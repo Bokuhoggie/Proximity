@@ -5,6 +5,16 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
     'api', {
         getAudioDevices: () => ipcRenderer.invoke('get-audio-devices'),
-        setAudioDevice: (deviceId) => ipcRenderer.invoke('set-audio-device', deviceId)
+        setAudioDevice: (deviceId) => ipcRenderer.invoke('set-audio-device', deviceId),
+        
+        // Add logging capability for debugging
+        log: (message) => {
+            console.log('[Renderer]:', message);
+        },
+        
+        // Add error reporting
+        reportError: (error) => {
+            console.error('[Renderer Error]:', error);
+        }
     }
-); 
+);

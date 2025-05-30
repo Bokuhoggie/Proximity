@@ -2,41 +2,148 @@
 <html>
 <head>
     <title>Wannabe - Voice Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:*; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Wannabe Voice Chat</h1>
-            <div class="room-info">
-                <div id="roomCode" class="room-code"></div>
-                <button id="newRoomBtn" class="btn primary">New Room</button>
+    <div class="app-container">
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">WANNABE</h1>
             </div>
-            <div class="room-controls">
-                <input type="text" id="roomId" placeholder="Enter Room ID">
-                <button id="joinRoom">Join Room</button>
-                <button id="leaveRoom" disabled>Leave Room</button>
+            <div class="nav-items">
+                <div class="nav-item active" data-page="rooms">
+                    <div class="nav-icon">🎤</div>
+                    <span class="nav-text">Rooms</span>
+                </div>
+                <div class="nav-item" data-page="settings">
+                    <div class="nav-icon">⚙️</div>
+                    <span class="nav-text">Settings</span>
+                </div>
             </div>
-        </header>
+        </nav>
 
-        <main>
-            <div class="participants">
-                <h2>Participants</h2>
-                <div id="participantsList"></div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Rooms Page -->
+            <div class="page active" id="rooms-page">
+                <header class="page-header">
+                    <h2>Voice Chat Rooms</h2>
+                </header>
+                
+                <div class="room-section">
+                    <div class="room-controls">
+                        <div class="room-input-group">
+                            <input type="text" id="roomId" placeholder="Enter Room ID" class="room-input">
+                            <button id="joinRoom" class="btn primary">Join Room</button>
+                        </div>
+                        <button id="newRoomBtn" class="btn secondary">Create New Room</button>
+                    </div>
+
+                    <div class="current-room" id="currentRoom" style="display: none;">
+                        <div class="room-header">
+                            <div class="room-info">
+                                <h3>Current Room</h3>
+                                <div id="roomCode" class="room-code"></div>
+                            </div>
+                            <button id="leaveRoom" class="btn danger">Leave Room</button>
+                        </div>
+
+                        <div class="participants-section">
+                            <h4>Participants</h4>
+                            <div id="participantsList" class="participants-list"></div>
+                        </div>
+
+                        <div class="voice-controls">
+                            <button id="muteButton" class="control-button mute-btn">
+                                <span class="icon">🎤</span>
+                                <span class="text">Mute</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="controls">
-                <button id="muteButton" class="control-button">
-                    <span class="icon">🎤</span>
-                    <span class="text">Mute</span>
-                </button>
-                <select id="audioDevice">
-                    <option value="">Select Audio Device</option>
-                </select>
+            <!-- Settings Page -->
+            <div class="page" id="settings-page">
+                <header class="page-header">
+                    <h2>Settings</h2>
+                </header>
+                
+                <div class="settings-section">
+                    <div class="setting-group">
+                        <h3>Audio Settings</h3>
+                        
+                        <div class="setting-item">
+                            <label for="audioDevice">Microphone Device</label>
+                            <select id="audioDevice" class="setting-select">
+                                <option value="">Select Audio Device</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="audioGain">Microphone Gain</label>
+                            <input type="range" id="audioGain" min="0" max="100" value="50" class="setting-slider">
+                            <span class="slider-value">50%</span>
+                        </div>
+
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="noiseSupression" checked>
+                                Enable Noise Suppression
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="echoCancellation" checked>
+                                Enable Echo Cancellation
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>General Settings</h3>
+                        
+                        <div class="setting-item">
+                            <label for="username">Display Name</label>
+                            <input type="text" id="username" placeholder="Enter your name" class="setting-input">
+                        </div>
+
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="autoJoin">
+                                Auto-join last room on startup
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Hotkeys</h3>
+                        
+                        <div class="setting-item">
+                            <label for="muteHotkey">Mute Toggle</label>
+                            <input type="text" id="muteHotkey" value="Ctrl+M" class="setting-input" readonly>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="deafenHotkey">Deafen Toggle</label>
+                            <input type="text" id="deafenHotkey" value="Ctrl+D" class="setting-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button id="testMicrophone" class="btn secondary">Test Microphone</button>
+                        <button id="resetSettings" class="btn danger">Reset to Defaults</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <script src="dist/bundle.js"></script>
 </body>
-</html> 
+</html>
