@@ -144,6 +144,80 @@
         </main>
     </div>
 
-    <script src="dist/bundle.js"></script>
+    <!-- Debug fallback script -->
+    <script>
+        console.log('HTML loaded, checking for bundle...');
+        
+        // Simple navigation fallback if bundle fails
+        function initBasicNavigation() {
+            console.log('Initializing basic navigation fallback');
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    console.log('Nav item clicked:', this.dataset.page);
+                    
+                    // Update navigation
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update pages
+                    pages.forEach(page => page.classList.remove('active'));
+                    const targetPage = document.getElementById(this.dataset.page + '-page');
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                    }
+                });
+            });
+            
+            // Basic button handlers
+            const createNewRoomBtn = document.getElementById('newRoomBtn');
+            if (createNewRoomBtn) {
+                createNewRoomBtn.addEventListener('click', function() {
+                    console.log('Create new room clicked');
+                    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+                    document.getElementById('roomId').value = roomId;
+                    alert(`New room created: ${roomId}`);
+                });
+            }
+            
+            const joinRoomBtn = document.getElementById('joinRoom');
+            if (joinRoomBtn) {
+                joinRoomBtn.addEventListener('click', function() {
+                    const roomId = document.getElementById('roomId').value;
+                    console.log('Join room clicked:', roomId);
+                    if (roomId) {
+                        alert(`Attempting to join room: ${roomId}`);
+                    } else {
+                        alert('Please enter a room ID');
+                    }
+                });
+            }
+        }
+        
+        // Initialize basic navigation immediately
+        document.addEventListener('DOMContentLoaded', initBasicNavigation);
+        
+        // Also try after a delay in case DOMContentLoaded already fired
+        setTimeout(initBasicNavigation, 100);
+    </script>
+
+    <!-- Try to load the webpack bundle -->
+    <script>
+        console.log('Attempting to load bundle...');
+        
+        // Check if bundle exists and load it
+        const script = document.createElement('script');
+        script.src = 'dist/bundle.js';
+        script.onload = function() {
+            console.log('Bundle loaded successfully');
+        };
+        script.onerror = function() {
+            console.error('Failed to load bundle.js - using fallback navigation only');
+        };
+        document.head.appendChild(script);
+    </script>
 </body>
 </html>
