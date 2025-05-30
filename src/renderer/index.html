@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wannabe - Voice Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wannabe Voice Chat</h1>
+            <div class="room-controls">
+                <input type="text" id="roomId" placeholder="Enter Room ID">
+                <button id="joinRoom">Join Room</button>
+                <button id="leaveRoom" disabled>Leave Room</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="participants">
+                <h2>Participants</h2>
+                <div id="participantsList"></div>
+            </div>
+
+            <div class="controls">
+                <button id="muteButton" class="control-button">
+                    <span class="icon">🎤</span>
+                    <span class="text">Mute</span>
+                </button>
+                <select id="audioDevice">
+                    <option value="">Select Audio Device</option>
+                </select>
+            </div>
+        </main>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html> 
