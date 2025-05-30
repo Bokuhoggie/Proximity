@@ -1,5 +1,5 @@
-// Enhanced version with mic visualizer and room management
-console.log('Enhanced Renderer.js starting...');
+// Fixed renderer with persistent visualizer and username handling
+console.log('Fixed Renderer.js starting...');
 
 class AudioVisualizer {
     constructor() {
@@ -56,7 +56,7 @@ class AudioVisualizer {
 
     stop() {
         this.isActive = false;
-        if (this.audioContext) {
+        if (this.audioContext && this.audioContext.state !== 'closed') {
             this.audioContext.close();
         }
         this.callbacks = [];
@@ -150,7 +150,9 @@ class WannabeApp {
         this.isMuted = false;
         this.isDeafened = false;
         this.currentRoom = null;
-        this.createdRooms = []; // Track created rooms
+        this.createdRooms = [];
+        this.myUserId = null;
+        this.persistentVisualizerActive = false;
         this.settings = {
             username: '',
             audioGain: 50,
@@ -194,6 +196,11 @@ class WannabeApp {
         this.autoJoinCheck = document.getElementById('autoJoin');
         this.testMicrophoneBtn = document.getElementById('testMicrophone');
         this.resetSettingsBtn = document.getElementById('resetSettings');
+
+        // Persistent visualizer elements
+        this.persistentMicLevelFill = document.getElementById('persistentMicLevelFill');
+        this.persistentVolumeLevel = document.getElementById('persistentVolumeLevel');
+        this.micStatusText = document.getElementById('micStatusText');
         
         // Create mic test visualizer
         this.createMicTestVisualizer();
@@ -201,15 +208,10 @@ class WannabeApp {
         // Create created rooms container
         this.createCreatedRoomsContainer();
         
-        console.log('UI elements found:', {
-            navItems: this.navItems.length,
-            joinBtn: !!this.joinRoomBtn,
-            newRoomBtn: !!this.newRoomBtn
-        });
+        console.log('UI elements found');
     }
 
     createMicTestVisualizer() {
-        // Find the test microphone button and add visualizer after it
         const testMicContainer = this.testMicrophoneBtn.parentElement;
         
         const visualizerContainer = document.createElement('div');
@@ -224,7 +226,7 @@ class WannabeApp {
         `;
         
         const visualizerTitle = document.createElement('h4');
-        visualizerTitle.textContent = 'Microphone Level';
+        visualizerTitle.textContent = 'Microphone Test (10 seconds)';
         visualizerTitle.style.cssText = `
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
@@ -275,7 +277,6 @@ class WannabeApp {
     }
 
     createCreatedRoomsContainer() {
-        // Find the room controls and add created rooms container after it
         const roomControls = document.querySelector('.room-controls');
         
         const createdRoomsContainer = document.createElement('div');
@@ -308,16 +309,11 @@ class WannabeApp {
     }
 
     setupMicrophoneGlow() {
-        // Add glow styles to document
         const style = document.createElement('style');
         style.textContent = `
             .mic-status.glowing {
                 box-shadow: 0 0 var(--glow-size, 8px) var(--glow-color, rgba(16, 185, 129, 0.6));
                 transition: box-shadow 0.1s ease;
-            }
-            
-            .participant {
-                position: relative;
             }
         `;
         document.head.appendChild(style);
@@ -327,10 +323,8 @@ class WannabeApp {
         console.log('Setting up event listeners...');
         
         // Navigation
-        this.navItems.forEach((item, index) => {
-            console.log(`Adding click listener to nav item ${index}:`, item.dataset.page);
-            item.addEventListener('click', (e) => {
-                console.log('Nav item clicked:', item.dataset.page);
+        this.navItems.forEach((item) => {
+            item.addEventListener('click', () => {
                 const page = item.dataset.page;
                 this.switchPage(page);
             });
@@ -338,34 +332,21 @@ class WannabeApp {
 
         // Room controls
         if (this.joinRoomBtn) {
-            this.joinRoomBtn.addEventListener('click', () => {
-                console.log('Join room button clicked');
-                this.joinRoom();
-            });
+            this.joinRoomBtn.addEventListener('click', () => this.joinRoom());
         }
         
         if (this.leaveRoomBtn) {
-            this.leaveRoomBtn.addEventListener('click', () => {
-                console.log('Leave room button clicked');
-                this.leaveRoom();
-            });
+            this.leaveRoomBtn.addEventListener('click', () => this.leaveRoom());
         }
         
         if (this.muteButton) {
-            this.muteButton.addEventListener('click', () => {
-                console.log('Mute button clicked');
-                this.toggleMute();
-            });
+            this.muteButton.addEventListener('click', () => this.toggleMute());
         }
         
         if (this.newRoomBtn) {
-            this.newRoomBtn.addEventListener('click', () => {
-                console.log('New room button clicked');
-                this.createNewRoom();
-            });
+            this.newRoomBtn.addEventListener('click', () => this.createNewRoom());
         }
 
-        // Allow Enter key to join room
         if (this.roomIdInput) {
             this.roomIdInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !this.joinRoomBtn.disabled) {
@@ -388,6 +369,37 @@ class WannabeApp {
                 }
             });
         }
+
+        // Username input with real-time saving
+        if (this.usernameInput) {
+            this.usernameInput.addEventListener('input', (e) => {
+                this.settings.username = e.target.value.trim();
+                this.saveSettings();
+                this.updateParticipantName();
+            });
+        }
+
+        // Audio setting checkboxes
+        if (this.noiseSupressionCheck) {
+            this.noiseSupressionCheck.addEventListener('change', (e) => {
+                this.settings.noiseSupression = e.target.checked;
+                this.saveSettings();
+            });
+        }
+
+        if (this.echoCancellationCheck) {
+            this.echoCancellationCheck.addEventListener('change', (e) => {
+                this.settings.echoCancellation = e.target.checked;
+                this.saveSettings();
+            });
+        }
+
+        if (this.autoJoinCheck) {
+            this.autoJoinCheck.addEventListener('change', (e) => {
+                this.settings.autoJoin = e.target.checked;
+                this.saveSettings();
+            });
+        }
         
         if (this.testMicrophoneBtn) {
             this.testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
@@ -403,24 +415,77 @@ class WannabeApp {
     switchPage(pageName) {
         console.log('Switching to page:', pageName);
         
-        // Update navigation
         this.navItems.forEach(item => {
             item.classList.toggle('active', item.dataset.page === pageName);
         });
 
-        // Update pages
         this.pages.forEach(page => {
             page.classList.toggle('active', page.id === `${pageName}-page`);
         });
 
-        // Initialize audio devices when switching to settings
         if (pageName === 'settings') {
             this.populateAudioDevices();
+            this.startPersistentVisualizer();
+        } else {
+            this.stopPersistentVisualizer();
+        }
+    }
+
+    async startPersistentVisualizer() {
+        if (this.persistentVisualizerActive) return;
+
+        try {
+            if (!this.micInput.getStream()) {
+                await this.initializeMedia();
+            }
+            
+            this.persistentVisualizerActive = true;
+            this.micStatusText.textContent = 'Monitoring microphone...';
+            
+            let persistentCallback = (volume, frequencyData) => {
+                if (this.persistentMicLevelFill && this.persistentVolumeLevel) {
+                    this.persistentMicLevelFill.style.width = `${volume}%`;
+                    this.persistentVolumeLevel.textContent = `${Math.round(volume)}%`;
+                }
+            };
+            
+            this.micInput.addVolumeCallback(persistentCallback);
+            this.persistentVisualizerCallback = persistentCallback;
+            
+        } catch (error) {
+            console.error('Error starting persistent visualizer:', error);
+            this.micStatusText.textContent = 'Microphone access denied';
+        }
+    }
+
+    stopPersistentVisualizer() {
+        if (this.persistentVisualizerCallback) {
+            this.micInput.removeVolumeCallback(this.persistentVisualizerCallback);
+            this.persistentVisualizerCallback = null;
+        }
+        this.persistentVisualizerActive = false;
+        
+        if (this.persistentMicLevelFill && this.persistentVolumeLevel) {
+            this.persistentMicLevelFill.style.width = '0%';
+            this.persistentVolumeLevel.textContent = '0%';
+        }
+        if (this.micStatusText) {
+            this.micStatusText.textContent = 'Click "Test Microphone" to start monitoring';
+        }
+    }
+
+    updateParticipantName() {
+        // Update your own participant name if you're in a room
+        const selfParticipant = document.getElementById(`participant-${this.myUserId || 'self'}`);
+        if (selfParticipant) {
+            const nameSpan = selfParticipant.querySelector('span');
+            if (nameSpan) {
+                nameSpan.textContent = this.settings.username || 'You';
+            }
         }
     }
 
     loadSettings() {
-        // Load settings from localStorage or use defaults
         try {
             const savedSettings = localStorage.getItem('wannabe-settings');
             if (savedSettings) {
@@ -430,14 +495,12 @@ class WannabeApp {
             console.error('Error loading settings:', error);
         }
 
-        // Apply settings to UI
         if (this.usernameInput) this.usernameInput.value = this.settings.username;
         if (this.audioGainSlider) this.audioGainSlider.value = this.settings.audioGain;
         if (this.noiseSupressionCheck) this.noiseSupressionCheck.checked = this.settings.noiseSupression;
         if (this.echoCancellationCheck) this.echoCancellationCheck.checked = this.settings.echoCancellation;
         if (this.autoJoinCheck) this.autoJoinCheck.checked = this.settings.autoJoin;
 
-        // Update slider display
         const valueDisplay = document.querySelector('.slider-value');
         if (valueDisplay) {
             valueDisplay.textContent = `${this.settings.audioGain}%`;
@@ -460,7 +523,6 @@ class WannabeApp {
         console.log('Creating new room...');
         const roomCode = this.generateRoomCode();
         
-        // Add to created rooms list
         this.createdRooms.push({
             code: roomCode,
             created: new Date(),
@@ -477,13 +539,9 @@ class WannabeApp {
         
         if (!container || !list) return;
         
-        // Show container if we have rooms
         container.style.display = this.createdRooms.length > 0 ? 'block' : 'none';
-        
-        // Clear existing rooms
         list.innerHTML = '';
         
-        // Add each room
         this.createdRooms.forEach((room, index) => {
             const roomCard = document.createElement('div');
             roomCard.style.cssText = `
@@ -544,6 +602,159 @@ class WannabeApp {
         }
     }
 
+    connectToSignalingServer(roomId) {
+        // Check if Socket.IO is available
+        if (typeof io === 'undefined') {
+            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
+            return;
+        }
+
+        console.log('Connecting to signaling server...');
+        this.socket = io('http://localhost:3000');
+
+        this.socket.on('connect', () => {
+            console.log('Connected to signaling server');
+            this.myUserId = this.socket.id;
+            this.socket.emit('join-room', roomId);
+            this.addParticipant(this.myUserId, this.micInput.getStream(), true);
+        });
+
+        this.socket.on('user-joined', (userId) => {
+            console.log('User joined:', userId);
+            this.connectToNewUser(userId);
+        });
+
+        this.socket.on('room-users', (users) => {
+            console.log('Room users:', users);
+            users.forEach(userId => {
+                this.connectToNewUser(userId);
+            });
+        });
+
+        this.socket.on('offer', async ({ offer, from }) => {
+            console.log('Received offer from:', from);
+            await this.handleOffer(offer, from);
+        });
+
+        this.socket.on('answer', async ({ answer, from }) => {
+            console.log('Received answer from:', from);
+            await this.handleAnswer(answer, from);
+        });
+
+        this.socket.on('ice-candidate', async ({ candidate, from }) => {
+            await this.handleIceCandidate(candidate, from);
+        });
+
+        this.socket.on('user-left', (userId) => {
+            console.log('User left:', userId);
+            this.removePeerConnection(userId);
+        });
+
+        this.socket.on('user-mic-status', ({ userId, isMuted }) => {
+            this.updateMicStatus(userId, isMuted);
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('Disconnected from signaling server');
+        });
+
+        this.socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+            this.showNotification('Failed to connect to server. Make sure server is running on port 3000.', 'error');
+        });
+    }
+
+    async connectToNewUser(userId) {
+        const peerConnection = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        });
+
+        this.peerConnections[userId] = peerConnection;
+
+        this.micInput.getStream().getTracks().forEach(track => {
+            peerConnection.addTrack(track, this.micInput.getStream());
+        });
+
+        peerConnection.ontrack = (event) => {
+            console.log('Received remote stream from:', userId);
+            this.addParticipant(userId, event.streams[0], false);
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate && this.socket) {
+                this.socket.emit('ice-candidate', {
+                    target: userId,
+                    candidate: event.candidate
+                });
+            }
+        };
+
+        try {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            this.socket.emit('offer', { target: userId, offer });
+        } catch (error) {
+            console.error('Error creating offer:', error);
+        }
+    }
+
+    async handleOffer(offer, from) {
+        const peerConnection = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        });
+
+        this.peerConnections[from] = peerConnection;
+
+        this.micInput.getStream().getTracks().forEach(track => {
+            peerConnection.addTrack(track, this.micInput.getStream());
+        });
+
+        peerConnection.ontrack = (event) => {
+            console.log('Received remote stream from:', from);
+            this.addParticipant(from, event.streams[0], false);
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate && this.socket) {
+                this.socket.emit('ice-candidate', {
+                    target: from,
+                    candidate: event.candidate
+                });
+            }
+        };
+
+        try {
+            await peerConnection.setRemoteDescription(offer);
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            this.socket.emit('answer', { target: from, answer });
+        } catch (error) {
+            console.error('Error handling offer:', error);
+        }
+    }
+
+    async handleAnswer(answer, from) {
+        const peerConnection = this.peerConnections[from];
+        if (peerConnection) {
+            try {
+                await peerConnection.setRemoteDescription(answer);
+            } catch (error) {
+                console.error('Error handling answer:', error);
+            }
+        }
+    }
+
+    async handleIceCandidate(candidate, from) {
+        const peerConnection = this.peerConnections[from];
+        if (peerConnection) {
+            try {
+                await peerConnection.addIceCandidate(candidate);
+            } catch (error) {
+                console.error('Error handling ICE candidate:', error);
+            }
+        }
+    }
+
     async joinRoom() {
         const roomId = this.roomIdInput.value.trim();
         if (!roomId) {
@@ -554,12 +765,10 @@ class WannabeApp {
         console.log('Attempting to join room:', roomId);
         
         try {
-            // Initialize microphone input
             await this.initializeMedia();
-            
+            this.connectToSignalingServer(roomId);
             this.currentRoom = roomId;
             
-            // Update UI
             this.joinRoomBtn.disabled = true;
             this.roomIdInput.disabled = true;
             this.newRoomBtn.disabled = true;
@@ -570,7 +779,7 @@ class WannabeApp {
             
         } catch (error) {
             console.error('Error joining room:', error);
-            this.showNotification('Failed to join room. Check microphone permissions.', 'error');
+            this.showNotification('Failed to join room. Please allow microphone access.', 'error');
         }
     }
 
@@ -589,16 +798,21 @@ class WannabeApp {
             console.log('Microphone access granted');
             
             await this.populateAudioDevices();
-            this.addParticipant('self', this.micInput.getStream(), true);
             
             // Setup microphone glow callback
             this.micInput.addVolumeCallback((volume, frequencyData) => {
-                this.updateMicrophoneGlow('self', volume);
+                this.updateMicrophoneGlow(this.myUserId || 'self', volume);
             });
             
         } catch (error) {
             console.error('Error accessing media devices:', error);
-            throw error;
+            if (error.name === 'NotAllowedError') {
+                throw new Error('Microphone access denied. Please allow microphone permissions.');
+            } else if (error.name === 'NotFoundError') {
+                throw new Error('No microphone found. Please connect a microphone.');
+            } else {
+                throw new Error('Failed to access microphone: ' + error.message);
+            }
         }
     }
 
@@ -607,16 +821,14 @@ class WannabeApp {
         if (participant) {
             const micStatus = participant.querySelector('.mic-status');
             if (micStatus && !this.isMuted) {
-                // Calculate glow intensity based on volume
-                const intensity = Math.min(volume / 50, 1); // Normalize to 0-1
-                const glowSize = 4 + (intensity * 12); // 4px to 16px
-                const glowOpacity = 0.3 + (intensity * 0.5); // 0.3 to 0.8
+                const intensity = Math.min(volume / 50, 1);
+                const glowSize = 4 + (intensity * 12);
+                const glowOpacity = 0.3 + (intensity * 0.5);
                 
                 micStatus.style.setProperty('--glow-size', `${glowSize}px`);
                 micStatus.style.setProperty('--glow-color', `rgba(16, 185, 129, ${glowOpacity})`);
                 micStatus.classList.add('glowing');
                 
-                // Remove glow if volume is very low
                 if (volume < 5) {
                     micStatus.classList.remove('glowing');
                 }
@@ -629,9 +841,6 @@ class WannabeApp {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             
-            console.log('Audio devices found:', audioInputs.length);
-            
-            // Clear existing options except the first placeholder
             this.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
             
             audioInputs.forEach((device, index) => {
@@ -641,7 +850,6 @@ class WannabeApp {
                 this.audioDeviceSelect.appendChild(option);
             });
 
-            // Set current device as selected if we have a stream
             if (this.micInput.getStream()) {
                 const currentTrack = this.micInput.getStream().getAudioTracks()[0];
                 if (currentTrack && currentTrack.getSettings) {
@@ -655,7 +863,6 @@ class WannabeApp {
     }
 
     addParticipant(userId, stream, isSelf = false) {
-        // Check if participant already exists
         const existingParticipant = document.getElementById(`participant-${userId}`);
         if (existingParticipant) {
             return;
@@ -678,20 +885,51 @@ class WannabeApp {
         participant.appendChild(micStatus);
         participant.appendChild(name);
         
+        if (!isSelf && stream) {
+            const audioElement = document.createElement('audio');
+            audioElement.autoplay = true;
+            audioElement.srcObject = stream;
+            audioElement.volume = this.isDeafened ? 0 : 1;
+            audioElement.style.display = 'none';
+            participant.appendChild(audioElement);
+        }
+        
         this.participantsList.appendChild(participant);
+    }
+
+    removePeerConnection(userId) {
+        if (this.peerConnections[userId]) {
+            this.peerConnections[userId].close();
+            delete this.peerConnections[userId];
+        }
+        
+        const participantElement = document.getElementById(`participant-${userId}`);
+        if (participantElement) {
+            participantElement.remove();
+        }
     }
 
     async leaveRoom() {
         console.log('Leaving room...');
         
-        this.micInput.stop();
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+        }
+
+        Object.values(this.peerConnections).forEach(pc => pc.close());
+        this.peerConnections = {};
+
+        // Don't stop mic input if persistent visualizer is active
+        if (!this.persistentVisualizerActive) {
+            this.micInput.stop();
+        }
 
         this.participantsList.innerHTML = '';
         this.currentRoom = null;
         this.isMuted = false;
         this.isDeafened = false;
         
-        // Reset UI
         this.joinRoomBtn.disabled = false;
         this.roomIdInput.disabled = false;
         this.newRoomBtn.disabled = false;
@@ -716,14 +954,17 @@ class WannabeApp {
             button.querySelector('.icon').textContent = this.isMuted ? '🔇' : '🎤';
             button.classList.toggle('muted', this.isMuted);
             
-            this.updateMicStatus('self', this.isMuted);
+            this.updateMicStatus(this.myUserId || 'self', this.isMuted);
             
-            // Remove glow when muted
             if (this.isMuted) {
-                const micStatus = document.querySelector('#participant-self .mic-status');
+                const micStatus = document.querySelector(`#participant-${this.myUserId || 'self'} .mic-status`);
                 if (micStatus) {
                     micStatus.classList.remove('glowing');
                 }
+            }
+            
+            if (this.socket && this.currentRoom) {
+                this.socket.emit('mic-status', { roomId: this.currentRoom, isMuted: this.isMuted });
             }
         }
     }
@@ -738,17 +979,38 @@ class WannabeApp {
     }
 
     async changeAudioDevice(deviceId) {
-        if (!deviceId || !this.micInput.getStream()) {
+        if (!deviceId) {
             return;
         }
 
         try {
+            const wasInCall = !!this.currentRoom;
+            
             await this.micInput.changeDevice(deviceId);
+            
+            // Update all peer connections with new stream if in a call
+            if (wasInCall) {
+                Object.values(this.peerConnections).forEach(pc => {
+                    const senders = pc.getSenders();
+                    const audioSender = senders.find(sender => 
+                        sender.track && sender.track.kind === 'audio'
+                    );
+                    if (audioSender) {
+                        audioSender.replaceTrack(this.micInput.getStream().getAudioTracks()[0]);
+                    }
+                });
+            }
             
             // Re-setup glow callback for new stream
             this.micInput.addVolumeCallback((volume, frequencyData) => {
-                this.updateMicrophoneGlow('self', volume);
+                this.updateMicrophoneGlow(this.myUserId || 'self', volume);
             });
+
+            // Re-setup persistent visualizer callback if active
+            if (this.persistentVisualizerActive) {
+                this.stopPersistentVisualizer();
+                this.startPersistentVisualizer();
+            }
             
             this.showNotification('Audio device changed successfully', 'success');
         } catch (error) {
@@ -772,19 +1034,16 @@ class WannabeApp {
                 await this.initializeMedia();
             }
             
-            // Show visualizer
             visualizerContainer.style.display = 'block';
             this.showNotification('Microphone test - speak now!', 'info');
             
             let testCallback = (volume, frequencyData) => {
-                // Update volume bar
                 levelFill.style.width = `${volume}%`;
                 volumeText.textContent = `${Math.round(volume)}%`;
             };
             
             this.micInput.addVolumeCallback(testCallback);
             
-            // Stop test after 10 seconds
             setTimeout(() => {
                 this.micInput.removeVolumeCallback(testCallback);
                 visualizerContainer.style.display = 'none';
@@ -817,12 +1076,10 @@ class WannabeApp {
     showNotification(message, type = 'info') {
         console.log(`Notification [${type}]: ${message}`);
         
-        // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
         
-        // Style the notification
         Object.assign(notification.style, {
             position: 'fixed',
             top: '20px',
@@ -837,7 +1094,6 @@ class WannabeApp {
             transition: 'all 0.3s ease'
         });
         
-        // Set background color based on type
         const colors = {
             success: '#10b981',
             error: '#ef4444',
@@ -848,13 +1104,11 @@ class WannabeApp {
         
         document.body.appendChild(notification);
         
-        // Animate in
         setTimeout(() => {
             notification.style.opacity = '1';
             notification.style.transform = 'translateX(0)';
         }, 10);
         
-        // Remove after 3 seconds
         setTimeout(() => {
             notification.style.opacity = '0';
             notification.style.transform = 'translateX(100%)';

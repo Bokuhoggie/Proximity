@@ -4,7 +4,7 @@
     <title>Wannabe - Voice Chat</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:*; media-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* https://cdnjs.cloudflare.com; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -90,6 +90,51 @@
                             <span class="slider-value">50%</span>
                         </div>
 
+                        <!-- Persistent Microphone Visualizer -->
+                        <div class="setting-item">
+                            <label>Microphone Level</label>
+                            <div id="persistentMicVisualizer" style="
+                                margin-top: 0.5rem;
+                                padding: 1rem;
+                                background: var(--dark-bg);
+                                border-radius: 8px;
+                                border: 1px solid var(--border);
+                            ">
+                                <div id="persistentMicLevelBar" style="
+                                    width: 100%;
+                                    height: 20px;
+                                    background: var(--border);
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                    position: relative;
+                                ">
+                                    <div id="persistentMicLevelFill" style="
+                                        height: 100%;
+                                        width: 0%;
+                                        background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%);
+                                        transition: width 0.1s ease;
+                                        border-radius: 10px;
+                                    "></div>
+                                    <span id="persistentVolumeLevel" style="
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 0.8rem;
+                                        font-weight: bold;
+                                        color: var(--text-primary);
+                                        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                                    ">0%</span>
+                                </div>
+                                <div style="
+                                    margin-top: 0.5rem;
+                                    font-size: 0.8rem;
+                                    color: var(--text-muted);
+                                    text-align: center;
+                                " id="micStatusText">Click "Test Microphone" to start monitoring</div>
+                            </div>
+                        </div>
+
                         <div class="setting-item">
                             <label>
                                 <input type="checkbox" id="noiseSupression" checked>
@@ -144,80 +189,21 @@
         </main>
     </div>
 
-    <!-- Debug fallback script -->
+    <!-- Load Socket.IO from CDN first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    <!-- Then load our bundle -->
+    <script src="dist/bundle.js"></script>
+    
+    <!-- Fallback if bundle fails -->
     <script>
-        console.log('HTML loaded, checking for bundle...');
-        
-        // Simple navigation fallback if bundle fails
-        function initBasicNavigation() {
-            console.log('Initializing basic navigation fallback');
-            
-            const navItems = document.querySelectorAll('.nav-item');
-            const pages = document.querySelectorAll('.page');
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    console.log('Nav item clicked:', this.dataset.page);
-                    
-                    // Update navigation
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update pages
-                    pages.forEach(page => page.classList.remove('active'));
-                    const targetPage = document.getElementById(this.dataset.page + '-page');
-                    if (targetPage) {
-                        targetPage.classList.add('active');
-                    }
-                });
-            });
-            
-            // Basic button handlers
-            const createNewRoomBtn = document.getElementById('newRoomBtn');
-            if (createNewRoomBtn) {
-                createNewRoomBtn.addEventListener('click', function() {
-                    console.log('Create new room clicked');
-                    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-                    document.getElementById('roomId').value = roomId;
-                    alert(`New room created: ${roomId}`);
-                });
+        // Check if our app loaded
+        setTimeout(() => {
+            if (!window.wannabeApp) {
+                console.error('Main app failed to load - check webpack build');
+                alert('App failed to load. Please run: npm run webpack');
             }
-            
-            const joinRoomBtn = document.getElementById('joinRoom');
-            if (joinRoomBtn) {
-                joinRoomBtn.addEventListener('click', function() {
-                    const roomId = document.getElementById('roomId').value;
-                    console.log('Join room clicked:', roomId);
-                    if (roomId) {
-                        alert(`Attempting to join room: ${roomId}`);
-                    } else {
-                        alert('Please enter a room ID');
-                    }
-                });
-            }
-        }
-        
-        // Initialize basic navigation immediately
-        document.addEventListener('DOMContentLoaded', initBasicNavigation);
-        
-        // Also try after a delay in case DOMContentLoaded already fired
-        setTimeout(initBasicNavigation, 100);
-    </script>
-
-    <!-- Try to load the webpack bundle -->
-    <script>
-        console.log('Attempting to load bundle...');
-        
-        // Check if bundle exists and load it
-        const script = document.createElement('script');
-        script.src = 'dist/bundle.js';
-        script.onload = function() {
-            console.log('Bundle loaded successfully');
-        };
-        script.onerror = function() {
-            console.error('Failed to load bundle.js - using fallback navigation only');
-        };
-        document.head.appendChild(script);
+        }, 1000);
     </script>
 </body>
 </html>
