@@ -95,4 +95,50 @@ select {
     font-size: 1rem;
     background-color: white;
     cursor: pointer;
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.room-code {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4CAF50;
+    padding: 0.5rem 1rem;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    display: none;
+}
+
+.room-code.active {
+    display: block;
+}
+
+.participant {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.mic-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #666;
+}
+
+.mic-status.active {
+    background: #4CAF50;
+}
+
+.mic-status.muted {
+    background: #f44336;
 } 

@@ -25,12 +25,11 @@ io.on('connection', (socket) => {
         rooms.get(roomId).add(socket.id);
 
         // Notify others in the room
-        socket.to(roomId).emit('user-connected', socket.id);
+        socket.to(roomId).emit('user-joined', socket.id);
 
         // Send list of existing users to the new participant
-        const usersInRoom = Array.from(rooms.get(roomId))
-            .filter(id => id !== socket.id);
-        socket.emit('room-users', usersInRoom);
+        const users = Array.from(rooms.get(roomId)).filter(id => id !== socket.id);
+        socket.emit('room-users', users);
     });
 
     socket.on('offer', ({ target, offer }) => {
@@ -54,6 +53,10 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on('mic-status', ({ roomId, isMuted }) => {
+        socket.to(roomId).emit('user-mic-status', { userId: socket.id, isMuted });
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
         
@@ -61,7 +64,7 @@ io.on('connection', (socket) => {
         rooms.forEach((users, roomId) => {
             if (users.has(socket.id)) {
                 users.delete(socket.id);
-                io.to(roomId).emit('user-disconnected', socket.id);
+                io.to(roomId).emit('user-left', socket.id);
                 
                 if (users.size === 0) {
                     rooms.delete(roomId);

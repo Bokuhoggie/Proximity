@@ -1,5 +1,6 @@
-const io = require('socket.io-client');
-const adapter = require('webrtc-adapter');
+import { io } from 'socket.io-client';
+import 'webrtc-adapter';
+import './styles.css';
 
 class VoiceChat {
     constructor() {
@@ -8,6 +9,7 @@ class VoiceChat {
         this.localStream = null;
         this.isMuted = false;
         this.currentRoom = null;
+        this.peers = {};
 
         this.initializeUI();
         this.setupEventListeners();
@@ -20,6 +22,8 @@ class VoiceChat {
         this.muteButton = document.getElementById('muteButton');
         this.audioDeviceSelect = document.getElementById('audioDevice');
         this.participantsList = document.getElementById('participantsList');
+        this.roomCodeElement = document.getElementById('roomCode');
+        this.newRoomBtn = document.getElementById('newRoomBtn');
     }
 
     setupEventListeners() {
@@ -27,6 +31,19 @@ class VoiceChat {
         this.leaveRoomBtn.addEventListener('click', () => this.leaveRoom());
         this.muteButton.addEventListener('click', () => this.toggleMute());
         this.audioDeviceSelect.addEventListener('change', (e) => this.changeAudioDevice(e.target.value));
+        this.newRoomBtn.addEventListener('click', () => this.createNewRoom());
+    }
+
+    generateRoomCode() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    async createNewRoom() {
+        const roomCode = this.generateRoomCode();
+        this.roomIdInput.value = roomCode;
+        this.roomCodeElement.textContent = `Room Code: ${roomCode}`;
+        this.roomCodeElement.classList.add('active');
+        await this.joinRoom();
     }
 
     async joinRoom() {
@@ -39,8 +56,9 @@ class VoiceChat {
             this.currentRoom = roomId;
             this.joinRoomBtn.disabled = true;
             this.leaveRoomBtn.disabled = false;
+            this.roomIdInput.disabled = true;
         } catch (error) {
-            console.error('Failed to join room:', error);
+            console.error('Error joining room:', error);
         }
     }
 
@@ -59,9 +77,11 @@ class VoiceChat {
 
     async populateAudioDevices() {
         try {
-            const devices = await window.api.getAudioDevices();
-            this.audioDeviceSelect.innerHTML = devices.map(device => 
-                `<option value="${device.deviceId}">${device.label || `Microphone ${devices.indexOf(device) + 1}`}</option>`
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioInputs = devices.filter(device => device.kind === 'audioinput');
+            
+            this.audioDeviceSelect.innerHTML = audioInputs.map(device => 
+                `<option value="${device.deviceId}">${device.label || `Microphone ${audioInputs.indexOf(device) + 1}`}</option>`
             ).join('');
         } catch (error) {
             console.error('Error populating audio devices:', error);
@@ -131,16 +151,22 @@ class VoiceChat {
     }
 
     addParticipant(userId, stream) {
-        const participantElement = document.createElement('div');
-        participantElement.id = `participant-${userId}`;
-        participantElement.className = 'participant';
-        participantElement.innerHTML = `
-            <span class="participant-name">User ${userId}</span>
-            <audio autoplay></audio>
-        `;
-        this.participantsList.appendChild(participantElement);
+        const participant = document.createElement('div');
+        participant.className = 'participant';
+        participant.id = `participant-${userId}`;
         
-        const audioElement = participantElement.querySelector('audio');
+        const micStatus = document.createElement('div');
+        micStatus.className = 'mic-status';
+        micStatus.classList.add(this.isMuted ? 'muted' : 'active');
+        
+        const name = document.createElement('span');
+        name.textContent = userId === this.socket.id ? 'You' : `User ${userId.slice(0, 4)}`;
+        
+        participant.appendChild(micStatus);
+        participant.appendChild(name);
+        this.participantsList.appendChild(participant);
+        
+        const audioElement = participant.querySelector('audio');
         audioElement.srcObject = stream;
     }
 
@@ -173,6 +199,7 @@ class VoiceChat {
         this.currentRoom = null;
         this.joinRoomBtn.disabled = false;
         this.leaveRoomBtn.disabled = true;
+        this.roomIdInput.disabled = false;
     }
 
     toggleMute() {
@@ -182,6 +209,17 @@ class VoiceChat {
                 track.enabled = !this.isMuted;
             });
             this.muteButton.querySelector('.text').textContent = this.isMuted ? 'Unmute' : 'Mute';
+            this.updateMicStatus(this.socket.id, this.isMuted);
+            this.socket.emit('mic-status', { roomId: this.currentRoom, isMuted: this.isMuted });
+        }
+    }
+
+    updateMicStatus(userId, isMuted) {
+        const participant = document.getElementById(`participant-${userId}`);
+        if (participant) {
+            const micStatus = participant.querySelector('.mic-status');
+            micStatus.classList.toggle('muted', isMuted);
+            micStatus.classList.toggle('active', !isMuted);
         }
     }
 
