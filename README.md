@@ -1,4 +1,4 @@
-# Wannabe
+# Proximity
 
 A project by Bokuhoggie.
 
