@@ -11,20 +11,73 @@ const io = new Server(server, {
     }
 });
 
+// Add this new Map to store server information
+const servers = new Map();
 const rooms = new Map();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
+    // Add this new handler for server creation
+    socket.on('create-server', ({ serverName, serverDescription }) => {
+        console.log(`User ${socket.id} creating server: ${serverName}`);
+        
+        const serverId = Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        // Create server entry
+        servers.set(serverId, {
+            id: serverId,
+            name: serverName,
+            description: serverDescription,
+            owner: socket.id,
+            created: new Date(),
+            channels: [
+                { id: 'general', name: 'general', type: 'text' },
+                { id: 'general-voice', name: 'General Voice', type: 'voice' }
+            ]
+        });
+
+        // Create the voice room
+        const voiceRoomId = `${serverId}-general-voice`;
+        rooms.set(voiceRoomId, new Map());
+        
+        socket.emit('server-created', {
+            serverId,
+            serverName,
+            serverDescription,
+            owner: socket.id
+        });
+    });
+
+    // Update the validate-server handler
+    socket.on('validate-server', ({ inviteCode }) => {
+        console.log(`User ${socket.id} validating server code: ${inviteCode}`);
+        
+        // Check if the server exists
+        if (servers.has(inviteCode)) {
+            const serverInfo = servers.get(inviteCode);
+            socket.emit('server-validated', {
+                valid: true,
+                server: serverInfo
+            });
+        } else {
+            socket.emit('server-validated', {
+                valid: false,
+                error: 'Invalid invite code'
+            });
+        }
+    });
+
     socket.on('join-room', (data) => {
         const { roomId, username } = data;
         console.log(`User ${socket.id} (${username}) joining room ${roomId}`);
-        socket.join(roomId);
         
+        // Create room if it doesn't exist
         if (!rooms.has(roomId)) {
             rooms.set(roomId, new Map());
         }
         
+        socket.join(roomId);
         const roomUsers = rooms.get(roomId);
         
         // Get existing users before adding new one
@@ -37,7 +90,7 @@ io.on('connection', (socket) => {
         // Add new user to room with default position
         roomUsers.set(socket.id, {
             username: username || 'Anonymous',
-            position: { x: 100, y: 100 }, // Default spawn position
+            position: { x: 100, y: 100 },
             lastUpdate: Date.now()
         });
 
@@ -124,28 +177,13 @@ io.on('connection', (socket) => {
                     username: userData.username
                 });
                 
-                console.log(`User ${socket.id} (${userData.username}) left room ${roomId}, ${roomUsers.size} users remaining`);
+                console.log(`User ${socket.id} left room ${roomId}, ${roomUsers.size} users remaining`);
                 
                 if (roomUsers.size === 0) {
-                    console.log(`Room ${roomId} is now empty, deleting`);
+                    console.log(`Room ${roomId} deleted (empty)`);
                     rooms.delete(roomId);
                 }
             }
-        });
-    });
-
-    // Handle server creation/management
-    socket.on('create-server', ({ serverName, serverDescription }) => {
-        console.log(`User ${socket.id} creating server: ${serverName}`);
-        
-        // In a real implementation, you'd save this to a database
-        const serverId = Math.random().toString(36).substring(2, 8).toUpperCase();
-        
-        socket.emit('server-created', {
-            serverId,
-            serverName,
-            serverDescription,
-            owner: socket.id
         });
     });
 
@@ -196,11 +234,20 @@ setInterval(() => {
     });
 }, 60000); // Check every minute
 
-// API endpoint to get room statistics
+// Update the stats endpoint to include server information
 app.get('/api/stats', (req, res) => {
     const stats = {
+        totalServers: servers.size,
         totalRooms: rooms.size,
         totalUsers: Array.from(rooms.values()).reduce((total, roomUsers) => total + roomUsers.size, 0),
+        servers: Array.from(servers.entries()).map(([serverId, serverData]) => ({
+            id: serverId,
+            name: serverData.name,
+            description: serverData.description,
+            owner: serverData.owner,
+            created: serverData.created,
+            channels: serverData.channels
+        })),
         rooms: Array.from(rooms.entries()).map(([roomId, roomUsers]) => ({
             roomId,
             userCount: roomUsers.size,

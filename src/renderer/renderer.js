@@ -538,6 +538,14 @@ class ProximityApp {
             owner: this.settings.username || 'Anonymous'
         };
 
+        // Create the room on the signaling server
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('create-server', {
+                serverName: name,
+                serverDescription: server.description
+            });
+        }
+
         this.createdServers.push(server);
         this.saveServers();
         this.updateServersList();
@@ -552,8 +560,13 @@ class ProximityApp {
             return;
         }
 
+        // Connect to signaling server if not connected
         if (!this.socket || !this.socket.connected) {
-            this.showNotification('Not connected to server', 'error');
+            console.log('Not connected to signaling server, connecting first...');
+            this.connectToSignalingServerForValidation(() => {
+                // Validate server code after connection is established
+                this.socket.emit('validate-server', { inviteCode });
+            });
             return;
         }
 
@@ -1115,57 +1128,7 @@ class ProximityApp {
         }
     }
 
-    connectToSignalingServer(roomId) {
-        if (typeof io === 'undefined') {
-            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
-            return;
-        }
-
-        // Prevent multiple connections to the same room
-        if (this.socket && this.currentRoom === roomId) {
-            console.log('Already connected to this room');
-            return;
-        }
-
-        // Disconnect from previous room if exists
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket = null;
-        }
-
-        console.log('Connecting to signaling server:', SERVER_URL);
-        this.showNotification(`Connecting to server...`, 'info');
-        
-        // Update connection status
-        this.updateConnectionStatus('connecting', 'Connecting...');
-        
-        this.socket = io(SERVER_URL, {
-            reconnectionAttempts: 5,
-            timeout: 10000,
-            transports: ['websocket', 'polling']
-        });
-
-        this.socket.on('connect', () => {
-            console.log('Connected to signaling server');
-            this.myUserId = this.socket.id;
-            
-            // Update connection status
-            this.updateConnectionStatus('online', 'Connected');
-            
-            this.socket.emit('join-room', {
-                roomId: roomId,
-                username: this.settings.username || 'Anonymous',
-                userColor: this.settings.userColor || 'purple'
-            });
-            
-            this.addParticipant(this.myUserId, this.micInput.getStream(), true, this.settings.username || 'You', this.settings.userColor || 'purple');
-            
-            if (this.proximityMap) {
-                this.proximityMap.addUser(this.myUserId, this.settings.username || 'You', true);
-                this.proximityMap.updateUserColor(this.myUserId, this.settings.userColor || 'purple');
-            }
-        });
-
+    setupSocketEventHandlers() {
         this.socket.on('user-joined', ({ userId, username, userColor }) => {
             console.log('User joined:', userId, username, userColor);
             this.showNotification(`${username || 'Anonymous'} joined the channel`, 'info');
@@ -1266,6 +1229,117 @@ class ProximityApp {
         this.socket.on('chat-message-sent', (data) => {
             console.log('Chat message sent confirmation:', data);
         });
+    }
+
+    connectToSignalingServerForValidation(callback) {
+        if (typeof io === 'undefined') {
+            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
+            return;
+        }
+
+        // Don't create a new connection if already connected
+        if (this.socket && this.socket.connected) {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+            return;
+        }
+
+        console.log('Connecting to signaling server for validation:', SERVER_URL);
+        this.showNotification(`Connecting to server...`, 'info');
+        
+        // Update connection status
+        this.updateConnectionStatus('connecting', 'Connecting...');
+        
+        this.socket = io(SERVER_URL, {
+            reconnectionAttempts: 5,
+            timeout: 10000,
+            transports: ['websocket', 'polling']
+        });
+
+        this.socket.on('connect', () => {
+            console.log('Connected to signaling server for validation');
+            this.myUserId = this.socket.id;
+            
+            // Update connection status
+            this.updateConnectionStatus('online', 'Connected');
+            this.showNotification('Connected to server', 'success');
+
+            // Call the callback if provided
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+
+        // Add error handling
+        this.socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+            this.updateConnectionStatus('offline', 'Error');
+            this.showNotification('Failed to connect to server. Server may be down.', 'error');
+        });
+
+        // Add all the other socket event handlers
+        this.setupSocketEventHandlers();
+    }
+
+    connectToSignalingServer(roomId, callback) {
+        if (typeof io === 'undefined') {
+            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
+            return;
+        }
+
+        // Prevent multiple connections to the same room
+        if (this.socket && this.currentRoom === roomId) {
+            console.log('Already connected to this room');
+            return;
+        }
+
+        // Disconnect from previous room if exists
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+        }
+
+        console.log('Connecting to signaling server:', SERVER_URL);
+        this.showNotification(`Connecting to server...`, 'info');
+        
+        // Update connection status
+        this.updateConnectionStatus('connecting', 'Connecting...');
+        
+        this.socket = io(SERVER_URL, {
+            reconnectionAttempts: 5,
+            timeout: 10000,
+            transports: ['websocket', 'polling']
+        });
+
+        this.socket.on('connect', () => {
+            console.log('Connected to signaling server');
+            this.myUserId = this.socket.id;
+            
+            // Update connection status
+            this.updateConnectionStatus('online', 'Connected');
+            
+            this.socket.emit('join-room', {
+                roomId: roomId,
+                username: this.settings.username || 'Anonymous',
+                userColor: this.settings.userColor || 'purple'
+            });
+            
+            this.addParticipant(this.myUserId, this.micInput.getStream(), true, this.settings.username || 'You', this.settings.userColor || 'purple');
+            
+            if (this.proximityMap) {
+                this.proximityMap.addUser(this.myUserId, this.settings.username || 'You', true);
+                this.proximityMap.updateUserColor(this.myUserId, this.settings.userColor || 'purple');
+            }
+
+            // Call the callback if provided
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+
+        // Set up all socket event handlers
+        this.setupSocketEventHandlers();
     }
 
     // Helper to get color for a remote user (future: sync from server)
