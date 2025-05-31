@@ -11,21 +11,31 @@ const io = new Server(server, {
     }
 });
 
-// Add this new Map to store server information
+// Add these Maps to store server and room information
 const servers = new Map();
 const rooms = new Map();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Add this new handler for server creation
+    // Handle get-servers request
+    socket.on('get-servers', () => {
+        console.log(`User ${socket.id} requesting available servers`);
+        const serverList = Array.from(servers.values()).map(server => ({
+            ...server,
+            userCount: rooms.get(`${server.id}-general-voice`)?.size || 0
+        }));
+        socket.emit('available-servers', { servers: serverList });
+    });
+
+    // Handle server creation
     socket.on('create-server', ({ serverName, serverDescription }) => {
         console.log(`User ${socket.id} creating server: ${serverName}`);
         
         const serverId = Math.random().toString(36).substring(2, 8).toUpperCase();
         
         // Create server entry
-        servers.set(serverId, {
+        const newServer = {
             id: serverId,
             name: serverName,
             description: serverDescription,
@@ -35,25 +45,33 @@ io.on('connection', (socket) => {
                 { id: 'general', name: 'general', type: 'text' },
                 { id: 'general-voice', name: 'General Voice', type: 'voice' }
             ]
-        });
+        };
+        
+        servers.set(serverId, newServer);
 
         // Create the voice room
         const voiceRoomId = `${serverId}-general-voice`;
         rooms.set(voiceRoomId, new Map());
         
+        // Notify the creator
         socket.emit('server-created', {
             serverId,
             serverName,
             serverDescription,
             owner: socket.id
         });
+
+        // Broadcast to all clients that a new server is available
+        io.emit('server-added', {
+            ...newServer,
+            userCount: 0
+        });
     });
 
-    // Update the validate-server handler
+    // Handle server validation
     socket.on('validate-server', ({ inviteCode }) => {
         console.log(`User ${socket.id} validating server code: ${inviteCode}`);
         
-        // Check if the server exists
         if (servers.has(inviteCode)) {
             const serverInfo = servers.get(inviteCode);
             socket.emit('server-validated', {
@@ -104,6 +122,16 @@ io.on('connection', (socket) => {
         socket.emit('room-users', existingUsers);
         
         console.log(`Room ${roomId} now has ${roomUsers.size} users`);
+
+        // Update server user count for all clients
+        const serverId = roomId.split('-')[0];
+        if (servers.has(serverId)) {
+            const userCount = roomUsers.size;
+            io.emit('server-updated', {
+                serverId,
+                userCount
+            });
+        }
     });
 
     socket.on('position-update', ({ roomId, x, y }) => {
@@ -179,6 +207,16 @@ io.on('connection', (socket) => {
                 
                 console.log(`User ${socket.id} left room ${roomId}, ${roomUsers.size} users remaining`);
                 
+                // Update server user count
+                const serverId = roomId.split('-')[0];
+                if (servers.has(serverId)) {
+                    const userCount = roomUsers.size;
+                    io.emit('server-updated', {
+                        serverId,
+                        userCount
+                    });
+                }
+
                 if (roomUsers.size === 0) {
                     console.log(`Room ${roomId} deleted (empty)`);
                     rooms.delete(roomId);
@@ -246,7 +284,8 @@ app.get('/api/stats', (req, res) => {
             description: serverData.description,
             owner: serverData.owner,
             created: serverData.created,
-            channels: serverData.channels
+            channels: serverData.channels,
+            userCount: rooms.get(`${serverId}-general-voice`)?.size || 0
         })),
         rooms: Array.from(rooms.entries()).map(([roomId, roomUsers]) => ({
             roomId,

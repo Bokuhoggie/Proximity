@@ -92,15 +92,11 @@
                                 <span class="action-icon">➕</span>
                                 <span class="action-text">Create Server</span>
                             </button>
-                            <button id="homeJoinServerBtn" class="home-action-btn join">
-                                <span class="action-icon">🔗</span>
-                                <span class="action-text">Join Server</span>
-                            </button>
                         </div>
                         
-                        <div class="recent-servers" id="recentServersSection" style="display: none;">
-                            <h3>Recent Servers</h3>
-                            <div id="recentServersList" class="recent-servers-list"></div>
+                        <div class="servers-section">
+                            <h3>Available Servers</h3>
+                            <div id="availableServersList" class="available-servers-list"></div>
                         </div>
                     </div>
                 </div>
@@ -113,10 +109,8 @@
                     <div class="server-sidebar">
                         <div class="server-info">
                             <h3 id="currentServerName">Server Name</h3>
-                            <div class="server-invite">
-                                <span>Invite Code: </span>
-                                <code id="serverInviteDisplay">ABC123</code>
-                                <button id="copyInviteBtn" class="copy-btn" title="Copy invite code">📋</button>
+                            <div class="server-invite" style="display: none;">
+                                <!-- Removed invite code display -->
                             </div>
                         </div>
                         

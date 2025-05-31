@@ -19,7 +19,9 @@ class ProximityApp {
         this.currentRoom = null;
         this.currentServer = null;
         this.currentChannel = null;
-        this.createdServers = [];
+        this.availableServers = [];
+        this.myServers = []; // Servers I created
+        this.favoriteServers = []; // Servers I favorited
         this.myUserId = null;
         this.persistentVisualizerActive = false;
         this.settings = {
@@ -49,9 +51,10 @@ class ProximityApp {
         this.initializeUI();
         this.setupEventListeners();
         this.loadSettings();
-        this.loadServers();
+        this.loadServerData();
         this.setupMicrophoneGlow();
         this.initializeProximityMap();
+        this.connectToServerDiscovery();
         console.log('ProximityApp initialized');
     }
 
@@ -101,6 +104,11 @@ class ProximityApp {
         this.voiceChannelsList = document.getElementById('voiceChannelsList');
         this.leaveServerBtn = document.getElementById('leaveServerBtn');
 
+        // Create and add favorite button
+        this.favoriteBtn = document.createElement('button');
+        this.favoriteBtn.id = 'favoriteServerBtn';
+        this.favoriteBtn.className = 'btn secondary favorite-btn';
+        this.favoriteBtn.innerHTML = '<span class="icon">⭐</span><span class="text">Favorite</span>';
         // Chat elements
         this.chatMessages = document.getElementById('chatMessages');
         this.messageInput = document.getElementById('messageInput');
@@ -142,6 +150,24 @@ class ProximityApp {
         
         // Create mic test visualizer
         this.createMicTestVisualizer();
+        
+        // Home page elements
+        this.homeCreateServerBtn = document.getElementById('homeCreateServerBtn');
+        this.availableServersList = document.getElementById('availableServersList');
+        if (!this.availableServersList) {
+            // Create it if it doesn't exist
+            const homeContent = document.querySelector('.home-content');
+            if (homeContent) {
+                const serversSection = document.createElement('div');
+                serversSection.className = 'servers-section';
+                serversSection.innerHTML = `
+                    <h3>Available Servers</h3>
+                    <div id="availableServersList" class="available-servers-list"></div>
+                `;
+                homeContent.appendChild(serversSection);
+                this.availableServersList = document.getElementById('availableServersList');
+            }
+        }
         
         console.log('UI elements found');
     }
@@ -526,57 +552,48 @@ class ProximityApp {
             return;
         }
 
-        const server = {
-            id: this.generateRoomCode(),
-            name: name,
-            description: this.serverDescriptionInput.value.trim(),
-            created: new Date(),
-            channels: [
-                { id: 'general', name: 'general', type: 'text' },
-                { id: 'general-voice', name: 'General Voice', type: 'voice' }
-            ],
-            owner: this.settings.username || 'Anonymous'
-        };
-
-        // Create the room on the signaling server
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('create-server', {
-                serverName: name,
-                serverDescription: server.description
-            });
+        if (!this.socket || !this.socket.connected) {
+            this.showNotification('Not connected to server. Please wait...', 'error');
+            return;
         }
 
-        this.createdServers.push(server);
-        this.saveServers();
-        this.updateServersList();
+        console.log('Creating server:', name);
+        
+        this.socket.emit('create-server', {
+            serverName: name,
+            serverDescription: this.serverDescriptionInput.value.trim()
+        });
+
         this.hideCreateServerModal();
-        this.showNotification(`Server "${name}" created! Invite code: ${server.id}`, 'success');
+        this.showNotification(`Creating server "${name}"...`, 'info');
     }
 
-    joinServerByCode() {
-        const inviteCode = this.serverInviteCodeInput.value.trim().toUpperCase();
-        if (!inviteCode) {
-            this.showNotification('Please enter an invite code', 'warning');
-            return;
+    joinServer(server) {
+        console.log('Joining server:', server);
+        this.currentServer = server;
+        
+        this.clearChatMessages();
+        this.switchPage('server-view');
+        
+        if (this.currentServerNameElement) {
+            this.currentServerNameElement.textContent = server.name;
         }
-
-        // Connect to signaling server if not connected
-        if (!this.socket || !this.socket.connected) {
-            console.log('Not connected to signaling server, connecting first...');
-            this.connectToSignalingServerForValidation(() => {
-                // Validate server code after connection is established
-                this.socket.emit('validate-server', { inviteCode });
-            });
-            return;
+        if (this.serverInviteDisplay) {
+            this.serverInviteDisplay.textContent = server.id;
         }
-
-        // Validate server code with the server
-        this.socket.emit('validate-server', { inviteCode });
+        
+        // Update favorite button
+        this.updateFavoriteButton();
+        
+        this.setupServerChannels(server);
+        this.switchToChannel('general', 'text');
+        
+        this.showNotification(`Joined server: ${server.name}`, 'success');
     }
 
     deleteServer(serverId) {
         if (confirm('Are you sure you want to delete this server?')) {
-            this.createdServers = this.createdServers.filter(s => s.id !== serverId);
+            this.availableServers = this.availableServers.filter(s => s.id !== serverId);
             this.saveServers();
             this.updateServersList();
             this.showNotification('Server deleted', 'info');
@@ -588,7 +605,7 @@ class ProximityApp {
 
         this.myServersList.innerHTML = '';
 
-        this.createdServers.forEach(server => {
+        this.availableServers.forEach(server => {
             const serverItem = document.createElement('div');
             serverItem.className = 'server-item';
             serverItem.onclick = () => this.selectServer(server);
@@ -634,7 +651,7 @@ class ProximityApp {
     updateRecentServers() {
         if (!this.recentServersList || !this.recentServersSection) return;
 
-        if (this.createdServers.length === 0) {
+        if (this.availableServers.length === 0) {
             this.recentServersSection.style.display = 'none';
             return;
         }
@@ -643,7 +660,7 @@ class ProximityApp {
         this.recentServersList.innerHTML = '';
 
         // Show up to 3 most recent servers
-        const recentServers = this.createdServers.slice(-3).reverse();
+        const recentServers = this.availableServers.slice(-3).reverse();
 
         recentServers.forEach(server => {
             const serverItem = document.createElement('div');
@@ -980,7 +997,7 @@ class ProximityApp {
         try {
             const savedServers = localStorage.getItem('proximity-servers');
             if (savedServers) {
-                this.createdServers = JSON.parse(savedServers);
+                this.availableServers = JSON.parse(savedServers);
                 this.updateServersList();
             }
         } catch (error) {
@@ -990,7 +1007,7 @@ class ProximityApp {
 
     saveServers() {
         try {
-            localStorage.setItem('proximity-servers', JSON.stringify(this.createdServers));
+            localStorage.setItem('proximity-servers', JSON.stringify(this.availableServers));
         } catch (error) {
             console.error('Error saving servers:', error);
         }
@@ -1202,10 +1219,9 @@ class ProximityApp {
                     isJoined: true
                 };
                 
-                // Add to createdServers array so it shows in the sidebar
-                const existingIndex = this.createdServers.findIndex(s => s.id === server.id);
-                if (existingIndex === -1) {
-                    this.createdServers.push(server);
+                // Add to availableServers array so it shows in the sidebar
+                if (!this.availableServers.find(s => s.id === server.id)) {
+                    this.availableServers.push(server);
                     this.saveServers();
                     this.updateServersList();
                 }
@@ -1966,6 +1982,340 @@ class ProximityApp {
                 }
             }, 300);
         }, 3000);
+    }
+
+    connectToServerDiscovery() {
+        if (typeof io === 'undefined') {
+            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
+            return;
+        }
+
+        console.log('Connecting to server discovery:', SERVER_URL);
+        this.updateConnectionStatus('connecting', 'Connecting...');
+        
+        this.socket = io(SERVER_URL, {
+            reconnectionAttempts: 5,
+            timeout: 10000,
+            transports: ['websocket', 'polling']
+        });
+
+        this.socket.on('connect', () => {
+            console.log('Connected to server discovery');
+            this.updateConnectionStatus('online', 'Connected');
+            this.showNotification('Connected to server', 'success');
+            
+            // Request available servers immediately
+            this.socket.emit('get-servers');
+        });
+
+        this.socket.on('servers-updated', (data) => {
+            console.log('Servers updated:', data.servers);
+            this.availableServers = data.servers || [];
+            this.updateAvailableServersList();
+        });
+
+        this.socket.on('server-created', (data) => {
+            console.log('Server created:', data);
+            if (data.success) {
+                this.showNotification(`Server "${data.server.name}" created successfully!`, 'success');
+            }
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('Disconnected from server discovery');
+            this.updateConnectionStatus('offline', 'Disconnected');
+            this.showNotification('Disconnected from server', 'warning');
+        });
+
+        this.socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+            this.updateConnectionStatus('offline', 'Error');
+            this.showNotification('Failed to connect to server. Server may be down.', 'error');
+        });
+
+        this.setupVoiceEventHandlers();
+    }
+
+    updateAvailableServersList() {
+        console.log('Updating available servers list:', this.availableServers);
+        
+        if (!this.availableServersList) {
+            console.error('Available servers list element not found');
+            return;
+        }
+
+        this.availableServersList.innerHTML = '';
+
+        if (this.availableServers.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.style.cssText = `
+                text-align: center;
+                color: var(--text-muted);
+                padding: 2rem;
+                font-style: italic;
+            `;
+            emptyMessage.textContent = 'No servers available. Create one to get started!';
+            this.availableServersList.appendChild(emptyMessage);
+            return;
+        }
+
+        this.availableServers.forEach(server => {
+            const serverCard = document.createElement('div');
+            serverCard.className = 'server-card';
+            
+            const isOwned = this.myServers.includes(server.id);
+            const isFavorited = this.favoriteServers.includes(server.id);
+            
+            if (isOwned) serverCard.classList.add('owned');
+            if (isFavorited) serverCard.classList.add('favorited');
+            
+            serverCard.onclick = () => this.joinServer(server);
+
+            let badges = '';
+            if (isOwned) badges += '<span class="server-badge owned">👑 Owner</span>';
+            if (isFavorited) badges += '<span class="server-badge favorited">⭐ Favorite</span>';
+
+            serverCard.innerHTML = `
+                <div class="server-card-badges">${badges}</div>
+                <div class="server-card-header">
+                    <h4 class="server-card-name">${server.name}</h4>
+                    <span class="server-card-users">${server.userCount || 0} users</span>
+                </div>
+                <p class="server-card-description">${server.description || 'No description'}</p>
+            `;
+
+            this.availableServersList.appendChild(serverCard);
+        });
+
+        // Update sidebar as well
+        this.updateSidebarServersList();
+    }
+
+    joinServer(server) {
+        console.log('Joining server:', server);
+        this.currentServer = server;
+        
+        this.clearChatMessages();
+        this.switchPage('server-view');
+        
+        if (this.currentServerNameElement) {
+            this.currentServerNameElement.textContent = server.name;
+        }
+        if (this.serverInviteDisplay) {
+            this.serverInviteDisplay.textContent = server.id;
+        }
+        
+        // Update favorite button
+        this.updateFavoriteButton();
+        
+        this.setupServerChannels(server);
+        this.switchToChannel('general', 'text');
+        
+        this.showNotification(`Joined server: ${server.name}`, 'success');
+    }
+
+    setupVoiceEventHandlers() {
+        this.socket.on('server-created', (data) => {
+            console.log('Server created:', data);
+            if (data.success) {
+                // Add to my servers list
+                if (!this.myServers.includes(data.server.id)) {
+                    this.myServers.push(data.server.id);
+                    this.saveServerData();
+                }
+                this.showNotification(`Server "${data.server.name}" created successfully!`, 'success');
+            }
+        });
+
+        this.socket.on('user-joined', ({ userId, username, userColor }) => {
+            console.log('User joined:', userId, username, userColor);
+            this.showNotification(`${username || 'Anonymous'} joined the channel`, 'info');
+            this.connectToNewUser(userId, username, userColor);
+        });
+
+        this.socket.on('room-users', (users) => {
+            console.log('Room users:', users);
+            users.forEach(({ userId, username, userColor }) => {
+                this.connectToNewUser(userId, username, userColor);
+            });
+        });
+
+        this.socket.on('user-left', ({ userId, username }) => {
+            console.log('User left:', userId, username);
+            this.showNotification(`${username || 'Anonymous'} left the channel`, 'info');
+            this.removePeerConnection(userId);
+            
+            if (this.proximityMap) {
+                this.proximityMap.removeUser(userId);
+            }
+        });
+
+        this.socket.on('position-update', ({ userId, x, y }) => {
+            if (this.proximityMap) {
+                this.proximityMap.updateRemoteUserPosition(userId, x, y);
+            }
+        });
+
+        this.socket.on('offer', async ({ offer, from }) => {
+            console.log('Received offer from:', from);
+            await this.handleOffer(offer, from);
+        });
+
+        this.socket.on('answer', async ({ answer, from }) => {
+            console.log('Received answer from:', from);
+            await this.handleAnswer(answer, from);
+        });
+
+        this.socket.on('ice-candidate', async ({ candidate, from }) => {
+            await this.handleIceCandidate(candidate, from);
+        });
+
+        this.socket.on('user-mic-status', ({ userId, isMuted }) => {
+            this.updateMicStatus(userId, isMuted);
+        });
+
+        this.socket.on('chat-message', (data) => {
+            console.log('Received chat message:', data);
+            this.addMessageToChat(data.username, data.message, data.timestamp);
+        });
+
+        this.socket.on('chat-message-sent', (data) => {
+            console.log('Chat message sent confirmation:', data);
+        });
+    }
+
+    updateFavoriteButton() {
+        if (!this.currentServer || !this.favoriteBtn) return;
+        
+        const isFavorited = this.favoriteServers.includes(this.currentServer.id);
+        const isOwned = this.myServers.includes(this.currentServer.id);
+        
+        if (isOwned) {
+            this.favoriteBtn.style.display = 'none';
+        } else {
+            this.favoriteBtn.style.display = 'inline-flex';
+            
+            if (isFavorited) {
+                this.favoriteBtn.innerHTML = '<span class="icon">⭐</span><span class="text">Unfavorite</span>';
+                this.favoriteBtn.classList.add('favorited');
+            } else {
+                this.favoriteBtn.innerHTML = '<span class="icon">☆</span><span class="text">Favorite</span>';
+                this.favoriteBtn.classList.remove('favorited');
+            }
+        }
+    }
+
+    toggleFavoriteServer() {
+        if (!this.currentServer) return;
+        
+        const serverId = this.currentServer.id;
+        const isFavorited = this.favoriteServers.includes(serverId);
+        
+        if (isFavorited) {
+            this.favoriteServers = this.favoriteServers.filter(id => id !== serverId);
+            this.showNotification(`Removed ${this.currentServer.name} from favorites`, 'info');
+        } else {
+            this.favoriteServers.push(serverId);
+            this.showNotification(`Added ${this.currentServer.name} to favorites`, 'success');
+        }
+        
+        this.saveServerData();
+        this.updateFavoriteButton();
+        this.updateAvailableServersList();
+    }
+
+    addServerToSidebar(server, type) {
+        const serverItem = document.createElement('div');
+        serverItem.className = 'server-item';
+        serverItem.onclick = () => this.joinServer(server);
+
+        const serverIcon = document.createElement('div');
+        serverIcon.className = 'server-icon';
+        serverIcon.textContent = server.name.charAt(0).toUpperCase();
+
+        const serverName = document.createElement('span');
+        serverName.textContent = server.name;
+        serverName.style.flex = '1';
+
+        const badge = document.createElement('span');
+        badge.style.fontSize = '0.8rem';
+        badge.style.marginLeft = '0.5rem';
+        if (type === 'owned') {
+            badge.textContent = '👑';
+            badge.title = 'Your server';
+        } else if (type === 'favorited') {
+            badge.textContent = '⭐';
+            badge.title = 'Favorited';
+        }
+
+        serverItem.appendChild(serverIcon);
+        serverItem.appendChild(serverName);
+        serverItem.appendChild(badge);
+
+        this.myServersList.appendChild(serverItem);
+    }
+
+    loadServerData() {
+        try {
+            const savedMyServers = localStorage.getItem('proximity-my-servers');
+            if (savedMyServers) {
+                this.myServers = JSON.parse(savedMyServers);
+            }
+            
+            const savedFavorites = localStorage.getItem('proximity-favorite-servers');
+            if (savedFavorites) {
+                this.favoriteServers = JSON.parse(savedFavorites);
+            }
+            
+            this.updateSidebarServersList();
+        } catch (error) {
+            console.error('Error loading server data:', error);
+        }
+    }
+
+    saveServerData() {
+        try {
+            localStorage.setItem('proximity-my-servers', JSON.stringify(this.myServers));
+            localStorage.setItem('proximity-favorite-servers', JSON.stringify(this.favoriteServers));
+        } catch (error) {
+            console.error('Error saving server data:', error);
+        }
+    }
+
+    updateSidebarServersList() {
+        if (!this.myServersList) return;
+
+        this.myServersList.innerHTML = '';
+
+        // Add "My Servers" section
+        if (this.myServers.length > 0) {
+            const myServersHeader = document.createElement('div');
+            myServersHeader.className = 'server-category-header';
+            myServersHeader.innerHTML = '<h4 style="color: var(--success); font-size: 0.8rem; margin-bottom: 0.5rem;">MY SERVERS</h4>';
+            this.myServersList.appendChild(myServersHeader);
+
+            this.myServers.forEach(serverId => {
+                const server = this.availableServers.find(s => s.id === serverId);
+                if (server) {
+                    this.addServerToSidebar(server, 'owned');
+                }
+            });
+        }
+
+        // Add "Favorite Servers" section
+        if (this.favoriteServers.length > 0) {
+            const favoritesHeader = document.createElement('div');
+            favoritesHeader.className = 'server-category-header';
+            favoritesHeader.innerHTML = '<h4 style="color: var(--warning); font-size: 0.8rem; margin: 1rem 0 0.5rem 0;">FAVORITES</h4>';
+            this.myServersList.appendChild(favoritesHeader);
+
+            this.favoriteServers.forEach(serverId => {
+                const server = this.availableServers.find(s => s.id === serverId);
+                if (server && !this.myServers.includes(serverId)) {
+                    this.addServerToSidebar(server, 'favorited');
+                }
+            });
+        }
     }
 }
 
