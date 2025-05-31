@@ -34,6 +34,18 @@ class ProximityApp {
             audioOutputDevice: ''
         };
 
+        // Emoji avatars matching each color
+        this.colorEmojis = {
+            blue: '🔵',
+            green: '🟢', 
+            purple: '🟣',
+            red: '🔴',
+            orange: '🟠',
+            pink: '🩷',
+            indigo: '💜',
+            cyan: '🔹'
+        };
+
         this.initializeUI();
         this.setupEventListeners();
         this.loadSettings();
@@ -53,6 +65,10 @@ class ProximityApp {
         // Navigation elements
         this.navItems = document.querySelectorAll('.nav-item');
         this.pages = document.querySelectorAll('.page');
+
+        // Home page buttons
+        this.homeCreateServerBtn = document.getElementById('homeCreateServerBtn');
+        this.homeJoinServerBtn = document.getElementById('homeJoinServerBtn');
 
         // Server elements
         this.createServerBtn = document.getElementById('createServerBtn');
@@ -101,6 +117,10 @@ class ProximityApp {
         // Mute button (exists in multiple places)
         this.muteButton = document.getElementById('muteButton');
         this.mapMuteButton = document.getElementById('mapMuteButton');
+        
+        // Leave channel buttons
+        this.leaveChannelBtn = document.getElementById('leaveChannelBtn');
+        this.leaveChannelServerBtn = document.getElementById('leaveChannelServerBtn');
 
         // Settings elements
         this.audioDeviceSelect = document.getElementById('audioDevice');
@@ -324,6 +344,15 @@ class ProximityApp {
             this.mapMuteButton.addEventListener('click', () => this.toggleMute());
         }
 
+        // Leave channel buttons
+        if (this.leaveChannelBtn) {
+            this.leaveChannelBtn.addEventListener('click', () => this.leaveVoiceChannel());
+        }
+
+        if (this.leaveChannelServerBtn) {
+            this.leaveChannelServerBtn.addEventListener('click', () => this.leaveVoiceChannel());
+        }
+
         // Proximity map controls
         if (this.proximitySlider) {
             this.proximitySlider.addEventListener('input', (e) => {
@@ -523,21 +552,13 @@ class ProximityApp {
             return;
         }
 
-        // For now, create a dummy server entry
-        const server = {
-            id: inviteCode,
-            name: `Server ${inviteCode}`,
-            description: 'Joined server',
-            channels: [
-                { id: 'general', name: 'general', type: 'text' },
-                { id: 'general-voice', name: 'General Voice', type: 'voice' }
-            ],
-            owner: 'Unknown',
-            isJoined: true
-        };
+        if (!this.socket || !this.socket.connected) {
+            this.showNotification('Not connected to server', 'error');
+            return;
+        }
 
-        this.selectServer(server);
-        this.hideJoinServerModal();
+        // Validate server code with the server
+        this.socket.emit('validate-server', { inviteCode });
     }
 
     deleteServer(serverId) {
@@ -639,6 +660,9 @@ class ProximityApp {
         // Do NOT disconnect from voice or server when clicking a server in the list
         this.currentServer = server;
         
+        // Clear chat messages when switching to a different server
+        this.clearChatMessages();
+        
         // Update UI to show server selection
         document.querySelectorAll('.server-item').forEach(item => {
             item.classList.remove('active');
@@ -735,11 +759,12 @@ class ProximityApp {
 
         console.log('Leaving voice channel...');
         
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket = null;
+        // Emit leave-voice-channel event to server instead of disconnecting completely
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('leave-voice-channel', { roomId: this.currentRoom });
         }
 
+        // Close all peer connections
         Object.values(this.peerConnections).forEach(pc => pc.close());
         this.peerConnections = {};
 
@@ -755,7 +780,7 @@ class ProximityApp {
             this.proximityMap.myUserId = null;
         }
 
-        // Clear participants list
+        // Clear participants list (voice participants only)
         if (this.participantsList) {
             this.participantsList.innerHTML = '';
         }
@@ -772,6 +797,11 @@ class ProximityApp {
                 button.classList.remove('muted');
             }
         });
+
+        // Switch back to text channel view if we were in voice
+        if (this.currentChannel && this.currentChannel.type === 'voice') {
+            this.switchToChannel('general', 'text');
+        }
         
         this.showNotification('Left voice channel', 'info');
         this.playSound('assets/LeaveNoise.mp3');
@@ -810,13 +840,57 @@ class ProximityApp {
     }
 
     leaveServer() {
-        // Leave voice channel first if connected
-        if (this.currentRoom) {
-            this.leaveVoiceChannel();
+        console.log('Leaving server completely...');
+        
+        // Disconnect from socket completely (this will handle both voice and server)
+        if (this.socket && this.socket.connected) {
+            this.socket.disconnect();
+            this.socket = null;
         }
 
+        // Close all peer connections
+        Object.values(this.peerConnections).forEach(pc => pc.close());
+        this.peerConnections = {};
+
+        // Clear proximity map and remove test bot if exists
+        if (this.proximityMap) {
+            if (this.proximityMap.testBotId) {
+                this.proximityMap.removeTestBot();
+                if (this.toggleTestBotBtn) {
+                    this.toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
+                }
+            }
+            this.proximityMap.users.clear();
+            this.proximityMap.myUserId = null;
+        }
+
+        // Clear participants list
+        if (this.participantsList) {
+            this.participantsList.innerHTML = '';
+        }
+
+        // Clear chat messages when leaving the server
+        this.clearChatMessages();
+
+        // Reset all state
         this.currentServer = null;
         this.currentChannel = null;
+        this.currentRoom = null;
+        this.myUserId = null;
+        this.isMuted = false;
+        this.isDeafened = false;
+        
+        // Reset mute buttons
+        [this.muteButton, this.mapMuteButton].forEach(button => {
+            if (button) {
+                button.querySelector('.text').textContent = 'Mute';
+                button.querySelector('.icon').textContent = '🎤';
+                button.classList.remove('muted');
+            }
+        });
+
+        // Update connection status
+        this.updateConnectionStatus('offline', 'Disconnected');
         
         // Switch back to home page
         this.switchPage('home');
@@ -828,7 +902,25 @@ class ProximityApp {
         const message = this.messageInput.value.trim();
         if (!message) return;
 
-        // Add message to chat
+        // Check if we're connected and in a room
+        if (!this.socket || !this.socket.connected) {
+            this.showNotification('Not connected to server', 'error');
+            return;
+        }
+
+        if (!this.currentRoom) {
+            this.showNotification('Join a voice channel first', 'warning');
+            return;
+        }
+
+        // Send message through socket
+        this.socket.emit('send-chat-message', {
+            roomId: this.currentRoom,
+            message: message,
+            username: this.settings.username || 'Anonymous'
+        });
+
+        // Add message to our own chat immediately
         this.addMessageToChat(this.settings.username || 'You', message);
         this.messageInput.value = '';
     }
@@ -862,6 +954,13 @@ class ProximityApp {
 
         this.chatMessages.appendChild(messageElement);
         this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    clearChatMessages() {
+        if (this.chatMessages) {
+            this.chatMessages.innerHTML = '';
+            console.log('Chat messages cleared');
+        }
     }
 
     loadServers() {
@@ -1055,10 +1154,11 @@ class ProximityApp {
             
             this.socket.emit('join-room', {
                 roomId: roomId,
-                username: this.settings.username || 'Anonymous'
+                username: this.settings.username || 'Anonymous',
+                userColor: this.settings.userColor || 'purple'
             });
             
-            this.addParticipant(this.myUserId, this.micInput.getStream(), true);
+            this.addParticipant(this.myUserId, this.micInput.getStream(), true, this.settings.username || 'You', this.settings.userColor || 'purple');
             
             if (this.proximityMap) {
                 this.proximityMap.addUser(this.myUserId, this.settings.username || 'You', true);
@@ -1066,16 +1166,16 @@ class ProximityApp {
             }
         });
 
-        this.socket.on('user-joined', ({ userId, username }) => {
-            console.log('User joined:', userId, username);
+        this.socket.on('user-joined', ({ userId, username, userColor }) => {
+            console.log('User joined:', userId, username, userColor);
             this.showNotification(`${username || 'Anonymous'} joined the channel`, 'info');
-            this.connectToNewUser(userId, username);
+            this.connectToNewUser(userId, username, userColor);
         });
 
         this.socket.on('room-users', (users) => {
             console.log('Room users:', users);
-            users.forEach(({ userId, username }) => {
-                this.connectToNewUser(userId, username);
+            users.forEach(({ userId, username, userColor }) => {
+                this.connectToNewUser(userId, username, userColor);
             });
         });
 
@@ -1124,6 +1224,48 @@ class ProximityApp {
             this.updateConnectionStatus('offline', 'Error');
             this.showNotification('Failed to connect to server. Server may be down.', 'error');
         });
+
+        // Handle server validation response
+        this.socket.on('server-validated', (data) => {
+            if (data.valid) {
+                console.log('Server validated successfully:', data.server);
+                
+                // Clear chat messages when joining a new server
+                this.clearChatMessages();
+                
+                // Add server to joined servers list and show it in the left sidebar
+                const server = {
+                    ...data.server,
+                    isJoined: true
+                };
+                
+                // Add to createdServers array so it shows in the sidebar
+                const existingIndex = this.createdServers.findIndex(s => s.id === server.id);
+                if (existingIndex === -1) {
+                    this.createdServers.push(server);
+                    this.saveServers();
+                    this.updateServersList();
+                }
+                
+                this.selectServer(server);
+                this.hideJoinServerModal();
+                this.showNotification(`Successfully joined server: ${server.name}`, 'success');
+            } else {
+                console.log('Server validation failed:', data.error);
+                this.showNotification(data.error || 'Invalid invite code', 'error');
+            }
+        });
+
+        // Handle incoming chat messages
+        this.socket.on('chat-message', (data) => {
+            console.log('Received chat message:', data);
+            this.addMessageToChat(data.username, data.message, data.timestamp);
+        });
+
+        // Handle chat message sent confirmation
+        this.socket.on('chat-message-sent', (data) => {
+            console.log('Chat message sent confirmation:', data);
+        });
     }
 
     // Helper to get color for a remote user (future: sync from server)
@@ -1132,8 +1274,13 @@ class ProximityApp {
         return 'blue';
     }
 
-    async connectToNewUser(userId, username = null) {
-        console.log('=== CONNECTING TO NEW USER ===', userId, username);
+    // Get emoji avatar for a user color
+    getUserEmoji(color) {
+        return this.colorEmojis[color] || this.colorEmojis['purple'];
+    }
+
+    async connectToNewUser(userId, username = null, userColor = 'blue') {
+        console.log('=== CONNECTING TO NEW USER ===', userId, username, userColor);
         const peerConnection = new RTCPeerConnection({
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
@@ -1152,13 +1299,12 @@ class ProximityApp {
             console.log('=== RECEIVED REMOTE STREAM ===', userId, username);
             const remoteStream = event.streams[0];
             
-            this.addParticipant(userId, remoteStream, false, username);
+            this.addParticipant(userId, remoteStream, false, username, userColor);
             
             if (this.proximityMap) {
                 const audioElement = this.getAudioElementForUser(userId);
-                const color = this.getRemoteUserColor(userId);
                 this.proximityMap.addUser(userId, username || `User ${userId.slice(0, 4)}`, false, audioElement);
-                this.proximityMap.updateUserColor(userId, color);
+                this.proximityMap.updateUserColor(userId, userColor);
             }
         };
 
@@ -1449,7 +1595,7 @@ class ProximityApp {
         }
     }
 
-    addParticipant(userId, stream, isSelf = false, username = null) {
+    addParticipant(userId, stream, isSelf = false, username = null, userColor = 'blue') {
         const existingParticipant = document.getElementById(`participant-${userId}`);
         if (existingParticipant) {
             return;
@@ -1463,22 +1609,34 @@ class ProximityApp {
         micStatus.className = 'mic-status';
         micStatus.classList.add(this.isMuted && isSelf ? 'muted' : 'active');
         
+        // Add emoji avatar
+        const avatar = document.createElement('span');
+        avatar.className = 'participant-avatar';
+        avatar.style.marginRight = '8px';
+        avatar.style.fontSize = '16px';
+        
         const name = document.createElement('span');
         let displayName;
+        let displayColor;
         
         if (isSelf) {
             displayName = this.settings.username || 'You';
-            name.classList.add(this.getUserColorClass(this.settings.userColor));
+            displayColor = this.settings.userColor || 'purple';
+            name.classList.add(this.getUserColorClass(displayColor));
         } else {
             displayName = username || `User ${userId.slice(0, 4)}`;
-            // For now, give other users a default color (could be expanded to sync colors)
-            name.classList.add('user-color-blue');
+            displayColor = userColor || 'blue';
+            name.classList.add(this.getUserColorClass(displayColor));
         }
+        
+        // Set emoji avatar based on color
+        avatar.textContent = this.getUserEmoji(displayColor);
         
         name.textContent = displayName;
         name.style.fontWeight = isSelf ? 'bold' : 'normal';
         
         participant.appendChild(micStatus);
+        participant.appendChild(avatar);
         participant.appendChild(name);
         
         if (!isSelf && stream) {

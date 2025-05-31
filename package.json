@@ -42,7 +42,7 @@
       "assets/**/*"
     ],
     "win": {
-      "icon": "assets/Proximity Logo.ico",
+      "icon": "assets/icon.ico",
       "target": [
         {
           "target": "nsis",

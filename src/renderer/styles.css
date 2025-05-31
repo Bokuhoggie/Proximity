@@ -961,6 +961,30 @@ body {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
+.btn.warning {
+    background: var(--warning);
+    color: var(--text-primary);
+}
+
+.btn.warning:hover {
+    background: #b45309;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.leave-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.leave-buttons .btn {
+    width: 100%;
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
 .btn:disabled {
     background: var(--text-muted);
     cursor: not-allowed;
