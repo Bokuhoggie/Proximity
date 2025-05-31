@@ -35,6 +35,98 @@
         .color-pink { background: #ec4899; }
         .color-indigo { background: #6366f1; }
         .color-cyan { background: #06b6d4; }
+
+        /* Fixed server info styling */
+        .server-info {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .server-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .server-info-text {
+            flex: 1;
+        }
+
+        .server-info-text h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .server-invite {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .server-invite code {
+            background: var(--dark-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--light-purple);
+        }
+
+        .server-info-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--light-purple);
+        }
+
+        .favorite-btn {
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            background: var(--secondary-purple);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .favorite-btn:hover {
+            background: var(--primary-purple);
+            transform: translateY(-1px);
+        }
+
+        .favorite-btn.favorited {
+            background: var(--warning);
+            color: white;
+        }
+
+        .favorite-btn.favorited:hover {
+            background: #d97706;
+        }
     </style>
 </head>
 <body>
@@ -108,9 +200,18 @@
                     <!-- Server Sidebar -->
                     <div class="server-sidebar">
                         <div class="server-info">
-                            <h3 id="currentServerName">Server Name</h3>
-                            <div class="server-invite" style="display: none;">
-                                <!-- Removed invite code display -->
+                            <div class="server-info-header">
+                                <div class="server-info-text">
+                                    <h3 id="currentServerName">Server Name</h3>
+                                    <div class="server-invite">
+                                        <span>Invite Code:</span>
+                                        <code id="serverInviteDisplay">ABC123</code>
+                                        <button id="copyInviteBtn" class="copy-btn" title="Copy invite code">📋</button>
+                                    </div>
+                                </div>
+                                <div class="server-info-actions">
+                                    <!-- Favorite button will be added here by JavaScript -->
+                                </div>
                             </div>
                         </div>
                         
@@ -378,37 +479,6 @@
         </main>
     </div>
 
-    <!-- Create/Join Server Modal -->
-    <div id="createJoinModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>What would you like to do?</h3>
-                <span class="modal-close" id="createJoinClose">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="server-options">
-                    <button id="createNewServerBtn" class="server-option-btn">
-                        <div class="option-icon">➕</div>
-                        <div class="option-content">
-                            <h4>Create a Server</h4>
-                            <p>Start your own community with custom channels and settings</p>
-                        </div>
-                        <div class="option-arrow">→</div>
-                    </button>
-                    
-                    <button id="joinExistingServerBtn" class="server-option-btn">
-                        <div class="option-icon">🔗</div>
-                        <div class="option-content">
-                            <h4>Join a Server</h4>
-                            <p>Connect to an existing community using an invite code</p>
-                        </div>
-                        <div class="option-arrow">→</div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Create Server Modal -->
     <div id="createServerModal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -429,26 +499,6 @@
             <div class="modal-footer">
                 <button id="cancelCreateServer" class="btn secondary">Cancel</button>
                 <button id="confirmCreateServer" class="btn primary">Create Server</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join Server Modal -->
-    <div id="joinServerModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Join Server</h3>
-                <span class="modal-close" id="joinModalClose">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="setting-item">
-                    <label for="serverInviteCode">Server Invite Code</label>
-                    <input type="text" id="serverInviteCode" placeholder="Enter invite code (e.g. ABC123)" class="setting-input">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelJoinServer" class="btn secondary">Cancel</button>
-                <button id="confirmJoinServer" class="btn primary">Join Server</button>
             </div>
         </div>
     </div>
