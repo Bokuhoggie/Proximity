@@ -46,6 +46,10 @@ class ProximityApp {
     initializeUI() {
         console.log('Initializing UI...');
         
+        // Connection status elements
+        this.connectionIndicator = document.getElementById('connectionIndicator');
+        this.connectionText = document.getElementById('connectionText');
+        
         // Navigation elements
         this.navItems = document.querySelectorAll('.nav-item');
         this.pages = document.querySelectorAll('.page');
@@ -92,6 +96,7 @@ class ProximityApp {
         this.proximitySlider = document.getElementById('proximitySlider');
         this.proximityRangeDisplay = document.getElementById('proximityRange');
         this.centerMapBtn = document.getElementById('centerMapBtn');
+        this.toggleTestBotBtn = document.getElementById('toggleTestBot');
 
         // Mute button (exists in multiple places)
         this.muteButton = document.getElementById('muteButton');
@@ -337,6 +342,25 @@ class ProximityApp {
                 }
             });
         }
+        
+        // Test bot toggle button
+        if (this.toggleTestBotBtn) {
+            this.toggleTestBotBtn.addEventListener('click', () => {
+                if (this.proximityMap) {
+                    if (this.proximityMap.testBotId) {
+                        // Remove test bot
+                        this.proximityMap.removeTestBot();
+                        this.toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
+                        this.showNotification('Test bot removed', 'info');
+                    } else {
+                        // Add test bot
+                        this.proximityMap.addTestBot();
+                        this.toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
+                        this.showNotification('Test bot added - move around to test proximity!', 'success');
+                    }
+                }
+            });
+        }
 
         // Settings controls
         if (this.audioDeviceSelect) {
@@ -369,6 +393,9 @@ class ProximityApp {
         this.userColorPicker.forEach(colorOption => {
             colorOption.addEventListener('click', (e) => {
                 const selectedColor = e.target.dataset.color;
+                // Remove 'selected' from all, add to clicked
+                this.userColorPicker.forEach(opt => opt.classList.remove('selected'));
+                colorOption.classList.add('selected');
                 this.setUserColor(selectedColor);
             });
         });
@@ -609,6 +636,7 @@ class ProximityApp {
 
     selectServer(server) {
         console.log('Selecting server:', server);
+        // Do NOT disconnect from voice or server when clicking a server in the list
         this.currentServer = server;
         
         // Update UI to show server selection
@@ -673,33 +701,25 @@ class ProximityApp {
 
     switchToChannel(channelId, channelType) {
         console.log('Switching to channel:', channelId, channelType);
-        
         this.currentChannel = { id: channelId, type: channelType };
-        
         // Update active channel
         document.querySelectorAll('.channel-item').forEach(item => {
             item.classList.remove('active');
         });
-        
         const activeChannel = document.querySelector(`[data-channel-id="${channelId}"]`);
         if (activeChannel) {
             activeChannel.classList.add('active');
         }
-        
         // Show appropriate content view
         document.querySelectorAll('.content-view').forEach(view => {
             view.classList.remove('active');
         });
-        
         if (channelType === 'text') {
             const textView = document.getElementById('text-chat-view');
             if (textView) {
                 textView.classList.add('active');
             }
-            // Leave voice channel if switching to text
-            if (this.currentRoom) {
-                this.leaveVoiceChannel();
-            }
+            // Do NOT leave voice channel automatically
         } else if (channelType === 'voice') {
             const voiceView = document.getElementById('voice-channel-view');
             if (voiceView) {
@@ -723,8 +743,14 @@ class ProximityApp {
         Object.values(this.peerConnections).forEach(pc => pc.close());
         this.peerConnections = {};
 
-        // Clear proximity map
+        // Clear proximity map and remove test bot if exists
         if (this.proximityMap) {
+            if (this.proximityMap.testBotId) {
+                this.proximityMap.removeTestBot();
+                if (this.toggleTestBotBtn) {
+                    this.toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
+                }
+            }
             this.proximityMap.users.clear();
             this.proximityMap.myUserId = null;
         }
@@ -908,16 +934,18 @@ class ProximityApp {
     setUserColor(color) {
         this.settings.userColor = color;
         this.saveSettings();
-        
         // Update color picker UI
         this.userColorPicker.forEach(option => {
             option.classList.remove('selected');
         });
-        document.querySelector(`[data-color="${color}"]`).classList.add('selected');
-        
-        // Update participant display
+        const selectedOption = document.querySelector(`[data-color="${color}"]`);
+        if (selectedOption) selectedOption.classList.add('selected');
+        // Update participant display color immediately
         this.updateParticipantName();
-        
+        // Update map icon color
+        if (this.proximityMap && this.myUserId) {
+            this.proximityMap.updateUserColor(this.myUserId, color);
+        }
         this.showNotification(`User color changed to ${color}`, 'success');
     }
 
@@ -936,6 +964,14 @@ class ProximityApp {
             if (nameSpan) {
                 nameSpan.textContent = this.settings.username || 'You';
             }
+            // Remove all user-color-* classes
+            selfParticipant.className = selfParticipant.className.replace(/user-color-\w+/g, '').trim();
+            // Add the current color class
+            selfParticipant.classList.add('user-color-' + this.settings.userColor);
+        }
+        // Update map icon color if needed
+        if (this.proximityMap && this.myUserId) {
+            this.proximityMap.updateUserColor(this.myUserId, this.settings.userColor);
         }
     }
 
@@ -948,14 +984,12 @@ class ProximityApp {
         } catch (error) {
             console.error('Error loading settings:', error);
         }
-
         if (this.usernameInput) this.usernameInput.value = this.settings.username;
         if (this.audioGainSlider) this.audioGainSlider.value = this.settings.audioGain;
         if (this.noiseSupressionCheck) this.noiseSupressionCheck.checked = this.settings.noiseSupression;
         if (this.echoCancellationCheck) this.echoCancellationCheck.checked = this.settings.echoCancellation;
         if (this.autoJoinCheck) this.autoJoinCheck.checked = this.settings.autoJoin;
         if (this.audioOutputDeviceSelect) this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice || '';
-
         // Load user color
         this.userColorPicker.forEach(option => {
             option.classList.remove('selected');
@@ -964,10 +998,13 @@ class ProximityApp {
         if (selectedColorOption) {
             selectedColorOption.classList.add('selected');
         }
-
         const valueDisplay = document.querySelector('.slider-value');
         if (valueDisplay) {
             valueDisplay.textContent = `${this.settings.audioGain}%`;
+        }
+        // Set gain after loading settings
+        if (this.micInput && typeof this.micInput.setGain === 'function') {
+            this.micInput.setGain(this.settings.audioGain);
         }
     }
 
@@ -997,12 +1034,24 @@ class ProximityApp {
             this.socket = null;
         }
 
-        console.log('Connecting to signaling server...');
-        this.socket = io(SERVER_URL);
+        console.log('Connecting to signaling server:', SERVER_URL);
+        this.showNotification(`Connecting to server...`, 'info');
+        
+        // Update connection status
+        this.updateConnectionStatus('connecting', 'Connecting...');
+        
+        this.socket = io(SERVER_URL, {
+            reconnectionAttempts: 5,
+            timeout: 10000,
+            transports: ['websocket', 'polling']
+        });
 
         this.socket.on('connect', () => {
             console.log('Connected to signaling server');
             this.myUserId = this.socket.id;
+            
+            // Update connection status
+            this.updateConnectionStatus('online', 'Connected');
             
             this.socket.emit('join-room', {
                 roomId: roomId,
@@ -1013,6 +1062,7 @@ class ProximityApp {
             
             if (this.proximityMap) {
                 this.proximityMap.addUser(this.myUserId, this.settings.username || 'You', true);
+                this.proximityMap.updateUserColor(this.myUserId, this.settings.userColor || 'purple');
             }
         });
 
@@ -1065,12 +1115,21 @@ class ProximityApp {
 
         this.socket.on('disconnect', () => {
             console.log('Disconnected from signaling server');
+            this.updateConnectionStatus('offline', 'Disconnected');
+            this.showNotification('Disconnected from server', 'warning');
         });
 
         this.socket.on('connect_error', (error) => {
             console.error('Connection error:', error);
+            this.updateConnectionStatus('offline', 'Error');
             this.showNotification('Failed to connect to server. Server may be down.', 'error');
         });
+    }
+
+    // Helper to get color for a remote user (future: sync from server)
+    getRemoteUserColor(userId) {
+        // TODO: In the future, get color from server/user profile
+        return 'blue';
     }
 
     async connectToNewUser(userId, username = null) {
@@ -1097,7 +1156,9 @@ class ProximityApp {
             
             if (this.proximityMap) {
                 const audioElement = this.getAudioElementForUser(userId);
+                const color = this.getRemoteUserColor(userId);
                 this.proximityMap.addUser(userId, username || `User ${userId.slice(0, 4)}`, false, audioElement);
+                this.proximityMap.updateUserColor(userId, color);
             }
         };
 
@@ -1271,6 +1332,23 @@ class ProximityApp {
         }
     }
 
+    // Attach mic volume callback for map glow and activity
+    attachMicVolumeCallback() {
+        this.micInput.addVolumeCallback((volume, frequencyData) => {
+            this.updateMicrophoneGlow(this.myUserId || 'self', volume);
+            if (this.proximityMap && this.myUserId) {
+                if (volume > 10) {
+                    this.proximityMap.setUserActivity(this.myUserId, true);
+                    setTimeout(() => {
+                        if (this.proximityMap) {
+                            this.proximityMap.setUserActivity(this.myUserId, false);
+                        }
+                    }, 200);
+                }
+            }
+        });
+    }
+
     async initializeMedia() {
         try {
             console.log('Requesting microphone access...');
@@ -1286,20 +1364,7 @@ class ProximityApp {
             console.log('Microphone access granted');
             
             await this.populateAudioDevices();
-            
-            this.micInput.addVolumeCallback((volume, frequencyData) => {
-                this.updateMicrophoneGlow(this.myUserId || 'self', volume);
-                
-                if (this.proximityMap && volume > 10) {
-                    this.proximityMap.setUserActivity(this.myUserId, true);
-                    setTimeout(() => {
-                        if (this.proximityMap) {
-                            this.proximityMap.setUserActivity(this.myUserId, false);
-                        }
-                    }, 200);
-                }
-            });
-            
+            this.attachMicVolumeCallback();
         } catch (error) {
             console.error('Error accessing media devices:', error);
             if (error.name === 'NotAllowedError') {
@@ -1315,18 +1380,32 @@ class ProximityApp {
     updateMicrophoneGlow(userId, volume) {
         const participant = document.getElementById(`participant-${userId}`);
         if (participant) {
+            if (userId === (this.myUserId || 'self')) {
+                participant.className = participant.className.replace(/user-color-\w+/g, '').trim();
+                participant.classList.add('user-color-' + this.settings.userColor);
+            }
             const micStatus = participant.querySelector('.mic-status');
             if (micStatus && !this.isMuted) {
-                const intensity = Math.min(volume / 50, 1);
-                const glowSize = 4 + (intensity * 12);
-                const glowOpacity = 0.3 + (intensity * 0.5);
-                
-                micStatus.style.setProperty('--glow-size', `${glowSize}px`);
-                micStatus.style.setProperty('--glow-color', `rgba(16, 185, 129, ${glowOpacity})`);
+                // Color gradient: green (0) -> yellow (50) -> red (100)
+                let r, g, b;
+                if (volume < 50) {
+                    // Green to yellow
+                    r = Math.round(245 * (volume / 50));
+                    g = 185;
+                    b = 11;
+                } else {
+                    // Yellow to red
+                    r = 245;
+                    g = Math.round(185 - (185 - 68) * ((volume - 50) / 50));
+                    b = 11;
+                }
+                const glowColor = `rgba(${r},${g},${b},${Math.max(0.3, volume / 100)})`;
+                const glowSize = 8 + (volume * 0.4); // up to 48px
+                micStatus.style.boxShadow = `0 0 ${glowSize}px ${glowColor}`;
                 micStatus.classList.add('glowing');
-                
                 if (volume < 5) {
                     micStatus.classList.remove('glowing');
+                    micStatus.style.boxShadow = '';
                 }
             }
         }
@@ -1504,16 +1583,11 @@ class ProximityApp {
                     }
                 });
             }
-            
-            this.micInput.addVolumeCallback((volume, frequencyData) => {
-                this.updateMicrophoneGlow(this.myUserId || 'self', volume);
-            });
-
+            this.attachMicVolumeCallback();
             if (this.persistentVisualizerActive) {
                 this.stopPersistentVisualizer();
                 this.startPersistentVisualizer();
             }
-            
             this.showNotification('Audio device changed successfully', 'success');
         } catch (error) {
             console.error('Error changing audio device:', error);
@@ -1529,6 +1603,9 @@ class ProximityApp {
     updateAudioGain(value) {
         this.settings.audioGain = parseInt(value);
         this.saveSettings();
+        if (this.micInput && typeof this.micInput.setGain === 'function') {
+            this.micInput.setGain(this.settings.audioGain);
+        }
     }
 
     async testMicrophone() {
@@ -1599,6 +1676,19 @@ class ProximityApp {
         }
     }
 
+    updateConnectionStatus(status, text) {
+        if (!this.connectionIndicator || !this.connectionText) return;
+        
+        // Clear all existing classes
+        this.connectionIndicator.classList.remove('online', 'offline', 'connecting');
+        
+        // Add the new status class
+        this.connectionIndicator.classList.add(status);
+        this.connectionText.textContent = text;
+        
+        console.log(`Connection status changed to: ${status} (${text})`);
+    }
+    
     showNotification(message, type = 'info') {
         console.log(`Notification [${type}]: ${message}`);
         

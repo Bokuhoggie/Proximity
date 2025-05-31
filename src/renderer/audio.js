@@ -30,6 +30,22 @@ class AudioVisualizer {
         }
     }
 
+    async initializeFromNode(node) {
+        try {
+            this.audioContext = node.context;
+            this.analyser = this.audioContext.createAnalyser();
+            this.analyser.fftSize = 256;
+            this.analyser.smoothingTimeConstant = 0.8;
+            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            node.connect(this.analyser);
+            this.isActive = true;
+            this.startAnalyzing();
+            console.log('Audio visualizer initialized from node');
+        } catch (error) {
+            console.error('Error initializing audio visualizer from node:', error);
+        }
+    }
+
     startAnalyzing() {
         if (!this.isActive) return;
         
@@ -67,6 +83,8 @@ class MicrophoneInput {
         this.stream = null;
         this.visualizer = null;
         this.isRecording = false;
+        this.gainNode = null;
+        this.gainValue = 1.0;
         this.constraints = {
             audio: {
                 echoCancellation: true,
@@ -79,17 +97,33 @@ class MicrophoneInput {
 
     async initialize(constraints = {}) {
         this.constraints = { ...this.constraints, ...constraints };
-        
         try {
             this.stream = await navigator.mediaDevices.getUserMedia(this.constraints);
+            // Setup audio context and gain node
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.gainNode = this.audioContext.createGain();
+            // Set initial gain
+            this.setGain((window.proximityApp && window.proximityApp.settings && window.proximityApp.settings.audioGain) || 50);
+            // Connect mic to gain node
+            this.micSource = this.audioContext.createMediaStreamSource(this.stream);
+            this.micSource.connect(this.gainNode);
+            // For visualizer, use the gain node output
             this.visualizer = new AudioVisualizer();
-            await this.visualizer.initialize(this.stream);
+            await this.visualizer.initializeFromNode(this.gainNode);
             this.isRecording = true;
-            console.log('Microphone input initialized');
+            console.log('Microphone input initialized with gain');
             return this.stream;
         } catch (error) {
             console.error('Error initializing microphone:', error);
             throw error;
+        }
+    }
+
+    setGain(value) {
+        // value: 0-100, map to 0-2
+        this.gainValue = Math.max(0, Math.min(2, value / 50));
+        if (this.gainNode) {
+            this.gainNode.gain.value = this.gainValue;
         }
     }
 

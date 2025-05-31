@@ -6,6 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .user-color-picker {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+        .color-option.selected,
+        .color-option:focus {
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--border, #a0aec0);
+        }
+        .color-blue { background: #3b82f6; }
+        .color-green { background: #10b981; }
+        .color-purple { background: #8b5cf6; }
+        .color-red { background: #ef4444; }
+        .color-orange { background: #f59e0b; }
+        .color-pink { background: #ec4899; }
+        .color-indigo { background: #6366f1; }
+        .color-cyan { background: #06b6d4; }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -13,6 +43,10 @@
         <nav class="sidebar">
             <div class="sidebar-header">
                 <h1 class="logo">PROXIMITY</h1>
+                <div class="connection-status">
+                    <span id="connectionIndicator" class="status-indicator offline"></span>
+                    <span id="connectionText">Offline</span>
+                </div>
             </div>
             <div class="nav-items">
                 <div class="nav-item active" data-page="home">
@@ -54,14 +88,13 @@
                         </div>
                         
                         <div class="home-actions">
-                            <button id="homeCreateServerBtn" class="home-action-btn primary">
-                                <div class="action-icon">➕</div>
-                                <span>Create Server</span>
+                            <button id="homeCreateServerBtn" class="home-action-btn create">
+                                <span class="action-icon">➕</span>
+                                <span class="action-text">Create Server</span>
                             </button>
-                            
-                            <button id="homeJoinServerBtn" class="home-action-btn secondary">
-                                <div class="action-icon">🔗</div>
-                                <span>Join Server</span>
+                            <button id="homeJoinServerBtn" class="home-action-btn join">
+                                <span class="action-icon">🔗</span>
+                                <span class="action-text">Join Server</span>
                             </button>
                         </div>
                         
@@ -162,6 +195,15 @@
                 <header class="page-header">
                     <h2>Channel Map</h2>
                     <p>Move around to adjust voice proximity with other users</p>
+                    <div class="map-instructions">
+                        <ul>
+                            <li>Drag your user icon to move around the map</li>
+                            <li>Users closer to you will sound louder</li>
+                            <li>The dashed circle shows your proximity range</li>
+                            <li>Use the slider to adjust your proximity range</li>
+                            <li>Test with the bot button to verify your audio works</li>
+                        </ul>
+                    </div>
                 </header>
                 
                 <div class="map-section">
@@ -179,6 +221,10 @@
                                 <button id="mapMuteButton" class="control-button">
                                     <span class="icon">🎤</span>
                                     <span class="text">Mute</span>
+                                </button>
+                                <button id="toggleTestBot" class="btn secondary">
+                                    <span class="icon">🤖</span>
+                                    <span class="text">Add Test Bot</span>
                                 </button>
                             </div>
                         </div>
@@ -288,14 +334,14 @@
                         <div class="setting-item">
                             <label>User Color</label>
                             <div class="user-color-picker">
-                                <div class="color-option color-blue" data-color="blue"></div>
-                                <div class="color-option color-green" data-color="green"></div>
-                                <div class="color-option color-purple selected" data-color="purple"></div>
-                                <div class="color-option color-red" data-color="red"></div>
-                                <div class="color-option color-orange" data-color="orange"></div>
-                                <div class="color-option color-pink" data-color="pink"></div>
-                                <div class="color-option color-indigo" data-color="indigo"></div>
-                                <div class="color-option color-cyan" data-color="cyan"></div>
+                                <button type="button" class="color-option color-blue" data-color="blue" aria-label="Blue"></button>
+                                <button type="button" class="color-option color-green" data-color="green" aria-label="Green"></button>
+                                <button type="button" class="color-option color-purple selected" data-color="purple" aria-label="Purple"></button>
+                                <button type="button" class="color-option color-red" data-color="red" aria-label="Red"></button>
+                                <button type="button" class="color-option color-orange" data-color="orange" aria-label="Orange"></button>
+                                <button type="button" class="color-option color-pink" data-color="pink" aria-label="Pink"></button>
+                                <button type="button" class="color-option color-indigo" data-color="indigo" aria-label="Indigo"></button>
+                                <button type="button" class="color-option color-cyan" data-color="cyan" aria-label="Cyan"></button>
                             </div>
                         </div>
 
