@@ -1,10 +1,10 @@
-# Wannabe
+# Proximity
 
 A project by Bokuhoggie.
 
 ## Description
 
-This repository contains the Wannabe project.
+This repository contains the Proximity project.
 
 ## Getting Started
 
