@@ -28,5 +28,51 @@
     "webrtc-adapter": "^8.2.3",
     "express": "^4.18.2",
     "socket.io": "^4.7.2"
+  },
+  "build": {
+    "appId": "com.bokuhoggie.proximity",
+    "productName": "Proximity",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/main/**/*",
+      "src/renderer/**/*",
+      "node_modules/**/*",
+      "assets/**/*"
+    ],
+    "icon": "assets/Proximity Logo.ico",
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "assets/Proximity Logo.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
+    "win": {
+      "icon": "assets/Proximity Logo.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "assets/Proximity Logo.png",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 } 

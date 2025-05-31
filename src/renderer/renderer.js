@@ -481,7 +481,6 @@ class ProximityApp {
     }
 
     connectToSignalingServer(roomId) {
-        // Check if Socket.IO is available
         if (typeof io === 'undefined') {
             this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
             return;
@@ -493,20 +492,33 @@ class ProximityApp {
         this.socket.on('connect', () => {
             console.log('Connected to signaling server');
             this.myUserId = this.socket.id;
-            this.socket.emit('join-room', roomId);
+            
+            // Send username when joining room
+            this.socket.emit('join-room', {
+                roomId: roomId,
+                username: this.settings.username || 'Anonymous'
+            });
+            
             this.addParticipant(this.myUserId, this.micInput.getStream(), true);
         });
 
-        this.socket.on('user-joined', (userId) => {
-            console.log('User joined:', userId);
-            this.connectToNewUser(userId);
+        this.socket.on('user-joined', ({ userId, username }) => {
+            console.log('User joined:', userId, username);
+            this.showNotification(`${username || 'Anonymous'} joined the room`, 'info');
+            this.connectToNewUser(userId, username);
         });
 
         this.socket.on('room-users', (users) => {
             console.log('Room users:', users);
-            users.forEach(userId => {
-                this.connectToNewUser(userId);
+            users.forEach(({ userId, username }) => {
+                this.connectToNewUser(userId, username);
             });
+        });
+
+        this.socket.on('user-left', ({ userId, username }) => {
+            console.log('User left:', userId, username);
+            this.showNotification(`${username || 'Anonymous'} left the room`, 'info');
+            this.removePeerConnection(userId);
         });
 
         this.socket.on('offer', async ({ offer, from }) => {
@@ -523,11 +535,6 @@ class ProximityApp {
             await this.handleIceCandidate(candidate, from);
         });
 
-        this.socket.on('user-left', (userId) => {
-            console.log('User left:', userId);
-            this.removePeerConnection(userId);
-        });
-
         this.socket.on('user-mic-status', ({ userId, isMuted }) => {
             this.updateMicStatus(userId, isMuted);
         });
@@ -542,20 +549,52 @@ class ProximityApp {
         });
     }
 
-    async connectToNewUser(userId) {
+    async connectToNewUser(userId, username = null) {
+        console.log('=== CONNECTING TO NEW USER ===', userId, username);
         const peerConnection = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
         });
 
         this.peerConnections[userId] = peerConnection;
 
-        this.micInput.getStream().getTracks().forEach(track => {
+        // ADD DEBUGGING EVENTS
+        peerConnection.onconnectionstatechange = () => {
+            console.log(`Connection state with ${userId}:`, peerConnection.connectionState);
+        };
+
+        peerConnection.oniceconnectionstatechange = () => {
+            console.log(`ICE connection state with ${userId}:`, peerConnection.iceConnectionState);
+        };
+
+        peerConnection.onsignalingstatechange = () => {
+            console.log(`Signaling state with ${userId}:`, peerConnection.signalingState);
+        };
+
+        // Check if we have audio tracks
+        const tracks = this.micInput.getStream().getTracks();
+        console.log('Local audio tracks:', tracks);
+        
+        tracks.forEach(track => {
+            console.log('Adding track:', track.kind, track.enabled, track.readyState);
             peerConnection.addTrack(track, this.micInput.getStream());
         });
 
         peerConnection.ontrack = (event) => {
-            console.log('Received remote stream from:', userId);
-            this.addParticipant(userId, event.streams[0], false);
+            console.log('=== RECEIVED REMOTE STREAM ===', userId, username);
+            console.log('Remote tracks:', event.streams[0].getTracks());
+            
+            const remoteStream = event.streams[0];
+            const audioTracks = remoteStream.getAudioTracks();
+            
+            console.log('Remote audio tracks:', audioTracks);
+            audioTracks.forEach(track => {
+                console.log('Remote track:', track.kind, track.enabled, track.readyState);
+            });
+            
+            this.addParticipant(userId, remoteStream, false, username);
         };
 
         peerConnection.onicecandidate = (event) => {
@@ -753,7 +792,7 @@ class ProximityApp {
         }
     }
 
-    addParticipant(userId, stream, isSelf = false) {
+    addParticipant(userId, stream, isSelf = false, username = null) {
         const existingParticipant = document.getElementById(`participant-${userId}`);
         if (existingParticipant) {
             return;
@@ -768,10 +807,17 @@ class ProximityApp {
         micStatus.classList.add(this.isMuted && isSelf ? 'muted' : 'active');
         
         const name = document.createElement('span');
-        const displayName = isSelf ? 
-            (this.settings.username || 'You') : 
-            `User ${userId.slice(0, 4)}`;
+        let displayName;
+        
+        if (isSelf) {
+            displayName = this.settings.username || 'You';
+        } else {
+            displayName = username || `User ${userId.slice(0, 4)}`;
+        }
+        
         name.textContent = displayName;
+        name.style.fontWeight = isSelf ? 'bold' : 'normal';
+        name.style.color = isSelf ? 'var(--light-purple)' : 'var(--text-primary)';
         
         participant.appendChild(micStatus);
         participant.appendChild(name);
