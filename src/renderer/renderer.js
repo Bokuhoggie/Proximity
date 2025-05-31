@@ -4,7 +4,11 @@ console.log('Fixed Renderer.js starting...');
 // Import audio classes
 import { AudioVisualizer, MicrophoneInput } from './audio';
 
+const SERVER_URL = 'https://myserver2-production.up.railway.app'; // Replace with your actual Railway URL
+
 class ProximityApp {
+
+    
     constructor() {
         console.log('ProximityApp constructor called');
         this.socket = null;
@@ -484,7 +488,7 @@ class ProximityApp {
         }
 
         console.log('Connecting to signaling server...');
-        this.socket = io('http://localhost:3000');
+        this.socket = io(SERVER_URL);
 
         this.socket.on('connect', () => {
             console.log('Connected to signaling server');
@@ -534,7 +538,7 @@ class ProximityApp {
 
         this.socket.on('connect_error', (error) => {
             console.error('Connection error:', error);
-            this.showNotification('Failed to connect to server. Make sure server is running on port 3000.', 'error');
+            this.showNotification('Failed to connect to server. Server may be down.', 'error');
         });
     }
 
