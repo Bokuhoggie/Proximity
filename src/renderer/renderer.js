@@ -1,27 +1,30 @@
-// Fixed renderer with persistent visualizer and username handling
-console.log('Fixed Renderer.js starting...');
+// Updated renderer with full server system
+console.log('Updated Renderer.js starting...');
 
-// Import audio classes
+// Import audio classes and proximity map
 import { AudioVisualizer, MicrophoneInput } from './audio';
+import { ProximityMap } from './proximity-map';
 
-const SERVER_URL = 'https://myserver2-production.up.railway.app'; // Replace with your actual Railway URL
+const SERVER_URL = 'https://myserver2-production.up.railway.app';
 
 class ProximityApp {
-
-    
     constructor() {
         console.log('ProximityApp constructor called');
         this.socket = null;
         this.peerConnections = {};
         this.micInput = new MicrophoneInput();
+        this.proximityMap = null;
         this.isMuted = false;
         this.isDeafened = false;
         this.currentRoom = null;
-        this.createdRooms = [];
+        this.currentServer = null;
+        this.currentChannel = null;
+        this.createdServers = [];
         this.myUserId = null;
         this.persistentVisualizerActive = false;
         this.settings = {
             username: '',
+            userColor: 'purple', // Default color
             audioGain: 50,
             noiseSupression: true,
             echoCancellation: true,
@@ -34,7 +37,9 @@ class ProximityApp {
         this.initializeUI();
         this.setupEventListeners();
         this.loadSettings();
+        this.loadServers();
         this.setupMicrophoneGlow();
+        this.initializeProximityMap();
         console.log('ProximityApp initialized');
     }
 
@@ -45,15 +50,52 @@ class ProximityApp {
         this.navItems = document.querySelectorAll('.nav-item');
         this.pages = document.querySelectorAll('.page');
 
-        // Room elements
-        this.roomIdInput = document.getElementById('roomId');
-        this.joinRoomBtn = document.getElementById('joinRoom');
-        this.leaveRoomBtn = document.getElementById('leaveRoom');
-        this.muteButton = document.getElementById('muteButton');
+        // Server elements
+        this.createServerBtn = document.getElementById('createServerBtn');
+        this.myServersList = document.getElementById('myServersList');
+        
+        // Modals
+        this.createJoinModal = document.getElementById('createJoinModal');
+        this.createJoinClose = document.getElementById('createJoinClose');
+        this.createNewServerBtn = document.getElementById('createNewServerBtn');
+        this.joinExistingServerBtn = document.getElementById('joinExistingServerBtn');
+        
+        this.createServerModal = document.getElementById('createServerModal');
+        this.serverNameInput = document.getElementById('serverName');
+        this.serverDescriptionInput = document.getElementById('serverDescription');
+        this.confirmCreateServerBtn = document.getElementById('confirmCreateServer');
+        this.cancelCreateServerBtn = document.getElementById('cancelCreateServer');
+        this.modalClose = document.querySelector('.modal-close');
+
+        this.joinServerModal = document.getElementById('joinServerModal');
+        this.joinModalClose = document.getElementById('joinModalClose');
+        this.serverInviteCodeInput = document.getElementById('serverInviteCode');
+        this.confirmJoinServerBtn = document.getElementById('confirmJoinServer');
+        this.cancelJoinServerBtn = document.getElementById('cancelJoinServer');
+
+        // Server view elements
+        this.currentServerNameElement = document.getElementById('currentServerName');
+        this.serverInviteDisplay = document.getElementById('serverInviteDisplay');
+        this.copyInviteBtn = document.getElementById('copyInviteBtn');
+        this.textChannelsList = document.getElementById('textChannelsList');
+        this.voiceChannelsList = document.getElementById('voiceChannelsList');
+        this.leaveServerBtn = document.getElementById('leaveServerBtn');
+
+        // Chat elements
+        this.chatMessages = document.getElementById('chatMessages');
+        this.messageInput = document.getElementById('messageInput');
+        this.sendMessageBtn = document.getElementById('sendMessageBtn');
         this.participantsList = document.getElementById('participantsList');
-        this.roomCodeElement = document.getElementById('roomCode');
-        this.newRoomBtn = document.getElementById('newRoomBtn');
-        this.currentRoomSection = document.getElementById('currentRoom');
+
+        // Map elements
+        this.proximityMapCanvas = document.getElementById('proximityMap');
+        this.proximitySlider = document.getElementById('proximitySlider');
+        this.proximityRangeDisplay = document.getElementById('proximityRange');
+        this.centerMapBtn = document.getElementById('centerMapBtn');
+
+        // Mute button (exists in multiple places)
+        this.muteButton = document.getElementById('muteButton');
+        this.mapMuteButton = document.getElementById('mapMuteButton');
 
         // Settings elements
         this.audioDeviceSelect = document.getElementById('audioDevice');
@@ -62,6 +104,7 @@ class ProximityApp {
         this.noiseSupressionCheck = document.getElementById('noiseSupression');
         this.echoCancellationCheck = document.getElementById('echoCancellation');
         this.usernameInput = document.getElementById('username');
+        this.userColorPicker = document.querySelectorAll('.color-option');
         this.autoJoinCheck = document.getElementById('autoJoin');
         this.testMicrophoneBtn = document.getElementById('testMicrophone');
         this.testOutputButton = document.getElementById('testOutputButton');
@@ -75,10 +118,14 @@ class ProximityApp {
         // Create mic test visualizer
         this.createMicTestVisualizer();
         
-        // Create created rooms container
-        this.createCreatedRoomsContainer();
-        
         console.log('UI elements found');
+    }
+
+    initializeProximityMap() {
+        if (this.proximityMapCanvas) {
+            this.proximityMap = new ProximityMap(this.proximityMapCanvas, this);
+            console.log('Proximity map initialized');
+        }
     }
 
     createMicTestVisualizer() {
@@ -146,38 +193,6 @@ class ProximityApp {
         testMicContainer.appendChild(visualizerContainer);
     }
 
-    createCreatedRoomsContainer() {
-        const roomControls = document.querySelector('.room-controls');
-        
-        const createdRoomsContainer = document.createElement('div');
-        createdRoomsContainer.id = 'createdRoomsContainer';
-        createdRoomsContainer.style.cssText = `
-            margin-top: 1rem;
-            display: none;
-        `;
-        
-        const createdRoomsTitle = document.createElement('h3');
-        createdRoomsTitle.textContent = 'Your Created Rooms';
-        createdRoomsTitle.style.cssText = `
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        `;
-        
-        const roomsList = document.createElement('div');
-        roomsList.id = 'createdRoomsList';
-        roomsList.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        `;
-        
-        createdRoomsContainer.appendChild(createdRoomsTitle);
-        createdRoomsContainer.appendChild(roomsList);
-        
-        roomControls.parentNode.insertBefore(createdRoomsContainer, roomControls.nextSibling);
-    }
-
     setupMicrophoneGlow() {
         const style = document.createElement('style');
         style.textContent = `
@@ -200,27 +215,125 @@ class ProximityApp {
             });
         });
 
-        // Room controls
-        if (this.joinRoomBtn) {
-            this.joinRoomBtn.addEventListener('click', () => this.joinRoom());
+        // Home page controls
+        if (this.homeCreateServerBtn) {
+            this.homeCreateServerBtn.addEventListener('click', () => {
+                this.hideCreateJoinModal();
+                this.showCreateServerModal();
+            });
         }
-        
-        if (this.leaveRoomBtn) {
-            this.leaveRoomBtn.addEventListener('click', () => this.leaveRoom());
+
+        if (this.homeJoinServerBtn) {
+            this.homeJoinServerBtn.addEventListener('click', () => {
+                this.hideCreateJoinModal();
+                this.showJoinServerModal();
+            });
         }
-        
+
+        // Server controls
+        if (this.createServerBtn) {
+            this.createServerBtn.addEventListener('click', () => this.showCreateJoinModal());
+        }
+
+        // Create/Join Modal
+        if (this.createJoinClose) {
+            this.createJoinClose.addEventListener('click', () => this.hideCreateJoinModal());
+        }
+
+        if (this.createNewServerBtn) {
+            this.createNewServerBtn.addEventListener('click', () => {
+                this.hideCreateJoinModal();
+                this.showCreateServerModal();
+            });
+        }
+
+        if (this.joinExistingServerBtn) {
+            this.joinExistingServerBtn.addEventListener('click', () => {
+                this.hideCreateJoinModal();
+                this.showJoinServerModal();
+            });
+        }
+
+        // Create Server Modal
+        if (this.confirmCreateServerBtn) {
+            this.confirmCreateServerBtn.addEventListener('click', () => this.createServer());
+        }
+
+        if (this.cancelCreateServerBtn) {
+            this.cancelCreateServerBtn.addEventListener('click', () => this.hideCreateServerModal());
+        }
+
+        if (this.modalClose) {
+            this.modalClose.addEventListener('click', () => this.hideCreateServerModal());
+        }
+
+        // Join Server Modal
+        if (this.confirmJoinServerBtn) {
+            this.confirmJoinServerBtn.addEventListener('click', () => this.joinServerByCode());
+        }
+
+        if (this.cancelJoinServerBtn) {
+            this.cancelJoinServerBtn.addEventListener('click', () => this.hideJoinServerModal());
+        }
+
+        if (this.joinModalClose) {
+            this.joinModalClose.addEventListener('click', () => this.hideJoinServerModal());
+        }
+
+        if (this.serverInviteCodeInput) {
+            this.serverInviteCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.joinServerByCode();
+                }
+            });
+        }
+
+        // Server view controls
+        if (this.copyInviteBtn) {
+            this.copyInviteBtn.addEventListener('click', () => this.copyInviteCode());
+        }
+
+        if (this.leaveServerBtn) {
+            this.leaveServerBtn.addEventListener('click', () => this.leaveServer());
+        }
+
+        // Chat controls
+        if (this.sendMessageBtn) {
+            this.sendMessageBtn.addEventListener('click', () => this.sendMessage());
+        }
+
+        if (this.messageInput) {
+            this.messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.sendMessage();
+                }
+            });
+        }
+
+        // Mute button
         if (this.muteButton) {
             this.muteButton.addEventListener('click', () => this.toggleMute());
         }
         
-        if (this.newRoomBtn) {
-            this.newRoomBtn.addEventListener('click', () => this.createNewRoom());
+        if (this.mapMuteButton) {
+            this.mapMuteButton.addEventListener('click', () => this.toggleMute());
         }
 
-        if (this.roomIdInput) {
-            this.roomIdInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !this.joinRoomBtn.disabled) {
-                    this.joinRoom();
+        // Proximity map controls
+        if (this.proximitySlider) {
+            this.proximitySlider.addEventListener('input', (e) => {
+                const range = parseInt(e.target.value);
+                this.proximityRangeDisplay.textContent = `${range}px`;
+                if (this.proximityMap) {
+                    this.proximityMap.setProximityRange(range);
+                }
+            });
+        }
+
+        if (this.centerMapBtn) {
+            this.centerMapBtn.addEventListener('click', () => {
+                if (this.proximityMap) {
+                    this.proximityMap.centerMyPosition();
                 }
             });
         }
@@ -251,6 +364,14 @@ class ProximityApp {
                 this.updateParticipantName();
             });
         }
+
+        // User color picker
+        this.userColorPicker.forEach(colorOption => {
+            colorOption.addEventListener('click', (e) => {
+                const selectedColor = e.target.dataset.color;
+                this.setUserColor(selectedColor);
+            });
+        });
 
         // Audio setting checkboxes
         if (this.noiseSupressionCheck) {
@@ -306,6 +427,439 @@ class ProximityApp {
         } else {
             this.stopPersistentVisualizer();
         }
+
+        if (pageName === 'map' && this.proximityMap) {
+            this.proximityMap.resizeCanvas();
+        }
+    }
+
+    // Server Management
+    showCreateJoinModal() {
+        this.createJoinModal.style.display = 'flex';
+    }
+
+    hideCreateJoinModal() {
+        this.createJoinModal.style.display = 'none';
+    }
+
+    showCreateServerModal() {
+        this.createServerModal.style.display = 'flex';
+        this.serverNameInput.focus();
+    }
+
+    hideCreateServerModal() {
+        this.createServerModal.style.display = 'none';
+        this.serverNameInput.value = '';
+        this.serverDescriptionInput.value = '';
+    }
+
+    showJoinServerModal() {
+        this.joinServerModal.style.display = 'flex';
+        this.serverInviteCodeInput.focus();
+    }
+
+    hideJoinServerModal() {
+        this.joinServerModal.style.display = 'none';
+        this.serverInviteCodeInput.value = '';
+    }
+
+    createServer() {
+        const name = this.serverNameInput.value.trim();
+        if (!name) {
+            this.showNotification('Please enter a server name', 'warning');
+            return;
+        }
+
+        const server = {
+            id: this.generateRoomCode(),
+            name: name,
+            description: this.serverDescriptionInput.value.trim(),
+            created: new Date(),
+            channels: [
+                { id: 'general', name: 'general', type: 'text' },
+                { id: 'general-voice', name: 'General Voice', type: 'voice' }
+            ],
+            owner: this.settings.username || 'Anonymous'
+        };
+
+        this.createdServers.push(server);
+        this.saveServers();
+        this.updateServersList();
+        this.hideCreateServerModal();
+        this.showNotification(`Server "${name}" created! Invite code: ${server.id}`, 'success');
+    }
+
+    joinServerByCode() {
+        const inviteCode = this.serverInviteCodeInput.value.trim().toUpperCase();
+        if (!inviteCode) {
+            this.showNotification('Please enter an invite code', 'warning');
+            return;
+        }
+
+        // For now, create a dummy server entry
+        const server = {
+            id: inviteCode,
+            name: `Server ${inviteCode}`,
+            description: 'Joined server',
+            channels: [
+                { id: 'general', name: 'general', type: 'text' },
+                { id: 'general-voice', name: 'General Voice', type: 'voice' }
+            ],
+            owner: 'Unknown',
+            isJoined: true
+        };
+
+        this.selectServer(server);
+        this.hideJoinServerModal();
+    }
+
+    deleteServer(serverId) {
+        if (confirm('Are you sure you want to delete this server?')) {
+            this.createdServers = this.createdServers.filter(s => s.id !== serverId);
+            this.saveServers();
+            this.updateServersList();
+            this.showNotification('Server deleted', 'info');
+        }
+    }
+
+    updateServersList() {
+        if (!this.myServersList) return;
+
+        this.myServersList.innerHTML = '';
+
+        this.createdServers.forEach(server => {
+            const serverItem = document.createElement('div');
+            serverItem.className = 'server-item';
+            serverItem.onclick = () => this.selectServer(server);
+
+            const serverIcon = document.createElement('div');
+            serverIcon.className = 'server-icon';
+            serverIcon.textContent = server.name.charAt(0).toUpperCase();
+
+            const serverName = document.createElement('span');
+            serverName.textContent = server.name;
+            serverName.style.flex = '1';
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '×';
+            deleteBtn.style.cssText = `
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 0.25rem;
+                border-radius: 3px;
+                font-size: 1.2rem;
+                line-height: 1;
+            `;
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.deleteServer(server.id);
+            };
+            deleteBtn.onmouseover = () => deleteBtn.style.background = 'rgba(239, 68, 68, 0.2)';
+            deleteBtn.onmouseout = () => deleteBtn.style.background = 'none';
+
+            serverItem.appendChild(serverIcon);
+            serverItem.appendChild(serverName);
+            serverItem.appendChild(deleteBtn);
+
+            this.myServersList.appendChild(serverItem);
+        });
+
+        // Update recent servers on home page
+        this.updateRecentServers();
+    }
+
+    updateRecentServers() {
+        if (!this.recentServersList || !this.recentServersSection) return;
+
+        if (this.createdServers.length === 0) {
+            this.recentServersSection.style.display = 'none';
+            return;
+        }
+
+        this.recentServersSection.style.display = 'block';
+        this.recentServersList.innerHTML = '';
+
+        // Show up to 3 most recent servers
+        const recentServers = this.createdServers.slice(-3).reverse();
+
+        recentServers.forEach(server => {
+            const serverItem = document.createElement('div');
+            serverItem.className = 'recent-server-item';
+            serverItem.onclick = () => this.selectServer(server);
+
+            const serverIcon = document.createElement('div');
+            serverIcon.className = 'recent-server-icon';
+            serverIcon.textContent = server.name.charAt(0).toUpperCase();
+
+            const serverInfo = document.createElement('div');
+            serverInfo.className = 'recent-server-info';
+            serverInfo.innerHTML = `
+                <h4>${server.name}</h4>
+                <p>Created ${new Date(server.created).toLocaleDateString()}</p>
+            `;
+
+            serverItem.appendChild(serverIcon);
+            serverItem.appendChild(serverInfo);
+
+            this.recentServersList.appendChild(serverItem);
+        });
+    }
+
+    selectServer(server) {
+        console.log('Selecting server:', server);
+        this.currentServer = server;
+        
+        // Update UI to show server selection
+        document.querySelectorAll('.server-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Switch to server view page
+        this.switchPage('server-view');
+        
+        // Update server info
+        if (this.currentServerNameElement) {
+            this.currentServerNameElement.textContent = server.name;
+        }
+        if (this.serverInviteDisplay) {
+            this.serverInviteDisplay.textContent = server.id;
+        }
+        
+        // Setup channels
+        this.setupServerChannels(server);
+        
+        // Show text chat by default
+        this.switchToChannel('general', 'text');
+        
+        this.showNotification(`Joined server: ${server.name}`, 'success');
+    }
+
+    setupServerChannels(server) {
+        // Clear existing channels
+        if (this.textChannelsList) {
+            this.textChannelsList.innerHTML = '';
+        }
+        if (this.voiceChannelsList) {
+            this.voiceChannelsList.innerHTML = '';
+        }
+
+        server.channels.forEach(channel => {
+            const channelItem = document.createElement('div');
+            channelItem.className = 'channel-item';
+            channelItem.dataset.channelType = channel.type;
+            channelItem.dataset.channelId = channel.id;
+            channelItem.onclick = () => this.switchToChannel(channel.id, channel.type);
+
+            const channelIcon = document.createElement('span');
+            channelIcon.className = 'channel-icon';
+            channelIcon.textContent = channel.type === 'text' ? '#' : '🔊';
+
+            const channelName = document.createElement('span');
+            channelName.className = 'channel-name';
+            channelName.textContent = channel.name;
+
+            channelItem.appendChild(channelIcon);
+            channelItem.appendChild(channelName);
+
+            if (channel.type === 'text' && this.textChannelsList) {
+                this.textChannelsList.appendChild(channelItem);
+            } else if (channel.type === 'voice' && this.voiceChannelsList) {
+                this.voiceChannelsList.appendChild(channelItem);
+            }
+        });
+    }
+
+    switchToChannel(channelId, channelType) {
+        console.log('Switching to channel:', channelId, channelType);
+        
+        this.currentChannel = { id: channelId, type: channelType };
+        
+        // Update active channel
+        document.querySelectorAll('.channel-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        const activeChannel = document.querySelector(`[data-channel-id="${channelId}"]`);
+        if (activeChannel) {
+            activeChannel.classList.add('active');
+        }
+        
+        // Show appropriate content view
+        document.querySelectorAll('.content-view').forEach(view => {
+            view.classList.remove('active');
+        });
+        
+        if (channelType === 'text') {
+            const textView = document.getElementById('text-chat-view');
+            if (textView) {
+                textView.classList.add('active');
+            }
+            // Leave voice channel if switching to text
+            if (this.currentRoom) {
+                this.leaveVoiceChannel();
+            }
+        } else if (channelType === 'voice') {
+            const voiceView = document.getElementById('voice-channel-view');
+            if (voiceView) {
+                voiceView.classList.add('active');
+            }
+            // Join voice channel
+            this.joinVoiceChannel(channelId);
+        }
+    }
+
+    leaveVoiceChannel() {
+        if (!this.currentRoom) return;
+
+        console.log('Leaving voice channel...');
+        
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+        }
+
+        Object.values(this.peerConnections).forEach(pc => pc.close());
+        this.peerConnections = {};
+
+        // Clear proximity map
+        if (this.proximityMap) {
+            this.proximityMap.users.clear();
+            this.proximityMap.myUserId = null;
+        }
+
+        // Clear participants list
+        if (this.participantsList) {
+            this.participantsList.innerHTML = '';
+        }
+
+        this.currentRoom = null;
+        this.isMuted = false;
+        this.isDeafened = false;
+        
+        // Reset mute buttons
+        [this.muteButton, this.mapMuteButton].forEach(button => {
+            if (button) {
+                button.querySelector('.text').textContent = 'Mute';
+                button.querySelector('.icon').textContent = '🎤';
+                button.classList.remove('muted');
+            }
+        });
+        
+        this.showNotification('Left voice channel', 'info');
+        this.playSound('assets/LeaveNoise.mp3');
+    }
+
+    async joinVoiceChannel(channelId) {
+        // Prevent joining if already in a voice channel
+        if (this.currentRoom) {
+            this.showNotification('Already connected to a voice channel', 'warning');
+            return;
+        }
+
+        const roomId = `${this.currentServer.id}-${channelId}`;
+        
+        try {
+            await this.initializeMedia();
+            this.connectToSignalingServer(roomId);
+            this.currentRoom = roomId;
+            
+            this.showNotification(`Joined voice channel`, 'success');
+            this.playSound('assets/JoinNoise.mp3');
+        } catch (error) {
+            console.error('Error joining voice channel:', error);
+            this.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');
+        }
+    }
+
+    copyInviteCode() {
+        if (this.currentServer) {
+            navigator.clipboard.writeText(this.currentServer.id).then(() => {
+                this.showNotification('Invite code copied to clipboard!', 'success');
+            }).catch(() => {
+                this.showNotification('Failed to copy invite code', 'error');
+            });
+        }
+    }
+
+    leaveServer() {
+        // Leave voice channel first if connected
+        if (this.currentRoom) {
+            this.leaveVoiceChannel();
+        }
+
+        this.currentServer = null;
+        this.currentChannel = null;
+        
+        // Switch back to home page
+        this.switchPage('home');
+        
+        this.showNotification('Left the server', 'info');
+    }
+
+    sendMessage() {
+        const message = this.messageInput.value.trim();
+        if (!message) return;
+
+        // Add message to chat
+        this.addMessageToChat(this.settings.username || 'You', message);
+        this.messageInput.value = '';
+    }
+
+    addMessageToChat(username, message) {
+        if (!this.chatMessages) return;
+
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header';
+
+        const author = document.createElement('span');
+        author.className = 'message-author';
+        author.textContent = username;
+
+        const timestamp = document.createElement('span');
+        timestamp.className = 'message-timestamp';
+        timestamp.textContent = new Date().toLocaleTimeString();
+
+        messageHeader.appendChild(author);
+        messageHeader.appendChild(timestamp);
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.textContent = message;
+
+        messageElement.appendChild(messageHeader);
+        messageElement.appendChild(content);
+
+        this.chatMessages.appendChild(messageElement);
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    loadServers() {
+        try {
+            const savedServers = localStorage.getItem('proximity-servers');
+            if (savedServers) {
+                this.createdServers = JSON.parse(savedServers);
+                this.updateServersList();
+            }
+        } catch (error) {
+            console.error('Error loading servers:', error);
+        }
+    }
+
+    saveServers() {
+        try {
+            localStorage.setItem('proximity-servers', JSON.stringify(this.createdServers));
+        } catch (error) {
+            console.error('Error saving servers:', error);
+        }
+    }
+
+    generateRoomCode() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
     }
 
     async startPersistentVisualizer() {
@@ -351,8 +905,31 @@ class ProximityApp {
         }
     }
 
+    setUserColor(color) {
+        this.settings.userColor = color;
+        this.saveSettings();
+        
+        // Update color picker UI
+        this.userColorPicker.forEach(option => {
+            option.classList.remove('selected');
+        });
+        document.querySelector(`[data-color="${color}"]`).classList.add('selected');
+        
+        // Update participant display
+        this.updateParticipantName();
+        
+        this.showNotification(`User color changed to ${color}`, 'success');
+    }
+
+    getUserColorClass(color) {
+        return `user-color-${color}`;
+    }
+
+    getServerIconColorClass(color) {
+        return `server-icon-${color}`;
+    }
+
     updateParticipantName() {
-        // Update your own participant name if you're in a room
         const selfParticipant = document.getElementById(`participant-${this.myUserId || 'self'}`);
         if (selfParticipant) {
             const nameSpan = selfParticipant.querySelector('span');
@@ -379,6 +956,15 @@ class ProximityApp {
         if (this.autoJoinCheck) this.autoJoinCheck.checked = this.settings.autoJoin;
         if (this.audioOutputDeviceSelect) this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice || '';
 
+        // Load user color
+        this.userColorPicker.forEach(option => {
+            option.classList.remove('selected');
+        });
+        const selectedColorOption = document.querySelector(`[data-color="${this.settings.userColor}"]`);
+        if (selectedColorOption) {
+            selectedColorOption.classList.add('selected');
+        }
+
         const valueDisplay = document.querySelector('.slider-value');
         if (valueDisplay) {
             valueDisplay.textContent = `${this.settings.audioGain}%`;
@@ -393,97 +979,22 @@ class ProximityApp {
         }
     }
 
-    generateRoomCode() {
-        return Math.random().toString(36).substring(2, 8).toUpperCase();
-    }
-
-    createNewRoom() {
-        console.log('Creating new room...');
-        const roomCode = this.generateRoomCode();
-        
-        this.createdRooms.push({
-            code: roomCode,
-            created: new Date(),
-            participants: 0
-        });
-        
-        this.updateCreatedRoomsList();
-        this.showNotification(`New room created: ${roomCode}`, 'success');
-    }
-
-    updateCreatedRoomsList() {
-        const container = document.getElementById('createdRoomsContainer');
-        const list = document.getElementById('createdRoomsList');
-        
-        if (!container || !list) return;
-        
-        container.style.display = this.createdRooms.length > 0 ? 'block' : 'none';
-        list.innerHTML = '';
-        
-        this.createdRooms.forEach((room, index) => {
-            const roomCard = document.createElement('div');
-            roomCard.style.cssText = `
-                background: var(--card-bg);
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                padding: 1rem;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            `;
-            
-            const roomInfo = document.createElement('div');
-            roomInfo.innerHTML = `
-                <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.25rem;">
-                    Room: ${room.code}
-                </div>
-                <div style="color: var(--text-muted); font-size: 0.8rem;">
-                    Created: ${room.created.toLocaleTimeString()} • ${room.participants} participants
-                </div>
-            `;
-            
-            const roomActions = document.createElement('div');
-            roomActions.style.cssText = 'display: flex; gap: 0.5rem;';
-            
-            const joinBtn = document.createElement('button');
-            joinBtn.className = 'btn primary';
-            joinBtn.style.cssText = 'padding: 0.5rem 1rem; font-size: 0.9rem;';
-            joinBtn.textContent = 'Join';
-            joinBtn.onclick = () => {
-                this.roomIdInput.value = room.code;
-                this.joinRoom();
-            };
-            
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'btn danger';
-            deleteBtn.style.cssText = 'padding: 0.5rem 1rem; font-size: 0.9rem;';
-            deleteBtn.textContent = 'Delete';
-            deleteBtn.onclick = () => {
-                this.deleteCreatedRoom(index);
-            };
-            
-            roomActions.appendChild(joinBtn);
-            roomActions.appendChild(deleteBtn);
-            
-            roomCard.appendChild(roomInfo);
-            roomCard.appendChild(roomActions);
-            
-            list.appendChild(roomCard);
-        });
-    }
-
-    deleteCreatedRoom(index) {
-        if (confirm('Are you sure you want to delete this room?')) {
-            this.createdRooms.splice(index, 1);
-            this.updateCreatedRoomsList();
-            this.showNotification('Room deleted', 'info');
-        }
-    }
-
     connectToSignalingServer(roomId) {
         if (typeof io === 'undefined') {
             this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');
             return;
+        }
+
+        // Prevent multiple connections to the same room
+        if (this.socket && this.currentRoom === roomId) {
+            console.log('Already connected to this room');
+            return;
+        }
+
+        // Disconnect from previous room if exists
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
         }
 
         console.log('Connecting to signaling server...');
@@ -493,18 +1004,21 @@ class ProximityApp {
             console.log('Connected to signaling server');
             this.myUserId = this.socket.id;
             
-            // Send username when joining room
             this.socket.emit('join-room', {
                 roomId: roomId,
                 username: this.settings.username || 'Anonymous'
             });
             
             this.addParticipant(this.myUserId, this.micInput.getStream(), true);
+            
+            if (this.proximityMap) {
+                this.proximityMap.addUser(this.myUserId, this.settings.username || 'You', true);
+            }
         });
 
         this.socket.on('user-joined', ({ userId, username }) => {
             console.log('User joined:', userId, username);
-            this.showNotification(`${username || 'Anonymous'} joined the room`, 'info');
+            this.showNotification(`${username || 'Anonymous'} joined the channel`, 'info');
             this.connectToNewUser(userId, username);
         });
 
@@ -517,8 +1031,18 @@ class ProximityApp {
 
         this.socket.on('user-left', ({ userId, username }) => {
             console.log('User left:', userId, username);
-            this.showNotification(`${username || 'Anonymous'} left the room`, 'info');
+            this.showNotification(`${username || 'Anonymous'} left the channel`, 'info');
             this.removePeerConnection(userId);
+            
+            if (this.proximityMap) {
+                this.proximityMap.removeUser(userId);
+            }
+        });
+
+        this.socket.on('position-update', ({ userId, x, y }) => {
+            if (this.proximityMap) {
+                this.proximityMap.updateRemoteUserPosition(userId, x, y);
+            }
         });
 
         this.socket.on('offer', async ({ offer, from }) => {
@@ -560,41 +1084,21 @@ class ProximityApp {
 
         this.peerConnections[userId] = peerConnection;
 
-        // ADD DEBUGGING EVENTS
-        peerConnection.onconnectionstatechange = () => {
-            console.log(`Connection state with ${userId}:`, peerConnection.connectionState);
-        };
-
-        peerConnection.oniceconnectionstatechange = () => {
-            console.log(`ICE connection state with ${userId}:`, peerConnection.iceConnectionState);
-        };
-
-        peerConnection.onsignalingstatechange = () => {
-            console.log(`Signaling state with ${userId}:`, peerConnection.signalingState);
-        };
-
-        // Check if we have audio tracks
         const tracks = this.micInput.getStream().getTracks();
-        console.log('Local audio tracks:', tracks);
-        
         tracks.forEach(track => {
-            console.log('Adding track:', track.kind, track.enabled, track.readyState);
             peerConnection.addTrack(track, this.micInput.getStream());
         });
 
         peerConnection.ontrack = (event) => {
             console.log('=== RECEIVED REMOTE STREAM ===', userId, username);
-            console.log('Remote tracks:', event.streams[0].getTracks());
-            
             const remoteStream = event.streams[0];
-            const audioTracks = remoteStream.getAudioTracks();
-            
-            console.log('Remote audio tracks:', audioTracks);
-            audioTracks.forEach(track => {
-                console.log('Remote track:', track.kind, track.enabled, track.readyState);
-            });
             
             this.addParticipant(userId, remoteStream, false, username);
+            
+            if (this.proximityMap) {
+                const audioElement = this.getAudioElementForUser(userId);
+                this.proximityMap.addUser(userId, username || `User ${userId.slice(0, 4)}`, false, audioElement);
+            }
         };
 
         peerConnection.onicecandidate = (event) => {
@@ -615,24 +1119,65 @@ class ProximityApp {
         }
     }
 
+    getAudioElementForUser(userId) {
+        const participant = document.getElementById(`participant-${userId}`);
+        if (participant) {
+            return participant.querySelector('audio');
+        }
+        return null;
+    }
+
     async handleOffer(offer, from) {
+        console.log('Handling offer from:', from);
+        
+        // Check if connection already exists
+        if (this.peerConnections[from]) {
+            console.log('Connection already exists for user:', from);
+            return;
+        }
+
         const peerConnection = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
         });
 
         this.peerConnections[from] = peerConnection;
 
-        this.micInput.getStream().getTracks().forEach(track => {
-            peerConnection.addTrack(track, this.micInput.getStream());
-        });
+        // Add connection state monitoring
+        peerConnection.onconnectionstatechange = () => {
+            console.log(`Answer - Connection state with ${from}:`, peerConnection.connectionState);
+            if (peerConnection.connectionState === 'failed') {
+                console.log('Answer - Connection failed, cleaning up:', from);
+                this.removePeerConnection(from);
+            }
+        };
+
+        // Add tracks if available
+        if (this.micInput.getStream()) {
+            this.micInput.getStream().getTracks().forEach(track => {
+                try {
+                    peerConnection.addTrack(track, this.micInput.getStream());
+                } catch (error) {
+                    console.error('Error adding track in handleOffer:', error);
+                }
+            });
+        }
 
         peerConnection.ontrack = (event) => {
             console.log('Received remote stream from:', from);
             this.addParticipant(from, event.streams[0], false);
+            
+            if (this.proximityMap) {
+                const audioElement = this.getAudioElementForUser(from);
+                this.proximityMap.addUser(from, `User ${from.slice(0, 4)}`, false, audioElement);
+            }
         };
 
         peerConnection.onicecandidate = (event) => {
             if (event.candidate && this.socket) {
+                console.log('Sending ICE candidate from answer to:', from);
                 this.socket.emit('ice-candidate', {
                     target: from,
                     candidate: event.candidate
@@ -641,61 +1186,88 @@ class ProximityApp {
         };
 
         try {
-            await peerConnection.setRemoteDescription(offer);
-            const answer = await peerConnection.createAnswer();
+            console.log('Setting remote description for offer from:', from);
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            
+            console.log('Creating answer for:', from);
+            const answer = await peerConnection.createAnswer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: false
+            });
+            
+            console.log('Setting local description for answer to:', from);
             await peerConnection.setLocalDescription(answer);
+            
+            console.log('Sending answer to:', from);
             this.socket.emit('answer', { target: from, answer });
         } catch (error) {
-            console.error('Error handling offer:', error);
+            console.error('Error handling offer from', from, ':', error);
+            this.removePeerConnection(from);
         }
     }
 
     async handleAnswer(answer, from) {
+        console.log('Handling answer from:', from);
+        
         const peerConnection = this.peerConnections[from];
-        if (peerConnection) {
-            try {
-                await peerConnection.setRemoteDescription(answer);
-            } catch (error) {
-                console.error('Error handling answer:', error);
+        if (!peerConnection) {
+            console.warn('No peer connection found for:', from);
+            return;
+        }
+
+        try {
+            console.log('Current signaling state:', peerConnection.signalingState);
+            
+            // Check if we're in the right state to set remote description
+            if (peerConnection.signalingState === 'have-local-offer') {
+                console.log('Setting remote description for answer from:', from);
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                console.log('Successfully set remote description for:', from);
+            } else {
+                console.warn(`Cannot set remote answer in state: ${peerConnection.signalingState} for user: ${from}`);
+                
+                // If we're in stable state, it might mean the connection was already established
+                if (peerConnection.signalingState === 'stable') {
+                    console.log('Connection already in stable state, ignoring duplicate answer');
+                    return;
+                }
+                
+                // For other states, we might need to recreate the connection
+                console.log('Removing problematic connection and will recreate on next offer');
+                this.removePeerConnection(from);
             }
+        } catch (error) {
+            console.error('Error handling answer from', from, ':', error);
+            console.log('Removing failed connection:', from);
+            this.removePeerConnection(from);
         }
     }
 
     async handleIceCandidate(candidate, from) {
+        console.log('Handling ICE candidate from:', from);
+        
         const peerConnection = this.peerConnections[from];
-        if (peerConnection) {
-            try {
-                await peerConnection.addIceCandidate(candidate);
-            } catch (error) {
-                console.error('Error handling ICE candidate:', error);
-            }
-        }
-    }
-
-    async joinRoom() {
-        const roomId = this.roomIdInput.value.trim();
-        if (!roomId) {
-            this.showNotification('Please enter a room ID', 'warning');
+        if (!peerConnection) {
+            console.warn('No peer connection found for ICE candidate from:', from);
             return;
         }
 
-        console.log('Attempting to join room:', roomId);
         try {
-            await this.initializeMedia();
-            this.connectToSignalingServer(roomId);
-            this.currentRoom = roomId;
-
-            this.joinRoomBtn.disabled = true;
-            this.roomIdInput.disabled = true;
-            this.newRoomBtn.disabled = true;
-            this.currentRoomSection.style.display = 'block';
-            this.roomCodeElement.textContent = roomId;
-
-            this.showNotification(`Joined room: ${roomId}`, 'success');
-            this.playSound('assets/JoinNoise.mp3');
+            // Check if remote description is set before adding ICE candidate
+            if (peerConnection.remoteDescription) {
+                console.log('Adding ICE candidate from:', from);
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                console.log('Successfully added ICE candidate from:', from);
+            } else {
+                console.warn('Remote description not set, queueing ICE candidate for:', from);
+                // Queue the candidate for later
+                if (!peerConnection.queuedCandidates) {
+                    peerConnection.queuedCandidates = [];
+                }
+                peerConnection.queuedCandidates.push(candidate);
+            }
         } catch (error) {
-            console.error('Error joining room:', error);
-            this.showNotification('Failed to join room. Please allow microphone access.', 'error');
+            console.error('Error handling ICE candidate from', from, ':', error);
         }
     }
 
@@ -715,9 +1287,17 @@ class ProximityApp {
             
             await this.populateAudioDevices();
             
-            // Setup microphone glow callback
             this.micInput.addVolumeCallback((volume, frequencyData) => {
                 this.updateMicrophoneGlow(this.myUserId || 'self', volume);
+                
+                if (this.proximityMap && volume > 10) {
+                    this.proximityMap.setUserActivity(this.myUserId, true);
+                    setTimeout(() => {
+                        if (this.proximityMap) {
+                            this.proximityMap.setUserActivity(this.myUserId, false);
+                        }
+                    }, 200);
+                }
             });
             
         } catch (error) {
@@ -775,7 +1355,6 @@ class ProximityApp {
                 this.audioOutputDeviceSelect.appendChild(option);
             });
 
-            // Restore input device selection
             if (this.micInput.getStream()) {
                 const currentTrack = this.micInput.getStream().getAudioTracks()[0];
                 if (currentTrack && currentTrack.getSettings) {
@@ -783,7 +1362,6 @@ class ProximityApp {
                     this.audioDeviceSelect.value = currentDeviceId;
                 }
             }
-            // Always restore output device selection from settings
             if (this.settings.audioOutputDevice) {
                 this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice;
             }
@@ -811,13 +1389,15 @@ class ProximityApp {
         
         if (isSelf) {
             displayName = this.settings.username || 'You';
+            name.classList.add(this.getUserColorClass(this.settings.userColor));
         } else {
             displayName = username || `User ${userId.slice(0, 4)}`;
+            // For now, give other users a default color (could be expanded to sync colors)
+            name.classList.add('user-color-blue');
         }
         
         name.textContent = displayName;
         name.style.fontWeight = isSelf ? 'bold' : 'normal';
-        name.style.color = isSelf ? 'var(--light-purple)' : 'var(--text-primary)';
         
         participant.appendChild(micStatus);
         participant.appendChild(name);
@@ -835,49 +1415,34 @@ class ProximityApp {
     }
 
     removePeerConnection(userId) {
+        console.log('Removing peer connection for:', userId);
+        
         if (this.peerConnections[userId]) {
-            this.peerConnections[userId].close();
+            const peerConnection = this.peerConnections[userId];
+            
+            // Clean up event listeners to prevent memory leaks
+            peerConnection.ontrack = null;
+            peerConnection.onicecandidate = null;
+            peerConnection.onconnectionstatechange = null;
+            peerConnection.oniceconnectionstatechange = null;
+            peerConnection.onsignalingstatechange = null;
+            
+            // Close the connection
+            try {
+                peerConnection.close();
+            } catch (error) {
+                console.error('Error closing peer connection:', error);
+            }
+            
             delete this.peerConnections[userId];
+            console.log('Peer connection removed for:', userId);
         }
         
         const participantElement = document.getElementById(`participant-${userId}`);
         if (participantElement) {
             participantElement.remove();
+            console.log('Participant element removed for:', userId);
         }
-    }
-
-    async leaveRoom() {
-        console.log('Leaving room...');
-        
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket = null;
-        }
-
-        Object.values(this.peerConnections).forEach(pc => pc.close());
-        this.peerConnections = {};
-
-        // Don't stop mic input if persistent visualizer is active
-        if (!this.persistentVisualizerActive) {
-            this.micInput.stop();
-        }
-
-        this.participantsList.innerHTML = '';
-        this.currentRoom = null;
-        this.isMuted = false;
-        this.isDeafened = false;
-        
-        this.joinRoomBtn.disabled = false;
-        this.roomIdInput.disabled = false;
-        this.newRoomBtn.disabled = false;
-        this.currentRoomSection.style.display = 'none';
-        if (this.muteButton) {
-            this.muteButton.querySelector('.text').textContent = 'Mute';
-            this.muteButton.classList.remove('muted');
-        }
-        
-        this.showNotification('Left the room', 'info');
-        this.playSound('assets/LeaveNoise.mp3');
     }
 
     toggleMute() {
@@ -887,10 +1452,14 @@ class ProximityApp {
                 track.enabled = !this.isMuted;
             });
             
-            const button = this.muteButton;
-            button.querySelector('.text').textContent = this.isMuted ? 'Unmute' : 'Mute';
-            button.querySelector('.icon').textContent = this.isMuted ? '🔇' : '🎤';
-            button.classList.toggle('muted', this.isMuted);
+            // Update both mute buttons
+            [this.muteButton, this.mapMuteButton].forEach(button => {
+                if (button) {
+                    button.querySelector('.text').textContent = this.isMuted ? 'Unmute' : 'Mute';
+                    button.querySelector('.icon').textContent = this.isMuted ? '🔇' : '🎤';
+                    button.classList.toggle('muted', this.isMuted);
+                }
+            });
             
             this.updateMicStatus(this.myUserId || 'self', this.isMuted);
             
@@ -917,16 +1486,13 @@ class ProximityApp {
     }
 
     async changeAudioDevice(deviceId) {
-        if (!deviceId) {
-            return;
-        }
+        if (!deviceId) return;
 
         try {
             const wasInCall = !!this.currentRoom;
             
             await this.micInput.changeDevice(deviceId);
             
-            // Update all peer connections with new stream if in a call
             if (wasInCall) {
                 Object.values(this.peerConnections).forEach(pc => {
                     const senders = pc.getSenders();
@@ -939,12 +1505,10 @@ class ProximityApp {
                 });
             }
             
-            // Re-setup glow callback for new stream
             this.micInput.addVolumeCallback((volume, frequencyData) => {
                 this.updateMicrophoneGlow(this.myUserId || 'self', volume);
             });
 
-            // Re-setup persistent visualizer callback if active
             if (this.persistentVisualizerActive) {
                 this.stopPersistentVisualizer();
                 this.startPersistentVisualizer();
@@ -1021,6 +1585,7 @@ class ProximityApp {
             localStorage.removeItem('proximity-settings');
             this.settings = {
                 username: '',
+                userColor: 'purple',
                 audioGain: 50,
                 noiseSupression: true,
                 echoCancellation: true,

@@ -41,17 +41,6 @@
       "node_modules/**/*",
       "assets/**/*"
     ],
-    "icon": "assets/Proximity Logo.ico",
-    "mac": {
-      "category": "public.app-category.social-networking",
-      "icon": "assets/Proximity Logo.icns",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": ["x64", "arm64"]
-        }
-      ]
-    },
     "win": {
       "icon": "assets/Proximity Logo.ico",
       "target": [
@@ -61,8 +50,18 @@
         }
       ]
     },
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "assets/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
     "linux": {
-      "icon": "assets/Proximity Logo.png",
+      "icon": "assets/icon.png",
       "target": [
         {
           "target": "AppImage",
@@ -75,4 +74,4 @@
       "allowToChangeInstallationDirectory": true
     }
   }
-} 
+}
