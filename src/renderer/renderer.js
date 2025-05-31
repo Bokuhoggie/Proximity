@@ -23,7 +23,8 @@ class ProximityApp {
             echoCancellation: true,
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
-            deafenHotkey: 'Ctrl+D'
+            deafenHotkey: 'Ctrl+D',
+            audioOutputDevice: ''
         };
 
         this.initializeUI();
@@ -52,12 +53,14 @@ class ProximityApp {
 
         // Settings elements
         this.audioDeviceSelect = document.getElementById('audioDevice');
+        this.audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
         this.audioGainSlider = document.getElementById('audioGain');
         this.noiseSupressionCheck = document.getElementById('noiseSupression');
         this.echoCancellationCheck = document.getElementById('echoCancellation');
         this.usernameInput = document.getElementById('username');
         this.autoJoinCheck = document.getElementById('autoJoin');
         this.testMicrophoneBtn = document.getElementById('testMicrophone');
+        this.testOutputButton = document.getElementById('testOutputButton');
         this.resetSettingsBtn = document.getElementById('resetSettings');
 
         // Persistent visualizer elements
@@ -222,6 +225,9 @@ class ProximityApp {
         if (this.audioDeviceSelect) {
             this.audioDeviceSelect.addEventListener('change', (e) => this.changeAudioDevice(e.target.value));
         }
+        if (this.audioOutputDeviceSelect) {
+            this.audioOutputDeviceSelect.addEventListener('change', (e) => this.changeAudioOutputDevice(e.target.value));
+        }
         
         if (this.audioGainSlider) {
             this.audioGainSlider.addEventListener('input', (e) => {
@@ -266,6 +272,10 @@ class ProximityApp {
         
         if (this.testMicrophoneBtn) {
             this.testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
+        }
+        
+        if (this.testOutputButton) {
+            this.testOutputButton.addEventListener('click', () => this.testOutput());
         }
         
         if (this.resetSettingsBtn) {
@@ -363,6 +373,7 @@ class ProximityApp {
         if (this.noiseSupressionCheck) this.noiseSupressionCheck.checked = this.settings.noiseSupression;
         if (this.echoCancellationCheck) this.echoCancellationCheck.checked = this.settings.echoCancellation;
         if (this.autoJoinCheck) this.autoJoinCheck.checked = this.settings.autoJoin;
+        if (this.audioOutputDeviceSelect) this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice || '';
 
         const valueDisplay = document.querySelector('.slider-value');
         if (valueDisplay) {
@@ -626,20 +637,19 @@ class ProximityApp {
         }
 
         console.log('Attempting to join room:', roomId);
-        
         try {
             await this.initializeMedia();
             this.connectToSignalingServer(roomId);
             this.currentRoom = roomId;
-            
+
             this.joinRoomBtn.disabled = true;
             this.roomIdInput.disabled = true;
             this.newRoomBtn.disabled = true;
             this.currentRoomSection.style.display = 'block';
             this.roomCodeElement.textContent = roomId;
-            
+
             this.showNotification(`Joined room: ${roomId}`, 'success');
-            
+            this.playSound('assets/JoinNoise.mp3');
         } catch (error) {
             console.error('Error joining room:', error);
             this.showNotification('Failed to join room. Please allow microphone access.', 'error');
@@ -703,9 +713,11 @@ class ProximityApp {
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
-            
+            const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
+
             this.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
-            
+            this.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
+
             audioInputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
@@ -713,12 +725,24 @@ class ProximityApp {
                 this.audioDeviceSelect.appendChild(option);
             });
 
+            audioOutputs.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.textContent = device.label || `Speaker ${index + 1}`;
+                this.audioOutputDeviceSelect.appendChild(option);
+            });
+
+            // Restore input device selection
             if (this.micInput.getStream()) {
                 const currentTrack = this.micInput.getStream().getAudioTracks()[0];
                 if (currentTrack && currentTrack.getSettings) {
                     const currentDeviceId = currentTrack.getSettings().deviceId;
                     this.audioDeviceSelect.value = currentDeviceId;
                 }
+            }
+            // Always restore output device selection from settings
+            if (this.settings.audioOutputDevice) {
+                this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice;
             }
         } catch (error) {
             console.error('Error populating audio devices:', error);
@@ -803,6 +827,7 @@ class ProximityApp {
         }
         
         this.showNotification('Left the room', 'info');
+        this.playSound('assets/LeaveNoise.mp3');
     }
 
     toggleMute() {
@@ -882,6 +907,11 @@ class ProximityApp {
         }
     }
 
+    async changeAudioOutputDevice(deviceId) {
+        this.settings.audioOutputDevice = deviceId;
+        this.saveSettings();
+    }
+
     updateAudioGain(value) {
         this.settings.audioGain = parseInt(value);
         this.saveSettings();
@@ -919,6 +949,23 @@ class ProximityApp {
         }
     }
 
+    async testOutput() {
+        this.playSound('assets/TestNoise.mp3');
+    }
+
+    async playSound(filePath) {
+        try {
+            const audio = new Audio(filePath);
+            if (this.settings.audioOutputDevice && typeof audio.setSinkId === 'function') {
+                await audio.setSinkId(this.settings.audioOutputDevice);
+            }
+            audio.play();
+        } catch (error) {
+            this.showNotification('Failed to play sound', 'error');
+            console.error('Error playing sound:', error);
+        }
+    }
+
     resetSettings() {
         if (confirm('Are you sure you want to reset all settings to defaults?')) {
             localStorage.removeItem('proximity-settings');
@@ -929,7 +976,8 @@ class ProximityApp {
                 echoCancellation: true,
                 autoJoin: false,
                 muteHotkey: 'Ctrl+M',
-                deafenHotkey: 'Ctrl+D'
+                deafenHotkey: 'Ctrl+D',
+                audioOutputDevice: ''
             };
             this.loadSettings();
             this.showNotification('Settings reset to defaults', 'success');

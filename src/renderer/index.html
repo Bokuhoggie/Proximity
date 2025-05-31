@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Wannabe - Voice Chat</title>
+    <title>Proximity - Voice Chat</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* https://cdnjs.cloudflare.com; media-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* https://cdnjs.cloudflare.com; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <!-- Navigation Sidebar -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1 class="logo">WANNABE</h1>
+                <h1 class="logo">PROXIMITY</h1>
             </div>
             <div class="nav-items">
                 <div class="nav-item active" data-page="rooms">
@@ -81,6 +81,14 @@
                             <label for="audioDevice">Microphone Device</label>
                             <select id="audioDevice" class="setting-select">
                                 <option value="">Select Audio Device</option>
+                            </select>
+                        </div>
+
+                        <!-- Audio Output Device Selector -->
+                        <div class="setting-item">
+                            <label for="audioOutputDevice">Output Device</label>
+                            <select id="audioOutputDevice" class="setting-select">
+                                <option value="">Select Output Device</option>
                             </select>
                         </div>
 
@@ -182,6 +190,7 @@
 
                     <div class="settings-actions">
                         <button id="testMicrophone" class="btn secondary">Test Microphone</button>
+                        <button id="testOutputButton" class="btn secondary">Test Output</button>
                         <button id="resetSettings" class="btn danger">Reset to Defaults</button>
                     </div>
                 </div>
@@ -199,7 +208,7 @@
     <script>
         // Check if our app loaded
         setTimeout(() => {
-            if (!window.wannabeApp) {
+            if (!window.proximityApp) {
                 console.error('Main app failed to load - check webpack build');
                 alert('App failed to load. Please run: npm run webpack');
             }
