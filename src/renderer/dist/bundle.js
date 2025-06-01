@@ -1,42 +1,1717 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/renderer/audio.js":
-/*!*******************************!*\
-  !*** ./src/renderer/audio.js ***!
-  \*******************************/
+/***/ "./src/renderer/js/audio/AudioManager.js":
+/*!***********************************************!*\
+  !*** ./src/renderer/js/audio/AudioManager.js ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   AudioVisualizer: () => (/* binding */ AudioVisualizer),\n/* harmony export */   MicrophoneInput: () => (/* binding */ MicrophoneInput)\n/* harmony export */ });\n// Audio-related classes for Proximity\r\n\r\nclass AudioVisualizer {\r\n    constructor() {\r\n        this.audioContext = null;\r\n        this.analyser = null;\r\n        this.microphone = null;\r\n        this.dataArray = null;\r\n        this.isActive = false;\r\n        this.callbacks = [];\r\n    }\r\n\r\n    async initialize(stream) {\r\n        try {\r\n            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();\r\n            this.analyser = this.audioContext.createAnalyser();\r\n            this.microphone = this.audioContext.createMediaStreamSource(stream);\r\n            \r\n            this.analyser.fftSize = 256;\r\n            this.analyser.smoothingTimeConstant = 0.8;\r\n            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);\r\n            \r\n            this.microphone.connect(this.analyser);\r\n            this.isActive = true;\r\n            \r\n            this.startAnalyzing();\r\n            console.log('Audio visualizer initialized');\r\n        } catch (error) {\r\n            console.error('Error initializing audio visualizer:', error);\r\n        }\r\n    }\r\n\r\n    async initializeFromNode(node) {\r\n        try {\r\n            this.audioContext = node.context;\r\n            this.analyser = this.audioContext.createAnalyser();\r\n            this.analyser.fftSize = 256;\r\n            this.analyser.smoothingTimeConstant = 0.8;\r\n            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);\r\n            node.connect(this.analyser);\r\n            this.isActive = true;\r\n            this.startAnalyzing();\r\n            console.log('Audio visualizer initialized from node');\r\n        } catch (error) {\r\n            console.error('Error initializing audio visualizer from node:', error);\r\n        }\r\n    }\r\n\r\n    startAnalyzing() {\r\n        if (!this.isActive) return;\r\n        \r\n        this.analyser.getByteFrequencyData(this.dataArray);\r\n        \r\n        // Calculate volume level (0-100)\r\n        const average = this.dataArray.reduce((a, b) => a + b) / this.dataArray.length;\r\n        const volume = Math.min(100, (average / 128) * 100);\r\n        \r\n        // Notify all callbacks\r\n        this.callbacks.forEach(callback => callback(volume, this.dataArray));\r\n        \r\n        requestAnimationFrame(() => this.startAnalyzing());\r\n    }\r\n\r\n    addCallback(callback) {\r\n        this.callbacks.push(callback);\r\n    }\r\n\r\n    removeCallback(callback) {\r\n        this.callbacks = this.callbacks.filter(cb => cb !== callback);\r\n    }\r\n\r\n    stop() {\r\n        this.isActive = false;\r\n        if (this.audioContext && this.audioContext.state !== 'closed') {\r\n            this.audioContext.close();\r\n        }\r\n        this.callbacks = [];\r\n    }\r\n}\r\n\r\nclass MicrophoneInput {\r\n    constructor() {\r\n        this.stream = null;\r\n        this.visualizer = null;\r\n        this.isRecording = false;\r\n        this.gainNode = null;\r\n        this.gainValue = 1.0;\r\n        this.constraints = {\r\n            audio: {\r\n                echoCancellation: true,\r\n                noiseSuppression: true,\r\n                autoGainControl: true\r\n            },\r\n            video: false\r\n        };\r\n    }\r\n\r\n    async initialize(constraints = {}) {\r\n        this.constraints = { ...this.constraints, ...constraints };\r\n        try {\r\n            this.stream = await navigator.mediaDevices.getUserMedia(this.constraints);\r\n            // Setup audio context and gain node\r\n            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();\r\n            this.gainNode = this.audioContext.createGain();\r\n            // Set initial gain\r\n            this.setGain((window.proximityApp && window.proximityApp.settings && window.proximityApp.settings.audioGain) || 50);\r\n            // Connect mic to gain node\r\n            this.micSource = this.audioContext.createMediaStreamSource(this.stream);\r\n            this.micSource.connect(this.gainNode);\r\n            // For visualizer, use the gain node output\r\n            this.visualizer = new AudioVisualizer();\r\n            await this.visualizer.initializeFromNode(this.gainNode);\r\n            this.isRecording = true;\r\n            console.log('Microphone input initialized with gain');\r\n            return this.stream;\r\n        } catch (error) {\r\n            console.error('Error initializing microphone:', error);\r\n            throw error;\r\n        }\r\n    }\r\n\r\n    setGain(value) {\r\n        // value: 0-100, map to 0-2\r\n        this.gainValue = Math.max(0, Math.min(2, value / 50));\r\n        if (this.gainNode) {\r\n            this.gainNode.gain.value = this.gainValue;\r\n        }\r\n    }\r\n\r\n    getStream() {\r\n        return this.stream;\r\n    }\r\n\r\n    getVisualizer() {\r\n        return this.visualizer;\r\n    }\r\n\r\n    addVolumeCallback(callback) {\r\n        if (this.visualizer) {\r\n            this.visualizer.addCallback(callback);\r\n        }\r\n    }\r\n\r\n    removeVolumeCallback(callback) {\r\n        if (this.visualizer) {\r\n            this.visualizer.removeCallback(callback);\r\n        }\r\n    }\r\n\r\n    stop() {\r\n        this.isRecording = false;\r\n        if (this.stream) {\r\n            this.stream.getTracks().forEach(track => track.stop());\r\n        }\r\n        if (this.visualizer) {\r\n            this.visualizer.stop();\r\n        }\r\n    }\r\n\r\n    async changeDevice(deviceId) {\r\n        if (this.stream) {\r\n            this.stop();\r\n        }\r\n        \r\n        const newConstraints = {\r\n            ...this.constraints,\r\n            audio: {\r\n                ...this.constraints.audio,\r\n                deviceId: { exact: deviceId }\r\n            }\r\n        };\r\n        \r\n        return await this.initialize(newConstraints);\r\n    }\r\n}\r\n\r\n \n\n//# sourceURL=webpack://proximity/./src/renderer/audio.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AudioManager: () => (/* binding */ AudioManager)
+/* harmony export */ });
+// src/renderer/js/audio/AudioManager.js - Fixed version with missing methods
+class AudioManager {
+    constructor() {
+        this.peerConnections = new Map();
+        this.localStream = null;
+        this.isMuted = false;
+        this.initialized = false; // Add this flag
+        this.audioContext = null;
+        this.micSource = null;
+        this.gainNode = null;
+        
+        this.iceServers = [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+        ];
+    }
+
+    async initialize() {
+        try {
+            console.log('Initializing audio...');
+            
+            const constraints = {
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                },
+                video: false
+            };
+
+            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            
+            // Setup audio context for gain control
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.gainNode = this.audioContext.createGain();
+            this.gainNode.gain.value = 1.0;
+            
+            this.micSource = this.audioContext.createMediaStreamSource(this.localStream);
+            this.micSource.connect(this.gainNode);
+            
+            this.initialized = true;
+            console.log('Audio initialized successfully');
+            
+        } catch (error) {
+            console.error('Failed to initialize audio:', error);
+            throw new Error('Failed to access microphone: ' + error.message);
+        }
+    }
+
+    // Add the missing isInitialized method
+    isInitialized() {
+        return this.initialized;
+    }
+
+    async connectToUser(userId, username, userColor) {
+        if (this.peerConnections.has(userId)) {
+            console.log('Already connected to user:', userId);
+            return;
+        }
+
+        console.log('Connecting to user:', userId, username);
+        
+        const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+        this.peerConnections.set(userId, peerConnection);
+
+        // Add local stream
+        if (this.localStream) {
+            this.localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, this.localStream);
+            });
+        }
+
+        // Handle incoming stream
+        peerConnection.ontrack = (event) => {
+            console.log('Received remote stream from:', userId);
+            const remoteStream = event.streams[0];
+            
+            // Create audio element
+            const audioElement = document.createElement('audio');
+            audioElement.autoplay = true;
+            audioElement.srcObject = remoteStream;
+            audioElement.volume = 1;
+            audioElement.style.display = 'none';
+            
+            // Add to participant
+            const participant = document.getElementById(`participant-${userId}`);
+            if (participant) {
+                participant.appendChild(audioElement);
+            }
+            
+            // Notify app about the audio element for proximity calculations
+            if (window.proximityApp && window.proximityApp.proximityMap) {
+                window.proximityApp.proximityMap.setUserAudioElement(userId, audioElement);
+            }
+        };
+
+        // Handle ICE candidates
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate && window.proximityApp) {
+                window.proximityApp.connectionManager.emit('ice-candidate', {
+                    target: userId,
+                    candidate: event.candidate
+                });
+            }
+        };
+
+        // Create and send offer
+        try {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            
+            if (window.proximityApp) {
+                window.proximityApp.connectionManager.emit('offer', {
+                    target: userId,
+                    offer: offer
+                });
+            }
+        } catch (error) {
+            console.error('Error creating offer for user:', userId, error);
+            this.peerConnections.delete(userId);
+        }
+    }
+
+    async handleOffer(offer, from) {
+        console.log('Handling offer from:', from);
+        
+        if (this.peerConnections.has(from)) {
+            console.log('Connection already exists for user:', from);
+            return;
+        }
+
+        const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
+        this.peerConnections.set(from, peerConnection);
+
+        // Add local stream
+        if (this.localStream) {
+            this.localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, this.localStream);
+            });
+        }
+
+        // Handle incoming stream
+        peerConnection.ontrack = (event) => {
+            console.log('Received remote stream from:', from);
+            const remoteStream = event.streams[0];
+            
+            // Create audio element
+            const audioElement = document.createElement('audio');
+            audioElement.autoplay = true;
+            audioElement.srcObject = remoteStream;
+            audioElement.volume = 1;
+            audioElement.style.display = 'none';
+            
+            // Add to participant
+            const participant = document.getElementById(`participant-${from}`);
+            if (participant) {
+                participant.appendChild(audioElement);
+            }
+            
+            // Notify proximity map
+            if (window.proximityApp && window.proximityApp.proximityMap) {
+                window.proximityApp.proximityMap.setUserAudioElement(from, audioElement);
+            }
+        };
+
+        // Handle ICE candidates
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate && window.proximityApp) {
+                window.proximityApp.connectionManager.emit('ice-candidate', {
+                    target: from,
+                    candidate: event.candidate
+                });
+            }
+        };
+
+        try {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            
+            if (window.proximityApp) {
+                window.proximityApp.connectionManager.emit('answer', {
+                    target: from,
+                    answer: answer
+                });
+            }
+        } catch (error) {
+            console.error('Error handling offer from:', from, error);
+            this.peerConnections.delete(from);
+        }
+    }
+
+    async handleAnswer(answer, from) {
+        console.log('Handling answer from:', from);
+        
+        const peerConnection = this.peerConnections.get(from);
+        if (!peerConnection) {
+            console.warn('No peer connection found for:', from);
+            return;
+        }
+
+        try {
+            if (peerConnection.signalingState === 'have-local-offer') {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+            } else {
+                console.warn(`Cannot set remote answer in state: ${peerConnection.signalingState}`);
+            }
+        } catch (error) {
+            console.error('Error handling answer from:', from, error);
+            this.disconnectFromUser(from);
+        }
+    }
+
+    async handleIceCandidate(candidate, from) {
+        const peerConnection = this.peerConnections.get(from);
+        if (!peerConnection) {
+            console.warn('No peer connection found for ICE candidate from:', from);
+            return;
+        }
+
+        try {
+            if (peerConnection.remoteDescription) {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+                // Queue candidates if remote description not set yet
+                if (!peerConnection.queuedCandidates) {
+                    peerConnection.queuedCandidates = [];
+                }
+                peerConnection.queuedCandidates.push(candidate);
+            }
+        } catch (error) {
+            console.error('Error handling ICE candidate from:', from, error);
+        }
+    }
+
+    disconnectFromUser(userId) {
+        const peerConnection = this.peerConnections.get(userId);
+        if (peerConnection) {
+            peerConnection.close();
+            this.peerConnections.delete(userId);
+            console.log('Disconnected from user:', userId);
+        }
+    }
+
+    disconnectAll() {
+        console.log('Disconnecting from all users...');
+        this.peerConnections.forEach((pc, userId) => {
+            pc.close();
+        });
+        this.peerConnections.clear();
+    }
+
+    toggleMute() {
+        if (!this.localStream) return;
+
+        this.isMuted = !this.isMuted;
+        
+        this.localStream.getAudioTracks().forEach(track => {
+            track.enabled = !this.isMuted;
+        });
+
+        // Update UI
+        if (window.proximityApp && window.proximityApp.uiManager) {
+            window.proximityApp.uiManager.updateMuteStatus(this.isMuted);
+        }
+
+        // Notify server
+        if (window.proximityApp) {
+            window.proximityApp.updateMicStatus(this.isMuted);
+        }
+
+        console.log('Microphone', this.isMuted ? 'muted' : 'unmuted');
+    }
+
+    setGain(value) {
+        // value: 0-100, map to 0-2
+        const gainValue = Math.max(0, Math.min(2, value / 50));
+        if (this.gainNode) {
+            this.gainNode.gain.value = gainValue;
+        }
+    }
+
+    async changeInputDevice(deviceId) {
+        if (!deviceId) return;
+
+        try {
+            // Stop current stream
+            if (this.localStream) {
+                this.localStream.getTracks().forEach(track => track.stop());
+            }
+
+            // Get new stream with specific device
+            const constraints = {
+                audio: {
+                    deviceId: { exact: deviceId },
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            };
+
+            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+            // Update audio context
+            if (this.micSource) {
+                this.micSource.disconnect();
+            }
+            this.micSource = this.audioContext.createMediaStreamSource(this.localStream);
+            this.micSource.connect(this.gainNode);
+
+            // Replace tracks in all peer connections
+            this.peerConnections.forEach(pc => {
+                const senders = pc.getSenders();
+                const audioSender = senders.find(sender => 
+                    sender.track && sender.track.kind === 'audio'
+                );
+                if (audioSender) {
+                    audioSender.replaceTrack(this.localStream.getAudioTracks()[0]);
+                }
+            });
+
+            console.log('Audio input device changed successfully');
+        } catch (error) {
+            console.error('Error changing audio input device:', error);
+            throw error;
+        }
+    }
+
+    getLocalStream() {
+        return this.localStream;
+    }
+
+    cleanup() {
+        this.disconnectAll();
+        
+        if (this.localStream) {
+            this.localStream.getTracks().forEach(track => track.stop());
+            this.localStream = null;
+        }
+
+        if (this.audioContext && this.audioContext.state !== 'closed') {
+            this.audioContext.close();
+        }
+
+        this.initialized = false;
+    }
+}
 
 /***/ }),
 
-/***/ "./src/renderer/proximity-map.js":
-/*!***************************************!*\
-  !*** ./src/renderer/proximity-map.js ***!
-  \***************************************/
+/***/ "./src/renderer/js/chat/ChatManager.js":
+/*!*********************************************!*\
+  !*** ./src/renderer/js/chat/ChatManager.js ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   ProximityMap: () => (/* binding */ ProximityMap)\n/* harmony export */ });\n// Proximity Map for handling user positions and audio proximity\r\nclass ProximityMap {\r\n    constructor(canvas, proximityApp) {\r\n        this.canvas = canvas;\r\n        this.ctx = canvas.getContext('2d');\r\n        this.app = proximityApp;\r\n        this.users = new Map(); // userId -> {x, y, username, isSelf, audioElement}\r\n        this.myUserId = null;\r\n        this.proximityRange = 100;\r\n        this.isDragging = false;\r\n        this.dragOffset = { x: 0, y: 0 };\r\n        this.testBotId = null;\r\n        this.testBotMovementInterval = null;\r\n        \r\n        // Define audio constants for proximity calculation\r\n        this.EDGE_START = 0.75; // When edge effects begin (80% of max range)\r\n        this.OUTER_RANGE = 1.3; // Allow audio to continue beyond visible range (120%)\r\n        \r\n        this.setupEventListeners();\r\n        this.startRenderLoop();\r\n        \r\n        // Set canvas size\r\n        this.resizeCanvas();\r\n        window.addEventListener('resize', () => this.resizeCanvas());\r\n    }\r\n\r\n    resizeCanvas() {\r\n        const rect = this.canvas.getBoundingClientRect();\r\n        this.canvas.width = rect.width;\r\n        this.canvas.height = rect.height;\r\n    }\r\n\r\n    setupEventListeners() {\r\n        this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));\r\n        this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));\r\n        this.canvas.addEventListener('mouseup', () => this.handleMouseUp());\r\n        this.canvas.addEventListener('mouseleave', () => this.handleMouseUp());\r\n        \r\n        // Touch events for mobile\r\n        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e));\r\n        this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e));\r\n        this.canvas.addEventListener('touchend', () => this.handleMouseUp());\r\n    }\r\n\r\n    handleMouseDown(e) {\r\n        const rect = this.canvas.getBoundingClientRect();\r\n        const x = e.clientX - rect.left;\r\n        const y = e.clientY - rect.top;\r\n        \r\n        if (this.myUserId && this.users.has(this.myUserId)) {\r\n            const myUser = this.users.get(this.myUserId);\r\n            const distance = Math.sqrt((x - myUser.x) ** 2 + (y - myUser.y) ** 2);\r\n            \r\n            if (distance <= 20) { // User circle radius is 20px\r\n                this.isDragging = true;\r\n                this.dragOffset = { x: x - myUser.x, y: y - myUser.y };\r\n                this.canvas.style.cursor = 'grabbing';\r\n            }\r\n        }\r\n    }\r\n\r\n    handleMouseMove(e) {\r\n        const rect = this.canvas.getBoundingClientRect();\r\n        const x = e.clientX - rect.left;\r\n        const y = e.clientY - rect.top;\r\n        \r\n        if (this.isDragging && this.myUserId) {\r\n            const newX = Math.max(20, Math.min(this.canvas.width - 20, x - this.dragOffset.x));\r\n            const newY = Math.max(20, Math.min(this.canvas.height - 20, y - this.dragOffset.y));\r\n            \r\n            this.updateUserPosition(this.myUserId, newX, newY);\r\n            this.updateAudioProximity();\r\n            \r\n            // Emit position update to other users\r\n            if (this.app.socket) {\r\n                this.app.socket.emit('position-update', {\r\n                    roomId: this.app.currentRoom,\r\n                    x: newX,\r\n                    y: newY\r\n                });\r\n            }\r\n        } else {\r\n            // Update cursor based on hover\r\n            let isHovering = false;\r\n            if (this.myUserId && this.users.has(this.myUserId)) {\r\n                const myUser = this.users.get(this.myUserId);\r\n                const distance = Math.sqrt((x - myUser.x) ** 2 + (y - myUser.y) ** 2);\r\n                isHovering = distance <= 20;\r\n            }\r\n            this.canvas.style.cursor = isHovering ? 'grab' : 'crosshair';\r\n        }\r\n    }\r\n\r\n    handleMouseUp() {\r\n        this.isDragging = false;\r\n        this.canvas.style.cursor = 'crosshair';\r\n    }\r\n\r\n    handleTouchStart(e) {\r\n        e.preventDefault();\r\n        const touch = e.touches[0];\r\n        const mouseEvent = new MouseEvent('mousedown', {\r\n            clientX: touch.clientX,\r\n            clientY: touch.clientY\r\n        });\r\n        this.handleMouseDown(mouseEvent);\r\n    }\r\n\r\n    handleTouchMove(e) {\r\n        e.preventDefault();\r\n        const touch = e.touches[0];\r\n        const mouseEvent = new MouseEvent('mousemove', {\r\n            clientX: touch.clientX,\r\n            clientY: touch.clientY\r\n        });\r\n        this.handleMouseMove(mouseEvent);\r\n    }\r\n\r\n    addUser(userId, username, isSelf = false, audioElement = null) {\r\n        // Center spawn position\r\n        const x = this.canvas.width / 2;\r\n        const y = this.canvas.height / 2;\r\n        \r\n        this.users.set(userId, {\r\n            x,\r\n            y,\r\n            username: username || `User ${userId.slice(0, 4)}`,\r\n            isSelf,\r\n            audioElement,\r\n            lastUpdate: Date.now(),\r\n            color: isSelf ? (this.app.settings.userColor || 'purple') : undefined\r\n        });\r\n\r\n        if (isSelf) {\r\n            this.myUserId = userId;\r\n        }\r\n\r\n        this.updateAudioProximity();\r\n    }\r\n\r\n    // Add center position method\r\n    centerMyPosition() {\r\n        if (!this.myUserId || !this.users.has(this.myUserId)) return;\r\n\r\n        const centerX = this.canvas.width / 2;\r\n        const centerY = this.canvas.height / 2;\r\n        \r\n        this.updateUserPosition(this.myUserId, centerX, centerY);\r\n        this.updateAudioProximity();\r\n        \r\n        // Emit position update to other users\r\n        if (this.app.socket) {\r\n            this.app.socket.emit('position-update', {\r\n                roomId: this.app.currentRoom,\r\n                x: centerX,\r\n                y: centerY\r\n            });\r\n        }\r\n    }\r\n\r\n    removeUser(userId) {\r\n        this.users.delete(userId);\r\n        if (this.myUserId === userId) {\r\n            this.myUserId = null;\r\n        }\r\n        this.updateAudioProximity();\r\n    }\r\n\r\n    updateUserPosition(userId, x, y) {\r\n        if (this.users.has(userId)) {\r\n            const user = this.users.get(userId);\r\n            user.x = x;\r\n            user.y = y;\r\n            user.lastUpdate = Date.now();\r\n        }\r\n    }\r\n\r\n    updateRemoteUserPosition(userId, x, y) {\r\n        this.updateUserPosition(userId, x, y);\r\n        this.updateAudioProximity();\r\n    }\r\n\r\n    updateAudioProximity() {\r\n        if (!this.myUserId || !this.users.has(this.myUserId)) return;\r\n\r\n        const myUser = this.users.get(this.myUserId);\r\n        \r\n        this.users.forEach((user, userId) => {\r\n            if (userId === this.myUserId || !user.audioElement) return;\r\n\r\n            const distance = Math.sqrt(\r\n                (myUser.x - user.x) ** 2 + (myUser.y - user.y) ** 2\r\n            );\r\n\r\n            // Calculate volume based on proximity (0 to 1)\r\n            let volume = 0;\r\n            \r\n            // Calculate normalized distance\r\n            const normalizedDistance = distance / this.proximityRange;\r\n            \r\n            if (normalizedDistance <= this.OUTER_RANGE) {\r\n                // Improved feathering with extended fade beyond visible range\r\n                if (normalizedDistance > this.EDGE_START && normalizedDistance <= 1.0) {\r\n                    // Extra feathering at the edge (last 20% of visible range)\r\n                    const edgeFactor = (1 - normalizedDistance) / (1 - this.EDGE_START);\r\n                    volume = Math.pow(edgeFactor, 2) * 0.3;\r\n                } else if (normalizedDistance > 1.0 && normalizedDistance <= this.OUTER_RANGE) {\r\n                    // Extended fadeout beyond visible range\r\n                    const fadeoutFactor = (this.OUTER_RANGE - normalizedDistance) / (this.OUTER_RANGE - 1.0);\r\n                    volume = Math.pow(fadeoutFactor, 3) * 0.1; // Very quiet, just audible\r\n                } else {\r\n                    // Normal falloff for closer distances\r\n                    volume = Math.max(0, 1 - normalizedDistance);\r\n                    volume = Math.pow(volume, 0.4); // Gentler curve for more natural falloff\r\n                }\r\n            }\r\n\r\n            // Apply volume with some smoothing\r\n            if (user.audioElement) {\r\n                const currentVolume = user.audioElement.volume;\r\n                const smoothedVolume = currentVolume * 0.8 + volume * 0.2;\r\n                user.audioElement.volume = this.app.isDeafened ? 0 : smoothedVolume;\r\n                \r\n                // Apply audio effects if the user is a bot (for testing)\r\n                if (user.isBot && user.audioElement) {\r\n                    // Apply reverb based on distance, with smoothing beyond visible range\r\n                    const isNearEdge = normalizedDistance > this.EDGE_START && normalizedDistance <= this.OUTER_RANGE;\r\n\r\n                    try {\r\n                        // Set up audio effects if not already done\r\n                        if (!user.audioEffectsApplied) {\r\n                            // Create audio context if not already present\r\n                            if (!this.audioContext) {\r\n                                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();\r\n                            }\r\n                            \r\n                            // Create audio nodes for reverb effect\r\n                            const source = this.audioContext.createMediaElementSource(user.audioElement);\r\n                            const reverbNode = this.audioContext.createConvolver();\r\n                            \r\n                            // Create reverb impulse response\r\n                            const reverbTime = 2.5; // seconds\r\n                            const sampleRate = this.audioContext.sampleRate;\r\n                            const impulseLength = sampleRate * reverbTime;\r\n                            const impulseResponse = this.audioContext.createBuffer(2, impulseLength, sampleRate);\r\n                            \r\n                            // Fill impulse response with decaying white noise\r\n                            for (let channel = 0; channel < 2; channel++) {\r\n                                const impulseData = impulseResponse.getChannelData(channel);\r\n                                for (let i = 0; i < impulseLength; i++) {\r\n                                    // Exponential decay\r\n                                    impulseData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / impulseLength, 1.5);\r\n                                }\r\n                            }\r\n                            \r\n                            reverbNode.buffer = impulseResponse;\r\n                            \r\n                            // Create gain nodes for dry/wet mix\r\n                            const dryGain = this.audioContext.createGain();\r\n                            const wetGain = this.audioContext.createGain();\r\n                            \r\n                            // Initialize with no reverb to fix initial audio issues\r\n                            dryGain.gain.value = 1;\r\n                            wetGain.gain.value = 0;\r\n                            \r\n                            // Connect the nodes\r\n                            source.connect(dryGain);\r\n                            source.connect(reverbNode);\r\n                            reverbNode.connect(wetGain);\r\n                            dryGain.connect(this.audioContext.destination);\r\n                            wetGain.connect(this.audioContext.destination);\r\n                            \r\n                            // Save references to avoid garbage collection\r\n                            user.audioNodes = {\r\n                                source,\r\n                                reverbNode,\r\n                                dryGain,\r\n                                wetGain\r\n                            };\r\n                            \r\n                            user.audioEffectsApplied = true;\r\n                        }\r\n                        \r\n                        // Dynamically adjust reverb mix based on distance\r\n                        if (user.audioNodes) {\r\n                            if (isNearEdge) {\r\n                                let reverbAmount = 0;\r\n                                \r\n                                if (normalizedDistance > this.EDGE_START && normalizedDistance <= 1.0) {\r\n                                    // Gradual increase of reverb as we reach the visible edge\r\n                                    const edgeFactor = (normalizedDistance - this.EDGE_START) / (1.0 - this.EDGE_START);\r\n                                    reverbAmount = Math.min(0.7, edgeFactor * 0.7); // max 70% wet at visible edge\r\n                                } else if (normalizedDistance > 1.0 && normalizedDistance <= this.OUTER_RANGE) {\r\n                                    // Maximum reverb in the fadeout zone beyond visible range\r\n                                    const fadeoutFactor = (this.OUTER_RANGE - normalizedDistance) / (this.OUTER_RANGE - 1.0);\r\n                                    reverbAmount = 0.7 + (0.2 * (1 - fadeoutFactor)); // 70-90% wet in fadeout zone\r\n                                }\r\n                                \r\n                                // Apply with smooth transition\r\n                                const audioCtx = this.audioContext;\r\n                                user.audioNodes.dryGain.gain.setTargetAtTime(1 - reverbAmount, audioCtx.currentTime, 0.1);\r\n                                user.audioNodes.wetGain.gain.setTargetAtTime(reverbAmount, audioCtx.currentTime, 0.1);\r\n                            } else {\r\n                                // No reverb when not at the edge\r\n                                const audioCtx = this.audioContext;\r\n                                user.audioNodes.dryGain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.1);\r\n                                user.audioNodes.wetGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);\r\n                            }\r\n                        }\r\n                    } catch (error) {\r\n                        console.error('Error applying audio effects:', error);\r\n                    }\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    setProximityRange(range) {\r\n        this.proximityRange = range;\r\n        this.updateAudioProximity();\r\n    }\r\n\r\n    startRenderLoop() {\r\n        const render = () => {\r\n            this.render();\r\n            requestAnimationFrame(render);\r\n        };\r\n        render();\r\n    }\r\n\r\n    render() {\r\n        // Clear canvas\r\n        this.ctx.fillStyle = '#0f0f23';\r\n        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);\r\n\r\n        // Draw grid\r\n        this.drawGrid();\r\n\r\n        // Draw proximity ranges and users\r\n        this.users.forEach((user, userId) => {\r\n            if (userId === this.myUserId) {\r\n                this.drawProximityRange(user.x, user.y);\r\n            }\r\n        });\r\n\r\n        this.users.forEach((user, userId) => {\r\n            this.drawUser(user, userId === this.myUserId);\r\n        });\r\n\r\n        // Draw connection lines\r\n        if (this.myUserId && this.users.has(this.myUserId)) {\r\n            this.drawConnectionLines();\r\n        }\r\n    }\r\n\r\n    drawGrid() {\r\n        this.ctx.strokeStyle = 'rgba(107, 70, 193, 0.1)';\r\n        this.ctx.lineWidth = 1;\r\n        \r\n        const gridSize = 50;\r\n        \r\n        for (let x = 0; x <= this.canvas.width; x += gridSize) {\r\n            this.ctx.beginPath();\r\n            this.ctx.moveTo(x, 0);\r\n            this.ctx.lineTo(x, this.canvas.height);\r\n            this.ctx.stroke();\r\n        }\r\n        \r\n        for (let y = 0; y <= this.canvas.height; y += gridSize) {\r\n            this.ctx.beginPath();\r\n            this.ctx.moveTo(0, y);\r\n            this.ctx.lineTo(this.canvas.width, y);\r\n            this.ctx.stroke();\r\n        }\r\n    }\r\n\r\n    drawProximityRange(x, y) {\r\n        // Use user's color for the proximity range\r\n        let strokeColor = 'rgba(139, 92, 246, 0.3)';\r\n        let fillColor = 'rgba(139, 92, 246, 0.05)';\r\n        let extendedStrokeColor = 'rgba(139, 92, 246, 0.15)';\r\n        \r\n        if (this.myUserId && this.users.has(this.myUserId)) {\r\n            const user = this.users.get(this.myUserId);\r\n            if (user.color) {\r\n                const colorMap = {\r\n                    blue: [\r\n                        'rgba(59,130,246,0.3)', \r\n                        'rgba(59,130,246,0.08)',\r\n                        'rgba(59,130,246,0.15)'\r\n                    ],\r\n                    green: [\r\n                        'rgba(16,185,129,0.3)', \r\n                        'rgba(16,185,129,0.08)',\r\n                        'rgba(16,185,129,0.15)'\r\n                    ],\r\n                    purple: [\r\n                        'rgba(139,92,246,0.3)', \r\n                        'rgba(139,92,246,0.08)',\r\n                        'rgba(139,92,246,0.15)'\r\n                    ],\r\n                    red: [\r\n                        'rgba(239,68,68,0.3)', \r\n                        'rgba(239,68,68,0.08)',\r\n                        'rgba(239,68,68,0.15)'\r\n                    ],\r\n                    orange: [\r\n                        'rgba(245,158,11,0.3)', \r\n                        'rgba(245,158,11,0.08)',\r\n                        'rgba(245,158,11,0.15)'\r\n                    ],\r\n                    pink: [\r\n                        'rgba(236,72,153,0.3)', \r\n                        'rgba(236,72,153,0.08)',\r\n                        'rgba(236,72,153,0.15)'\r\n                    ],\r\n                    indigo: [\r\n                        'rgba(99,102,241,0.3)', \r\n                        'rgba(99,102,241,0.08)',\r\n                        'rgba(99,102,241,0.15)'\r\n                    ],\r\n                    cyan: [\r\n                        'rgba(6,182,212,0.3)', \r\n                        'rgba(6,182,212,0.08)',\r\n                        'rgba(6,182,212,0.15)'\r\n                    ]\r\n                };\r\n                [strokeColor, fillColor, extendedStrokeColor] = colorMap[user.color] || [strokeColor, fillColor, extendedStrokeColor];\r\n            }\r\n        }\r\n        \r\n        // Draw extended audible range (faded)\r\n        this.ctx.strokeStyle = extendedStrokeColor;\r\n        this.ctx.lineWidth = 1;\r\n        this.ctx.setLineDash([2, 4]);\r\n        this.ctx.beginPath();\r\n        this.ctx.arc(x, y, this.proximityRange * this.OUTER_RANGE, 0, Math.PI * 2);\r\n        this.ctx.stroke();\r\n        \r\n        // Draw main proximity range\r\n        this.ctx.strokeStyle = strokeColor;\r\n        this.ctx.fillStyle = fillColor;\r\n        this.ctx.lineWidth = 2;\r\n        this.ctx.setLineDash([5, 5]);\r\n        this.ctx.beginPath();\r\n        this.ctx.arc(x, y, this.proximityRange, 0, Math.PI * 2);\r\n        this.ctx.fill();\r\n        this.ctx.stroke();\r\n        this.ctx.setLineDash([]);\r\n    }\r\n\r\n    drawUser(user, isSelf) {\r\n        const { x, y, username, color } = user;\r\n        // Use user.color if present, otherwise fallback\r\n        let fillColor = '#8b5cf6';\r\n        let strokeColor = '#a78bfa';\r\n        if (color) {\r\n            const colorMap = {\r\n                blue: ['#3b82f6', '#60a5fa'],\r\n                green: ['#10b981', '#34d399'],\r\n                purple: ['#8b5cf6', '#a78bfa'],\r\n                red: ['#ef4444', '#f87171'],\r\n                orange: ['#f59e0b', '#fbbf24'],\r\n                pink: ['#ec4899', '#f472b6'],\r\n                indigo: ['#6366f1', '#818cf8'],\r\n                cyan: ['#06b6d4', '#22d3ee']\r\n            };\r\n            const [fill, stroke] = colorMap[color] || ['#8b5cf6', '#a78bfa'];\r\n            fillColor = fill;\r\n            strokeColor = stroke;\r\n        }\r\n        this.ctx.fillStyle = fillColor;\r\n        this.ctx.strokeStyle = strokeColor;\r\n        this.ctx.lineWidth = 3;\r\n        this.ctx.beginPath();\r\n        this.ctx.arc(x, y, 20, 0, Math.PI * 2);\r\n        this.ctx.fill();\r\n        this.ctx.stroke();\r\n        \r\n        // User initial/icon\r\n        this.ctx.fillStyle = '#ffffff';\r\n        this.ctx.font = 'bold 16px sans-serif';\r\n        this.ctx.textAlign = 'center';\r\n        this.ctx.textBaseline = 'middle';\r\n        \r\n        const initial = username.charAt(0).toUpperCase();\r\n        this.ctx.fillText(initial, x, y);\r\n        \r\n        // Username label\r\n        let nameColor = isSelf && color ? color : null;\r\n        if (nameColor) {\r\n            const colorMap = {\r\n                blue: '#3b82f6',\r\n                green: '#10b981',\r\n                purple: '#8b5cf6',\r\n                red: '#ef4444',\r\n                orange: '#f59e0b',\r\n                pink: '#ec4899',\r\n                indigo: '#6366f1',\r\n                cyan: '#06b6d4'\r\n            };\r\n            this.ctx.fillStyle = colorMap[nameColor] || '#a78bfa';\r\n        } else {\r\n            this.ctx.fillStyle = isSelf ? '#a78bfa' : '#cbd5e1';\r\n        }\r\n        this.ctx.font = '12px sans-serif';\r\n        this.ctx.textAlign = 'center';\r\n        this.textBaseline = 'top';\r\n        const displayName = isSelf ? `${username} (You)` : username;\r\n        this.ctx.fillText(displayName, x, y + 30);\r\n        \r\n        // Activity indicator (pulsing effect when speaking)\r\n        if (user.isActive) {\r\n            const pulseRadius = 25 + Math.sin(Date.now() * 0.01) * 5;\r\n            let glowColor = 'rgba(16, 185, 129, 0.6)';\r\n            if (color) {\r\n                const colorMap = {\r\n                    blue: 'rgba(59,130,246,0.6)',\r\n                    green: 'rgba(16,185,129,0.6)',\r\n                    purple: 'rgba(139,92,246,0.6)',\r\n                    red: 'rgba(239,68,68,0.6)',\r\n                    orange: 'rgba(245,158,11,0.6)',\r\n                    pink: 'rgba(236,72,153,0.6)',\r\n                    indigo: 'rgba(99,102,241,0.6)',\r\n                    cyan: 'rgba(6,182,212,0.6)'\r\n                };\r\n                glowColor = colorMap[color] || glowColor;\r\n            }\r\n            this.ctx.strokeStyle = glowColor;\r\n            this.ctx.lineWidth = 2;\r\n            this.ctx.beginPath();\r\n            this.ctx.arc(x, y, pulseRadius, 0, Math.PI * 2);\r\n            this.ctx.stroke();\r\n        }\r\n    }\r\n\r\n    drawConnectionLines() {\r\n        if (!this.myUserId || !this.users.has(this.myUserId)) return;\r\n\r\n        const myUser = this.users.get(this.myUserId);\r\n        \r\n        this.users.forEach((user, userId) => {\r\n            if (userId === this.myUserId) return;\r\n\r\n            const distance = Math.sqrt(\r\n                (myUser.x - user.x) ** 2 + (myUser.y - user.y) ** 2\r\n            );\r\n\r\n            if (distance <= this.proximityRange) {\r\n                const opacity = Math.max(0.1, 1 - (distance / this.proximityRange));\r\n                this.ctx.strokeStyle = `rgba(16, 185, 129, ${opacity * 0.5})`;\r\n                this.ctx.lineWidth = 2;\r\n                \r\n                this.ctx.beginPath();\r\n                this.ctx.moveTo(myUser.x, myUser.y);\r\n                this.ctx.lineTo(user.x, user.y);\r\n                this.ctx.stroke();\r\n            }\r\n        });\r\n    }\r\n\r\n    // Called when user speaks to show activity\r\n    setUserActivity(userId, isActive) {\r\n        if (this.users.has(userId)) {\r\n            this.users.get(userId).isActive = isActive;\r\n        }\r\n    }\r\n\r\n    // Get current user positions for saving/restoring\r\n    getUserPositions() {\r\n        const positions = {};\r\n        this.users.forEach((user, userId) => {\r\n            positions[userId] = { x: user.x, y: user.y };\r\n        });\r\n        return positions;\r\n    }\r\n\r\n    // Restore user positions\r\n    setUserPositions(positions) {\r\n        Object.entries(positions).forEach(([userId, pos]) => {\r\n            if (this.users.has(userId)) {\r\n                this.updateUserPosition(userId, pos.x, pos.y);\r\n            }\r\n        });\r\n        this.updateAudioProximity();\r\n    }\r\n\r\n    // Add this method to allow updating a user's color\r\n    updateUserColor(userId, color) {\r\n        if (this.users.has(userId)) {\r\n            this.users.get(userId).color = color;\r\n        }\r\n    }\r\n\r\n    addTestBot() {\r\n        // Remove existing test bot if there is one\r\n        this.removeTestBot();\r\n\r\n        // Create a test bot ID\r\n        this.testBotId = 'test-bot-' + Date.now();\r\n        \r\n        // Create audio element for test sound\r\n        const audioElement = new Audio('assets/TestNoise.mp3');\r\n        audioElement.loop = true;\r\n        \r\n        // Initially set volume to 0 to prevent being heard before proximity is applied\r\n        audioElement.volume = 0;\r\n        \r\n        // Position the bot at a distance away from the user \r\n        // to avoid being immediately heard at full volume\r\n        let x, y;\r\n        \r\n        if (this.myUserId && this.users.has(this.myUserId)) {\r\n            // Position at a safe distance from user\r\n            const myUser = this.users.get(this.myUserId);\r\n            const angle = Math.random() * Math.PI * 2;\r\n            const distance = this.proximityRange * 0.9; // 90% of proximity range\r\n            \r\n            x = myUser.x + Math.cos(angle) * distance;\r\n            y = myUser.y + Math.sin(angle) * distance;\r\n            \r\n            // Ensure within canvas bounds\r\n            x = Math.max(20, Math.min(this.canvas.width - 20, x));\r\n            y = Math.max(20, Math.min(this.canvas.height - 20, y));\r\n        } else {\r\n            // Random position if no user exists\r\n            x = Math.random() * (this.canvas.width - 40) + 20;\r\n            y = Math.random() * (this.canvas.height - 40) + 20;\r\n        }\r\n        \r\n        // Add bot to users map\r\n        this.users.set(this.testBotId, {\r\n            x,\r\n            y,\r\n            username: 'Test Bot',\r\n            isSelf: false,\r\n            audioElement,\r\n            lastUpdate: Date.now(),\r\n            color: 'green',\r\n            isBot: true,\r\n            audioEffectsApplied: false\r\n        });\r\n        \r\n        // Play the audio\r\n        audioElement.play();\r\n        \r\n        // Update audio proximity before animation starts\r\n        this.updateAudioProximity();\r\n        \r\n        // Start bot movement\r\n        this.startTestBotMovement();\r\n        \r\n        return this.testBotId;\r\n    }\r\n    \r\n    removeTestBot() {\r\n        // Stop the movement interval\r\n        if (this.testBotMovementInterval) {\r\n            clearInterval(this.testBotMovementInterval);\r\n            this.testBotMovementInterval = null;\r\n        }\r\n        \r\n        // Remove the bot and stop audio\r\n        if (this.testBotId && this.users.has(this.testBotId)) {\r\n            const bot = this.users.get(this.testBotId);\r\n            \r\n            // Clean up audio processing nodes if they exist\r\n            if (bot.audioNodes) {\r\n                try {\r\n                    bot.audioNodes.source.disconnect();\r\n                    bot.audioNodes.reverbNode.disconnect();\r\n                    bot.audioNodes.dryGain.disconnect();\r\n                    bot.audioNodes.wetGain.disconnect();\r\n                } catch (error) {\r\n                    console.error('Error disconnecting audio nodes:', error);\r\n                }\r\n                bot.audioNodes = null;\r\n            }\r\n            \r\n            if (bot.audioElement) {\r\n                bot.audioElement.pause();\r\n                bot.audioElement.srcObject = null;\r\n            }\r\n            \r\n            this.users.delete(this.testBotId);\r\n            this.testBotId = null;\r\n            this.updateAudioProximity();\r\n        }\r\n    }\r\n    \r\n    startTestBotMovement() {\r\n        // Stop any existing movement interval\r\n        if (this.testBotMovementInterval) {\r\n            clearInterval(this.testBotMovementInterval);\r\n        }\r\n        \r\n        // Move the bot randomly every 3 seconds\r\n        this.testBotMovementInterval = setInterval(() => {\r\n            if (this.testBotId && this.users.has(this.testBotId)) {\r\n                const bot = this.users.get(this.testBotId);\r\n                \r\n                // Random movement direction\r\n                const targetX = Math.random() * (this.canvas.width - 40) + 20;\r\n                const targetY = Math.random() * (this.canvas.height - 40) + 20;\r\n                \r\n                // Animate the movement over 3 seconds\r\n                const startX = bot.x;\r\n                const startY = bot.y;\r\n                const startTime = Date.now();\r\n                const duration = 3000;\r\n                \r\n                const animateMovement = () => {\r\n                    const elapsed = Date.now() - startTime;\r\n                    const progress = Math.min(elapsed / duration, 1);\r\n                    \r\n                    // Ease-in-out movement\r\n                    const easing = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;\r\n                    \r\n                    bot.x = startX + (targetX - startX) * easing;\r\n                    bot.y = startY + (targetY - startY) * easing;\r\n                    \r\n                    if (progress < 1) {\r\n                        requestAnimationFrame(animateMovement);\r\n                    }\r\n                    \r\n                    // Update audio proximity after each movement step\r\n                    this.updateAudioProximity();\r\n                };\r\n                \r\n                animateMovement();\r\n                \r\n                // Show speaking activity for half a second\r\n                bot.isActive = true;\r\n                setTimeout(() => {\r\n                    if (this.testBotId && this.users.has(this.testBotId)) {\r\n                        this.users.get(this.testBotId).isActive = false;\r\n                    }\r\n                }, 500);\r\n            }\r\n        }, 5000);\r\n    }\r\n}\r\n\r\n\n\n//# sourceURL=webpack://proximity/./src/renderer/proximity-map.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ChatManager: () => (/* binding */ ChatManager)
+/* harmony export */ });
+// src/renderer/js/chat/ChatManager.js
+class ChatManager {
+    constructor() {
+        this.currentRoom = null;
+    }
+
+    sendMessage(message) {
+        if (!message.trim()) return;
+
+        if (!window.proximityApp || !window.proximityApp.connectionManager.socket) {
+            console.error('Not connected to server');
+            return;
+        }
+
+        if (!window.proximityApp.isInHub) {
+            console.error('Not in a channel');
+            return;
+        }
+
+        const username = window.proximityApp.settingsManager.get('username') || 'Anonymous';
+        
+        console.log('Sending chat message:', message);
+
+        window.proximityApp.connectionManager.emit('send-chat-message', {
+            roomId: 'hub-general',
+            message: message,
+            username: username
+        });
+    }
+
+    addMessage(data) {
+        if (!window.proximityApp || !window.proximityApp.uiManager) return;
+
+        console.log('Adding chat message:', data);
+        
+        window.proximityApp.uiManager.addChatMessage(
+            data.username,
+            data.message,
+            data.timestamp || Date.now()
+        );
+    }
+
+    clearMessages() {
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+        }
+    }
+}
 
 /***/ }),
 
-/***/ "./src/renderer/renderer.js":
-/*!**********************************!*\
-  !*** ./src/renderer/renderer.js ***!
-  \**********************************/
+/***/ "./src/renderer/js/core/ConnectionManager.js":
+/*!***************************************************!*\
+  !*** ./src/renderer/js/core/ConnectionManager.js ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _audio__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./audio */ \"./src/renderer/audio.js\");\n/* harmony import */ var _proximity_map__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./proximity-map */ \"./src/renderer/proximity-map.js\");\n// Updated renderer with full server system - FIXED VERSION\r\nconsole.log('Updated Renderer.js starting...');\r\n\r\n// Import audio classes and proximity map\r\n\r\n\r\n\r\nconst SERVER_URL = 'https://myserver2-production.up.railway.app';\r\n\r\nclass ProximityApp {\r\n    constructor() {\r\n        console.log('ProximityApp constructor called');\r\n        this.socket = null;\r\n        this.peerConnections = {};\r\n        this.micInput = new _audio__WEBPACK_IMPORTED_MODULE_0__.MicrophoneInput();\r\n        this.proximityMap = null;\r\n        this.isMuted = false;\r\n        this.isDeafened = false;\r\n        this.currentRoom = null;\r\n        this.currentServer = null;\r\n        this.currentChannel = null;\r\n        this.availableServers = [];\r\n        this.myServers = []; // Servers I created\r\n        this.favoriteServers = []; // Servers I favorited\r\n        this.myUserId = null;\r\n        this.persistentVisualizerActive = false;\r\n        this.settings = {\r\n            username: '',\r\n            userColor: 'purple',\r\n            audioGain: 50,\r\n            noiseSupression: true,\r\n            echoCancellation: true,\r\n            autoJoin: false,\r\n            muteHotkey: 'Ctrl+M',\r\n            deafenHotkey: 'Ctrl+D',\r\n            audioOutputDevice: ''\r\n        };\r\n\r\n        this.colorEmojis = {\r\n            blue: '🔵',\r\n            green: '🟢', \r\n            purple: '🟣',\r\n            red: '🔴',\r\n            orange: '🟠',\r\n            pink: '🩷',\r\n            indigo: '💜',\r\n            cyan: '🔹'\r\n        };\r\n\r\n        this.initializeUI();\r\n        this.setupEventListeners();\r\n        this.loadSettings();\r\n        this.loadServerData();\r\n        this.setupMicrophoneGlow();\r\n        this.initializeProximityMap();\r\n        this.connectToServerDiscovery();\r\n        console.log('ProximityApp initialized');\r\n    }\r\n\r\n    initializeUI() {\r\n        console.log('Initializing UI...');\r\n        \r\n        // Connection status elements\r\n        this.connectionIndicator = document.getElementById('connectionIndicator');\r\n        this.connectionText = document.getElementById('connectionText');\r\n        \r\n        // Navigation elements\r\n        this.navItems = document.querySelectorAll('.nav-item');\r\n        this.pages = document.querySelectorAll('.page');\r\n\r\n        // Home page elements\r\n        this.homeCreateServerBtn = document.getElementById('homeCreateServerBtn');\r\n        this.availableServersList = document.getElementById('availableServersList');\r\n\r\n        // Sidebar server elements\r\n        this.createServerBtn = document.getElementById('createServerBtn');\r\n        this.myServersList = document.getElementById('myServersList');\r\n\r\n        // Server creation modal elements\r\n        this.createServerModal = document.getElementById('createServerModal');\r\n        this.serverNameInput = document.getElementById('serverName');\r\n        this.serverDescriptionInput = document.getElementById('serverDescription');\r\n        this.confirmCreateServerBtn = document.getElementById('confirmCreateServer');\r\n        this.cancelCreateServerBtn = document.getElementById('cancelCreateServer');\r\n        this.modalClose = document.querySelector('.modal-close');\r\n\r\n        // Server view elements\r\n        this.currentServerNameElement = document.getElementById('currentServerName');\r\n        this.serverInviteDisplay = document.getElementById('serverInviteDisplay');\r\n        this.textChannelsList = document.getElementById('textChannelsList');\r\n        this.voiceChannelsList = document.getElementById('voiceChannelsList');\r\n        this.leaveServerBtn = document.getElementById('leaveServerBtn');\r\n\r\n        // Chat elements\r\n        this.chatMessages = document.getElementById('chatMessages');\r\n        this.messageInput = document.getElementById('messageInput');\r\n        this.sendMessageBtn = document.getElementById('sendMessageBtn');\r\n        this.participantsList = document.getElementById('participantsList');\r\n\r\n        // Map elements\r\n        this.proximityMapCanvas = document.getElementById('proximityMap');\r\n        this.proximitySlider = document.getElementById('proximitySlider');\r\n        this.proximityRangeDisplay = document.getElementById('proximityRange');\r\n        this.centerMapBtn = document.getElementById('centerMapBtn');\r\n        this.toggleTestBotBtn = document.getElementById('toggleTestBot');\r\n\r\n        // Mute button\r\n        this.muteButton = document.getElementById('muteButton');\r\n        this.mapMuteButton = document.getElementById('mapMuteButton');\r\n        \r\n        // Leave channel buttons\r\n        this.leaveChannelBtn = document.getElementById('leaveChannelBtn');\r\n        this.leaveChannelServerBtn = document.getElementById('leaveChannelServerBtn');\r\n\r\n        // Settings elements\r\n        this.audioDeviceSelect = document.getElementById('audioDevice');\r\n        this.audioOutputDeviceSelect = document.getElementById('audioOutputDevice');\r\n        this.audioGainSlider = document.getElementById('audioGain');\r\n        this.noiseSupressionCheck = document.getElementById('noiseSupression');\r\n        this.echoCancellationCheck = document.getElementById('echoCancellation');\r\n        this.usernameInput = document.getElementById('username');\r\n        this.userColorPicker = document.querySelectorAll('.color-option');\r\n        this.autoJoinCheck = document.getElementById('autoJoin');\r\n        this.testMicrophoneBtn = document.getElementById('testMicrophone');\r\n        this.testOutputButton = document.getElementById('testOutputButton');\r\n        this.resetSettingsBtn = document.getElementById('resetSettings');\r\n\r\n        // Persistent visualizer elements\r\n        this.persistentMicLevelFill = document.getElementById('persistentMicLevelFill');\r\n        this.persistentVolumeLevel = document.getElementById('persistentVolumeLevel');\r\n        this.micStatusText = document.getElementById('micStatusText');\r\n        \r\n        this.createMicTestVisualizer();\r\n        this.createFavoriteButton();\r\n        \r\n        console.log('UI elements found');\r\n    }\r\n\r\n    createFavoriteButton() {\r\n        // Create and add favorite button to server info section\r\n        this.favoriteBtn = document.createElement('button');\r\n        this.favoriteBtn.id = 'favoriteServerBtn';\r\n        this.favoriteBtn.className = 'btn secondary favorite-btn';\r\n        this.favoriteBtn.innerHTML = '<span class=\"icon\">⭐</span><span class=\"text\">Favorite</span>';\r\n        this.favoriteBtn.onclick = () => this.toggleFavoriteServer();\r\n        this.favoriteBtn.style.marginLeft = '1rem';\r\n        this.favoriteBtn.style.display = 'none'; // Initially hidden\r\n        \r\n        // Add to server info actions section\r\n        const serverInfoActions = document.querySelector('.server-info-actions');\r\n        if (serverInfoActions) {\r\n            serverInfoActions.appendChild(this.favoriteBtn);\r\n        }\r\n    }\r\n\r\n    setupEventListeners() {\r\n        console.log('Setting up event listeners...');\r\n        \r\n        // Navigation\r\n        this.navItems.forEach((item) => {\r\n            item.addEventListener('click', () => {\r\n                const page = item.dataset.page;\r\n                this.switchPage(page);\r\n            });\r\n        });\r\n\r\n        // Home page server creation\r\n        if (this.homeCreateServerBtn) {\r\n            this.homeCreateServerBtn.addEventListener('click', () => {\r\n                this.showCreateServerModal();\r\n            });\r\n        }\r\n\r\n        // Sidebar server creation\r\n        if (this.createServerBtn) {\r\n            this.createServerBtn.addEventListener('click', () => {\r\n                this.showCreateServerModal();\r\n            });\r\n        }\r\n\r\n        // Create Server Modal\r\n        if (this.confirmCreateServerBtn) {\r\n            this.confirmCreateServerBtn.addEventListener('click', () => this.createServer());\r\n        }\r\n\r\n        if (this.cancelCreateServerBtn) {\r\n            this.cancelCreateServerBtn.addEventListener('click', () => this.hideCreateServerModal());\r\n        }\r\n\r\n        if (this.modalClose) {\r\n            this.modalClose.addEventListener('click', () => this.hideCreateServerModal());\r\n        }\r\n\r\n        // Server view controls\r\n        if (this.leaveServerBtn) {\r\n            this.leaveServerBtn.addEventListener('click', () => this.leaveServer());\r\n        }\r\n\r\n        // Chat controls\r\n        if (this.sendMessageBtn) {\r\n            this.sendMessageBtn.addEventListener('click', () => this.sendMessage());\r\n        }\r\n\r\n        if (this.messageInput) {\r\n            this.messageInput.addEventListener('keypress', (e) => {\r\n                if (e.key === 'Enter') {\r\n                    this.sendMessage();\r\n                }\r\n            });\r\n        }\r\n\r\n        // Mute button\r\n        if (this.muteButton) {\r\n            this.muteButton.addEventListener('click', () => this.toggleMute());\r\n        }\r\n        \r\n        if (this.mapMuteButton) {\r\n            this.mapMuteButton.addEventListener('click', () => this.toggleMute());\r\n        }\r\n\r\n        // Leave channel buttons\r\n        if (this.leaveChannelBtn) {\r\n            this.leaveChannelBtn.addEventListener('click', () => this.leaveVoiceChannel());\r\n        }\r\n\r\n        if (this.leaveChannelServerBtn) {\r\n            this.leaveChannelServerBtn.addEventListener('click', () => this.leaveVoiceChannel());\r\n        }\r\n\r\n        // Proximity map controls\r\n        if (this.proximitySlider) {\r\n            this.proximitySlider.addEventListener('input', (e) => {\r\n                const range = parseInt(e.target.value);\r\n                this.proximityRangeDisplay.textContent = `${range}px`;\r\n                if (this.proximityMap) {\r\n                    this.proximityMap.setProximityRange(range);\r\n                }\r\n            });\r\n        }\r\n\r\n        if (this.centerMapBtn) {\r\n            this.centerMapBtn.addEventListener('click', () => {\r\n                if (this.proximityMap) {\r\n                    this.proximityMap.centerMyPosition();\r\n                }\r\n            });\r\n        }\r\n        \r\n        // Test bot toggle button\r\n        if (this.toggleTestBotBtn) {\r\n            this.toggleTestBotBtn.addEventListener('click', () => {\r\n                if (this.proximityMap) {\r\n                    if (this.proximityMap.testBotId) {\r\n                        this.proximityMap.removeTestBot();\r\n                        this.toggleTestBotBtn.innerHTML = '<span class=\"icon\">🤖</span><span class=\"text\">Add Test Bot</span>';\r\n                        this.showNotification('Test bot removed', 'info');\r\n                    } else {\r\n                        this.proximityMap.addTestBot();\r\n                        this.toggleTestBotBtn.innerHTML = '<span class=\"icon\">🤖</span><span class=\"text\">Remove Test Bot</span>';\r\n                        this.showNotification('Test bot added - move around to test proximity!', 'success');\r\n                    }\r\n                }\r\n            });\r\n        }\r\n\r\n        // Settings controls\r\n        if (this.audioDeviceSelect) {\r\n            this.audioDeviceSelect.addEventListener('change', (e) => this.changeAudioDevice(e.target.value));\r\n        }\r\n        if (this.audioOutputDeviceSelect) {\r\n            this.audioOutputDeviceSelect.addEventListener('change', (e) => this.changeAudioOutputDevice(e.target.value));\r\n        }\r\n        \r\n        if (this.audioGainSlider) {\r\n            this.audioGainSlider.addEventListener('input', (e) => {\r\n                this.updateAudioGain(e.target.value);\r\n                const valueDisplay = document.querySelector('.slider-value');\r\n                if (valueDisplay) {\r\n                    valueDisplay.textContent = `${e.target.value}%`;\r\n                }\r\n            });\r\n        }\r\n\r\n        // Username input with real-time saving\r\n        if (this.usernameInput) {\r\n            this.usernameInput.addEventListener('input', (e) => {\r\n                this.settings.username = e.target.value.trim();\r\n                this.saveSettings();\r\n                this.updateParticipantName();\r\n            });\r\n        }\r\n\r\n        // User color picker\r\n        this.userColorPicker.forEach(colorOption => {\r\n            colorOption.addEventListener('click', (e) => {\r\n                const selectedColor = e.target.dataset.color;\r\n                this.userColorPicker.forEach(opt => opt.classList.remove('selected'));\r\n                colorOption.classList.add('selected');\r\n                this.setUserColor(selectedColor);\r\n            });\r\n        });\r\n\r\n        // Audio setting checkboxes\r\n        if (this.noiseSupressionCheck) {\r\n            this.noiseSupressionCheck.addEventListener('change', (e) => {\r\n                this.settings.noiseSupression = e.target.checked;\r\n                this.saveSettings();\r\n            });\r\n        }\r\n\r\n        if (this.echoCancellationCheck) {\r\n            this.echoCancellationCheck.addEventListener('change', (e) => {\r\n                this.settings.echoCancellation = e.target.checked;\r\n                this.saveSettings();\r\n            });\r\n        }\r\n\r\n        if (this.autoJoinCheck) {\r\n            this.autoJoinCheck.addEventListener('change', (e) => {\r\n                this.settings.autoJoin = e.target.checked;\r\n                this.saveSettings();\r\n            });\r\n        }\r\n        \r\n        if (this.testMicrophoneBtn) {\r\n            this.testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());\r\n        }\r\n        \r\n        if (this.testOutputButton) {\r\n            this.testOutputButton.addEventListener('click', () => this.testOutput());\r\n        }\r\n        \r\n        if (this.resetSettingsBtn) {\r\n            this.resetSettingsBtn.addEventListener('click', () => this.resetSettings());\r\n        }\r\n\r\n        console.log('Event listeners set up complete');\r\n    }\r\n\r\n    connectToServerDiscovery() {\r\n        if (typeof io === 'undefined') {\r\n            this.showNotification('Socket.IO not loaded. Please check your internet connection.', 'error');\r\n            return;\r\n        }\r\n\r\n        console.log('Connecting to server discovery:', SERVER_URL);\r\n        this.updateConnectionStatus('connecting', 'Connecting...');\r\n        \r\n        this.socket = io(SERVER_URL, {\r\n            reconnectionAttempts: 5,\r\n            timeout: 10000,\r\n            transports: ['websocket', 'polling']\r\n        });\r\n\r\n        this.socket.on('connect', () => {\r\n            console.log('Connected to server discovery');\r\n            this.myUserId = this.socket.id;\r\n            this.updateConnectionStatus('online', 'Connected');\r\n            this.showNotification('Connected to server', 'success');\r\n        });\r\n\r\n        this.socket.on('servers-updated', (data) => {\r\n            console.log('Servers updated:', data.servers);\r\n            this.availableServers = data.servers || [];\r\n            this.updateAvailableServersList();\r\n        });\r\n\r\n        this.socket.on('server-created', (data) => {\r\n            console.log('Server created response:', data);\r\n            if (data.success) {\r\n                // Add to my servers list\r\n                if (!this.myServers.includes(data.server.id)) {\r\n                    this.myServers.push(data.server.id);\r\n                    this.saveServerData();\r\n                }\r\n                this.showNotification(`Server \"${data.server.name}\" created successfully!`, 'success');\r\n                \r\n                // Auto-join the created server\r\n                setTimeout(() => {\r\n                    this.joinServer(data.server);\r\n                }, 1000);\r\n            } else {\r\n                this.showNotification('Failed to create server', 'error');\r\n            }\r\n        });\r\n\r\n        this.socket.on('disconnect', () => {\r\n            console.log('Disconnected from server discovery');\r\n            this.updateConnectionStatus('offline', 'Disconnected');\r\n            this.showNotification('Disconnected from server', 'warning');\r\n        });\r\n\r\n        this.socket.on('connect_error', (error) => {\r\n            console.error('Connection error:', error);\r\n            this.updateConnectionStatus('offline', 'Error');\r\n            this.showNotification('Failed to connect to server. Server may be down.', 'error');\r\n        });\r\n\r\n        this.setupVoiceEventHandlers();\r\n    }\r\n\r\n    setupVoiceEventHandlers() {\r\n        this.socket.on('user-joined', ({ userId, username, userColor }) => {\r\n            console.log('User joined:', userId, username, userColor);\r\n            this.showNotification(`${username || 'Anonymous'} joined the channel`, 'info');\r\n            this.connectToNewUser(userId, username, userColor);\r\n        });\r\n\r\n        this.socket.on('room-users', (users) => {\r\n            console.log('Room users:', users);\r\n            users.forEach(({ userId, username, userColor }) => {\r\n                this.connectToNewUser(userId, username, userColor);\r\n            });\r\n        });\r\n\r\n        this.socket.on('user-left', ({ userId, username }) => {\r\n            console.log('User left:', userId, username);\r\n            this.showNotification(`${username || 'Anonymous'} left the channel`, 'info');\r\n            this.removePeerConnection(userId);\r\n            \r\n            if (this.proximityMap) {\r\n                this.proximityMap.removeUser(userId);\r\n            }\r\n        });\r\n\r\n        this.socket.on('position-update', ({ userId, x, y }) => {\r\n            if (this.proximityMap) {\r\n                this.proximityMap.updateRemoteUserPosition(userId, x, y);\r\n            }\r\n        });\r\n\r\n        this.socket.on('offer', async ({ offer, from }) => {\r\n            console.log('Received offer from:', from);\r\n            await this.handleOffer(offer, from);\r\n        });\r\n\r\n        this.socket.on('answer', async ({ answer, from }) => {\r\n            console.log('Received answer from:', from);\r\n            await this.handleAnswer(answer, from);\r\n        });\r\n\r\n        this.socket.on('ice-candidate', async ({ candidate, from }) => {\r\n            await this.handleIceCandidate(candidate, from);\r\n        });\r\n\r\n        this.socket.on('user-mic-status', ({ userId, isMuted }) => {\r\n            this.updateMicStatus(userId, isMuted);\r\n        });\r\n\r\n        this.socket.on('chat-message', (data) => {\r\n            console.log('Received chat message:', data);\r\n            // Add all messages (the server will send to everyone including sender)\r\n            this.addMessageToChat(data.username, data.message, data.timestamp);\r\n        });\r\n\r\n        this.socket.on('chat-message-sent', (data) => {\r\n            console.log('Chat message sent confirmation:', data);\r\n            if (!data.success) {\r\n                this.showNotification('Failed to send message: ' + (data.error || 'Unknown error'), 'error');\r\n            }\r\n        });\r\n    }\r\n\r\n    updateAvailableServersList() {\r\n        console.log('Updating available servers list:', this.availableServers);\r\n        \r\n        if (!this.availableServersList) {\r\n            console.error('Available servers list element not found');\r\n            return;\r\n        }\r\n\r\n        this.availableServersList.innerHTML = '';\r\n\r\n        if (this.availableServers.length === 0) {\r\n            const emptyMessage = document.createElement('div');\r\n            emptyMessage.style.cssText = `\r\n                text-align: center;\r\n                color: var(--text-muted);\r\n                padding: 2rem;\r\n                font-style: italic;\r\n            `;\r\n            emptyMessage.textContent = 'No servers available. Create one to get started!';\r\n            this.availableServersList.appendChild(emptyMessage);\r\n            return;\r\n        }\r\n\r\n        this.availableServers.forEach(server => {\r\n            const serverCard = document.createElement('div');\r\n            serverCard.className = 'server-card';\r\n            \r\n            const isOwned = this.myServers.includes(server.id);\r\n            const isFavorited = this.favoriteServers.includes(server.id);\r\n            \r\n            if (isOwned) serverCard.classList.add('owned');\r\n            if (isFavorited) serverCard.classList.add('favorited');\r\n            \r\n            serverCard.onclick = () => this.joinServer(server);\r\n\r\n            let badges = '';\r\n            if (isOwned) badges += '<span class=\"server-badge owned\">👑 Owner</span>';\r\n            if (isFavorited) badges += '<span class=\"server-badge favorited\">⭐ Favorite</span>';\r\n\r\n            serverCard.innerHTML = `\r\n                <div class=\"server-card-badges\">${badges}</div>\r\n                <div class=\"server-card-header\">\r\n                    <h4 class=\"server-card-name\">${server.name}</h4>\r\n                    <span class=\"server-card-users\">${server.userCount || 0} users</span>\r\n                </div>\r\n                <p class=\"server-card-description\">${server.description || 'No description'}</p>\r\n            `;\r\n\r\n            this.availableServersList.appendChild(serverCard);\r\n        });\r\n\r\n        // Update sidebar as well\r\n        this.updateSidebarServersList();\r\n    }\r\n\r\n    joinServer(server) {\r\n        console.log('Joining server:', server);\r\n        this.currentServer = server;\r\n        \r\n        this.clearChatMessages();\r\n        this.switchPage('server-view');\r\n        \r\n        if (this.currentServerNameElement) {\r\n            this.currentServerNameElement.textContent = server.name;\r\n        }\r\n        if (this.serverInviteDisplay) {\r\n            this.serverInviteDisplay.textContent = server.id;\r\n        }\r\n        \r\n        // Update favorite button\r\n        this.updateFavoriteButton();\r\n        \r\n        this.setupServerChannels(server);\r\n        this.switchToChannel('general', 'text');\r\n        \r\n        this.showNotification(`Joined server: ${server.name}`, 'success');\r\n    }\r\n\r\n    updateFavoriteButton() {\r\n        if (!this.currentServer || !this.favoriteBtn) return;\r\n        \r\n        const isFavorited = this.favoriteServers.includes(this.currentServer.id);\r\n        const isOwned = this.myServers.includes(this.currentServer.id);\r\n        \r\n        if (isOwned) {\r\n            this.favoriteBtn.style.display = 'none';\r\n        } else {\r\n            this.favoriteBtn.style.display = 'inline-flex';\r\n            \r\n            if (isFavorited) {\r\n                this.favoriteBtn.innerHTML = '<span class=\"icon\">⭐</span><span class=\"text\">Unfavorite</span>';\r\n                this.favoriteBtn.classList.add('favorited');\r\n            } else {\r\n                this.favoriteBtn.innerHTML = '<span class=\"icon\">☆</span><span class=\"text\">Favorite</span>';\r\n                this.favoriteBtn.classList.remove('favorited');\r\n            }\r\n        }\r\n    }\r\n\r\n    toggleFavoriteServer() {\r\n        if (!this.currentServer) return;\r\n        \r\n        const serverId = this.currentServer.id;\r\n        const isFavorited = this.favoriteServers.includes(serverId);\r\n        \r\n        if (isFavorited) {\r\n            this.favoriteServers = this.favoriteServers.filter(id => id !== serverId);\r\n            this.showNotification(`Removed ${this.currentServer.name} from favorites`, 'info');\r\n        } else {\r\n            this.favoriteServers.push(serverId);\r\n            this.showNotification(`Added ${this.currentServer.name} to favorites`, 'success');\r\n        }\r\n        \r\n        this.saveServerData();\r\n        this.updateFavoriteButton();\r\n        this.updateAvailableServersList();\r\n    }\r\n\r\n    updateSidebarServersList() {\r\n        if (!this.myServersList) return;\r\n\r\n        this.myServersList.innerHTML = '';\r\n\r\n        // Add \"My Servers\" section\r\n        if (this.myServers.length > 0) {\r\n            const myServersHeader = document.createElement('div');\r\n            myServersHeader.className = 'server-category-header';\r\n            myServersHeader.innerHTML = '<h4 style=\"color: var(--success); font-size: 0.8rem; margin-bottom: 0.5rem;\">MY SERVERS</h4>';\r\n            this.myServersList.appendChild(myServersHeader);\r\n\r\n            this.myServers.forEach(serverId => {\r\n                const server = this.availableServers.find(s => s.id === serverId);\r\n                if (server) {\r\n                    this.addServerToSidebar(server, 'owned');\r\n                }\r\n            });\r\n        }\r\n\r\n        // Add \"Favorite Servers\" section\r\n        if (this.favoriteServers.length > 0) {\r\n            const favoritesHeader = document.createElement('div');\r\n            favoritesHeader.className = 'server-category-header';\r\n            favoritesHeader.innerHTML = '<h4 style=\"color: var(--warning); font-size: 0.8rem; margin: 1rem 0 0.5rem 0;\">FAVORITES</h4>';\r\n            this.myServersList.appendChild(favoritesHeader);\r\n\r\n            this.favoriteServers.forEach(serverId => {\r\n                const server = this.availableServers.find(s => s.id === serverId);\r\n                if (server && !this.myServers.includes(serverId)) {\r\n                    this.addServerToSidebar(server, 'favorited');\r\n                }\r\n            });\r\n        }\r\n    }\r\n\r\n    addServerToSidebar(server, type) {\r\n        const serverItem = document.createElement('div');\r\n        serverItem.className = 'server-item';\r\n        serverItem.onclick = () => this.joinServer(server);\r\n\r\n        const serverIcon = document.createElement('div');\r\n        serverIcon.className = 'server-icon';\r\n        serverIcon.textContent = server.name.charAt(0).toUpperCase();\r\n\r\n        const serverName = document.createElement('span');\r\n        serverName.textContent = server.name;\r\n        serverName.style.flex = '1';\r\n\r\n        const badge = document.createElement('span');\r\n        badge.style.fontSize = '0.8rem';\r\n        badge.style.marginLeft = '0.5rem';\r\n        if (type === 'owned') {\r\n            badge.textContent = '👑';\r\n            badge.title = 'Your server';\r\n        } else if (type === 'favorited') {\r\n            badge.textContent = '⭐';\r\n            badge.title = 'Favorited';\r\n        }\r\n\r\n        serverItem.appendChild(serverIcon);\r\n        serverItem.appendChild(serverName);\r\n        serverItem.appendChild(badge);\r\n\r\n        this.myServersList.appendChild(serverItem);\r\n    }\r\n\r\n    createServer() {\r\n        const name = this.serverNameInput.value.trim();\r\n        if (!name) {\r\n            this.showNotification('Please enter a server name', 'warning');\r\n            return;\r\n        }\r\n\r\n        if (!this.socket || !this.socket.connected) {\r\n            this.showNotification('Not connected to server. Please wait...', 'error');\r\n            return;\r\n        }\r\n\r\n        console.log('Creating server:', name);\r\n        \r\n        this.socket.emit('create-server', {\r\n            serverName: name,\r\n            serverDescription: this.serverDescriptionInput.value.trim()\r\n        });\r\n\r\n        this.hideCreateServerModal();\r\n        this.showNotification(`Creating server \"${name}\"...`, 'info');\r\n    }\r\n\r\n    showCreateServerModal() {\r\n        if (this.createServerModal) {\r\n            this.createServerModal.style.display = 'flex';\r\n            if (this.serverNameInput) {\r\n                this.serverNameInput.focus();\r\n            }\r\n        }\r\n    }\r\n\r\n    hideCreateServerModal() {\r\n        if (this.createServerModal) {\r\n            this.createServerModal.style.display = 'none';\r\n        }\r\n        if (this.serverNameInput) {\r\n            this.serverNameInput.value = '';\r\n        }\r\n        if (this.serverDescriptionInput) {\r\n            this.serverDescriptionInput.value = '';\r\n        }\r\n    }\r\n\r\n    setupServerChannels(server) {\r\n        if (this.textChannelsList) {\r\n            this.textChannelsList.innerHTML = '';\r\n        }\r\n        if (this.voiceChannelsList) {\r\n            this.voiceChannelsList.innerHTML = '';\r\n        }\r\n\r\n        server.channels.forEach(channel => {\r\n            const channelItem = document.createElement('div');\r\n            channelItem.className = 'channel-item';\r\n            channelItem.dataset.channelType = channel.type;\r\n            channelItem.dataset.channelId = channel.id;\r\n            channelItem.onclick = () => this.switchToChannel(channel.id, channel.type);\r\n\r\n            const channelIcon = document.createElement('span');\r\n            channelIcon.className = 'channel-icon';\r\n            channelIcon.textContent = channel.type === 'text' ? '#' : '🔊';\r\n\r\n            const channelName = document.createElement('span');\r\n            channelName.className = 'channel-name';\r\n            channelName.textContent = channel.name;\r\n\r\n            channelItem.appendChild(channelIcon);\r\n            channelItem.appendChild(channelName);\r\n\r\n            if (channel.type === 'text' && this.textChannelsList) {\r\n                this.textChannelsList.appendChild(channelItem);\r\n            } else if (channel.type === 'voice' && this.voiceChannelsList) {\r\n                this.voiceChannelsList.appendChild(channelItem);\r\n            }\r\n        });\r\n    }\r\n\r\n    switchToChannel(channelId, channelType) {\r\n        console.log('Switching to channel:', channelId, channelType);\r\n        this.currentChannel = { id: channelId, type: channelType };\r\n        \r\n        document.querySelectorAll('.channel-item').forEach(item => {\r\n            item.classList.remove('active');\r\n        });\r\n        const activeChannel = document.querySelector(`[data-channel-id=\"${channelId}\"]`);\r\n        if (activeChannel) {\r\n            activeChannel.classList.add('active');\r\n        }\r\n        \r\n        document.querySelectorAll('.content-view').forEach(view => {\r\n            view.classList.remove('active');\r\n        });\r\n        \r\n        if (channelType === 'text') {\r\n            const textView = document.getElementById('text-chat-view');\r\n            if (textView) {\r\n                textView.classList.add('active');\r\n            }\r\n        } else if (channelType === 'voice') {\r\n            const voiceView = document.getElementById('voice-channel-view');\r\n            if (voiceView) {\r\n                voiceView.classList.add('active');\r\n            }\r\n            this.joinVoiceChannel(channelId);\r\n        }\r\n    }\r\n\r\n    async joinVoiceChannel(channelId) {\r\n        if (this.currentRoom) {\r\n            this.showNotification('Already connected to a voice channel', 'warning');\r\n            return;\r\n        }\r\n\r\n        const roomId = `${this.currentServer.id}-${channelId}`;\r\n        \r\n        try {\r\n            await this.initializeMedia();\r\n            this.connectToVoiceRoom(roomId);\r\n            this.currentRoom = roomId;\r\n            \r\n            this.showNotification(`Joined voice channel`, 'success');\r\n            this.playSound('assets/JoinNoise.mp3');\r\n        } catch (error) {\r\n            console.error('Error joining voice channel:', error);\r\n            this.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');\r\n        }\r\n    }\r\n\r\n    connectToVoiceRoom(roomId) {\r\n        if (!this.socket || !this.socket.connected) {\r\n            this.showNotification('Not connected to server', 'error');\r\n            return;\r\n        }\r\n\r\n        console.log('Connecting to voice room:', roomId);\r\n\r\n        this.socket.emit('join-room', {\r\n            roomId: roomId,\r\n            username: this.settings.username || 'Anonymous',\r\n            userColor: this.settings.userColor || 'purple'\r\n        });\r\n        \r\n        this.addParticipant(this.socket.id, this.micInput.getStream(), true, this.settings.username || 'You', this.settings.userColor || 'purple');\r\n        \r\n        if (this.proximityMap) {\r\n            this.proximityMap.addUser(this.socket.id, this.settings.username || 'You', true);\r\n            this.proximityMap.updateUserColor(this.socket.id, this.settings.userColor || 'purple');\r\n        }\r\n\r\n        console.log('Successfully joined voice room:', roomId);\r\n    }\r\n\r\n    // Server data management\r\n    loadServerData() {\r\n        try {\r\n            const savedMyServers = localStorage.getItem('proximity-my-servers');\r\n            if (savedMyServers) {\r\n                this.myServers = JSON.parse(savedMyServers);\r\n            }\r\n            \r\n            const savedFavorites = localStorage.getItem('proximity-favorite-servers');\r\n            if (savedFavorites) {\r\n                this.favoriteServers = JSON.parse(savedFavorites);\r\n            }\r\n            \r\n            this.updateSidebarServersList();\r\n        } catch (error) {\r\n            console.error('Error loading server data:', error);\r\n        }\r\n    }\r\n\r\n    saveServerData() {\r\n        try {\r\n            localStorage.setItem('proximity-my-servers', JSON.stringify(this.myServers));\r\n            localStorage.setItem('proximity-favorite-servers', JSON.stringify(this.favoriteServers));\r\n        } catch (error) {\r\n            console.error('Error saving server data:', error);\r\n        }\r\n    }\r\n\r\n    // Essential missing methods\r\n    createMicTestVisualizer() {\r\n        if (!this.testMicrophoneBtn) return;\r\n        \r\n        const testMicContainer = this.testMicrophoneBtn.parentElement;\r\n        \r\n        const visualizerContainer = document.createElement('div');\r\n        visualizerContainer.id = 'micTestVisualizer';\r\n        visualizerContainer.style.cssText = `\r\n            margin-top: 1rem;\r\n            padding: 1rem;\r\n            background: var(--dark-bg);\r\n            border-radius: 8px;\r\n            border: 1px solid var(--border);\r\n            display: none;\r\n        `;\r\n        \r\n        const visualizerTitle = document.createElement('h4');\r\n        visualizerTitle.textContent = 'Microphone Test (10 seconds)';\r\n        visualizerTitle.style.cssText = `\r\n            color: var(--text-secondary);\r\n            margin-bottom: 0.5rem;\r\n            font-size: 0.9rem;\r\n        `;\r\n        \r\n        const visualizerBar = document.createElement('div');\r\n        visualizerBar.id = 'micLevelBar';\r\n        visualizerBar.style.cssText = `\r\n            width: 100%;\r\n            height: 20px;\r\n            background: var(--border);\r\n            border-radius: 10px;\r\n            overflow: hidden;\r\n            position: relative;\r\n        `;\r\n        \r\n        const visualizerFill = document.createElement('div');\r\n        visualizerFill.id = 'micLevelFill';\r\n        visualizerFill.style.cssText = `\r\n            height: 100%;\r\n            width: 0%;\r\n            background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%);\r\n            transition: width 0.1s ease;\r\n            border-radius: 10px;\r\n        `;\r\n        \r\n        const volumeText = document.createElement('span');\r\n        volumeText.id = 'volumeLevel';\r\n        volumeText.style.cssText = `\r\n            position: absolute;\r\n            top: 50%;\r\n            left: 50%;\r\n            transform: translate(-50%, -50%);\r\n            font-size: 0.8rem;\r\n            font-weight: bold;\r\n            color: var(--text-primary);\r\n            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);\r\n        `;\r\n        volumeText.textContent = '0%';\r\n        \r\n        visualizerBar.appendChild(visualizerFill);\r\n        visualizerBar.appendChild(volumeText);\r\n        visualizerContainer.appendChild(visualizerTitle);\r\n        visualizerContainer.appendChild(visualizerBar);\r\n        \r\n        testMicContainer.appendChild(visualizerContainer);\r\n    }\r\n\r\n    setupMicrophoneGlow() {\r\n        const style = document.createElement('style');\r\n        style.textContent = `\r\n            .mic-status.glowing {\r\n                box-shadow: 0 0 var(--glow-size, 8px) var(--glow-color, rgba(16, 185, 129, 0.6));\r\n                transition: box-shadow 0.1s ease;\r\n            }\r\n            .available-servers-list {\r\n                display: flex;\r\n                flex-direction: column;\r\n                gap: 1rem;\r\n                margin-top: 1rem;\r\n                max-height: 300px;\r\n                overflow-y: auto;\r\n            }\r\n            .server-card {\r\n                background: var(--card-bg);\r\n                border: 1px solid var(--border);\r\n                border-radius: 12px;\r\n                padding: 1.5rem;\r\n                cursor: pointer;\r\n                transition: all 0.3s ease;\r\n                border-left: 4px solid transparent;\r\n                position: relative;\r\n            }\r\n            .server-card:hover {\r\n                background: rgba(139, 92, 246, 0.1);\r\n                border-left-color: var(--accent-purple);\r\n                transform: translateY(-2px);\r\n                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);\r\n            }\r\n            .server-card.favorited {\r\n                border-left-color: var(--warning);\r\n            }\r\n            .server-card.owned {\r\n                border-left-color: var(--success);\r\n            }\r\n            .server-card-header {\r\n                display: flex;\r\n                justify-content: space-between;\r\n                align-items: flex-start;\r\n                margin-bottom: 0.5rem;\r\n            }\r\n            .server-card-name {\r\n                font-size: 1.1rem;\r\n                font-weight: 600;\r\n                color: var(--text-primary);\r\n                margin: 0;\r\n            }\r\n            .server-card-users {\r\n                font-size: 0.8rem;\r\n                color: var(--text-muted);\r\n                background: var(--dark-bg);\r\n                padding: 0.25rem 0.5rem;\r\n                border-radius: 4px;\r\n            }\r\n            .server-card-description {\r\n                color: var(--text-secondary);\r\n                font-size: 0.9rem;\r\n                margin: 0;\r\n            }\r\n            .server-card-badges {\r\n                position: absolute;\r\n                top: 0.75rem;\r\n                right: 0.75rem;\r\n                display: flex;\r\n                gap: 0.25rem;\r\n            }\r\n            .server-badge {\r\n                font-size: 0.8rem;\r\n                padding: 0.2rem 0.4rem;\r\n                border-radius: 4px;\r\n                background: var(--dark-bg);\r\n                color: var(--text-muted);\r\n            }\r\n            .server-badge.owned {\r\n                background: var(--success);\r\n                color: white;\r\n            }\r\n            .server-badge.favorited {\r\n                background: var(--warning);\r\n                color: white;\r\n            }\r\n            .servers-section {\r\n                margin-top: 2rem;\r\n                text-align: left;\r\n            }\r\n            .servers-section h3 {\r\n                color: var(--text-secondary);\r\n                margin-bottom: 1rem;\r\n                font-size: 1.2rem;\r\n            }\r\n            .favorite-btn {\r\n                margin-left: 0.5rem;\r\n            }\r\n            .favorite-btn.favorited {\r\n                background: var(--warning);\r\n                color: white;\r\n            }\r\n            .favorite-btn.favorited .icon {\r\n                filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));\r\n            }\r\n        `;\r\n        document.head.appendChild(style);\r\n    }\r\n\r\n    initializeProximityMap() {\r\n        if (this.proximityMapCanvas) {\r\n            this.proximityMap = new _proximity_map__WEBPACK_IMPORTED_MODULE_1__.ProximityMap(this.proximityMapCanvas, this);\r\n            console.log('Proximity map initialized');\r\n        }\r\n    }\r\n\r\n    switchPage(pageName) {\r\n        console.log('Switching to page:', pageName);\r\n        \r\n        this.navItems.forEach(item => {\r\n            item.classList.toggle('active', item.dataset.page === pageName);\r\n        });\r\n\r\n        this.pages.forEach(page => {\r\n            page.classList.toggle('active', page.id === `${pageName}-page`);\r\n        });\r\n\r\n        if (pageName === 'settings') {\r\n            this.populateAudioDevices();\r\n            this.startPersistentVisualizer();\r\n        } else {\r\n            this.stopPersistentVisualizer();\r\n        }\r\n\r\n        if (pageName === 'map' && this.proximityMap) {\r\n            this.proximityMap.resizeCanvas();\r\n        }\r\n    }\r\n\r\n    // Media and audio methods\r\n    async initializeMedia() {\r\n        try {\r\n            console.log('Requesting microphone access...');\r\n            const constraints = {\r\n                audio: {\r\n                    echoCancellation: this.settings.echoCancellation,\r\n                    noiseSuppression: this.settings.noiseSupression,\r\n                    autoGainControl: true\r\n                }\r\n            };\r\n\r\n            await this.micInput.initialize(constraints);\r\n            console.log('Microphone access granted');\r\n            \r\n            await this.populateAudioDevices();\r\n            this.attachMicVolumeCallback();\r\n        } catch (error) {\r\n            console.error('Error accessing media devices:', error);\r\n            if (error.name === 'NotAllowedError') {\r\n                throw new Error('Microphone access denied. Please allow microphone permissions.');\r\n            } else if (error.name === 'NotFoundError') {\r\n                throw new Error('No microphone found. Please connect a microphone.');\r\n            } else {\r\n                throw new Error('Failed to access microphone: ' + error.message);\r\n            }\r\n        }\r\n    }\r\n\r\n    attachMicVolumeCallback() {\r\n        this.micInput.addVolumeCallback((volume, frequencyData) => {\r\n            this.updateMicrophoneGlow(this.socket?.id || 'self', volume);\r\n            if (this.proximityMap && this.socket?.id) {\r\n                if (volume > 10) {\r\n                    this.proximityMap.setUserActivity(this.socket.id, true);\r\n                    setTimeout(() => {\r\n                        if (this.proximityMap) {\r\n                            this.proximityMap.setUserActivity(this.socket.id, false);\r\n                        }\r\n                    }, 200);\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    updateMicrophoneGlow(userId, volume) {\r\n        const participant = document.getElementById(`participant-${userId}`);\r\n        if (participant) {\r\n            if (userId === (this.socket?.id || 'self')) {\r\n                participant.className = participant.className.replace(/user-color-\\w+/g, '').trim();\r\n                participant.classList.add('user-color-' + this.settings.userColor);\r\n            }\r\n            const micStatus = participant.querySelector('.mic-status');\r\n            if (micStatus && !this.isMuted) {\r\n                let r, g, b;\r\n                if (volume < 50) {\r\n                    r = Math.round(245 * (volume / 50));\r\n                    g = 185;\r\n                    b = 11;\r\n                } else {\r\n                    r = 245;\r\n                    g = Math.round(185 - (185 - 68) * ((volume - 50) / 50));\r\n                    b = 11;\r\n                }\r\n                const glowColor = `rgba(${r},${g},${b},${Math.max(0.3, volume / 100)})`;\r\n                const glowSize = 8 + (volume * 0.4);\r\n                micStatus.style.boxShadow = `0 0 ${glowSize}px ${glowColor}`;\r\n                micStatus.classList.add('glowing');\r\n                if (volume < 5) {\r\n                    micStatus.classList.remove('glowing');\r\n                    micStatus.style.boxShadow = '';\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    async populateAudioDevices() {\r\n        if (!this.audioDeviceSelect || !this.audioOutputDeviceSelect) return;\r\n        \r\n        try {\r\n            const devices = await navigator.mediaDevices.enumerateDevices();\r\n            const audioInputs = devices.filter(device => device.kind === 'audioinput');\r\n            const audioOutputs = devices.filter(device => device.kind === 'audiooutput');\r\n\r\n            this.audioDeviceSelect.innerHTML = '<option value=\"\">Select Audio Device</option>';\r\n            this.audioOutputDeviceSelect.innerHTML = '<option value=\"\">Select Output Device</option>';\r\n\r\n            audioInputs.forEach((device, index) => {\r\n                const option = document.createElement('option');\r\n                option.value = device.deviceId;\r\n                option.textContent = device.label || `Microphone ${index + 1}`;\r\n                this.audioDeviceSelect.appendChild(option);\r\n            });\r\n\r\n            audioOutputs.forEach((device, index) => {\r\n                const option = document.createElement('option');\r\n                option.value = device.deviceId;\r\n                option.textContent = device.label || `Speaker ${index + 1}`;\r\n                this.audioOutputDeviceSelect.appendChild(option);\r\n            });\r\n\r\n            if (this.micInput.getStream()) {\r\n                const currentTrack = this.micInput.getStream().getAudioTracks()[0];\r\n                if (currentTrack && currentTrack.getSettings) {\r\n                    const currentDeviceId = currentTrack.getSettings().deviceId;\r\n                    this.audioDeviceSelect.value = currentDeviceId;\r\n                }\r\n            }\r\n            if (this.settings.audioOutputDevice) {\r\n                this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice;\r\n            }\r\n        } catch (error) {\r\n            console.error('Error populating audio devices:', error);\r\n        }\r\n    }\r\n\r\n    // WebRTC methods\r\n    async connectToNewUser(userId, username = null, userColor = 'blue') {\r\n        console.log('=== CONNECTING TO NEW USER ===', userId, username, userColor);\r\n        const peerConnection = new RTCPeerConnection({\r\n            iceServers: [\r\n                { urls: 'stun:stun.l.google.com:19302' },\r\n                { urls: 'stun:stun1.l.google.com:19302' }\r\n            ]\r\n        });\r\n\r\n        this.peerConnections[userId] = peerConnection;\r\n\r\n        const tracks = this.micInput.getStream().getTracks();\r\n        tracks.forEach(track => {\r\n            peerConnection.addTrack(track, this.micInput.getStream());\r\n        });\r\n\r\n        peerConnection.ontrack = (event) => {\r\n            console.log('=== RECEIVED REMOTE STREAM ===', userId, username);\r\n            const remoteStream = event.streams[0];\r\n            \r\n            this.addParticipant(userId, remoteStream, false, username, userColor);\r\n            \r\n            if (this.proximityMap) {\r\n                const audioElement = this.getAudioElementForUser(userId);\r\n                this.proximityMap.addUser(userId, username || `User ${userId.slice(0, 4)}`, false, audioElement);\r\n                this.proximityMap.updateUserColor(userId, userColor);\r\n            }\r\n        };\r\n\r\n        peerConnection.onicecandidate = (event) => {\r\n            if (event.candidate && this.socket) {\r\n                this.socket.emit('ice-candidate', {\r\n                    target: userId,\r\n                    candidate: event.candidate\r\n                });\r\n            }\r\n        };\r\n\r\n        try {\r\n            const offer = await peerConnection.createOffer();\r\n            await peerConnection.setLocalDescription(offer);\r\n            this.socket.emit('offer', { target: userId, offer });\r\n        } catch (error) {\r\n            console.error('Error creating offer:', error);\r\n        }\r\n    }\r\n\r\n    async handleOffer(offer, from) {\r\n        console.log('Handling offer from:', from);\r\n        \r\n        if (this.peerConnections[from]) {\r\n            console.log('Connection already exists for user:', from);\r\n            return;\r\n        }\r\n\r\n        const peerConnection = new RTCPeerConnection({\r\n            iceServers: [\r\n                { urls: 'stun:stun.l.google.com:19302' },\r\n                { urls: 'stun:stun1.l.google.com:19302' }\r\n            ]\r\n        });\r\n\r\n        this.peerConnections[from] = peerConnection;\r\n\r\n        if (this.micInput.getStream()) {\r\n            this.micInput.getStream().getTracks().forEach(track => {\r\n                try {\r\n                    peerConnection.addTrack(track, this.micInput.getStream());\r\n                } catch (error) {\r\n                    console.error('Error adding track in handleOffer:', error);\r\n                }\r\n            });\r\n        }\r\n\r\n        peerConnection.ontrack = (event) => {\r\n            console.log('Received remote stream from:', from);\r\n            this.addParticipant(from, event.streams[0], false);\r\n            \r\n            if (this.proximityMap) {\r\n                const audioElement = this.getAudioElementForUser(from);\r\n                this.proximityMap.addUser(from, `User ${from.slice(0, 4)}`, false, audioElement);\r\n            }\r\n        };\r\n\r\n        peerConnection.onicecandidate = (event) => {\r\n            if (event.candidate && this.socket) {\r\n                this.socket.emit('ice-candidate', {\r\n                    target: from,\r\n                    candidate: event.candidate\r\n                });\r\n            }\r\n        };\r\n\r\n        try {\r\n            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));\r\n            const answer = await peerConnection.createAnswer();\r\n            await peerConnection.setLocalDescription(answer);\r\n            this.socket.emit('answer', { target: from, answer });\r\n        } catch (error) {\r\n            console.error('Error handling offer from', from, ':', error);\r\n            this.removePeerConnection(from);\r\n        }\r\n    }\r\n\r\n    async handleAnswer(answer, from) {\r\n        console.log('Handling answer from:', from);\r\n        \r\n        const peerConnection = this.peerConnections[from];\r\n        if (!peerConnection) {\r\n            console.warn('No peer connection found for:', from);\r\n            return;\r\n        }\r\n\r\n        try {\r\n            if (peerConnection.signalingState === 'have-local-offer') {\r\n                await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));\r\n            } else {\r\n                console.warn(`Cannot set remote answer in state: ${peerConnection.signalingState}`);\r\n            }\r\n        } catch (error) {\r\n            console.error('Error handling answer from', from, ':', error);\r\n            this.removePeerConnection(from);\r\n        }\r\n    }\r\n\r\n    async handleIceCandidate(candidate, from) {\r\n        const peerConnection = this.peerConnections[from];\r\n        if (!peerConnection) {\r\n            console.warn('No peer connection found for ICE candidate from:', from);\r\n            return;\r\n        }\r\n\r\n        try {\r\n            if (peerConnection.remoteDescription) {\r\n                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));\r\n            } else {\r\n                if (!peerConnection.queuedCandidates) {\r\n                    peerConnection.queuedCandidates = [];\r\n                }\r\n                peerConnection.queuedCandidates.push(candidate);\r\n            }\r\n        } catch (error) {\r\n            console.error('Error handling ICE candidate from', from, ':', error);\r\n        }\r\n    }\r\n\r\n    // UI methods\r\n    addParticipant(userId, stream, isSelf = false, username = null, userColor = 'blue') {\r\n        const existingParticipant = document.getElementById(`participant-${userId}`);\r\n        if (existingParticipant) {\r\n            return;\r\n        }\r\n\r\n        const participant = document.createElement('div');\r\n        participant.className = 'participant';\r\n        participant.id = `participant-${userId}`;\r\n        \r\n        const micStatus = document.createElement('div');\r\n        micStatus.className = 'mic-status';\r\n        micStatus.classList.add(this.isMuted && isSelf ? 'muted' : 'active');\r\n        \r\n        const avatar = document.createElement('span');\r\n        avatar.className = 'participant-avatar';\r\n        avatar.style.marginRight = '8px';\r\n        avatar.style.fontSize = '16px';\r\n        \r\n        const name = document.createElement('span');\r\n        let displayName;\r\n        let displayColor;\r\n        \r\n        if (isSelf) {\r\n            displayName = this.settings.username || 'You';\r\n            displayColor = this.settings.userColor || 'purple';\r\n            name.classList.add(this.getUserColorClass(displayColor));\r\n        } else {\r\n            displayName = username || `User ${userId.slice(0, 4)}`;\r\n            displayColor = userColor || 'blue';\r\n            name.classList.add(this.getUserColorClass(displayColor));\r\n        }\r\n        \r\n        avatar.textContent = this.getUserEmoji(displayColor);\r\n        \r\n        name.textContent = displayName;\r\n        name.style.fontWeight = isSelf ? 'bold' : 'normal';\r\n        \r\n        participant.appendChild(micStatus);\r\n        participant.appendChild(avatar);\r\n        participant.appendChild(name);\r\n        \r\n        if (!isSelf && stream) {\r\n            const audioElement = document.createElement('audio');\r\n            audioElement.autoplay = true;\r\n            audioElement.srcObject = stream;\r\n            audioElement.volume = this.isDeafened ? 0 : 1;\r\n            audioElement.style.display = 'none';\r\n            participant.appendChild(audioElement);\r\n        }\r\n        \r\n        if (this.participantsList) {\r\n            this.participantsList.appendChild(participant);\r\n        }\r\n    }\r\n\r\n    removePeerConnection(userId) {\r\n        console.log('Removing peer connection for:', userId);\r\n        \r\n        if (this.peerConnections[userId]) {\r\n            const peerConnection = this.peerConnections[userId];\r\n            \r\n            peerConnection.ontrack = null;\r\n            peerConnection.onicecandidate = null;\r\n            peerConnection.onconnectionstatechange = null;\r\n            peerConnection.oniceconnectionstatechange = null;\r\n            peerConnection.onsignalingstatechange = null;\r\n            \r\n            try {\r\n                peerConnection.close();\r\n            } catch (error) {\r\n                console.error('Error closing peer connection:', error);\r\n            }\r\n            \r\n            delete this.peerConnections[userId];\r\n        }\r\n        \r\n        const participantElement = document.getElementById(`participant-${userId}`);\r\n        if (participantElement) {\r\n            participantElement.remove();\r\n        }\r\n    }\r\n\r\n    getAudioElementForUser(userId) {\r\n        const participant = document.getElementById(`participant-${userId}`);\r\n        if (participant) {\r\n            return participant.querySelector('audio');\r\n        }\r\n        return null;\r\n    }\r\n\r\n    getUserEmoji(color) {\r\n        return this.colorEmojis[color] || this.colorEmojis['purple'];\r\n    }\r\n\r\n    getUserColorClass(color) {\r\n        return `user-color-${color}`;\r\n    }\r\n\r\n    // Settings and other utility methods\r\n    loadSettings() {\r\n        try {\r\n            const savedSettings = localStorage.getItem('proximity-settings');\r\n            if (savedSettings) {\r\n                this.settings = { ...this.settings, ...JSON.parse(savedSettings) };\r\n            }\r\n        } catch (error) {\r\n            console.error('Error loading settings:', error);\r\n        }\r\n        \r\n        if (this.usernameInput) this.usernameInput.value = this.settings.username;\r\n        if (this.audioGainSlider) this.audioGainSlider.value = this.settings.audioGain;\r\n        if (this.noiseSupressionCheck) this.noiseSupressionCheck.checked = this.settings.noiseSupression;\r\n        if (this.echoCancellationCheck) this.echoCancellationCheck.checked = this.settings.echoCancellation;\r\n        if (this.autoJoinCheck) this.autoJoinCheck.checked = this.settings.autoJoin;\r\n        if (this.audioOutputDeviceSelect) this.audioOutputDeviceSelect.value = this.settings.audioOutputDevice || '';\r\n        \r\n        this.userColorPicker.forEach(option => {\r\n            option.classList.remove('selected');\r\n        });\r\n        const selectedColorOption = document.querySelector(`[data-color=\"${this.settings.userColor}\"]`);\r\n        if (selectedColorOption) {\r\n            selectedColorOption.classList.add('selected');\r\n        }\r\n        \r\n        const valueDisplay = document.querySelector('.slider-value');\r\n        if (valueDisplay) {\r\n            valueDisplay.textContent = `${this.settings.audioGain}%`;\r\n        }\r\n        \r\n        if (this.micInput && typeof this.micInput.setGain === 'function') {\r\n            this.micInput.setGain(this.settings.audioGain);\r\n        }\r\n    }\r\n\r\n    saveSettings() {\r\n        try {\r\n            localStorage.setItem('proximity-settings', JSON.stringify(this.settings));\r\n        } catch (error) {\r\n            console.error('Error saving settings:', error);\r\n        }\r\n    }\r\n\r\n    setUserColor(color) {\r\n        this.settings.userColor = color;\r\n        this.saveSettings();\r\n        this.updateParticipantName();\r\n        if (this.proximityMap && this.socket?.id) {\r\n            this.proximityMap.updateUserColor(this.socket.id, color);\r\n        }\r\n        this.showNotification(`User color changed to ${color}`, 'success');\r\n    }\r\n\r\n    updateParticipantName() {\r\n        const selfParticipant = document.getElementById(`participant-${this.socket?.id || 'self'}`);\r\n        if (selfParticipant) {\r\n            const nameSpan = selfParticipant.querySelector('span');\r\n            if (nameSpan) {\r\n                nameSpan.textContent = this.settings.username || 'You';\r\n            }\r\n            selfParticipant.className = selfParticipant.className.replace(/user-color-\\w+/g, '').trim();\r\n            selfParticipant.classList.add('user-color-' + this.settings.userColor);\r\n        }\r\n        if (this.proximityMap && this.socket?.id) {\r\n            this.proximityMap.updateUserColor(this.socket.id, this.settings.userColor);\r\n        }\r\n    }\r\n\r\n    // Voice control methods\r\n    toggleMute() {\r\n        if (this.micInput.getStream()) {\r\n            this.isMuted = !this.isMuted;\r\n            this.micInput.getStream().getAudioTracks().forEach(track => {\r\n                track.enabled = !this.isMuted;\r\n            });\r\n            \r\n            [this.muteButton, this.mapMuteButton].forEach(button => {\r\n                if (button) {\r\n                    button.querySelector('.text').textContent = this.isMuted ? 'Unmute' : 'Mute';\r\n                    button.querySelector('.icon').textContent = this.isMuted ? '🔇' : '🎤';\r\n                    button.classList.toggle('muted', this.isMuted);\r\n                }\r\n            });\r\n            \r\n            this.updateMicStatus(this.socket?.id || 'self', this.isMuted);\r\n            \r\n            if (this.socket && this.currentRoom) {\r\n                this.socket.emit('mic-status', { roomId: this.currentRoom, isMuted: this.isMuted });\r\n            }\r\n        }\r\n    }\r\n\r\n    updateMicStatus(userId, isMuted) {\r\n        const participant = document.getElementById(`participant-${userId}`);\r\n        if (participant) {\r\n            const micStatus = participant.querySelector('.mic-status');\r\n            micStatus.classList.toggle('muted', isMuted);\r\n            micStatus.classList.toggle('active', !isMuted);\r\n        }\r\n    }\r\n\r\n    leaveVoiceChannel() {\r\n        if (!this.currentRoom) return;\r\n\r\n        console.log('Leaving voice channel...');\r\n        \r\n        Object.values(this.peerConnections).forEach(pc => pc.close());\r\n        this.peerConnections = {};\r\n\r\n        if (this.proximityMap) {\r\n            if (this.proximityMap.testBotId) {\r\n                this.proximityMap.removeTestBot();\r\n                if (this.toggleTestBotBtn) {\r\n                    this.toggleTestBotBtn.innerHTML = '<span class=\"icon\">🤖</span><span class=\"text\">Add Test Bot</span>';\r\n                }\r\n            }\r\n            this.proximityMap.users.clear();\r\n            this.proximityMap.myUserId = null;\r\n        }\r\n\r\n        if (this.participantsList) {\r\n            this.participantsList.innerHTML = '';\r\n        }\r\n\r\n        this.currentRoom = null;\r\n        this.isMuted = false;\r\n        this.isDeafened = false;\r\n        \r\n        [this.muteButton, this.mapMuteButton].forEach(button => {\r\n            if (button) {\r\n                button.querySelector('.text').textContent = 'Mute';\r\n                button.querySelector('.icon').textContent = '🎤';\r\n                button.classList.remove('muted');\r\n            }\r\n        });\r\n\r\n        if (this.currentChannel && this.currentChannel.type === 'voice') {\r\n            this.switchToChannel('general', 'text');\r\n        }\r\n        \r\n        this.showNotification('Left voice channel', 'info');\r\n        this.playSound('assets/LeaveNoise.mp3');\r\n    }\r\n\r\n    leaveServer() {\r\n        console.log('Leaving server completely...');\r\n        \r\n        if (this.socket && this.socket.connected) {\r\n            this.socket.disconnect();\r\n            this.socket = null;\r\n        }\r\n\r\n        Object.values(this.peerConnections).forEach(pc => pc.close());\r\n        this.peerConnections = {};\r\n\r\n        if (this.proximityMap) {\r\n            if (this.proximityMap.testBotId) {\r\n                this.proximityMap.removeTestBot();\r\n                if (this.toggleTestBotBtn) {\r\n                    this.toggleTestBotBtn.innerHTML = '<span class=\"icon\">🤖</span><span class=\"text\">Add Test Bot</span>';\r\n                }\r\n            }\r\n            this.proximityMap.users.clear();\r\n            this.proximityMap.myUserId = null;\r\n        }\r\n\r\n        if (this.participantsList) {\r\n            this.participantsList.innerHTML = '';\r\n        }\r\n\r\n        this.clearChatMessages();\r\n\r\n        this.currentServer = null;\r\n        this.currentChannel = null;\r\n        this.currentRoom = null;\r\n        this.myUserId = null;\r\n        this.isMuted = false;\r\n        this.isDeafened = false;\r\n        \r\n        [this.muteButton, this.mapMuteButton].forEach(button => {\r\n            if (button) {\r\n                button.querySelector('.text').textContent = 'Mute';\r\n                button.querySelector('.icon').textContent = '🎤';\r\n                button.classList.remove('muted');\r\n            }\r\n        });\r\n\r\n        this.updateConnectionStatus('offline', 'Disconnected');\r\n        this.switchPage('home');\r\n        \r\n        // Reconnect to server discovery\r\n        this.connectToServerDiscovery();\r\n        \r\n        this.showNotification('Left the server', 'info');\r\n    }\r\n\r\n    // Chat methods\r\n    sendMessage() {\r\n        const message = this.messageInput.value.trim();\r\n        if (!message) return;\r\n\r\n        if (!this.socket || !this.socket.connected) {\r\n            this.showNotification('Not connected to server', 'error');\r\n            return;\r\n        }\r\n\r\n        if (!this.currentRoom) {\r\n            this.showNotification('Join a voice channel first', 'warning');\r\n            return;\r\n        }\r\n\r\n        console.log('Sending message:', message, 'to room:', this.currentRoom);\r\n\r\n        this.socket.emit('send-chat-message', {\r\n            roomId: this.currentRoom,\r\n            message: message,\r\n            username: this.settings.username || 'Anonymous'\r\n        });\r\n\r\n        // Clear input immediately\r\n        this.messageInput.value = '';\r\n    }\r\n\r\n    addMessageToChat(username, message) {\r\n        if (!this.chatMessages) return;\r\n\r\n        const messageElement = document.createElement('div');\r\n        messageElement.className = 'message';\r\n\r\n        const messageHeader = document.createElement('div');\r\n        messageHeader.className = 'message-header';\r\n\r\n        const author = document.createElement('span');\r\n        author.className = 'message-author';\r\n        author.textContent = username;\r\n\r\n        const timestamp = document.createElement('span');\r\n        timestamp.className = 'message-timestamp';\r\n        timestamp.textContent = new Date().toLocaleTimeString();\r\n\r\n        messageHeader.appendChild(author);\r\n        messageHeader.appendChild(timestamp);\r\n\r\n        const content = document.createElement('div');\r\n        content.className = 'message-content';\r\n        content.textContent = message;\r\n\r\n        messageElement.appendChild(messageHeader);\r\n        messageElement.appendChild(content);\r\n\r\n        this.chatMessages.appendChild(messageElement);\r\n        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;\r\n    }\r\n\r\n    clearChatMessages() {\r\n        if (this.chatMessages) {\r\n            this.chatMessages.innerHTML = '';\r\n            console.log('Chat messages cleared');\r\n        }\r\n    }\r\n\r\n    // Audio control methods\r\n    async changeAudioDevice(deviceId) {\r\n        if (!deviceId) return;\r\n\r\n        try {\r\n            const wasInCall = !!this.currentRoom;\r\n            \r\n            await this.micInput.changeDevice(deviceId);\r\n            \r\n            if (wasInCall) {\r\n                Object.values(this.peerConnections).forEach(pc => {\r\n                    const senders = pc.getSenders();\r\n                    const audioSender = senders.find(sender => \r\n                        sender.track && sender.track.kind === 'audio'\r\n                    );\r\n                    if (audioSender) {\r\n                        audioSender.replaceTrack(this.micInput.getStream().getAudioTracks()[0]);\r\n                    }\r\n                });\r\n            }\r\n            this.attachMicVolumeCallback();\r\n            if (this.persistentVisualizerActive) {\r\n                this.stopPersistentVisualizer();\r\n                this.startPersistentVisualizer();\r\n            }\r\n            this.showNotification('Audio device changed successfully', 'success');\r\n        } catch (error) {\r\n            console.error('Error changing audio device:', error);\r\n            this.showNotification('Failed to change audio device', 'error');\r\n        }\r\n    }\r\n\r\n    async changeAudioOutputDevice(deviceId) {\r\n        this.settings.audioOutputDevice = deviceId;\r\n        this.saveSettings();\r\n    }\r\n\r\n    updateAudioGain(value) {\r\n        this.settings.audioGain = parseInt(value);\r\n        this.saveSettings();\r\n        if (this.micInput && typeof this.micInput.setGain === 'function') {\r\n            this.micInput.setGain(this.settings.audioGain);\r\n        }\r\n    }\r\n\r\n    async testMicrophone() {\r\n        try {\r\n            const visualizerContainer = document.getElementById('micTestVisualizer');\r\n            const volumeText = document.getElementById('volumeLevel');\r\n            const levelFill = document.getElementById('micLevelFill');\r\n            \r\n            if (!this.micInput.getStream()) {\r\n                await this.initializeMedia();\r\n            }\r\n            \r\n            visualizerContainer.style.display = 'block';\r\n            this.showNotification('Microphone test - speak now!', 'info');\r\n            \r\n            let testCallback = (volume, frequencyData) => {\r\n                levelFill.style.width = `${volume}%`;\r\n                volumeText.textContent = `${Math.round(volume)}%`;\r\n            };\r\n            \r\n            this.micInput.addVolumeCallback(testCallback);\r\n            \r\n            setTimeout(() => {\r\n                this.micInput.removeVolumeCallback(testCallback);\r\n                visualizerContainer.style.display = 'none';\r\n                this.showNotification('Microphone test complete! 🎤', 'success');\r\n            }, 10000);\r\n            \r\n        } catch (error) {\r\n            console.error('Error testing microphone:', error);\r\n            this.showNotification('Failed to test microphone', 'error');\r\n        }\r\n    }\r\n\r\n    async testOutput() {\r\n        this.playSound('assets/TestNoise.mp3');\r\n    }\r\n\r\n    async playSound(filePath) {\r\n        try {\r\n            const audio = new Audio(filePath);\r\n            if (this.settings.audioOutputDevice && typeof audio.setSinkId === 'function') {\r\n                await audio.setSinkId(this.settings.audioOutputDevice);\r\n            }\r\n            audio.play();\r\n        } catch (error) {\r\n            this.showNotification('Failed to play sound', 'error');\r\n            console.error('Error playing sound:', error);\r\n        }\r\n    }\r\n\r\n    resetSettings() {\r\n        if (confirm('Are you sure you want to reset all settings to defaults?')) {\r\n            localStorage.removeItem('proximity-settings');\r\n            this.settings = {\r\n                username: '',\r\n                userColor: 'purple',\r\n                audioGain: 50,\r\n                noiseSupression: true,\r\n                echoCancellation: true,\r\n                autoJoin: false,\r\n                muteHotkey: 'Ctrl+M',\r\n                deafenHotkey: 'Ctrl+D',\r\n                audioOutputDevice: ''\r\n            };\r\n            this.loadSettings();\r\n            this.showNotification('Settings reset to defaults', 'success');\r\n        }\r\n    }\r\n\r\n    // Persistent visualizer methods\r\n    async startPersistentVisualizer() {\r\n        if (this.persistentVisualizerActive) return;\r\n\r\n        try {\r\n            if (!this.micInput.getStream()) {\r\n                await this.initializeMedia();\r\n            }\r\n            \r\n            this.persistentVisualizerActive = true;\r\n            if (this.micStatusText) {\r\n                this.micStatusText.textContent = 'Monitoring microphone...';\r\n            }\r\n            \r\n            let persistentCallback = (volume, frequencyData) => {\r\n                if (this.persistentMicLevelFill && this.persistentVolumeLevel) {\r\n                    this.persistentMicLevelFill.style.width = `${volume}%`;\r\n                    this.persistentVolumeLevel.textContent = `${Math.round(volume)}%`;\r\n                }\r\n            };\r\n            \r\n            this.micInput.addVolumeCallback(persistentCallback);\r\n            this.persistentVisualizerCallback = persistentCallback;\r\n            \r\n        } catch (error) {\r\n            console.error('Error starting persistent visualizer:', error);\r\n            if (this.micStatusText) {\r\n                this.micStatusText.textContent = 'Microphone access denied';\r\n            }\r\n        }\r\n    }\r\n\r\n    stopPersistentVisualizer() {\r\n        if (this.persistentVisualizerCallback) {\r\n            this.micInput.removeVolumeCallback(this.persistentVisualizerCallback);\r\n            this.persistentVisualizerCallback = null;\r\n        }\r\n        this.persistentVisualizerActive = false;\r\n        \r\n        if (this.persistentMicLevelFill && this.persistentVolumeLevel) {\r\n            this.persistentMicLevelFill.style.width = '0%';\r\n            this.persistentVolumeLevel.textContent = '0%';\r\n        }\r\n        if (this.micStatusText) {\r\n            this.micStatusText.textContent = 'Click \"Test Microphone\" to start monitoring';\r\n        }\r\n    }\r\n\r\n    // Status and notification methods\r\n    updateConnectionStatus(status, text) {\r\n        if (!this.connectionIndicator || !this.connectionText) return;\r\n        \r\n        this.connectionIndicator.classList.remove('online', 'offline', 'connecting');\r\n        this.connectionIndicator.classList.add(status);\r\n        this.connectionText.textContent = text;\r\n        \r\n        console.log(`Connection status changed to: ${status} (${text})`);\r\n    }\r\n    \r\n    showNotification(message, type = 'info') {\r\n        console.log(`Notification [${type}]: ${message}`);\r\n        \r\n        const notification = document.createElement('div');\r\n        notification.className = `notification ${type}`;\r\n        notification.textContent = message;\r\n        \r\n        Object.assign(notification.style, {\r\n            position: 'fixed',\r\n            top: '20px',\r\n            right: '20px',\r\n            padding: '12px 20px',\r\n            borderRadius: '8px',\r\n            color: 'white',\r\n            fontWeight: '500',\r\n            zIndex: '9999',\r\n            opacity: '0',\r\n            transform: 'translateX(100%)',\r\n            transition: 'all 0.3s ease'\r\n        });\r\n        \r\n        const colors = {\r\n            success: '#10b981',\r\n            error: '#ef4444',\r\n            warning: '#f59e0b',\r\n            info: '#6b46c1'\r\n        };\r\n        notification.style.backgroundColor = colors[type] || colors.info;\r\n        \r\n        document.body.appendChild(notification);\r\n        \r\n        setTimeout(() => {\r\n            notification.style.opacity = '1';\r\n            notification.style.transform = 'translateX(0)';\r\n        }, 10);\r\n        \r\n        setTimeout(() => {\r\n            notification.style.opacity = '0';\r\n            notification.style.transform = 'translateX(100%)';\r\n            setTimeout(() => {\r\n                if (notification.parentNode) {\r\n                    document.body.removeChild(notification);\r\n                }\r\n            }, 300);\r\n        }, 3000);\r\n    }\r\n}\r\n\r\n// Initialize the application when the DOM is loaded\r\nconsole.log('Setting up DOMContentLoaded listener...');\r\n\r\nfunction initApp() {\r\n    console.log('DOM ready, initializing app...');\r\n    try {\r\n        window.proximityApp = new ProximityApp();\r\n        console.log('App initialized successfully');\r\n    } catch (error) {\r\n        console.error('Error initializing app:', error);\r\n    }\r\n}\r\n\r\nif (document.readyState === 'loading') {\r\n    document.addEventListener('DOMContentLoaded', initApp);\r\n} else {\r\n    initApp();\r\n}\n\n//# sourceURL=webpack://proximity/./src/renderer/renderer.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ConnectionManager: () => (/* binding */ ConnectionManager)
+/* harmony export */ });
+// src/renderer/js/core/ConnectionManager.js
+class ConnectionManager {
+    constructor(serverUrl) {
+        this.serverUrl = serverUrl;
+        this.socket = null;
+        this.isConnected = false;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+    }
+
+    async connect() {
+        return new Promise((resolve, reject) => {
+            if (typeof io === 'undefined') {
+                reject(new Error('Socket.IO not loaded'));
+                return;
+            }
+
+            console.log('Connecting to server:', this.serverUrl);
+            
+            this.socket = io(this.serverUrl, {
+                reconnectionAttempts: this.maxReconnectAttempts,
+                timeout: 10000,
+                transports: ['websocket', 'polling']
+            });
+
+            this.socket.on('connect', () => {
+                console.log('Connected to server');
+                this.isConnected = true;
+                this.reconnectAttempts = 0;
+                resolve();
+            });
+
+            this.socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                this.isConnected = false;
+            });
+
+            this.socket.on('connect_error', (error) => {
+                console.error('Connection error:', error);
+                this.isConnected = false;
+                this.reconnectAttempts++;
+                
+                if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+                    reject(new Error('Failed to connect to server after multiple attempts'));
+                }
+            });
+        });
+    }
+
+    disconnect() {
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+            this.isConnected = false;
+        }
+    }
+
+    emit(event, data) {
+        if (this.socket && this.isConnected) {
+            this.socket.emit(event, data);
+        } else {
+            console.warn('Attempted to emit event while disconnected:', event);
+        }
+    }
+
+    on(event, callback) {
+        if (this.socket) {
+            this.socket.on(event, callback);
+        }
+    }
+}
+
+/***/ }),
+
+/***/ "./src/renderer/js/proximity/ProximityMap.js":
+/*!***************************************************!*\
+  !*** ./src/renderer/js/proximity/ProximityMap.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ProximityMap: () => (/* binding */ ProximityMap)
+/* harmony export */ });
+// src/renderer/js/proximity/ProximityMap.js
+class ProximityMap {
+    constructor(canvas, app) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.app = app;
+        this.users = new Map(); // userId -> {x, y, username, isSelf, audioElement}
+        this.myUserId = null;
+        this.proximityRange = 100;
+        this.isDragging = false;
+        this.dragOffset = { x: 0, y: 0 };
+        this.testBotId = null;
+        this.testBotMovementInterval = null;
+        
+        // Audio constants for proximity calculation
+        this.EDGE_START = 0.75; // When edge effects begin
+        this.OUTER_RANGE = 1.3; // Allow audio to continue beyond visible range
+        
+        this.setupEventListeners();
+        this.startRenderLoop();
+        this.resizeCanvas();
+        
+        window.addEventListener('resize', () => this.resizeCanvas());
+    }
+
+    resizeCanvas() {
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+    }
+
+    setupEventListeners() {
+        this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+        this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.canvas.addEventListener('mouseup', () => this.handleMouseUp());
+        this.canvas.addEventListener('mouseleave', () => this.handleMouseUp());
+        
+        // Touch events for mobile
+        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+        this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        this.canvas.addEventListener('touchend', () => this.handleMouseUp());
+    }
+
+    handleMouseDown(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        if (this.myUserId && this.users.has(this.myUserId)) {
+            const myUser = this.users.get(this.myUserId);
+            const distance = Math.sqrt((x - myUser.x) ** 2 + (y - myUser.y) ** 2);
+            
+            if (distance <= 20) { // User circle radius is 20px
+                this.isDragging = true;
+                this.dragOffset = { x: x - myUser.x, y: y - myUser.y };
+                this.canvas.style.cursor = 'grabbing';
+            }
+        }
+    }
+
+    handleMouseMove(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        if (this.isDragging && this.myUserId) {
+            const newX = Math.max(20, Math.min(this.canvas.width - 20, x - this.dragOffset.x));
+            const newY = Math.max(20, Math.min(this.canvas.height - 20, y - this.dragOffset.y));
+            
+            this.updateUserPosition(this.myUserId, newX, newY);
+            this.updateAudioProximity();
+            
+            // Emit position update to other users
+            if (this.app && this.app.sendPositionUpdate) {
+                this.app.sendPositionUpdate(newX, newY);
+            }
+        } else {
+            // Update cursor based on hover
+            let isHovering = false;
+            if (this.myUserId && this.users.has(this.myUserId)) {
+                const myUser = this.users.get(this.myUserId);
+                const distance = Math.sqrt((x - myUser.x) ** 2 + (y - myUser.y) ** 2);
+                isHovering = distance <= 20;
+            }
+            this.canvas.style.cursor = isHovering ? 'grab' : 'crosshair';
+        }
+    }
+
+    handleMouseUp() {
+        this.isDragging = false;
+        this.canvas.style.cursor = 'crosshair';
+    }
+
+    handleTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousedown', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        this.handleMouseDown(mouseEvent);
+    }
+
+    handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        this.handleMouseMove(mouseEvent);
+    }
+
+    addUser(userId, username, isSelf = false, audioElement = null) {
+        // Center spawn position with slight randomization
+        const x = this.canvas.width / 2 + (Math.random() - 0.5) * 100;
+        const y = this.canvas.height / 2 + (Math.random() - 0.5) * 100;
+        
+        this.users.set(userId, {
+            x,
+            y,
+            username: username || `User ${userId.slice(0, 4)}`,
+            isSelf,
+            audioElement,
+            lastUpdate: Date.now(),
+            color: isSelf ? this.app.settingsManager.get('userColor') || 'purple' : 'blue'
+        });
+
+        if (isSelf) {
+            this.myUserId = userId;
+        }
+
+        this.updateAudioProximity();
+    }
+
+    removeUser(userId) {
+        this.users.delete(userId);
+        if (this.myUserId === userId) {
+            this.myUserId = null;
+        }
+        this.updateAudioProximity();
+    }
+
+    clearUsers() {
+        this.users.clear();
+        this.myUserId = null;
+    }
+
+    updateUserPosition(userId, x, y) {
+        if (this.users.has(userId)) {
+            const user = this.users.get(userId);
+            user.x = x;
+            user.y = y;
+            user.lastUpdate = Date.now();
+        }
+    }
+
+    updateUserColor(userId, color) {
+        if (this.users.has(userId)) {
+            this.users.get(userId).color = color;
+        }
+    }
+
+    setUserAudioElement(userId, audioElement) {
+        if (this.users.has(userId)) {
+            this.users.get(userId).audioElement = audioElement;
+            this.updateAudioProximity();
+        }
+    }
+
+    centerMyPosition() {
+        if (!this.myUserId || !this.users.has(this.myUserId)) return;
+
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        this.updateUserPosition(this.myUserId, centerX, centerY);
+        this.updateAudioProximity();
+        
+        // Emit position update
+        if (this.app && this.app.sendPositionUpdate) {
+            this.app.sendPositionUpdate(centerX, centerY);
+        }
+    }
+
+    updateAudioProximity() {
+        if (!this.myUserId || !this.users.has(this.myUserId)) return;
+
+        const myUser = this.users.get(this.myUserId);
+        
+        this.users.forEach((user, userId) => {
+            if (userId === this.myUserId || !user.audioElement) return;
+
+            const distance = Math.sqrt(
+                (myUser.x - user.x) ** 2 + (myUser.y - user.y) ** 2
+            );
+
+            // Calculate volume based on proximity (0 to 1)
+            let volume = 0;
+            
+            const normalizedDistance = distance / this.proximityRange;
+            
+            if (normalizedDistance <= this.OUTER_RANGE) {
+                if (normalizedDistance > this.EDGE_START && normalizedDistance <= 1.0) {
+                    // Extra feathering at the edge
+                    const edgeFactor = (1 - normalizedDistance) / (1 - this.EDGE_START);
+                    volume = Math.pow(edgeFactor, 2) * 0.3;
+                } else if (normalizedDistance > 1.0 && normalizedDistance <= this.OUTER_RANGE) {
+                    // Extended fadeout beyond visible range
+                    const fadeoutFactor = (this.OUTER_RANGE - normalizedDistance) / (this.OUTER_RANGE - 1.0);
+                    volume = Math.pow(fadeoutFactor, 3) * 0.1;
+                } else {
+                    // Normal falloff for closer distances
+                    volume = Math.max(0, 1 - normalizedDistance);
+                    volume = Math.pow(volume, 0.4);
+                }
+            }
+
+            // Apply volume
+            if (user.audioElement) {
+                const currentVolume = user.audioElement.volume;
+                const smoothedVolume = currentVolume * 0.8 + volume * 0.2;
+                user.audioElement.volume = smoothedVolume;
+            }
+        });
+    }
+
+    setProximityRange(range) {
+        this.proximityRange = range;
+        this.updateAudioProximity();
+    }
+
+    startRenderLoop() {
+        const render = () => {
+            this.render();
+            requestAnimationFrame(render);
+        };
+        render();
+    }
+
+    render() {
+        // Clear canvas
+        this.ctx.fillStyle = '#0f0f23';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw grid
+        this.drawGrid();
+
+        // Draw proximity ranges and users
+        this.users.forEach((user, userId) => {
+            if (userId === this.myUserId) {
+                this.drawProximityRange(user.x, user.y, user.color);
+            }
+        });
+
+        this.users.forEach((user, userId) => {
+            this.drawUser(user, userId === this.myUserId);
+        });
+
+        // Draw connection lines
+        if (this.myUserId && this.users.has(this.myUserId)) {
+            this.drawConnectionLines();
+        }
+    }
+
+    drawGrid() {
+        this.ctx.strokeStyle = 'rgba(107, 70, 193, 0.1)';
+        this.ctx.lineWidth = 1;
+        
+        const gridSize = 50;
+        
+        for (let x = 0; x <= this.canvas.width; x += gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, this.canvas.height);
+            this.ctx.stroke();
+        }
+        
+        for (let y = 0; y <= this.canvas.height; y += gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+    }
+
+    drawProximityRange(x, y, color = 'purple') {
+        const colorMap = {
+            blue: ['rgba(59,130,246,0.3)', 'rgba(59,130,246,0.08)', 'rgba(59,130,246,0.15)'],
+            green: ['rgba(16,185,129,0.3)', 'rgba(16,185,129,0.08)', 'rgba(16,185,129,0.15)'],
+            purple: ['rgba(139,92,246,0.3)', 'rgba(139,92,246,0.08)', 'rgba(139,92,246,0.15)'],
+            red: ['rgba(239,68,68,0.3)', 'rgba(239,68,68,0.08)', 'rgba(239,68,68,0.15)'],
+            orange: ['rgba(245,158,11,0.3)', 'rgba(245,158,11,0.08)', 'rgba(245,158,11,0.15)'],
+            pink: ['rgba(236,72,153,0.3)', 'rgba(236,72,153,0.08)', 'rgba(236,72,153,0.15)'],
+            indigo: ['rgba(99,102,241,0.3)', 'rgba(99,102,241,0.08)', 'rgba(99,102,241,0.15)'],
+            cyan: ['rgba(6,182,212,0.3)', 'rgba(6,182,212,0.08)', 'rgba(6,182,212,0.15)']
+        };
+        
+        const [strokeColor, fillColor, extendedStrokeColor] = colorMap[color] || colorMap['purple'];
+        
+        // Draw extended audible range (faded)
+        this.ctx.strokeStyle = extendedStrokeColor;
+        this.ctx.lineWidth = 1;
+        this.ctx.setLineDash([2, 4]);
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, this.proximityRange * this.OUTER_RANGE, 0, Math.PI * 2);
+        this.ctx.stroke();
+        
+        // Draw main proximity range
+        this.ctx.strokeStyle = strokeColor;
+        this.ctx.fillStyle = fillColor;
+        this.ctx.lineWidth = 2;
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, this.proximityRange, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.setLineDash([]);
+    }
+
+    drawUser(user, isSelf) {
+        const { x, y, username, color } = user;
+        
+        const colorMap = {
+            blue: ['#3b82f6', '#60a5fa'],
+            green: ['#10b981', '#34d399'],
+            purple: ['#8b5cf6', '#a78bfa'],
+            red: ['#ef4444', '#f87171'],
+            orange: ['#f59e0b', '#fbbf24'],
+            pink: ['#ec4899', '#f472b6'],
+            indigo: ['#6366f1', '#818cf8'],
+            cyan: ['#06b6d4', '#22d3ee']
+        };
+        
+        const [fillColor, strokeColor] = colorMap[color] || colorMap['purple'];
+        
+        this.ctx.fillStyle = fillColor;
+        this.ctx.strokeStyle = strokeColor;
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+        
+        // User initial/icon
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.font = 'bold 16px sans-serif';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        
+        const initial = username.charAt(0).toUpperCase();
+        this.ctx.fillText(initial, x, y);
+        
+        // Username label
+        this.ctx.fillStyle = isSelf ? strokeColor : '#cbd5e1';
+        this.ctx.font = '12px sans-serif';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'top';
+        const displayName = isSelf ? `${username} (You)` : username;
+        this.ctx.fillText(displayName, x, y + 30);
+        
+        // Activity indicator (pulsing effect when speaking)
+        if (user.isActive) {
+            const pulseRadius = 25 + Math.sin(Date.now() * 0.01) * 5;
+            const glowColor = colorMap[color] ? colorMap[color][0].replace('1)', '0.6)') : 'rgba(139,92,246,0.6)';
+            this.ctx.strokeStyle = glowColor;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, pulseRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    drawConnectionLines() {
+        if (!this.myUserId || !this.users.has(this.myUserId)) return;
+
+        const myUser = this.users.get(this.myUserId);
+        
+        this.users.forEach((user, userId) => {
+            if (userId === this.myUserId) return;
+
+            const distance = Math.sqrt(
+                (myUser.x - user.x) ** 2 + (myUser.y - user.y) ** 2
+            );
+
+            if (distance <= this.proximityRange) {
+                const opacity = Math.max(0.1, 1 - (distance / this.proximityRange));
+                this.ctx.strokeStyle = `rgba(16, 185, 129, ${opacity * 0.5})`;
+                this.ctx.lineWidth = 2;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(myUser.x, myUser.y);
+                this.ctx.lineTo(user.x, user.y);
+                this.ctx.stroke();
+            }
+        });
+    }
+
+    // Called when user speaks to show activity
+    setUserActivity(userId, isActive) {
+        if (this.users.has(userId)) {
+            this.users.get(userId).isActive = isActive;
+        }
+    }
+
+    // Test bot functionality
+    addTestBot() {
+        this.removeTestBot();
+
+        this.testBotId = 'test-bot-' + Date.now();
+        
+        const audioElement = new Audio('assets/TestNoise.mp3');
+        audioElement.loop = true;
+        audioElement.volume = 0;
+        
+        let x, y;
+        if (this.myUserId && this.users.has(this.myUserId)) {
+            const myUser = this.users.get(this.myUserId);
+            const angle = Math.random() * Math.PI * 2;
+            const distance = this.proximityRange * 0.9;
+            
+            x = myUser.x + Math.cos(angle) * distance;
+            y = myUser.y + Math.sin(angle) * distance;
+            
+            x = Math.max(20, Math.min(this.canvas.width - 20, x));
+            y = Math.max(20, Math.min(this.canvas.height - 20, y));
+        } else {
+            x = Math.random() * (this.canvas.width - 40) + 20;
+            y = Math.random() * (this.canvas.height - 40) + 20;
+        }
+        
+        this.users.set(this.testBotId, {
+            x, y,
+            username: 'Test Bot',
+            isSelf: false,
+            audioElement,
+            lastUpdate: Date.now(),
+            color: 'green',
+            isBot: true
+        });
+        
+        audioElement.play();
+        this.updateAudioProximity();
+        this.startTestBotMovement();
+        
+        return this.testBotId;
+    }
+    
+    removeTestBot() {
+        if (this.testBotMovementInterval) {
+            clearInterval(this.testBotMovementInterval);
+            this.testBotMovementInterval = null;
+        }
+        
+        if (this.testBotId && this.users.has(this.testBotId)) {
+            const bot = this.users.get(this.testBotId);
+            
+            if (bot.audioElement) {
+                bot.audioElement.pause();
+                bot.audioElement.srcObject = null;
+            }
+            
+            this.users.delete(this.testBotId);
+            this.testBotId = null;
+            this.updateAudioProximity();
+        }
+    }
+    
+    startTestBotMovement() {
+        if (this.testBotMovementInterval) {
+            clearInterval(this.testBotMovementInterval);
+        }
+        
+        this.testBotMovementInterval = setInterval(() => {
+            if (this.testBotId && this.users.has(this.testBotId)) {
+                const bot = this.users.get(this.testBotId);
+                
+                const targetX = Math.random() * (this.canvas.width - 40) + 20;
+                const targetY = Math.random() * (this.canvas.height - 40) + 20;
+                
+                const startX = bot.x;
+                const startY = bot.y;
+                const startTime = Date.now();
+                const duration = 3000;
+                
+                const animateMovement = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const easing = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                    
+                    bot.x = startX + (targetX - startX) * easing;
+                    bot.y = startY + (targetY - startY) * easing;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animateMovement);
+                    }
+                    
+                    this.updateAudioProximity();
+                };
+                
+                animateMovement();
+                
+                bot.isActive = true;
+                setTimeout(() => {
+                    if (this.testBotId && this.users.has(this.testBotId)) {
+                        this.users.get(this.testBotId).isActive = false;
+                    }
+                }, 500);
+            }
+        }, 5000);
+    }
+}
+
+/***/ }),
+
+/***/ "./src/renderer/js/server/ServerManager.js":
+/*!*************************************************!*\
+  !*** ./src/renderer/js/server/ServerManager.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ServerManager: () => (/* binding */ ServerManager)
+/* harmony export */ });
+// src/renderer/js/server/ServerManager.js
+class ServerManager {
+    constructor() {
+        this.availableServers = [];
+        this.myServers = [];
+        this.favoriteServers = [];
+    }
+
+    async loadServerData() {
+        try {
+            const savedMyServers = localStorage.getItem('proximity-my-servers');
+            if (savedMyServers) {
+                this.myServers = JSON.parse(savedMyServers);
+            }
+            
+            const savedFavorites = localStorage.getItem('proximity-favorite-servers');
+            if (savedFavorites) {
+                this.favoriteServers = JSON.parse(savedFavorites);
+            }
+        } catch (error) {
+            console.error('Error loading server data:', error);
+        }
+    }
+
+    saveServerData() {
+        try {
+            localStorage.setItem('proximity-my-servers', JSON.stringify(this.myServers));
+            localStorage.setItem('proximity-favorite-servers', JSON.stringify(this.favoriteServers));
+        } catch (error) {
+            console.error('Error saving server data:', error);
+        }
+    }
+
+    createServer(name, description) {
+        if (!window.proximityApp || !window.proximityApp.connectionManager.socket) {
+            throw new Error('Not connected to server');
+        }
+
+        window.proximityApp.connectionManager.emit('create-server', {
+            serverName: name,
+            serverDescription: description
+        });
+    }
+
+    joinServer(server) {
+        // Implementation for joining custom servers
+        // For now, we'll focus on the hub
+        console.log('Joining server:', server);
+    }
+
+    addToFavorites(serverId) {
+        if (!this.favoriteServers.includes(serverId)) {
+            this.favoriteServers.push(serverId);
+            this.saveServerData();
+        }
+    }
+
+    removeFromFavorites(serverId) {
+        this.favoriteServers = this.favoriteServers.filter(id => id !== serverId);
+        this.saveServerData();
+    }
+
+    addToMyServers(serverId) {
+        if (!this.myServers.includes(serverId)) {
+            this.myServers.push(serverId);
+            this.saveServerData();
+        }
+    }
+
+    updateAvailableServers(servers) {
+        this.availableServers = servers;
+        // Could emit event here for UI updates
+    }
+}
+
+/***/ }),
+
+/***/ "./src/renderer/js/settings/SettingsManager.js":
+/*!*****************************************************!*\
+  !*** ./src/renderer/js/settings/SettingsManager.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SettingsManager: () => (/* binding */ SettingsManager)
+/* harmony export */ });
+// src/renderer/js/settings/SettingsManager.js
+class SettingsManager {
+    constructor() {
+        this.settings = {
+            username: '',
+            userColor: 'purple',
+            audioGain: 50,
+            noiseSupression: true,
+            echoCancellation: true,
+            autoJoin: false,
+            muteHotkey: 'Ctrl+M',
+            deafenHotkey: 'Ctrl+D',
+            audioOutputDevice: ''
+        };
+        this.storageKey = 'proximity-settings';
+    }
+
+    async load() {
+        try {
+            const savedSettings = localStorage.getItem(this.storageKey);
+            if (savedSettings) {
+                this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
+                console.log('Settings loaded:', this.settings);
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+        }
+        
+        this.applyToUI();
+    }
+
+    save() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.settings));
+            console.log('Settings saved');
+        } catch (error) {
+            console.error('Error saving settings:', error);
+        }
+    }
+
+    get(key) {
+        return this.settings[key];
+    }
+
+    set(key, value) {
+        this.settings[key] = value;
+        this.save();
+        this.applyToUI();
+    }
+
+    update(newSettings) {
+        this.settings = { ...this.settings, ...newSettings };
+        this.save();
+        this.applyToUI();
+    }
+
+    reset() {
+        this.settings = {
+            username: '',
+            userColor: 'purple',
+            audioGain: 50,
+            noiseSupression: true,
+            echoCancellation: true,
+            autoJoin: false,
+            muteHotkey: 'Ctrl+M',
+            deafenHotkey: 'Ctrl+D',
+            audioOutputDevice: ''
+        };
+        this.save();
+        this.applyToUI();
+    }
+
+    applyToUI() {
+        // Username
+        const usernameInput = document.getElementById('username');
+        if (usernameInput) {
+            usernameInput.value = this.settings.username;
+        }
+
+        // Audio gain
+        const audioGainSlider = document.getElementById('audioGain');
+        if (audioGainSlider) {
+            audioGainSlider.value = this.settings.audioGain;
+            const valueDisplay = document.querySelector('.slider-value');
+            if (valueDisplay) {
+                valueDisplay.textContent = `${this.settings.audioGain}%`;
+            }
+        }
+
+        // Checkboxes
+        const noiseSupressionCheck = document.getElementById('noiseSupression');
+        if (noiseSupressionCheck) {
+            noiseSupressionCheck.checked = this.settings.noiseSupression;
+        }
+
+        const echoCancellationCheck = document.getElementById('echoCancellation');
+        if (echoCancellationCheck) {
+            echoCancellationCheck.checked = this.settings.echoCancellation;
+        }
+
+        const autoJoinCheck = document.getElementById('autoJoin');
+        if (autoJoinCheck) {
+            autoJoinCheck.checked = this.settings.autoJoin;
+        }
+
+        // Color picker
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.color === this.settings.userColor) {
+                option.classList.add('selected');
+            }
+        });
+
+        // Audio output device
+        const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
+        if (audioOutputDeviceSelect) {
+            audioOutputDeviceSelect.value = this.settings.audioOutputDevice || '';
+        }
+
+        // Apply audio gain to audio manager
+        if (window.proximityApp && window.proximityApp.audioManager) {
+            window.proximityApp.audioManager.setGain(this.settings.audioGain);
+        }
+    }
+}
+
+/***/ }),
+
+/***/ "./src/renderer/js/ui/UIManager.js":
+/*!*****************************************!*\
+  !*** ./src/renderer/js/ui/UIManager.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UIManager: () => (/* binding */ UIManager)
+/* harmony export */ });
+// src/renderer/js/ui/UIManager.js - Fixed version with proper home button setup
+class UIManager {
+    constructor() {
+        this.eventHandlers = {};
+        this.elements = {};
+    }
+
+    init() {
+        this.cacheElements();
+        this.setupEventListeners();
+        this.addHubToNavigation();
+        this.setupHomePageEvents(); // Add this
+    }
+
+    cacheElements() {
+        // Navigation
+        this.elements.navItems = document.querySelectorAll('.nav-item');
+        this.elements.pages = document.querySelectorAll('.page');
+        
+        // Connection status
+        this.elements.connectionIndicator = document.getElementById('connectionIndicator');
+        this.elements.connectionText = document.getElementById('connectionText');
+        
+        // Server view
+        this.elements.currentServerName = document.getElementById('currentServerName');
+        this.elements.serverInviteDisplay = document.getElementById('serverInviteDisplay');
+        this.elements.participantsList = document.getElementById('participantsList');
+        
+        // Chat
+        this.elements.chatMessages = document.getElementById('chatMessages');
+        this.elements.messageInput = document.getElementById('messageInput');
+        this.elements.sendMessageBtn = document.getElementById('sendMessageBtn');
+        
+        // Voice controls
+        this.elements.muteButton = document.getElementById('muteButton');
+        this.elements.mapMuteButton = document.getElementById('mapMuteButton');
+        this.elements.leaveChannelBtn = document.getElementById('leaveChannelBtn');
+        this.elements.leaveChannelServerBtn = document.getElementById('leaveChannelServerBtn');
+        
+        // Audio devices
+        this.elements.audioDeviceSelect = document.getElementById('audioDevice');
+        this.elements.audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
+        
+        // Home page elements
+        this.elements.joinHubBtn = document.getElementById('joinHubBtn');
+    }
+
+    setupEventListeners() {
+        // Navigation
+        this.elements.navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                this.switchPage(page);
+                this.emit('page-change', page);
+            });
+        });
+
+        // Chat
+        if (this.elements.sendMessageBtn) {
+            this.elements.sendMessageBtn.addEventListener('click', () => {
+                this.sendChatMessage();
+            });
+        }
+
+        if (this.elements.messageInput) {
+            this.elements.messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.sendChatMessage();
+                }
+            });
+        }
+
+        // Voice controls
+        [this.elements.muteButton, this.elements.mapMuteButton].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    this.emit('mute-toggle');
+                });
+            }
+        });
+
+        [this.elements.leaveChannelBtn, this.elements.leaveChannelServerBtn].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    this.emit('leave-channel');
+                });
+            }
+        });
+    }
+
+    setupHomePageEvents() {
+        // Home page hub button
+        if (this.elements.joinHubBtn) {
+            this.elements.joinHubBtn.addEventListener('click', () => {
+                console.log('Home page hub button clicked');
+                this.emit('join-hub');
+            });
+        }
+    }
+
+    addHubToNavigation() {
+        // Add Community Hub to navigation
+        const hubNavItem = document.createElement('div');
+        hubNavItem.className = 'nav-item';
+        hubNavItem.dataset.page = 'hub';
+        hubNavItem.innerHTML = `
+            <div class="nav-icon">🏢</div>
+            <span class="nav-text">Community Hub</span>
+        `;
+        
+        hubNavItem.addEventListener('click', () => {
+            console.log('Navigation hub button clicked');
+            this.switchPage('server-view');
+            this.emit('join-hub');
+        });
+
+        // Insert after the home nav item
+        const homeNavItem = document.querySelector('.nav-item[data-page="home"]');
+        if (homeNavItem && homeNavItem.parentNode) {
+            homeNavItem.parentNode.insertBefore(hubNavItem, homeNavItem.nextSibling);
+            
+            // Update cached nav items
+            this.elements.navItems = document.querySelectorAll('.nav-item');
+        }
+    }
+
+    switchPage(pageName) {
+        console.log('Switching to page:', pageName);
+        
+        // Update navigation
+        this.elements.navItems.forEach(item => {
+            item.classList.toggle('active', item.dataset.page === pageName);
+        });
+
+        // Update pages
+        this.elements.pages.forEach(page => {
+            page.classList.toggle('active', page.id === `${pageName}-page`);
+        });
+
+        // Special hub handling
+        if (pageName === 'hub') {
+            // Show server view but mark hub as active
+            document.getElementById('server-view-page').classList.add('active');
+            const hubNavItem = document.querySelector('.nav-item[data-page="hub"]');
+            if (hubNavItem) {
+                hubNavItem.classList.add('active');
+            }
+        }
+    }
+
+    showServerView(server) {
+        this.switchPage('server-view');
+        
+        if (this.elements.currentServerName) {
+            this.elements.currentServerName.textContent = server.name;
+        }
+        
+        if (this.elements.serverInviteDisplay) {
+            this.elements.serverInviteDisplay.textContent = server.id === 'hub' ? 'COMMUNITY-HUB' : server.id;
+        }
+
+        // Set up hub channels
+        if (server.id === 'hub') {
+            this.setupHubChannels();
+        }
+    }
+
+    setupHubChannels() {
+        const textChannelsList = document.getElementById('textChannelsList');
+        const voiceChannelsList = document.getElementById('voiceChannelsList');
+        
+        if (textChannelsList) {
+            textChannelsList.innerHTML = `
+                <div class="channel-item active" data-channel-type="text" data-channel-id="general">
+                    <span class="channel-icon">#</span>
+                    <span class="channel-name">general</span>
+                </div>
+            `;
+        }
+        
+        if (voiceChannelsList) {
+            voiceChannelsList.innerHTML = `
+                <div class="channel-item" data-channel-type="voice" data-channel-id="general-voice">
+                    <span class="channel-icon">🔊</span>
+                    <span class="channel-name">General Voice</span>
+                    <div class="voice-participants" id="voiceParticipants"></div>
+                </div>
+            `;
+        }
+
+        // Auto-join voice channel
+        setTimeout(() => {
+            this.switchToChannel('general-voice', 'voice');
+        }, 100);
+    }
+
+    switchToChannel(channelId, channelType) {
+        // Update channel selection
+        document.querySelectorAll('.channel-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        const activeChannel = document.querySelector(`[data-channel-id="${channelId}"]`);
+        if (activeChannel) {
+            activeChannel.classList.add('active');
+        }
+        
+        // Switch content view
+        document.querySelectorAll('.content-view').forEach(view => {
+            view.classList.remove('active');
+        });
+        
+        if (channelType === 'text') {
+            const textView = document.getElementById('text-chat-view');
+            if (textView) textView.classList.add('active');
+        } else if (channelType === 'voice') {
+            const voiceView = document.getElementById('voice-channel-view');
+            if (voiceView) voiceView.classList.add('active');
+        }
+    }
+
+    addParticipant(userId, stream, isSelf = false, username = 'Anonymous', userColor = 'purple') {
+        if (document.getElementById(`participant-${userId}`)) {
+            return; // Already exists
+        }
+
+        const participant = document.createElement('div');
+        participant.className = 'participant';
+        participant.id = `participant-${userId}`;
+        
+        const micStatus = document.createElement('div');
+        micStatus.className = 'mic-status active';
+        
+        const avatar = document.createElement('span');
+        avatar.className = 'participant-avatar';
+        avatar.style.cssText = 'margin-right: 8px; font-size: 16px;';
+        avatar.textContent = this.getColorEmoji(userColor);
+        
+        const name = document.createElement('span');
+        name.textContent = isSelf ? `${username} (You)` : username;
+        name.style.fontWeight = isSelf ? 'bold' : 'normal';
+        name.classList.add(`user-color-${userColor}`);
+        
+        participant.appendChild(micStatus);
+        participant.appendChild(avatar);
+        participant.appendChild(name);
+        
+        // Add audio element for remote users
+        if (!isSelf && stream) {
+            const audioElement = document.createElement('audio');
+            audioElement.autoplay = true;
+            audioElement.srcObject = stream;
+            audioElement.volume = 1;
+            audioElement.style.display = 'none';
+            participant.appendChild(audioElement);
+        }
+        
+        if (this.elements.participantsList) {
+            this.elements.participantsList.appendChild(participant);
+        }
+    }
+
+    removeParticipant(userId) {
+        const participant = document.getElementById(`participant-${userId}`);
+        if (participant) {
+            participant.remove();
+        }
+    }
+
+    clearParticipants() {
+        if (this.elements.participantsList) {
+            this.elements.participantsList.innerHTML = '';
+        }
+    }
+
+    updateMuteStatus(isMuted) {
+        [this.elements.muteButton, this.elements.mapMuteButton].forEach(button => {
+            if (button) {
+                const textSpan = button.querySelector('.text');
+                const iconSpan = button.querySelector('.icon');
+                
+                if (textSpan) textSpan.textContent = isMuted ? 'Unmute' : 'Mute';
+                if (iconSpan) iconSpan.textContent = isMuted ? '🔇' : '🎤';
+                
+                button.classList.toggle('muted', isMuted);
+            }
+        });
+    }
+
+    updateConnectionStatus(status, text) {
+        if (this.elements.connectionIndicator && this.elements.connectionText) {
+            this.elements.connectionIndicator.classList.remove('online', 'offline', 'connecting');
+            this.elements.connectionIndicator.classList.add(status);
+            this.elements.connectionText.textContent = text;
+        }
+    }
+
+    sendChatMessage() {
+        if (!this.elements.messageInput) return;
+        
+        const message = this.elements.messageInput.value.trim();
+        if (!message) return;
+        
+        this.emit('send-message', message);
+        this.elements.messageInput.value = '';
+    }
+
+    addChatMessage(username, message, timestamp) {
+        if (!this.elements.chatMessages) return;
+
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header';
+
+        const author = document.createElement('span');
+        author.className = 'message-author';
+        author.textContent = username;
+
+        const time = document.createElement('span');
+        time.className = 'message-timestamp';
+        time.textContent = new Date(timestamp).toLocaleTimeString();
+
+        messageHeader.appendChild(author);
+        messageHeader.appendChild(time);
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.textContent = message;
+
+        messageElement.appendChild(messageHeader);
+        messageElement.appendChild(content);
+
+        this.elements.chatMessages.appendChild(messageElement);
+        this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;
+    }
+
+    async populateAudioDevices() {
+        if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) return;
+        
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioInputs = devices.filter(device => device.kind === 'audioinput');
+            const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
+
+            this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
+            this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
+
+            audioInputs.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.textContent = device.label || `Microphone ${index + 1}`;
+                this.elements.audioDeviceSelect.appendChild(option);
+            });
+
+            audioOutputs.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.textContent = device.label || `Speaker ${index + 1}`;
+                this.elements.audioOutputDeviceSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error populating audio devices:', error);
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        console.log(`Notification [${type}]: ${message}`);
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            padding: '12px 20px',
+            borderRadius: '8px',
+            color: 'white',
+            fontWeight: '500',
+            zIndex: '9999',
+            opacity: '0',
+            transform: 'translateX(100%)',
+            transition: 'all 0.3s ease'
+        });
+        
+        const colors = {
+            success: '#10b981',
+            error: '#ef4444',
+            warning: '#f59e0b',
+            info: '#6b46c1'
+        };
+        notification.style.backgroundColor = colors[type] || colors.info;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    getColorEmoji(color) {
+        const colorEmojis = {
+            blue: '🔵',
+            green: '🟢', 
+            purple: '🟣',
+            red: '🔴',
+            orange: '🟠',
+            pink: '🩷',
+            indigo: '💜',
+            cyan: '🔹'
+        };
+        return colorEmojis[color] || colorEmojis['purple'];
+    }
+
+    // Event system
+    on(event, callback) {
+        if (!this.eventHandlers[event]) {
+            this.eventHandlers[event] = [];
+        }
+        this.eventHandlers[event].push(callback);
+    }
+
+    emit(event, data) {
+        if (this.eventHandlers[event]) {
+            this.eventHandlers[event].forEach(callback => callback(data));
+        }
+    }
+}
 
 /***/ })
 
@@ -96,11 +1771,309 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _aud
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/renderer/renderer.js");
-/******/ 	
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!********************************!*\
+  !*** ./src/renderer/js/app.js ***!
+  \********************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _core_ConnectionManager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core/ConnectionManager.js */ "./src/renderer/js/core/ConnectionManager.js");
+/* harmony import */ var _ui_UIManager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui/UIManager.js */ "./src/renderer/js/ui/UIManager.js");
+/* harmony import */ var _audio_AudioManager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./audio/AudioManager.js */ "./src/renderer/js/audio/AudioManager.js");
+/* harmony import */ var _proximity_ProximityMap_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./proximity/ProximityMap.js */ "./src/renderer/js/proximity/ProximityMap.js");
+/* harmony import */ var _server_ServerManager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./server/ServerManager.js */ "./src/renderer/js/server/ServerManager.js");
+/* harmony import */ var _chat_ChatManager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./chat/ChatManager.js */ "./src/renderer/js/chat/ChatManager.js");
+/* harmony import */ var _settings_SettingsManager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./settings/SettingsManager.js */ "./src/renderer/js/settings/SettingsManager.js");
+// src/renderer/js/main.js - Main entry point for the renderer process
+
+
+
+
+
+
+
+
+const SERVER_URL = 'https://myserver2-production.up.railway.app';
+
+class ProximityApp {
+    constructor() {
+        console.log('ProximityApp initializing...');
+        
+        // Core managers
+        this.connectionManager = new _core_ConnectionManager_js__WEBPACK_IMPORTED_MODULE_0__.ConnectionManager(SERVER_URL);
+        this.uiManager = new _ui_UIManager_js__WEBPACK_IMPORTED_MODULE_1__.UIManager();
+        this.audioManager = new _audio_AudioManager_js__WEBPACK_IMPORTED_MODULE_2__.AudioManager();
+        this.settingsManager = new _settings_SettingsManager_js__WEBPACK_IMPORTED_MODULE_6__.SettingsManager();
+        this.serverManager = new _server_ServerManager_js__WEBPACK_IMPORTED_MODULE_4__.ServerManager();
+        this.chatManager = new _chat_ChatManager_js__WEBPACK_IMPORTED_MODULE_5__.ChatManager();
+        this.proximityMap = null;
+        
+        // State
+        this.currentServer = null;
+        this.currentChannel = null;
+        this.myUserId = null;
+        this.isInHub = false;
+        
+        this.init();
+    }
+
+    async init() {
+        try {
+            // Initialize settings first
+            await this.settingsManager.load();
+            
+            // Initialize UI
+            this.uiManager.init();
+            this.setupEventListeners();
+            
+            // Initialize proximity map
+            this.proximityMap = new _proximity_ProximityMap_js__WEBPACK_IMPORTED_MODULE_3__.ProximityMap(
+                document.getElementById('proximityMap'), 
+                this
+            );
+            
+            // Connect to server
+            await this.connectionManager.connect();
+            this.myUserId = this.connectionManager.socket.id;
+            
+            // Setup connection event handlers
+            this.setupConnectionHandlers();
+            
+            console.log('ProximityApp initialized successfully');
+            
+        } catch (error) {
+            console.error('Failed to initialize app:', error);
+            this.uiManager.showNotification('Failed to initialize app', 'error');
+        }
+    }
+
+    setupEventListeners() {
+        // Navigation
+        this.uiManager.on('page-change', (page) => this.handlePageChange(page));
+        this.uiManager.on('join-hub', () => this.joinHub());
+        this.uiManager.on('leave-channel', () => this.leaveCurrentChannel());
+        this.uiManager.on('mute-toggle', () => this.audioManager.toggleMute());
+        
+        // Chat
+        this.uiManager.on('send-message', (message) => this.chatManager.sendMessage(message));
+        
+        // Settings
+        this.uiManager.on('settings-change', (settings) => this.settingsManager.update(settings));
+    }
+
+    setupConnectionHandlers() {
+        const socket = this.connectionManager.socket;
+        
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            this.myUserId = socket.id;
+            this.uiManager.updateConnectionStatus('online', 'Connected');
+            this.uiManager.showNotification('Connected to server', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            this.uiManager.updateConnectionStatus('offline', 'Disconnected');
+            this.uiManager.showNotification('Disconnected from server', 'warning');
+        });
+
+        // Hub events
+        socket.on('hub-users', (users) => {
+            console.log('Hub users received:', users);
+            this.handleHubUsers(users);
+        });
+
+        socket.on('user-joined-hub', (user) => {
+            console.log('User joined hub:', user);
+            this.uiManager.showNotification(`${user.username} joined the hub`, 'info');
+            this.handleUserJoined(user);
+        });
+
+        socket.on('user-left-hub', (user) => {
+            console.log('User left hub:', user);
+            this.uiManager.showNotification(`${user.username} left the hub`, 'info');
+            this.handleUserLeft(user);
+        });
+
+        // Voice events
+        socket.on('offer', ({ offer, from }) => this.audioManager.handleOffer(offer, from));
+        socket.on('answer', ({ answer, from }) => this.audioManager.handleAnswer(answer, from));
+        socket.on('ice-candidate', ({ candidate, from }) => this.audioManager.handleIceCandidate(candidate, from));
+        
+        // Chat events
+        socket.on('chat-message', (data) => this.chatManager.addMessage(data));
+        
+        // Position events
+        socket.on('position-update', ({ userId, x, y }) => {
+            if (this.proximityMap) {
+                this.proximityMap.updateUserPosition(userId, x, y);
+            }
+        });
+    }
+
+    async joinHub() {
+        try {
+            console.log('Joining hub...');
+            
+            // Initialize audio if needed
+            if (!this.audioManager.isInitialized()) {
+                await this.audioManager.initialize();
+            }
+            
+            const username = this.settingsManager.get('username') || 'Anonymous';
+            const userColor = this.settingsManager.get('userColor') || 'purple';
+            
+            // Join the hub room
+            this.connectionManager.socket.emit('join-hub', {
+                username,
+                userColor
+            });
+            
+            this.isInHub = true;
+            this.currentServer = { id: 'hub', name: 'Community Hub' };
+            this.currentChannel = { id: 'general-voice', type: 'voice' };
+            
+            // Update UI
+            this.uiManager.showServerView(this.currentServer);
+            this.uiManager.switchToChannel('general-voice', 'voice');
+            
+            // Add self to proximity map
+            if (this.proximityMap) {
+                this.proximityMap.addUser(this.myUserId, username, true);
+                this.proximityMap.updateUserColor(this.myUserId, userColor);
+            }
+            
+            this.uiManager.showNotification('Joined Community Hub', 'success');
+            
+        } catch (error) {
+            console.error('Failed to join hub:', error);
+            this.uiManager.showNotification('Failed to join hub', 'error');
+        }
+    }
+
+    handleHubUsers(users) {
+        // Clear existing participants
+        this.uiManager.clearParticipants();
+        if (this.proximityMap) {
+            this.proximityMap.clearUsers();
+        }
+        
+        // Add self first
+        const username = this.settingsManager.get('username') || 'Anonymous';
+        const userColor = this.settingsManager.get('userColor') || 'purple';
+        
+        this.uiManager.addParticipant(this.myUserId, null, true, username, userColor);
+        if (this.proximityMap) {
+            this.proximityMap.addUser(this.myUserId, username, true);
+            this.proximityMap.updateUserColor(this.myUserId, userColor);
+        }
+        
+        // Add other users and establish WebRTC connections
+        users.forEach(user => {
+            if (user.userId !== this.myUserId) {
+                this.handleUserJoined(user);
+                this.audioManager.connectToUser(user.userId, user.username, user.userColor);
+            }
+        });
+    }
+
+    handleUserJoined(user) {
+        this.uiManager.addParticipant(user.userId, null, false, user.username, user.userColor);
+        
+        if (this.proximityMap) {
+            this.proximityMap.addUser(user.userId, user.username, false);
+            this.proximityMap.updateUserColor(user.userId, user.userColor);
+        }
+        
+        // Establish WebRTC connection if we're in the same channel
+        if (this.isInHub) {
+            this.audioManager.connectToUser(user.userId, user.username, user.userColor);
+        }
+    }
+
+    handleUserLeft(user) {
+        this.uiManager.removeParticipant(user.userId);
+        
+        if (this.proximityMap) {
+            this.proximityMap.removeUser(user.userId);
+        }
+        
+        this.audioManager.disconnectFromUser(user.userId);
+    }
+
+    handlePageChange(page) {
+        if (page === 'map' && this.proximityMap) {
+            this.proximityMap.resizeCanvas();
+        }
+        
+        if (page === 'settings') {
+            this.uiManager.populateAudioDevices();
+        }
+    }
+
+    leaveCurrentChannel() {
+        if (!this.isInHub) return;
+        
+        console.log('Leaving current channel...');
+        
+        // Disconnect from all users
+        this.audioManager.disconnectAll();
+        
+        // Clear UI
+        this.uiManager.clearParticipants();
+        if (this.proximityMap) {
+            this.proximityMap.clearUsers();
+        }
+        
+        // Leave the hub
+        this.connectionManager.socket.emit('leave-hub');
+        
+        this.isInHub = false;
+        this.currentServer = null;
+        this.currentChannel = null;
+        
+        // Return to home
+        this.uiManager.switchPage('home');
+        this.uiManager.showNotification('Left the channel', 'info');
+    }
+
+    // Public methods for other managers to use
+    sendPositionUpdate(x, y) {
+        if (this.connectionManager.socket && this.isInHub) {
+            this.connectionManager.socket.emit('position-update', {
+                roomId: 'hub-general-voice',
+                x, y
+            });
+        }
+    }
+
+    updateMicStatus(isMuted) {
+        if (this.connectionManager.socket && this.isInHub) {
+            this.connectionManager.socket.emit('mic-status', {
+                roomId: 'hub-general-voice',
+                isMuted
+            });
+        }
+    }
+}
+
+// Initialize app when DOM is ready
+function initApp() {
+    try {
+        window.proximityApp = new ProximityApp();
+        console.log('App initialized successfully');
+    } catch (error) {
+        console.error('Error initializing app:', error);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
+})();
+
 /******/ })()
 ;
+//# sourceMappingURL=bundle.js.map

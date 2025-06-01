@@ -1,4 +1,4 @@
-// src/renderer/js/ui/UIManager.js
+// src/renderer/js/ui/UIManager.js - Fixed version with proper home button setup
 export class UIManager {
     constructor() {
         this.eventHandlers = {};
@@ -9,6 +9,7 @@ export class UIManager {
         this.cacheElements();
         this.setupEventListeners();
         this.addHubToNavigation();
+        this.setupHomePageEvents(); // Add this
     }
 
     cacheElements() {
@@ -39,6 +40,9 @@ export class UIManager {
         // Audio devices
         this.elements.audioDeviceSelect = document.getElementById('audioDevice');
         this.elements.audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
+        
+        // Home page elements
+        this.elements.joinHubBtn = document.getElementById('joinHubBtn');
     }
 
     setupEventListeners() {
@@ -84,6 +88,16 @@ export class UIManager {
         });
     }
 
+    setupHomePageEvents() {
+        // Home page hub button
+        if (this.elements.joinHubBtn) {
+            this.elements.joinHubBtn.addEventListener('click', () => {
+                console.log('Home page hub button clicked');
+                this.emit('join-hub');
+            });
+        }
+    }
+
     addHubToNavigation() {
         // Add Community Hub to navigation
         const hubNavItem = document.createElement('div');
@@ -95,6 +109,7 @@ export class UIManager {
         `;
         
         hubNavItem.addEventListener('click', () => {
+            console.log('Navigation hub button clicked');
             this.switchPage('server-view');
             this.emit('join-hub');
         });
@@ -103,10 +118,15 @@ export class UIManager {
         const homeNavItem = document.querySelector('.nav-item[data-page="home"]');
         if (homeNavItem && homeNavItem.parentNode) {
             homeNavItem.parentNode.insertBefore(hubNavItem, homeNavItem.nextSibling);
+            
+            // Update cached nav items
+            this.elements.navItems = document.querySelectorAll('.nav-item');
         }
     }
 
     switchPage(pageName) {
+        console.log('Switching to page:', pageName);
+        
         // Update navigation
         this.elements.navItems.forEach(item => {
             item.classList.toggle('active', item.dataset.page === pageName);
@@ -121,7 +141,10 @@ export class UIManager {
         if (pageName === 'hub') {
             // Show server view but mark hub as active
             document.getElementById('server-view-page').classList.add('active');
-            document.querySelector('.nav-item[data-page="hub"]').classList.add('active');
+            const hubNavItem = document.querySelector('.nav-item[data-page="hub"]');
+            if (hubNavItem) {
+                hubNavItem.classList.add('active');
+            }
         }
     }
 

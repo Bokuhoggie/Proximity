@@ -1,4 +1,4 @@
-// src/renderer/js/proximity/ProximityMap.js
+// src/renderer/js/proximity/ProximityMap.js - Complete fixed version
 export class ProximityMap {
     constructor(canvas, app) {
         this.canvas = canvas;
@@ -116,6 +116,11 @@ export class ProximityMap {
         const x = this.canvas.width / 2 + (Math.random() - 0.5) * 100;
         const y = this.canvas.height / 2 + (Math.random() - 0.5) * 100;
         
+        let userColor = 'blue';
+        if (isSelf && this.app && this.app.settingsManager) {
+            userColor = this.app.settingsManager.get('userColor') || 'purple';
+        }
+        
         this.users.set(userId, {
             x,
             y,
@@ -123,7 +128,7 @@ export class ProximityMap {
             isSelf,
             audioElement,
             lastUpdate: Date.now(),
-            color: isSelf ? this.app.settingsManager.get('userColor') || 'purple' : 'blue'
+            color: userColor
         });
 
         if (isSelf) {
@@ -183,6 +188,12 @@ export class ProximityMap {
         }
     }
 
+    setProximityRange(range) {
+        console.log('Setting proximity range to:', range);
+        this.proximityRange = range;
+        this.updateAudioProximity();
+    }
+
     updateAudioProximity() {
         if (!this.myUserId || !this.users.has(this.myUserId)) return;
 
@@ -216,18 +227,13 @@ export class ProximityMap {
                 }
             }
 
-            // Apply volume
+            // Apply volume with smoothing
             if (user.audioElement) {
                 const currentVolume = user.audioElement.volume;
                 const smoothedVolume = currentVolume * 0.8 + volume * 0.2;
                 user.audioElement.volume = smoothedVolume;
             }
         });
-    }
-
-    setProximityRange(range) {
-        this.proximityRange = range;
-        this.updateAudioProximity();
     }
 
     startRenderLoop() {
@@ -403,25 +409,28 @@ export class ProximityMap {
         }
     }
 
-    // Test bot functionality
+    // Test bot functionality - FIXED VERSION
     addTestBot() {
+        console.log('Adding test bot...');
         this.removeTestBot();
 
         this.testBotId = 'test-bot-' + Date.now();
         
+        // Create audio element for test sound
         const audioElement = new Audio('assets/TestNoise.mp3');
         audioElement.loop = true;
-        audioElement.volume = 0;
+        audioElement.volume = 0; // Start at 0, proximity will adjust
         
         let x, y;
         if (this.myUserId && this.users.has(this.myUserId)) {
             const myUser = this.users.get(this.myUserId);
             const angle = Math.random() * Math.PI * 2;
-            const distance = this.proximityRange * 0.9;
+            const distance = this.proximityRange * 0.9; // 90% of proximity range
             
             x = myUser.x + Math.cos(angle) * distance;
             y = myUser.y + Math.sin(angle) * distance;
             
+            // Ensure within canvas bounds
             x = Math.max(20, Math.min(this.canvas.width - 20, x));
             y = Math.max(20, Math.min(this.canvas.height - 20, y));
         } else {
@@ -439,14 +448,21 @@ export class ProximityMap {
             isBot: true
         });
         
-        audioElement.play();
+        // Play the audio
+        audioElement.play().catch(error => {
+            console.log('Audio autoplay prevented, will work after user interaction');
+        });
+        
         this.updateAudioProximity();
         this.startTestBotMovement();
         
+        console.log('Test bot added successfully');
         return this.testBotId;
     }
     
     removeTestBot() {
+        console.log('Removing test bot...');
+        
         if (this.testBotMovementInterval) {
             clearInterval(this.testBotMovementInterval);
             this.testBotMovementInterval = null;
@@ -457,12 +473,15 @@ export class ProximityMap {
             
             if (bot.audioElement) {
                 bot.audioElement.pause();
+                bot.audioElement.currentTime = 0;
                 bot.audioElement.srcObject = null;
             }
             
             this.users.delete(this.testBotId);
             this.testBotId = null;
             this.updateAudioProximity();
+            
+            console.log('Test bot removed successfully');
         }
     }
     
@@ -475,9 +494,11 @@ export class ProximityMap {
             if (this.testBotId && this.users.has(this.testBotId)) {
                 const bot = this.users.get(this.testBotId);
                 
+                // Random movement direction
                 const targetX = Math.random() * (this.canvas.width - 40) + 20;
                 const targetY = Math.random() * (this.canvas.height - 40) + 20;
                 
+                // Animate the movement over 3 seconds
                 const startX = bot.x;
                 const startY = bot.y;
                 const startTime = Date.now();
@@ -487,6 +508,7 @@ export class ProximityMap {
                     const elapsed = Date.now() - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     
+                    // Ease-in-out movement
                     const easing = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
                     
                     bot.x = startX + (targetX - startX) * easing;
@@ -496,11 +518,13 @@ export class ProximityMap {
                         requestAnimationFrame(animateMovement);
                     }
                     
+                    // Update audio proximity after each movement step
                     this.updateAudioProximity();
                 };
                 
                 animateMovement();
                 
+                // Show speaking activity for half a second
                 bot.isActive = true;
                 setTimeout(() => {
                     if (this.testBotId && this.users.has(this.testBotId)) {
@@ -508,6 +532,25 @@ export class ProximityMap {
                     }
                 }, 500);
             }
-        }, 5000);
+        }, 5000); // Move every 5 seconds
+    }
+
+    // Get current user positions for saving/restoring
+    getUserPositions() {
+        const positions = {};
+        this.users.forEach((user, userId) => {
+            positions[userId] = { x: user.x, y: user.y };
+        });
+        return positions;
+    }
+
+    // Restore user positions
+    setUserPositions(positions) {
+        Object.entries(positions).forEach(([userId, pos]) => {
+            if (this.users.has(userId)) {
+                this.updateUserPosition(userId, pos.x, pos.y);
+            }
+        });
+        this.updateAudioProximity();
     }
 }
