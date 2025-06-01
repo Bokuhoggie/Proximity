@@ -1,4 +1,4 @@
-// src/renderer/js/app.js - Updated with fixed functionality
+// src/renderer/js/app.js - Fixed with no auto voice join and proper leave logic
 import { ConnectionManager } from './core/ConnectionManager.js';
 import { UIManager } from './ui/UIManager.js';
 import { AudioManager } from './audio/AudioManager.js';
@@ -7,7 +7,9 @@ import { ServerManager } from './server/ServerManager.js';
 import { ChatManager } from './chat/ChatManager.js';
 import { SettingsManager } from './settings/SettingsManager.js';
 
+// Try Railway first, fallback to localhost for development
 const SERVER_URL = 'https://myserver2-production.up.railway.app';
+const FALLBACK_URL = 'http://localhost:3000';
 
 class ProximityApp {
     constructor() {
@@ -28,6 +30,7 @@ class ProximityApp {
         this.myUserId = null;
         this.isInHub = false;
         this.isInVoiceChannel = false;
+        this.hubUsers = [];
         
         this.init();
     }
@@ -53,18 +56,34 @@ class ProximityApp {
             // Setup settings controls
             this.setupSettingsControls();
             
-            // Connect to server
-            await this.connectionManager.connect();
-            this.myUserId = this.connectionManager.socket.id;
-            
-            // Setup connection event handlers
-            this.setupConnectionHandlers();
+            // Try to connect to server with fallback
+            await this.connectWithFallback();
             
             console.log('ProximityApp initialized successfully');
             
         } catch (error) {
             console.error('Failed to initialize app:', error);
             this.uiManager.showNotification('Failed to initialize app', 'error');
+        }
+    }
+
+    async connectWithFallback() {
+        try {
+            await this.connectionManager.connect();
+            this.myUserId = this.connectionManager.socket.id;
+            this.setupConnectionHandlers();
+        } catch (error) {
+            console.warn('Railway server failed, trying localhost...', error);
+            try {
+                this.connectionManager = new ConnectionManager(FALLBACK_URL);
+                await this.connectionManager.connect();
+                this.myUserId = this.connectionManager.socket.id;
+                this.setupConnectionHandlers();
+                this.uiManager.showNotification('Connected to local server', 'warning');
+            } catch (fallbackError) {
+                console.error('Both servers failed:', fallbackError);
+                this.uiManager.showNotification('Could not connect to any server', 'error');
+            }
         }
     }
 
@@ -298,11 +317,10 @@ class ProximityApp {
             this.currentServer = { id: 'hub', name: 'Community Hub' };
             this.currentChannel = { id: 'general', type: 'text' };
             
-            // Update UI
+            // Update UI - stay in text channel
             this.uiManager.showServerView(this.currentServer);
-            this.uiManager.switchToChannel('general', 'text'); // Start with text channel
             
-            // Setup voice channel click handler
+            // Setup voice channel click handler but don't auto-join
             this.setupVoiceChannelHandler();
             
             this.uiManager.showNotification('Joined Community Hub', 'success');
@@ -319,6 +337,8 @@ class ProximityApp {
             voiceChannel.addEventListener('click', () => {
                 if (!this.isInVoiceChannel) {
                     this.joinVoiceChannel();
+                } else {
+                    this.uiManager.showNotification('Already in voice channel', 'info');
                 }
             });
         }
@@ -438,27 +458,38 @@ class ProximityApp {
     }
 
     leaveCurrentChannel() {
-        if (!this.isInHub) return;
+        console.log('Leave channel called, current state:', {
+            isInHub: this.isInHub,
+            isInVoiceChannel: this.isInVoiceChannel
+        });
         
-        console.log('Leaving current channel...');
+        if (!this.isInHub) {
+            this.uiManager.showNotification('Not in any channel', 'warning');
+            return;
+        }
         
         if (this.isInVoiceChannel) {
+            // Leave voice channel, go back to text
+            console.log('Leaving voice channel...');
+            
             // Disconnect from all users
             this.audioManager.disconnectAll();
             
-            // Clear UI
+            // Clear voice UI
             this.uiManager.clearParticipants();
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
             }
             
             this.isInVoiceChannel = false;
+            this.currentChannel = { id: 'general', type: 'text' };
             
-            // Switch back to text channel
+            // Switch back to text channel view
             this.uiManager.switchToChannel('general', 'text');
             this.uiManager.showNotification('Left voice channel', 'info');
         } else {
             // Leave the entire hub
+            console.log('Leaving hub entirely...');
             this.connectionManager.socket.emit('leave-hub');
             
             this.isInHub = false;

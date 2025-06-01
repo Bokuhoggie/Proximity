@@ -1,4 +1,4 @@
-// src/renderer/js/ui/UIManager.js - Fixed version with proper home button setup
+// src/renderer/js/ui/UIManager.js - Fixed version with no auto voice join
 export class UIManager {
     constructor() {
         this.eventHandlers = {};
@@ -9,7 +9,7 @@ export class UIManager {
         this.cacheElements();
         this.setupEventListeners();
         this.addHubToNavigation();
-        this.setupHomePageEvents(); // Add this
+        this.setupHomePageEvents();
     }
 
     cacheElements() {
@@ -79,9 +79,11 @@ export class UIManager {
             }
         });
 
+        // Leave buttons - both should trigger leave-channel
         [this.elements.leaveChannelBtn, this.elements.leaveChannelServerBtn].forEach(btn => {
             if (btn) {
                 btn.addEventListener('click', () => {
+                    console.log('Leave button clicked');
                     this.emit('leave-channel');
                 });
             }
@@ -188,10 +190,9 @@ export class UIManager {
             `;
         }
 
-        // Auto-join voice channel
-        setTimeout(() => {
-            this.switchToChannel('general-voice', 'voice');
-        }, 100);
+        // DON'T auto-join voice channel - let user click it manually
+        // Start in text channel only
+        this.switchToChannel('general', 'text');
     }
 
     switchToChannel(channelId, channelType) {
@@ -225,7 +226,7 @@ export class UIManager {
         }
 
         const participant = document.createElement('div');
-        participant.className = 'participant';
+        participant.className = 'voice-participant';
         participant.id = `participant-${userId}`;
         
         const micStatus = document.createElement('div');
@@ -255,8 +256,10 @@ export class UIManager {
             participant.appendChild(audioElement);
         }
         
-        if (this.elements.participantsList) {
-            this.elements.participantsList.appendChild(participant);
+        // Add to voice participants list instead of main participants list
+        const voiceParticipants = document.getElementById('voiceParticipants');
+        if (voiceParticipants) {
+            voiceParticipants.appendChild(participant);
         }
     }
 
