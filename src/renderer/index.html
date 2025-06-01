@@ -6,128 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .user-color-picker {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .color-option {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            outline: none;
-            transition: border 0.2s, box-shadow 0.2s;
-            display: inline-block;
-        }
-        .color-option.selected,
-        .color-option:focus {
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--border, #a0aec0);
-        }
-        .color-blue { background: #3b82f6; }
-        .color-green { background: #10b981; }
-        .color-purple { background: #8b5cf6; }
-        .color-red { background: #ef4444; }
-        .color-orange { background: #f59e0b; }
-        .color-pink { background: #ec4899; }
-        .color-indigo { background: #6366f1; }
-        .color-cyan { background: #06b6d4; }
-
-        /* Fixed server info styling */
-        .server-info {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .server-info-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .server-info-text {
-            flex: 1;
-        }
-
-        .server-info-text h3 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .server-invite {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .server-invite code {
-            background: var(--dark-bg);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-weight: bold;
-            color: var(--light-purple);
-        }
-
-        .server-info-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        .copy-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .copy-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--light-purple);
-        }
-
-        .favorite-btn {
-            display: none;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            background: var(--secondary-purple);
-            color: var(--text-primary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .favorite-btn:hover {
-            background: var(--primary-purple);
-            transform: translateY(-1px);
-        }
-
-        .favorite-btn.favorited {
-            background: var(--warning);
-            color: white;
-        }
-
-        .favorite-btn.favorited:hover {
-            background: #d97706;
-        }
-    </style>
 </head>
 <body>
     <div class="app-container">
@@ -145,6 +23,7 @@
                     <div class="nav-icon">🏠</div>
                     <span class="nav-text">Home</span>
                 </div>
+                <!-- Community Hub will be added here by JavaScript -->
                 <div class="nav-item" data-page="map">
                     <div class="nav-icon">🗺️</div>
                     <span class="nav-text">Channel Map</span>
@@ -167,7 +46,7 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- Home Page (Default) -->
+            <!-- Home Page -->
             <div class="page active" id="home-page">
                 <div class="home-container">
                     <div class="home-content">
@@ -180,9 +59,9 @@
                         </div>
                         
                         <div class="home-actions">
-                            <button id="homeCreateServerBtn" class="home-action-btn create">
-                                <span class="action-icon">➕</span>
-                                <span class="action-text">Create Server</span>
+                            <button id="joinHubBtn" class="home-action-btn join">
+                                <span class="action-icon">🏢</span>
+                                <span class="action-text">Join Community Hub</span>
                             </button>
                         </div>
                         
@@ -202,15 +81,12 @@
                         <div class="server-info">
                             <div class="server-info-header">
                                 <div class="server-info-text">
-                                    <h3 id="currentServerName">Server Name</h3>
+                                    <h3 id="currentServerName">Community Hub</h3>
                                     <div class="server-invite">
-                                        <span>Invite Code:</span>
-                                        <code id="serverInviteDisplay">ABC123</code>
-                                        <button id="copyInviteBtn" class="copy-btn" title="Copy invite code">📋</button>
+                                        <span>Server:</span>
+                                        <code id="serverInviteDisplay">COMMUNITY-HUB</code>
+                                        <button id="copyInviteBtn" class="copy-btn" title="Copy server info">📋</button>
                                     </div>
-                                </div>
-                                <div class="server-info-actions">
-                                    <!-- Favorite button will be added here by JavaScript -->
                                 </div>
                             </div>
                         </div>
@@ -232,9 +108,7 @@
                                     <div class="channel-item" data-channel-type="voice" data-channel-id="general-voice">
                                         <span class="channel-icon">🔊</span>
                                         <span class="channel-name">General Voice</span>
-                                        <div class="voice-participants" id="voiceParticipants">
-                                            <!-- Voice participants will be added here -->
-                                        </div>
+                                        <div class="voice-participants" id="voiceParticipants"></div>
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +121,7 @@
                             </button>
                             <div class="leave-buttons">
                                 <button id="leaveChannelServerBtn" class="btn warning">Leave Channel</button>
-                                <button id="leaveServerBtn" class="btn danger">Leave Server</button>
+                                <button id="leaveServerBtn" class="btn danger">Leave Hub</button>
                             </div>
                         </div>
                     </div>
@@ -258,11 +132,11 @@
                         <div class="content-view active" id="text-chat-view">
                             <div class="chat-header">
                                 <h3># general</h3>
-                                <p>Welcome to the general text channel</p>
+                                <p>Welcome to the Community Hub general chat</p>
                             </div>
                             <div class="chat-messages" id="chatMessages">
                                 <div class="welcome-message">
-                                    <p>Welcome to the server! This is the beginning of the #general channel.</p>
+                                    <p>Welcome to the Community Hub! This is where everyone gathers to chat and connect.</p>
                                 </div>
                             </div>
                             <div class="chat-input-container">
@@ -275,7 +149,7 @@
                         <div class="content-view" id="voice-channel-view">
                             <div class="voice-header">
                                 <h3>🔊 General Voice</h3>
-                                <p>Connected to voice channel</p>
+                                <p>Connected to Community Hub voice channel</p>
                             </div>
                             <div class="voice-content">
                                 <div class="participants-section">
@@ -351,7 +225,6 @@
                             </select>
                         </div>
 
-                        <!-- Audio Output Device Selector -->
                         <div class="setting-item">
                             <label for="audioOutputDevice">Output Device</label>
                             <select id="audioOutputDevice" class="setting-select">
@@ -363,51 +236,6 @@
                             <label for="audioGain">Microphone Gain</label>
                             <input type="range" id="audioGain" min="0" max="100" value="50" class="setting-slider">
                             <span class="slider-value">50%</span>
-                        </div>
-
-                        <!-- Persistent Microphone Visualizer -->
-                        <div class="setting-item">
-                            <label>Microphone Level</label>
-                            <div id="persistentMicVisualizer" style="
-                                margin-top: 0.5rem;
-                                padding: 1rem;
-                                background: var(--dark-bg);
-                                border-radius: 8px;
-                                border: 1px solid var(--border);
-                            ">
-                                <div id="persistentMicLevelBar" style="
-                                    width: 100%;
-                                    height: 20px;
-                                    background: var(--border);
-                                    border-radius: 10px;
-                                    overflow: hidden;
-                                    position: relative;
-                                ">
-                                    <div id="persistentMicLevelFill" style="
-                                        height: 100%;
-                                        width: 0%;
-                                        background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%);
-                                        transition: width 0.1s ease;
-                                        border-radius: 10px;
-                                    "></div>
-                                    <span id="persistentVolumeLevel" style="
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        font-size: 0.8rem;
-                                        font-weight: bold;
-                                        color: var(--text-primary);
-                                        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-                                    ">0%</span>
-                                </div>
-                                <div style="
-                                    margin-top: 0.5rem;
-                                    font-size: 0.8rem;
-                                    color: var(--text-muted);
-                                    text-align: center;
-                                " id="micStatusText">Click "Test Microphone" to start monitoring</div>
-                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -450,22 +278,8 @@
                         <div class="setting-item">
                             <label>
                                 <input type="checkbox" id="autoJoin">
-                                Auto-join last room on startup
+                                Auto-join hub on startup
                             </label>
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Hotkeys</h3>
-                        
-                        <div class="setting-item">
-                            <label for="muteHotkey">Mute Toggle</label>
-                            <input type="text" id="muteHotkey" value="Ctrl+M" class="setting-input" readonly>
-                        </div>
-
-                        <div class="setting-item">
-                            <label for="deafenHotkey">Deafen Toggle</label>
-                            <input type="text" id="deafenHotkey" value="Ctrl+D" class="setting-input" readonly>
                         </div>
                     </div>
 
@@ -479,45 +293,52 @@
         </main>
     </div>
 
-    <!-- Create Server Modal -->
-    <div id="createServerModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Server</h3>
-                <span class="modal-close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="setting-item">
-                    <label for="serverName">Server Name</label>
-                    <input type="text" id="serverName" placeholder="Enter server name" class="setting-input">
-                </div>
-                <div class="setting-item">
-                    <label for="serverDescription">Description (Optional)</label>
-                    <textarea id="serverDescription" placeholder="Describe your server" class="setting-input" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelCreateServer" class="btn secondary">Cancel</button>
-                <button id="confirmCreateServer" class="btn primary">Create Server</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Load Socket.IO from CDN first -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     
-    <!-- Then load our bundle -->
-    <script src="dist/bundle.js"></script>
+    <!-- Load our main application -->
+    <script type="module" src="js/main.js"></script>
     
-    <!-- Fallback if bundle fails -->
+    <!-- Fallback check -->
     <script>
-        // Check if our app loaded
         setTimeout(() => {
             if (!window.proximityApp) {
-                console.error('Main app failed to load - check webpack build');
-                alert('App failed to load. Please run: npm run webpack');
+                console.error('Main app failed to load');
+                alert('App failed to load. Please check the console for errors.');
             }
-        }, 1000);
+        }, 2000);
     </script>
+
+    <!-- Add color picker styles -->
+    <style>
+        .user-color-picker {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+        .color-option.selected,
+        .color-option:focus {
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--border, #a0aec0);
+        }
+        .color-blue { background: #3b82f6; }
+        .color-green { background: #10b981; }
+        .color-purple { background: #8b5cf6; }
+        .color-red { background: #ef4444; }
+        .color-orange { background: #f59e0b; }
+        .color-pink { background: #ec4899; }
+        .color-indigo { background: #6366f1; }
+        .color-cyan { background: #06b6d4; }
+    </style>
 </body>
 </html>

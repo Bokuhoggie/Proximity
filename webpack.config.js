@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/renderer/renderer.js',
+  entry: './src/renderer/js/main.js',
   target: 'electron-renderer',
   output: {
     filename: 'bundle.js',
@@ -13,10 +13,21 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       }
     ]
   },
   resolve: {
     extensions: ['.js']
-  }
-}; 
+  },
+  devtool: 'source-map'
+};
