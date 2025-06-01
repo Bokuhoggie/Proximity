@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/renderer/js/main.js',
+  entry: './src/renderer/js/app.js',
   target: 'electron-renderer',
   output: {
     filename: 'bundle.js',
