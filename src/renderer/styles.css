@@ -1687,3 +1687,167 @@ body {
     padding-right: 2.5rem; /* Space for delete button */
     word-wrap: break-word;
 }
+
+/* Device Lock Button Styles */
+.device-lock-btn {
+    margin-left: 0.5rem;
+    padding: 0.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    min-width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.device-lock-btn:hover {
+    background: var(--secondary-purple);
+    color: var(--text-primary);
+    border-color: var(--secondary-purple);
+}
+
+.device-lock-btn.locked {
+    background: var(--accent-orange);
+    border-color: var(--accent-orange);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.device-lock-btn.locked:hover {
+    background: #d97706;
+    border-color: #d97706;
+}
+
+/* Enhanced Setting Item Layout for Device Selectors */
+.setting-item.device-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.device-selector-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.device-selector-row .setting-select {
+    flex: 1;
+    margin: 0;
+}
+
+/* Map Glow Effects for Voice Activity */
+.proximity-map-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Enhanced Activity Indicator Styles */
+.voice-participant .participant-avatar {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.voice-participant.speaking .participant-avatar {
+    animation: speakingPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes speakingPulse {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    100% {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+}
+
+/* Enhanced Proximity Map User Activity */
+.proximity-user-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: userGlow 0.5s ease-out;
+    z-index: 0;
+}
+
+@keyframes userGlow {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Color-specific glow effects */
+.user-glow-blue {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-green {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-purple {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-red {
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-orange {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-pink {
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.8);
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-indigo {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.8);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+}
+
+.user-glow-cyan {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.8);
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%);
+}
+
+/* Enhanced Voice Participant Speaking Indicator */
+.voice-participant .mic-status.speaking {
+    animation: micGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes micGlow {
+    0% {
+        box-shadow: 0 0 5px var(--success);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 0 0 15px var(--success), 0 0 25px rgba(16, 185, 129, 0.5);
+        transform: scale(1.1);
+    }
+}

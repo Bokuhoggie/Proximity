@@ -254,18 +254,24 @@
                     <div class="setting-group">
                         <h3>Audio Settings</h3>
                         
-                        <div class="setting-item">
+                        <div class="setting-item device-selector">
                             <label for="audioDevice">Microphone Device</label>
-                            <select id="audioDevice" class="setting-select">
-                                <option value="">Select Audio Device</option>
-                            </select>
+                            <div class="device-selector-row">
+                                <select id="audioDevice" class="setting-select">
+                                    <option value="">Select Audio Device</option>
+                                </select>
+                                <button id="inputDeviceLockBtn" class="device-lock-btn" title="Lock input device">🔓</button>
+                            </div>
                         </div>
 
-                        <div class="setting-item">
+                        <div class="setting-item device-selector">
                             <label for="audioOutputDevice">Output Device</label>
-                            <select id="audioOutputDevice" class="setting-select">
-                                <option value="">Select Output Device</option>
-                            </select>
+                            <div class="device-selector-row">
+                                <select id="audioOutputDevice" class="setting-select">
+                                    <option value="">Select Output Device</option>
+                                </select>
+                                <button id="outputDeviceLockBtn" class="device-lock-btn" title="Lock output device">🔓</button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -482,6 +488,33 @@
 
         .voice-participant .mic-status.muted {
             background: var(--danger);
+        }
+
+        .device-selector-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .device-lock-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .device-lock-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .device-lock-btn.locked {
+            background: var(--secondary-purple);
+            color: var(--text-primary);
+            border-color: var(--secondary-purple);
         }
     </style>
 </body>

@@ -1,4 +1,4 @@
-// src/renderer/js/proximity/ProximityMap.js - Complete fixed version
+// src/renderer/js/proximity/ProximityMap.js - Fixed bot toggle and mini map consistency
 export class ProximityMap {
     constructor(canvas, app) {
         this.canvas = canvas;
@@ -11,6 +11,8 @@ export class ProximityMap {
         this.dragOffset = { x: 0, y: 0 };
         this.testBotId = null;
         this.testBotMovementInterval = null;
+        this.isMinimapInstance = false; // Track if this is a minimap
+        this.syncing = false; // Prevent infinite sync loops
         
         // Audio constants for proximity calculation
         this.EDGE_START = 0.75; // When edge effects begin
@@ -21,6 +23,11 @@ export class ProximityMap {
         this.resizeCanvas();
         
         window.addEventListener('resize', () => this.resizeCanvas());
+    }
+
+    // Set if this is a minimap instance
+    setMinimapMode(isMinimapInstance = false) {
+        this.isMinimapInstance = isMinimapInstance;
     }
 
     resizeCanvas() {
@@ -70,10 +77,13 @@ export class ProximityMap {
             this.updateUserPosition(this.myUserId, newX, newY);
             this.updateAudioProximity();
             
-            // Emit position update to other users
+            // Emit position update to other users and sync with other map instances
             if (this.app && this.app.sendPositionUpdate) {
                 this.app.sendPositionUpdate(newX, newY);
             }
+            
+            // FIXED: Sync position between main map and minimap
+            this.syncWithOtherMaps(this.myUserId, newX, newY);
         } else {
             // Update cursor based on hover
             let isHovering = false;
@@ -83,6 +93,36 @@ export class ProximityMap {
                 isHovering = distance <= 20;
             }
             this.canvas.style.cursor = isHovering ? 'grab' : 'crosshair';
+        }
+    }
+
+    // FIXED: Sync position between main map and minimap
+    syncWithOtherMaps(userId, x, y) {
+        // Don't create infinite loops
+        if (this.syncing) return;
+        
+        // Sync with main map if this is minimap
+        if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
+            window.proximityApp.proximityMap.syncing = true;
+            window.proximityApp.proximityMap.updateUserPosition(userId, x, y);
+            window.proximityApp.proximityMap.updateAudioProximity();
+            setTimeout(() => {
+                if (window.proximityApp?.proximityMap) {
+                    window.proximityApp.proximityMap.syncing = false;
+                }
+            }, 10);
+        }
+        
+        // Sync with minimap if this is main map
+        if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+            window.proximityApp.miniProximityMap.syncing = true;
+            window.proximityApp.miniProximityMap.updateUserPosition(userId, x, y);
+            window.proximityApp.miniProximityMap.updateAudioProximity();
+            setTimeout(() => {
+                if (window.proximityApp?.miniProximityMap) {
+                    window.proximityApp.miniProximityMap.syncing = false;
+                }
+            }, 10);
         }
     }
 
@@ -136,6 +176,43 @@ export class ProximityMap {
         }
 
         this.updateAudioProximity();
+        
+        // FIXED: Sync user addition between maps
+        this.syncUserWithOtherMaps(userId, username, isSelf, audioElement, userColor);
+    }
+
+    // FIXED: Sync user operations between main map and minimap
+    syncUserWithOtherMaps(userId, username, isSelf, audioElement, userColor) {
+        if (this.syncing) return;
+        
+        const user = this.users.get(userId);
+        if (!user) return;
+        
+        // Sync with main map if this is minimap
+        if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
+            if (!window.proximityApp.proximityMap.users.has(userId)) {
+                window.proximityApp.proximityMap.syncing = true;
+                window.proximityApp.proximityMap.users.set(userId, { ...user });
+                setTimeout(() => {
+                    if (window.proximityApp?.proximityMap) {
+                        window.proximityApp.proximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        }
+        
+        // Sync with minimap if this is main map
+        if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+            if (!window.proximityApp.miniProximityMap.users.has(userId)) {
+                window.proximityApp.miniProximityMap.syncing = true;
+                window.proximityApp.miniProximityMap.users.set(userId, { ...user });
+                setTimeout(() => {
+                    if (window.proximityApp?.miniProximityMap) {
+                        window.proximityApp.miniProximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        }
     }
 
     removeUser(userId) {
@@ -144,11 +221,59 @@ export class ProximityMap {
             this.myUserId = null;
         }
         this.updateAudioProximity();
+        
+        // FIXED: Sync user removal between maps
+        if (!this.syncing) {
+            if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
+                window.proximityApp.proximityMap.syncing = true;
+                window.proximityApp.proximityMap.users.delete(userId);
+                setTimeout(() => {
+                    if (window.proximityApp?.proximityMap) {
+                        window.proximityApp.proximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+            
+            if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+                window.proximityApp.miniProximityMap.syncing = true;
+                window.proximityApp.miniProximityMap.users.delete(userId);
+                setTimeout(() => {
+                    if (window.proximityApp?.miniProximityMap) {
+                        window.proximityApp.miniProximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        }
     }
 
     clearUsers() {
         this.users.clear();
         this.myUserId = null;
+        
+        // FIXED: Sync clear operation between maps
+        if (!this.syncing) {
+            if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
+                window.proximityApp.proximityMap.syncing = true;
+                window.proximityApp.proximityMap.users.clear();
+                window.proximityApp.proximityMap.myUserId = null;
+                setTimeout(() => {
+                    if (window.proximityApp?.proximityMap) {
+                        window.proximityApp.proximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+            
+            if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+                window.proximityApp.miniProximityMap.syncing = true;
+                window.proximityApp.miniProximityMap.users.clear();
+                window.proximityApp.miniProximityMap.myUserId = null;
+                setTimeout(() => {
+                    if (window.proximityApp?.miniProximityMap) {
+                        window.proximityApp.miniProximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        }
     }
 
     updateUserPosition(userId, x, y) {
@@ -186,12 +311,40 @@ export class ProximityMap {
         if (this.app && this.app.sendPositionUpdate) {
             this.app.sendPositionUpdate(centerX, centerY);
         }
+        
+        // FIXED: Sync center operation between maps
+        this.syncWithOtherMaps(this.myUserId, centerX, centerY);
     }
 
     setProximityRange(range) {
         console.log('Setting proximity range to:', range);
         this.proximityRange = range;
         this.updateAudioProximity();
+        
+        // FIXED: Sync proximity range between maps
+        if (!this.syncing) {
+            if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
+                window.proximityApp.proximityMap.syncing = true;
+                window.proximityApp.proximityMap.proximityRange = range;
+                window.proximityApp.proximityMap.updateAudioProximity();
+                setTimeout(() => {
+                    if (window.proximityApp?.proximityMap) {
+                        window.proximityApp.proximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+            
+            if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+                window.proximityApp.miniProximityMap.syncing = true;
+                window.proximityApp.miniProximityMap.proximityRange = range;
+                window.proximityApp.miniProximityMap.updateAudioProximity();
+                setTimeout(() => {
+                    if (window.proximityApp?.miniProximityMap) {
+                        window.proximityApp.miniProximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        }
     }
 
     updateAudioProximity() {
@@ -340,6 +493,34 @@ export class ProximityMap {
         
         const [fillColor, strokeColor] = colorMap[color] || colorMap['purple'];
         
+        // Enhanced activity indicator with larger glow
+        if (user.isActive) {
+            const pulseRadius = 35 + Math.sin(Date.now() * 0.015) * 8;
+            const glowColor = colorMap[color] ? colorMap[color][0] : '#8b5cf6';
+            
+            // Outer glow
+            this.ctx.shadowColor = glowColor;
+            this.ctx.shadowBlur = 20;
+            this.ctx.strokeStyle = glowColor.replace(')', ', 0.4)').replace('rgb', 'rgba');
+            this.ctx.lineWidth = 3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, pulseRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+            
+            // Inner pulse
+            this.ctx.shadowBlur = 10;
+            this.ctx.strokeStyle = glowColor.replace(')', ', 0.6)').replace('rgb', 'rgba');
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, pulseRadius * 0.7, 0, Math.PI * 2);
+            this.ctx.stroke();
+            
+            // Reset shadow
+            this.ctx.shadowColor = 'transparent';
+            this.ctx.shadowBlur = 0;
+        }
+        
+        // Draw main user circle
         this.ctx.fillStyle = fillColor;
         this.ctx.strokeStyle = strokeColor;
         this.ctx.lineWidth = 3;
@@ -364,17 +545,6 @@ export class ProximityMap {
         this.ctx.textBaseline = 'top';
         const displayName = isSelf ? `${username} (You)` : username;
         this.ctx.fillText(displayName, x, y + 30);
-        
-        // Activity indicator (pulsing effect when speaking)
-        if (user.isActive) {
-            const pulseRadius = 25 + Math.sin(Date.now() * 0.01) * 5;
-            const glowColor = colorMap[color] ? colorMap[color][0].replace('1)', '0.6)') : 'rgba(139,92,246,0.6)';
-            this.ctx.strokeStyle = glowColor;
-            this.ctx.lineWidth = 2;
-            this.ctx.beginPath();
-            this.ctx.arc(x, y, pulseRadius, 0, Math.PI * 2);
-            this.ctx.stroke();
-        }
     }
 
     drawConnectionLines() {
@@ -405,16 +575,57 @@ export class ProximityMap {
     // Called when user speaks to show activity
     setUserActivity(userId, isActive) {
         if (this.users.has(userId)) {
-            this.users.get(userId).isActive = isActive;
+            const user = this.users.get(userId);
+            user.isActive = isActive;
+            
+            // Create glow effect when user starts speaking
+            if (isActive && userId === this.myUserId) {
+                this.createUserGlowEffect(user.x, user.y, user.color);
+            }
         }
     }
 
-    // Test bot functionality - FIXED VERSION
+    createUserGlowEffect(x, y, color) {
+        // Create glow element
+        const glowElement = document.createElement('div');
+        glowElement.className = `proximity-user-glow user-glow-${color}`;
+        glowElement.style.cssText = `
+            position: absolute;
+            left: ${x - 40}px;
+            top: ${y - 40}px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        `;
+        
+        // Add to canvas container
+        const canvasContainer = this.canvas.parentElement;
+        if (canvasContainer) {
+            canvasContainer.style.position = 'relative';
+            canvasContainer.appendChild(glowElement);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                if (glowElement.parentElement) {
+                    glowElement.parentElement.removeChild(glowElement);
+                }
+            }, 500);
+        }
+    }
+
+    // FIXED: Test bot functionality - proper state management
     addTestBot() {
         console.log('Adding test bot...');
-        this.removeTestBot();
+        
+        // FIXED: Only allow one test bot per map type
+        if (this.testBotId) {
+            console.log('Test bot already exists, removing first...');
+            this.removeTestBot();
+        }
 
-        this.testBotId = 'test-bot-' + Date.now();
+        this.testBotId = 'test-bot-' + Date.now() + (this.isMinimapInstance ? '-mini' : '-main');
         
         // Create audio element for test sound
         const audioElement = new Audio('assets/TestNoise.mp3');
@@ -456,6 +667,11 @@ export class ProximityMap {
         this.updateAudioProximity();
         this.startTestBotMovement();
         
+        // FIXED: Sync test bot addition with other map (only from main map)
+        if (!this.isMinimapInstance) {
+            this.syncTestBotWithMinimap('add');
+        }
+        
         console.log('Test bot added successfully');
         return this.testBotId;
     }
@@ -481,7 +697,47 @@ export class ProximityMap {
             this.testBotId = null;
             this.updateAudioProximity();
             
+            // FIXED: Sync test bot removal with other map (only from main map)
+            if (!this.isMinimapInstance) {
+                this.syncTestBotWithMinimap('remove');
+            }
+            
             console.log('Test bot removed successfully');
+        }
+    }
+
+    // FIXED: Sync test bot operations between main map and minimap
+    syncTestBotWithMinimap(operation) {
+        if (this.syncing) return;
+        
+        if (operation === 'add' && window.proximityApp?.miniProximityMap) {
+            const bot = this.users.get(this.testBotId);
+            if (bot) {
+                window.proximityApp.miniProximityMap.syncing = true;
+                
+                // Add bot to minimap without audio element (only main map handles audio)
+                window.proximityApp.miniProximityMap.testBotId = this.testBotId;
+                window.proximityApp.miniProximityMap.users.set(this.testBotId, {
+                    ...bot,
+                    audioElement: null // No audio for minimap
+                });
+                
+                setTimeout(() => {
+                    if (window.proximityApp?.miniProximityMap) {
+                        window.proximityApp.miniProximityMap.syncing = false;
+                    }
+                }, 10);
+            }
+        } else if (operation === 'remove' && window.proximityApp?.miniProximityMap) {
+            window.proximityApp.miniProximityMap.syncing = true;
+            window.proximityApp.miniProximityMap.users.delete(window.proximityApp.miniProximityMap.testBotId);
+            window.proximityApp.miniProximityMap.testBotId = null;
+            
+            setTimeout(() => {
+                if (window.proximityApp?.miniProximityMap) {
+                    window.proximityApp.miniProximityMap.syncing = false;
+                }
+            }, 10);
         }
     }
     
@@ -513,6 +769,15 @@ export class ProximityMap {
                     
                     bot.x = startX + (targetX - startX) * easing;
                     bot.y = startY + (targetY - startY) * easing;
+                    
+                    // FIXED: Sync bot position with other map during movement
+                    if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
+                        const miniBot = window.proximityApp.miniProximityMap.users.get(this.testBotId);
+                        if (miniBot) {
+                            miniBot.x = bot.x;
+                            miniBot.y = bot.y;
+                        }
+                    }
                     
                     if (progress < 1) {
                         requestAnimationFrame(animateMovement);
