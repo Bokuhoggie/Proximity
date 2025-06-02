@@ -12,7 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AudioManager: () => (/* binding */ AudioManager)
 /* harmony export */ });
-// src/renderer/js/audio/AudioManager.js - Enhanced with I/O and visualizer support
+// src/renderer/js/audio/AudioManager.js - ACTUALLY Fixed microphone initialization and WebRTC
 class AudioManager {
     constructor() {
         this.peerConnections = new Map();
@@ -27,37 +27,211 @@ class AudioManager {
         this.volumeCallbacks = [];
         this.persistentVisualizerActive = false;
         this.persistentVisualizerCallback = null;
+        this.initializationAttempts = 0;
+        this.maxInitAttempts = 3;
         
         this.iceServers = [
             { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' }
         ];
     }
 
     async initialize() {
+        this.initializationAttempts++;
+        
         try {
-            console.log('Initializing audio...');
+            console.log(`🎤 [ATTEMPT ${this.initializationAttempts}] Initializing audio...`);
             
+            // Force close any existing audio context first
+            if (this.audioContext && this.audioContext.state !== 'closed') {
+                await this.audioContext.close();
+                console.log('🔄 Closed existing audio context');
+            }
+            
+            // Stop any existing stream
+            if (this.localStream) {
+                this.localStream.getTracks().forEach(track => {
+                    console.log('🛑 Stopping existing track:', track.label);
+                    track.stop();
+                });
+                this.localStream = null;
+            }
+            
+            console.log('🎯 Requesting microphone access...');
+            
+            // More aggressive microphone constraints
             const constraints = {
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
-                    autoGainControl: true
+                    autoGainControl: true,
+                    sampleRate: { ideal: 48000, min: 16000 },
+                    channelCount: { ideal: 1 },
+                    latency: { ideal: 0.01 },
+                    volume: { ideal: 1.0 }
                 },
                 video: false
             };
 
             this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            console.log('✅ Microphone access granted!');
+            console.log('📊 Stream details:', {
+                id: this.localStream.id,
+                active: this.localStream.active,
+                tracks: this.localStream.getTracks().length
+            });
             
-            // Setup audio context for gain control and visualization
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            // Verify and log all audio tracks
+            const audioTracks = this.localStream.getAudioTracks();
+            console.log(`🎵 Found ${audioTracks.length} audio track(s):`);
+            
+            if (audioTracks.length === 0) {
+                throw new Error('❌ No audio tracks found in stream');
+            }
+            
+            audioTracks.forEach((track, index) => {
+                console.log(`🎵 Track ${index + 1}:`, {
+                    label: track.label || 'Unknown Device',
+                    enabled: track.enabled,
+                    muted: track.muted,
+                    readyState: track.readyState,
+                    kind: track.kind,
+                    constraints: track.getConstraints(),
+                    settings: track.getSettings()
+                });
+                
+                // Add event listeners to track
+                track.addEventListener('ended', () => {
+                    console.warn('⚠️ Audio track ended unexpectedly');
+                });
+                
+                track.addEventListener('mute', () => {
+                    console.warn('⚠️ Audio track muted');
+                });
+                
+                track.addEventListener('unmute', () => {
+                    console.log('🔊 Audio track unmuted');
+                });
+            });
+            
+            // Create new audio context with optimal settings
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            this.audioContext = new AudioContextClass({
+                sampleRate: 48000,
+                latencyHint: 'interactive'
+            });
+            
+            console.log('🎛️ AudioContext created:', {
+                state: this.audioContext.state,
+                sampleRate: this.audioContext.sampleRate,
+                baseLatency: this.audioContext.baseLatency,
+                outputLatency: this.audioContext.outputLatency
+            });
+            
+            // Resume audio context if suspended (required by browser autoplay policies)
+            if (this.audioContext.state === 'suspended') {
+                console.log('▶️ Resuming suspended audio context...');
+                await this.audioContext.resume();
+                console.log('✅ Audio context resumed, state:', this.audioContext.state);
+            }
+            
+            // Create audio processing nodes
+            this.gainNode = this.audioContext.createGain();
+            this.gainNode.gain.setValueAtTime(1.0, this.audioContext.currentTime);
+            
+            this.analyser = this.audioContext.createAnalyser();
+            this.analyser.fftSize = 512; // Increased for better analysis
+            this.analyser.smoothingTimeConstant = 0.3; // Less smoothing for more responsive
+            this.analyser.minDecibels = -90;
+            this.analyser.maxDecibels = -10;
+            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            
+            console.log('🔧 Audio nodes created:', {
+                gainValue: this.gainNode.gain.value,
+                analyserFFTSize: this.analyser.fftSize,
+                frequencyBinCount: this.analyser.frequencyBinCount
+            });
+            
+            // Connect audio pipeline
+            this.micSource = this.audioContext.createMediaStreamSource(this.localStream);
+            this.micSource.connect(this.gainNode);
+            this.gainNode.connect(this.analyser);
+            
+            console.log('🔗 Audio pipeline connected successfully');
+            
+            // Start immediate audio testing
+            this.startVolumeAnalysis();
+            this.testAudioInputImmediate();
+            
+            this.initialized = true;
+            this.initializationAttempts = 0; // Reset on success
+            
+            console.log('🎉 Audio initialization SUCCESSFUL!');
+            
+            // Notify success
+            if (window.proximityApp?.uiManager) {
+                window.proximityApp.uiManager.showNotification('🎤 Microphone initialized successfully!', 'success');
+            }
+            
+        } catch (error) {
+            console.error(`❌ Audio initialization failed (attempt ${this.initializationAttempts}):`, error);
+            
+            this.initialized = false;
+            
+            // Try again with fallback constraints if first attempt
+            if (this.initializationAttempts < this.maxInitAttempts) {
+                console.log('🔄 Retrying with fallback constraints...');
+                await this.delay(1000);
+                return this.initializeWithFallback();
+            }
+            
+            // Provide specific error messages
+            let errorMessage = 'Failed to access microphone: ';
+            
+            if (error.name === 'NotAllowedError') {
+                errorMessage += 'Permission denied. Please allow microphone access and try again.';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage += 'No microphone found. Please connect a microphone and try again.';
+            } else if (error.name === 'NotReadableError') {
+                errorMessage += 'Microphone is already in use by another application.';
+            } else if (error.name === 'OverconstrainedError') {
+                errorMessage += 'Microphone constraints not supported. Trying fallback...';
+                return this.initializeWithFallback();
+            } else {
+                errorMessage += error.message;
+            }
+            
+            throw new Error(errorMessage);
+        }
+    }
+
+    async initializeWithFallback() {
+        console.log('🔄 Attempting fallback initialization...');
+        
+        try {
+            // Very basic constraints as fallback
+            const fallbackConstraints = {
+                audio: true,
+                video: false
+            };
+
+            this.localStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+            console.log('✅ Fallback microphone access granted!');
+            
+            // Setup basic audio context
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            this.audioContext = new AudioContextClass();
+            
+            if (this.audioContext.state === 'suspended') {
+                await this.audioContext.resume();
+            }
+            
             this.gainNode = this.audioContext.createGain();
             this.gainNode.gain.value = 1.0;
             
-            // Setup analyzer for visualizer
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 256;
-            this.analyser.smoothingTimeConstant = 0.8;
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
             
             this.micSource = this.audioContext.createMediaStreamSource(this.localStream);
@@ -65,34 +239,123 @@ class AudioManager {
             this.gainNode.connect(this.analyser);
             
             this.startVolumeAnalysis();
+            this.testAudioInputImmediate();
             
             this.initialized = true;
-            console.log('Audio initialized successfully');
+            console.log('🎉 Fallback audio initialization successful!');
             
-        } catch (error) {
-            console.error('Failed to initialize audio:', error);
-            throw new Error('Failed to access microphone: ' + error.message);
+            if (window.proximityApp?.uiManager) {
+                window.proximityApp.uiManager.showNotification('🎤 Microphone initialized with basic settings', 'warning');
+            }
+            
+        } catch (fallbackError) {
+            console.error('❌ Fallback initialization also failed:', fallbackError);
+            throw new Error('Failed to initialize microphone with any settings: ' + fallbackError.message);
         }
     }
 
-    startVolumeAnalysis() {
-        if (!this.analyser || !this.dataArray) return;
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    testAudioInputImmediate() {
+        console.log('🧪 Starting immediate audio input test...');
         
-        const analyze = () => {
-            if (!this.initialized) return;
-            
+        if (!this.analyser || !this.dataArray) {
+            console.warn('⚠️ Audio analyser not available for testing');
+            return;
+        }
+        
+        let testCount = 0;
+        let maxLevel = 0;
+        let totalLevel = 0;
+        const maxTests = 100; // Test for ~2 seconds
+        
+        const testInterval = setInterval(() => {
             this.analyser.getByteFrequencyData(this.dataArray);
             
-            // Calculate volume level (0-100)
+            // Calculate both frequency average and time domain
+            const freqAverage = this.dataArray.reduce((a, b) => a + b) / this.dataArray.length;
+            
+            // Also check time domain for more accurate voice detection
+            const timeDataArray = new Uint8Array(this.analyser.fftSize);
+            this.analyser.getByteTimeDomainData(timeDataArray);
+            
+            let sum = 0;
+            for (let i = 0; i < timeDataArray.length; i++) {
+                const sample = (timeDataArray[i] - 128) / 128;
+                sum += sample * sample;
+            }
+            const rms = Math.sqrt(sum / timeDataArray.length);
+            const volume = rms * 100;
+            
+            maxLevel = Math.max(maxLevel, freqAverage, volume);
+            totalLevel += freqAverage;
+            
+            if (testCount % 20 === 0) { // Log every 20th test
+                console.log(`🎯 Audio test ${testCount}: freq=${freqAverage.toFixed(2)}, rms=${volume.toFixed(2)}, max=${maxLevel.toFixed(2)}`);
+            }
+            
+            testCount++;
+            if (testCount >= maxTests) {
+                clearInterval(testInterval);
+                const averageLevel = totalLevel / maxTests;
+                
+                console.log('📊 Audio test results:', {
+                    maxLevel: maxLevel.toFixed(2),
+                    averageLevel: averageLevel.toFixed(2),
+                    testDuration: `${maxTests * 20}ms`,
+                    verdict: maxLevel > 1 ? '✅ WORKING' : '❌ NO INPUT DETECTED'
+                });
+                
+                if (maxLevel > 1) {
+                    console.log('🎉 Microphone input is working properly!');
+                } else {
+                    console.warn('⚠️ No audio input detected - check microphone permissions and levels');
+                }
+            }
+        }, 20);
+    }
+
+    startVolumeAnalysis() {
+        if (!this.analyser || !this.dataArray) {
+            console.warn('⚠️ Cannot start volume analysis - analyser not ready');
+            return;
+        }
+        
+        console.log('📈 Starting volume analysis...');
+        
+        const analyze = () => {
+            if (!this.initialized || !this.analyser) return;
+            
+            // Get frequency data
+            this.analyser.getByteFrequencyData(this.dataArray);
+            
+            // Calculate volume level (0-100) with better sensitivity
             const average = this.dataArray.reduce((a, b) => a + b) / this.dataArray.length;
-            const volume = Math.min(100, (average / 128) * 100);
+            let volume = Math.min(100, (average / 80) * 100); // More sensitive scaling
+            
+            // Also calculate RMS for better voice detection
+            const timeDataArray = new Uint8Array(this.analyser.fftSize);
+            this.analyser.getByteTimeDomainData(timeDataArray);
+            
+            let rmsSum = 0;
+            for (let i = 0; i < timeDataArray.length; i++) {
+                const sample = (timeDataArray[i] - 128) / 128;
+                rmsSum += sample * sample;
+            }
+            const rms = Math.sqrt(rmsSum / timeDataArray.length);
+            const rmsVolume = Math.min(100, rms * 200); // Scale RMS to 0-100
+            
+            // Use the higher of the two methods
+            volume = Math.max(volume, rmsVolume);
             
             // Notify all callbacks
             this.volumeCallbacks.forEach(callback => {
                 try {
                     callback(volume, this.dataArray);
                 } catch (error) {
-                    console.error('Error in volume callback:', error);
+                    console.error('💥 Error in volume callback:', error);
                 }
             });
             
@@ -104,25 +367,45 @@ class AudioManager {
 
     addVolumeCallback(callback) {
         this.volumeCallbacks.push(callback);
+        console.log(`📊 Added volume callback, total: ${this.volumeCallbacks.length}`);
     }
 
     removeVolumeCallback(callback) {
         this.volumeCallbacks = this.volumeCallbacks.filter(cb => cb !== callback);
+        console.log(`📊 Removed volume callback, remaining: ${this.volumeCallbacks.length}`);
     }
 
     isInitialized() {
-        return this.initialized;
+        const hasStream = this.localStream && this.localStream.getAudioTracks().length > 0;
+        const hasActiveTrack = hasStream && this.localStream.getAudioTracks().some(track => 
+            track.readyState === 'live' && track.enabled
+        );
+        
+        console.log('🔍 Audio status check:', {
+            initialized: this.initialized,
+            hasStream,
+            hasActiveTrack,
+            contextState: this.audioContext?.state
+        });
+        
+        return this.initialized && hasActiveTrack;
     }
 
     async changeInputDevice(deviceId) {
-        if (!deviceId) return;
+        if (!deviceId) {
+            console.warn('⚠️ No device ID provided for input change');
+            return;
+        }
 
         try {
-            console.log('Changing input device to:', deviceId);
+            console.log('🔄 Changing input device to:', deviceId);
             
             // Stop current stream
             if (this.localStream) {
-                this.localStream.getTracks().forEach(track => track.stop());
+                this.localStream.getTracks().forEach(track => {
+                    console.log('🛑 Stopping track for device change:', track.label);
+                    track.stop();
+                });
             }
 
             // Get new stream with specific device
@@ -131,11 +414,14 @@ class AudioManager {
                     deviceId: { exact: deviceId },
                     echoCancellation: true,
                     noiseSuppression: true,
-                    autoGainControl: true
+                    autoGainControl: true,
+                    sampleRate: { ideal: 48000 },
+                    channelCount: { ideal: 1 }
                 }
             };
 
             this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            console.log('✅ New audio stream created with device:', deviceId);
 
             // Update audio context
             if (this.micSource) {
@@ -145,61 +431,83 @@ class AudioManager {
             this.micSource.connect(this.gainNode);
 
             // Replace tracks in all peer connections
-            this.peerConnections.forEach(pc => {
+            const audioTrack = this.localStream.getAudioTracks()[0];
+            console.log(`🔄 Updating ${this.peerConnections.size} peer connections with new track`);
+            
+            this.peerConnections.forEach((pc, userId) => {
                 const senders = pc.getSenders();
                 const audioSender = senders.find(sender => 
                     sender.track && sender.track.kind === 'audio'
                 );
                 if (audioSender) {
-                    audioSender.replaceTrack(this.localStream.getAudioTracks()[0]);
+                    audioSender.replaceTrack(audioTrack);
+                    console.log('✅ Replaced audio track for peer:', userId);
                 }
             });
 
-            console.log('Audio input device changed successfully');
+            console.log('🎉 Audio input device changed successfully');
         } catch (error) {
-            console.error('Error changing audio input device:', error);
+            console.error('❌ Error changing audio input device:', error);
             throw error;
         }
     }
 
     async changeOutputDevice(deviceId) {
         try {
-            console.log('Changing output device to:', deviceId);
+            console.log('🔊 Changing output device to:', deviceId);
             
             // Update all existing audio elements
             const audioElements = document.querySelectorAll('audio');
+            console.log(`🔄 Updating ${audioElements.length} audio elements`);
+            
             for (const audio of audioElements) {
                 if (typeof audio.setSinkId === 'function') {
                     await audio.setSinkId(deviceId);
+                    console.log('✅ Updated audio element output device');
                 }
             }
             
             // Store for future audio elements
             this.currentOutputDevice = deviceId;
             
-            console.log('Audio output device changed successfully');
+            console.log('🎉 Audio output device changed successfully');
         } catch (error) {
-            console.error('Error changing audio output device:', error);
+            console.error('❌ Error changing audio output device:', error);
             throw error;
         }
     }
 
     async testOutput() {
         try {
-            console.log('Testing audio output...');
-            const audio = new Audio('assets/TestNoise.mp3');
+            console.log('🔊 Testing audio output...');
             
-            // Set output device if one is selected
-            if (this.currentOutputDevice && typeof audio.setSinkId === 'function') {
-                await audio.setSinkId(this.currentOutputDevice);
-            }
+            // Create a simple test tone instead of loading a file
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
             
-            audio.volume = 0.5;
-            await audio.play();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
             
-            console.log('Test audio played successfully');
+            oscillator.frequency.value = 440; // A4 note
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+            
+            console.log('🎵 Test tone played successfully');
+            
+            // Clean up
+            setTimeout(() => {
+                audioContext.close();
+            }, 1000);
+            
         } catch (error) {
-            console.error('Error playing test audio:', error);
+            console.error('❌ Error playing test audio:', error);
             throw error;
         }
     }
@@ -207,6 +515,7 @@ class AudioManager {
     startPersistentVisualizer() {
         if (this.persistentVisualizerActive) return;
 
+        console.log('📊 Starting persistent visualizer...');
         this.persistentVisualizerActive = true;
         
         const micLevelFill = document.getElementById('persistentMicLevelFill');
@@ -221,6 +530,15 @@ class AudioManager {
             if (micLevelFill && volumeLevel) {
                 micLevelFill.style.width = `${volume}%`;
                 volumeLevel.textContent = `${Math.round(volume)}%`;
+                
+                // Change color based on volume
+                if (volume > 50) {
+                    micLevelFill.style.background = 'linear-gradient(90deg, var(--warning) 0%, var(--danger) 100%)';
+                } else if (volume > 20) {
+                    micLevelFill.style.background = 'linear-gradient(90deg, var(--success) 0%, var(--warning) 100%)';
+                } else {
+                    micLevelFill.style.background = 'var(--success)';
+                }
             }
         };
         
@@ -233,6 +551,8 @@ class AudioManager {
             this.persistentVisualizerCallback = null;
         }
         this.persistentVisualizerActive = false;
+        
+        console.log('📊 Stopped persistent visualizer');
         
         const micLevelFill = document.getElementById('persistentMicLevelFill');
         const volumeLevel = document.getElementById('persistentVolumeLevel');
@@ -249,9 +569,10 @@ class AudioManager {
 
     async testMicrophone() {
         try {
-            console.log('Testing microphone...');
+            console.log('🧪 Testing microphone...');
             
             if (!this.initialized) {
+                console.log('🔄 Initializing audio for microphone test...');
                 await this.initialize();
             }
             
@@ -266,10 +587,23 @@ class AudioManager {
                 visualizerContainer.style.display = 'block';
             }
             
+            let maxVolumeDetected = 0;
+            
             let testCallback = (volume, frequencyData) => {
+                maxVolumeDetected = Math.max(maxVolumeDetected, volume);
+                
                 if (levelFill && volumeText) {
                     levelFill.style.width = `${volume}%`;
                     volumeText.textContent = `${Math.round(volume)}%`;
+                    
+                    // Dynamic color based on volume
+                    if (volume > 50) {
+                        levelFill.style.background = 'linear-gradient(90deg, var(--warning) 0%, var(--danger) 100%)';
+                    } else if (volume > 20) {
+                        levelFill.style.background = 'linear-gradient(90deg, var(--success) 0%, var(--warning) 100%)';
+                    } else {
+                        levelFill.style.background = 'var(--success)';
+                    }
                 }
             };
             
@@ -280,10 +614,18 @@ class AudioManager {
                 if (visualizerContainer) {
                     visualizerContainer.style.display = 'none';
                 }
+                
+                // Report results
+                console.log('📊 Microphone test completed. Max volume detected:', maxVolumeDetected);
+                if (maxVolumeDetected > 5) {
+                    console.log('✅ Microphone is working properly!');
+                } else {
+                    console.warn('⚠️ Low or no microphone input detected');
+                }
             }, 10000);
             
         } catch (error) {
-            console.error('Error testing microphone:', error);
+            console.error('❌ Error testing microphone:', error);
             throw error;
         }
     }
@@ -308,7 +650,7 @@ class AudioManager {
         `;
         
         const visualizerTitle = document.createElement('h4');
-        visualizerTitle.textContent = 'Microphone Test (10 seconds)';
+        visualizerTitle.textContent = 'Microphone Test (10 seconds) - Speak now!';
         visualizerTitle.style.cssText = `
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
@@ -319,9 +661,9 @@ class AudioManager {
         visualizerBar.id = 'micLevelBar';
         visualizerBar.style.cssText = `
             width: 100%;
-            height: 20px;
+            height: 24px;
             background: var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
         `;
@@ -333,7 +675,7 @@ class AudioManager {
             width: 0%;
             background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%);
             transition: width 0.1s ease;
-            border-radius: 10px;
+            border-radius: 12px;
         `;
         
         const volumeText = document.createElement('span');
@@ -343,10 +685,10 @@ class AudioManager {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: var(--text-primary);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         `;
         volumeText.textContent = '0%';
         
@@ -360,25 +702,33 @@ class AudioManager {
 
     async connectToUser(userId, username, userColor) {
         if (this.peerConnections.has(userId)) {
-            console.log('Already connected to user:', userId);
+            console.log('🔗 Already connected to user:', userId);
             return;
         }
 
-        console.log('Connecting to user:', userId, username);
+        console.log('🤝 Connecting to user:', userId, username);
         
         const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
         this.peerConnections.set(userId, peerConnection);
 
         // Add local stream
-        if (this.localStream) {
-            this.localStream.getTracks().forEach(track => {
+        if (this.localStream && this.isInitialized()) {
+            const audioTracks = this.localStream.getAudioTracks();
+            console.log(`🎵 Adding ${audioTracks.length} audio track(s) for answer`);
+            
+            audioTracks.forEach(track => {
+                console.log('➕ Adding track for answer:', {
+                    label: track.label,
+                    enabled: track.enabled,
+                    readyState: track.readyState
+                });
                 peerConnection.addTrack(track, this.localStream);
             });
         }
 
         // Handle incoming stream
         peerConnection.ontrack = (event) => {
-            console.log('Received remote stream from:', userId);
+            console.log('📥 Received remote stream from:', userId);
             const remoteStream = event.streams[0];
             
             // Create audio element
@@ -394,12 +744,13 @@ class AudioManager {
             }
             
             // Add to participant
-            const participant = document.getElementById(`participant-${userId}`);
+            const participant = document.getElementById(`voice-participant-${userId}-${window.proximityApp?.currentVoiceChannel?.replace('-voice', '')}`);
             if (participant) {
                 participant.appendChild(audioElement);
+                console.log('🔊 Audio element attached to participant');
             }
             
-            // Notify app about the audio element for proximity calculations
+            // Notify proximity map
             if (window.proximityApp && window.proximityApp.proximityMap) {
                 window.proximityApp.proximityMap.setUserAudioElement(userId, audioElement);
             }
@@ -415,28 +766,35 @@ class AudioManager {
             }
         };
 
-        // Create and send offer
+        // Connection state monitoring
+        peerConnection.onconnectionstatechange = () => {
+            console.log(`🔗 Connection state with ${userId}:`, peerConnection.connectionState);
+        };
+
         try {
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            
+            console.log('📤 Created answer for:', userId);
             
             if (window.proximityApp) {
-                window.proximityApp.connectionManager.emit('offer', {
+                window.proximityApp.connectionManager.emit('answer', {
                     target: userId,
-                    offer: offer
+                    answer: answer
                 });
             }
         } catch (error) {
-            console.error('Error creating offer for user:', userId, error);
+            console.error('❌ Error handling offer from:', userId, error);
             this.peerConnections.delete(userId);
         }
     }
 
     async handleOffer(offer, from) {
-        console.log('Handling offer from:', from);
+        console.log('📥 Handling offer from:', from);
         
         if (this.peerConnections.has(from)) {
-            console.log('Connection already exists for user:', from);
+            console.log('🔗 Connection already exists for user:', from);
             return;
         }
 
@@ -445,14 +803,18 @@ class AudioManager {
 
         // Add local stream
         if (this.localStream) {
-            this.localStream.getTracks().forEach(track => {
+            const audioTracks = this.localStream.getAudioTracks();
+            console.log('🎵 Adding audio tracks to answer peer connection:', audioTracks.length);
+            
+            audioTracks.forEach(track => {
+                console.log('➕ Adding track for answer:', track.label, 'enabled:', track.enabled);
                 peerConnection.addTrack(track, this.localStream);
             });
         }
 
         // Handle incoming stream
         peerConnection.ontrack = (event) => {
-            console.log('Received remote stream from:', from);
+            console.log('📥 Received remote stream from:', from);
             const remoteStream = event.streams[0];
             
             // Create audio element
@@ -468,7 +830,7 @@ class AudioManager {
             }
             
             // Add to participant
-            const participant = document.getElementById(`participant-${from}`);
+            const participant = document.getElementById(`voice-participant-${from}-${window.proximityApp?.currentVoiceChannel?.replace('-voice', '')}`);
             if (participant) {
                 participant.appendChild(audioElement);
             }
@@ -494,6 +856,8 @@ class AudioManager {
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
             
+            console.log('📤 Created answer for:', from);
+            
             if (window.proximityApp) {
                 window.proximityApp.connectionManager.emit('answer', {
                     target: from,
@@ -501,28 +865,29 @@ class AudioManager {
                 });
             }
         } catch (error) {
-            console.error('Error handling offer from:', from, error);
+            console.error('❌ Error handling offer from:', from, error);
             this.peerConnections.delete(from);
         }
     }
 
     async handleAnswer(answer, from) {
-        console.log('Handling answer from:', from);
+        console.log('📥 Handling answer from:', from);
         
         const peerConnection = this.peerConnections.get(from);
         if (!peerConnection) {
-            console.warn('No peer connection found for:', from);
+            console.warn('⚠️ No peer connection found for:', from);
             return;
         }
 
         try {
             if (peerConnection.signalingState === 'have-local-offer') {
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                console.log('✅ Set remote description for answer from:', from);
             } else {
-                console.warn(`Cannot set remote answer in state: ${peerConnection.signalingState}`);
+                console.warn(`⚠️ Cannot set remote answer in state: ${peerConnection.signalingState}`);
             }
         } catch (error) {
-            console.error('Error handling answer from:', from, error);
+            console.error('❌ Error handling answer from:', from, error);
             this.disconnectFromUser(from);
         }
     }
@@ -530,22 +895,24 @@ class AudioManager {
     async handleIceCandidate(candidate, from) {
         const peerConnection = this.peerConnections.get(from);
         if (!peerConnection) {
-            console.warn('No peer connection found for ICE candidate from:', from);
+            console.warn('⚠️ No peer connection found for ICE candidate from:', from);
             return;
         }
 
         try {
             if (peerConnection.remoteDescription) {
                 await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                console.log('✅ Added ICE candidate from:', from);
             } else {
                 // Queue candidates if remote description not set yet
                 if (!peerConnection.queuedCandidates) {
                     peerConnection.queuedCandidates = [];
                 }
                 peerConnection.queuedCandidates.push(candidate);
+                console.log('📦 Queued ICE candidate from:', from);
             }
         } catch (error) {
-            console.error('Error handling ICE candidate from:', from, error);
+            console.error('❌ Error handling ICE candidate from:', from, error);
         }
     }
 
@@ -554,25 +921,30 @@ class AudioManager {
         if (peerConnection) {
             peerConnection.close();
             this.peerConnections.delete(userId);
-            console.log('Disconnected from user:', userId);
+            console.log('🔌 Disconnected from user:', userId);
         }
     }
 
     disconnectAll() {
-        console.log('Disconnecting from all users...');
+        console.log(`🔌 Disconnecting from all ${this.peerConnections.size} users...`);
         this.peerConnections.forEach((pc, userId) => {
             pc.close();
+            console.log('🔌 Closed connection to:', userId);
         });
         this.peerConnections.clear();
     }
 
     toggleMute() {
-        if (!this.localStream) return;
+        if (!this.localStream) {
+            console.warn('⚠️ No local stream to mute/unmute');
+            return;
+        }
 
         this.isMuted = !this.isMuted;
         
         this.localStream.getAudioTracks().forEach(track => {
             track.enabled = !this.isMuted;
+            console.log(`🎤 Audio track ${track.label} enabled: ${track.enabled}`);
         });
 
         // Update UI
@@ -585,14 +957,15 @@ class AudioManager {
             window.proximityApp.updateMicStatus(this.isMuted);
         }
 
-        console.log('Microphone', this.isMuted ? 'muted' : 'unmuted');
+        console.log(`🎤 Microphone ${this.isMuted ? 'muted' : 'unmuted'}`);
     }
 
     setGain(value) {
         // value: 0-100, map to 0-2
         const gainValue = Math.max(0, Math.min(2, value / 50));
         if (this.gainNode) {
-            this.gainNode.gain.value = gainValue;
+            this.gainNode.gain.setValueAtTime(gainValue, this.audioContext.currentTime);
+            console.log(`🔊 Audio gain set to: ${gainValue} (from ${value}%)`);
         }
     }
 
@@ -601,18 +974,28 @@ class AudioManager {
     }
 
     cleanup() {
+        console.log('🧹 Cleaning up audio manager...');
+        
         this.disconnectAll();
         
         if (this.localStream) {
-            this.localStream.getTracks().forEach(track => track.stop());
+            this.localStream.getTracks().forEach(track => {
+                console.log('🛑 Stopping track during cleanup:', track.label);
+                track.stop();
+            });
             this.localStream = null;
         }
 
         if (this.audioContext && this.audioContext.state !== 'closed') {
             this.audioContext.close();
+            console.log('🔌 Closed audio context');
         }
 
+        this.volumeCallbacks = [];
         this.initialized = false;
+        this.initializationAttempts = 0;
+        
+        console.log('✅ Audio manager cleanup complete');
     }
 }
 
@@ -628,13 +1011,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ChatManager: () => (/* binding */ ChatManager)
 /* harmony export */ });
-// src/renderer/js/chat/ChatManager.js
+// src/renderer/js/chat/ChatManager.js - Updated with channel support
 class ChatManager {
     constructor() {
-        this.currentRoom = null;
+        this.currentChannel = 'diamond';
     }
 
-    sendMessage(message) {
+    sendMessage(message, channel = null) {
         if (!message.trim()) return;
 
         if (!window.proximityApp || !window.proximityApp.connectionManager.socket) {
@@ -643,18 +1026,20 @@ class ChatManager {
         }
 
         if (!window.proximityApp.isInHub) {
-            console.error('Not in a channel');
+            console.error('Not in hub');
             return;
         }
 
         const username = window.proximityApp.settingsManager.get('username') || 'Anonymous';
+        const targetChannel = channel || this.currentChannel;
         
-        console.log('Sending chat message:', message);
+        console.log('Sending chat message:', message, 'to channel:', targetChannel);
 
         window.proximityApp.connectionManager.emit('send-chat-message', {
-            roomId: 'hub-general',
+            roomId: 'hub',
             message: message,
-            username: username
+            username: username,
+            channel: targetChannel
         });
     }
 
@@ -663,11 +1048,21 @@ class ChatManager {
 
         console.log('Adding chat message:', data);
         
+        // Pass channel info to UI manager
         window.proximityApp.uiManager.addChatMessage(
             data.username,
             data.message,
-            data.timestamp || Date.now()
+            data.timestamp || Date.now(),
+            data.channel
         );
+    }
+
+    setCurrentChannel(channel) {
+        this.currentChannel = channel;
+    }
+
+    getCurrentChannel() {
+        return this.currentChannel;
     }
 
     clearMessages() {
@@ -1569,18 +1964,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   UIManager: () => (/* binding */ UIManager)
 /* harmony export */ });
-// src/renderer/js/ui/UIManager.js - Fixed version with no auto voice join
+// src/renderer/js/ui/UIManager.js - Updated with chat message delete and improved functionality
 class UIManager {
     constructor() {
         this.eventHandlers = {};
         this.elements = {};
+        this.currentVoiceChannel = null;
+        this.currentTextChannel = 'diamond';
     }
 
     init() {
         this.cacheElements();
         this.setupEventListeners();
-        this.addHubToNavigation();
+        this.addHubToServers();
         this.setupHomePageEvents();
+        this.setupChannelHandlers();
     }
 
     cacheElements() {
@@ -1594,19 +1992,19 @@ class UIManager {
         
         // Server view
         this.elements.currentServerName = document.getElementById('currentServerName');
-        this.elements.serverInviteDisplay = document.getElementById('serverInviteDisplay');
         this.elements.participantsList = document.getElementById('participantsList');
         
         // Chat
         this.elements.chatMessages = document.getElementById('chatMessages');
         this.elements.messageInput = document.getElementById('messageInput');
         this.elements.sendMessageBtn = document.getElementById('sendMessageBtn');
+        this.elements.currentChannelName = document.getElementById('currentChannelName');
+        this.elements.currentChannelDescription = document.getElementById('currentChannelDescription');
         
         // Voice controls
         this.elements.muteButton = document.getElementById('muteButton');
         this.elements.mapMuteButton = document.getElementById('mapMuteButton');
         this.elements.leaveChannelBtn = document.getElementById('leaveChannelBtn');
-        this.elements.leaveChannelServerBtn = document.getElementById('leaveChannelServerBtn');
         
         // Audio devices
         this.elements.audioDeviceSelect = document.getElementById('audioDevice');
@@ -1614,6 +2012,10 @@ class UIManager {
         
         // Home page elements
         this.elements.joinHubBtn = document.getElementById('joinHubBtn');
+        
+        // Channel lists
+        this.elements.textChannelsList = document.getElementById('textChannelsList');
+        this.elements.voiceChannelsList = document.getElementById('voiceChannelsList');
     }
 
     setupEventListeners() {
@@ -1626,7 +2028,7 @@ class UIManager {
             });
         });
 
-        // Chat
+        // Chat - Single event listener setup
         if (this.elements.sendMessageBtn) {
             this.elements.sendMessageBtn.addEventListener('click', () => {
                 this.sendChatMessage();
@@ -1650,14 +2052,33 @@ class UIManager {
             }
         });
 
-        // Leave buttons - both should trigger leave-channel
-        [this.elements.leaveChannelBtn, this.elements.leaveChannelServerBtn].forEach(btn => {
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    console.log('Leave button clicked');
-                    this.emit('leave-channel');
-                });
-            }
+        // Leave button - single event listener
+        if (this.elements.leaveChannelBtn) {
+            this.elements.leaveChannelBtn.addEventListener('click', () => {
+                console.log('Leave button clicked in UI');
+                this.emit('leave-channel');
+            });
+        }
+    }
+
+    setupChannelHandlers() {
+        // Text channel handlers
+        const textChannels = document.querySelectorAll('[data-channel-type="text"]');
+        textChannels.forEach(channel => {
+            channel.addEventListener('click', () => {
+                const channelId = channel.dataset.channelId;
+                this.switchToTextChannel(channelId);
+            });
+        });
+
+        // Voice channel handlers
+        const voiceChannelHeaders = document.querySelectorAll('.voice-channel-header');
+        voiceChannelHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const channelData = header.closest('.voice-channel').dataset;
+                const channelId = channelData.channelId;
+                this.toggleVoiceChannel(channelId);
+            });
         });
     }
 
@@ -1671,29 +2092,25 @@ class UIManager {
         }
     }
 
-    addHubToNavigation() {
-        // Add Community Hub to navigation
-        const hubNavItem = document.createElement('div');
-        hubNavItem.className = 'nav-item';
-        hubNavItem.dataset.page = 'hub';
-        hubNavItem.innerHTML = `
-            <div class="nav-icon">🏢</div>
-            <span class="nav-text">Community Hub</span>
-        `;
-        
-        hubNavItem.addEventListener('click', () => {
-            console.log('Navigation hub button clicked');
-            this.switchPage('server-view');
-            this.emit('join-hub');
-        });
-
-        // Insert after the home nav item
-        const homeNavItem = document.querySelector('.nav-item[data-page="home"]');
-        if (homeNavItem && homeNavItem.parentNode) {
-            homeNavItem.parentNode.insertBefore(hubNavItem, homeNavItem.nextSibling);
+    addHubToServers() {
+        // Add Community Hub to My Servers section
+        const myServersList = document.getElementById('myServersList');
+        if (myServersList) {
+            const hubServer = document.createElement('div');
+            hubServer.className = 'server-item';
+            hubServer.dataset.serverId = 'hub';
+            hubServer.innerHTML = `
+                <div class="server-icon">🏢</div>
+                <span class="server-name">Community Hub</span>
+            `;
             
-            // Update cached nav items
-            this.elements.navItems = document.querySelectorAll('.nav-item');
+            hubServer.addEventListener('click', () => {
+                console.log('Server hub button clicked');
+                this.switchPage('server-view');
+                this.emit('join-hub');
+            });
+            
+            myServersList.appendChild(hubServer);
         }
     }
 
@@ -1712,12 +2129,7 @@ class UIManager {
 
         // Special hub handling
         if (pageName === 'hub') {
-            // Show server view but mark hub as active
             document.getElementById('server-view-page').classList.add('active');
-            const hubNavItem = document.querySelector('.nav-item[data-page="hub"]');
-            if (hubNavItem) {
-                hubNavItem.classList.add('active');
-            }
         }
     }
 
@@ -1727,124 +2139,195 @@ class UIManager {
         if (this.elements.currentServerName) {
             this.elements.currentServerName.textContent = server.name;
         }
-        
-        if (this.elements.serverInviteDisplay) {
-            this.elements.serverInviteDisplay.textContent = server.id === 'hub' ? 'COMMUNITY-HUB' : server.id;
-        }
 
-        // Set up hub channels
+        // Set up hub channels if it's the hub
         if (server.id === 'hub') {
             this.setupHubChannels();
         }
     }
 
     setupHubChannels() {
-        const textChannelsList = document.getElementById('textChannelsList');
-        const voiceChannelsList = document.getElementById('voiceChannelsList');
-        
-        if (textChannelsList) {
-            textChannelsList.innerHTML = `
-                <div class="channel-item active" data-channel-type="text" data-channel-id="general">
-                    <span class="channel-icon">#</span>
-                    <span class="channel-name">general</span>
-                </div>
-            `;
-        }
-        
-        if (voiceChannelsList) {
-            voiceChannelsList.innerHTML = `
-                <div class="channel-item" data-channel-type="voice" data-channel-id="general-voice">
-                    <span class="channel-icon">🔊</span>
-                    <span class="channel-name">General Voice</span>
-                    <div class="voice-participants" id="voiceParticipants"></div>
-                </div>
-            `;
-        }
-
-        // DON'T auto-join voice channel - let user click it manually
-        // Start in text channel only
-        this.switchToChannel('general', 'text');
+        // Start in diamond text channel
+        this.switchToTextChannel('diamond');
+        this.currentVoiceChannel = null;
     }
 
-    switchToChannel(channelId, channelType) {
-        // Update channel selection
-        document.querySelectorAll('.channel-item').forEach(item => {
-            item.classList.remove('active');
+    switchToTextChannel(channelId) {
+        console.log('Switching to text channel:', channelId);
+        
+        this.currentTextChannel = channelId;
+        
+        // Update text channel selection
+        const textChannels = document.querySelectorAll('[data-channel-type="text"]');
+        textChannels.forEach(channel => {
+            channel.classList.toggle('active', channel.dataset.channelId === channelId);
         });
         
-        const activeChannel = document.querySelector(`[data-channel-id="${channelId}"]`);
-        if (activeChannel) {
-            activeChannel.classList.add('active');
+        // Update chat UI
+        const channelNames = {
+            diamond: { name: '💎 diamond', desc: 'Welcome to the diamond chat' },
+            spade: { name: '♠️ spade', desc: 'Welcome to the spade chat' },
+            club: { name: '♣️ club', desc: 'Welcome to the club chat' },
+            heart: { name: '♥️ heart', desc: 'Welcome to the heart chat' }
+        };
+        
+        const channelInfo = channelNames[channelId] || channelNames.diamond;
+        
+        if (this.elements.currentChannelName) {
+            this.elements.currentChannelName.textContent = `# ${channelId}`;
+        }
+        if (this.elements.currentChannelDescription) {
+            this.elements.currentChannelDescription.textContent = channelInfo.desc;
+        }
+        if (this.elements.messageInput) {
+            this.elements.messageInput.placeholder = `Message #${channelId}`;
         }
         
-        // Switch content view
+        // Show text chat view
+        this.switchToContentView('text-chat-view');
+        
+        // Emit channel change
+        this.emit('text-channel-change', channelId);
+    }
+
+    toggleVoiceChannel(channelId) {
+        console.log('Toggle voice channel:', channelId, 'Current:', this.currentVoiceChannel);
+        
+        if (this.currentVoiceChannel === channelId) {
+            // Already in this voice channel, do nothing
+            this.showNotification('Already in this voice channel', 'info');
+            return;
+        }
+        
+        // Leave current voice channel if in one
+        if (this.currentVoiceChannel) {
+            this.emit('leave-voice-channel', this.currentVoiceChannel);
+        }
+        
+        // Join new voice channel
+        this.currentVoiceChannel = channelId;
+        this.emit('join-voice-channel', channelId);
+        
+        // Update voice channel UI
+        this.updateVoiceChannelUI(channelId);
+        
+        // Update voice header but DON'T switch to voice view
+        const channelNames = {
+            'diamond-voice': '💎 Diamond Voice',
+            'spade-voice': '♠️ Spade Voice', 
+            'club-voice': '♣️ Club Voice',
+            'heart-voice': '♥️ Heart Voice'
+        };
+        
+        const voiceChannelName = document.getElementById('currentVoiceChannelName');
+        if (voiceChannelName) {
+            voiceChannelName.textContent = channelNames[channelId] || '🔊 Voice Channel';
+        }
+    }
+
+    updateVoiceChannelUI(activeChannelId) {
+        // Update voice channel header states
+        const voiceChannelHeaders = document.querySelectorAll('.voice-channel-header');
+        voiceChannelHeaders.forEach(header => {
+            const channelData = header.closest('.voice-channel').dataset;
+            header.classList.toggle('active', channelData.channelId === activeChannelId);
+        });
+    }
+
+    switchToContentView(viewId) {
         document.querySelectorAll('.content-view').forEach(view => {
             view.classList.remove('active');
         });
         
-        if (channelType === 'text') {
-            const textView = document.getElementById('text-chat-view');
-            if (textView) textView.classList.add('active');
-        } else if (channelType === 'voice') {
-            const voiceView = document.getElementById('voice-channel-view');
-            if (voiceView) voiceView.classList.add('active');
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+            targetView.classList.add('active');
         }
     }
 
-    addParticipant(userId, stream, isSelf = false, username = 'Anonymous', userColor = 'purple') {
-        if (document.getElementById(`participant-${userId}`)) {
-            return; // Already exists
+    addVoiceParticipant(userId, username, userColor, channelId, isSelf = false) {
+        // Get the specific voice channel participants container
+        const channelKey = channelId.replace('-voice', '');
+        const participantsContainer = document.getElementById(`voiceParticipants-${channelKey}`);
+        
+        if (!participantsContainer) {
+            console.warn('Voice participants container not found for channel:', channelId);
+            return;
         }
+
+        // Remove existing participant if present
+        this.removeVoiceParticipant(userId, channelId);
 
         const participant = document.createElement('div');
         participant.className = 'voice-participant';
-        participant.id = `participant-${userId}`;
+        participant.id = `voice-participant-${userId}-${channelKey}`;
         
         const micStatus = document.createElement('div');
-        micStatus.className = 'mic-status active';
+        micStatus.className = 'mic-status';
         
         const avatar = document.createElement('span');
         avatar.className = 'participant-avatar';
-        avatar.style.cssText = 'margin-right: 8px; font-size: 16px;';
         avatar.textContent = this.getColorEmoji(userColor);
         
         const name = document.createElement('span');
-        name.textContent = isSelf ? `${username} (You)` : username;
+        name.textContent = username;
         name.style.fontWeight = isSelf ? 'bold' : 'normal';
-        name.classList.add(`user-color-${userColor}`);
         
         participant.appendChild(micStatus);
         participant.appendChild(avatar);
         participant.appendChild(name);
         
-        // Add audio element for remote users
-        if (!isSelf && stream) {
-            const audioElement = document.createElement('audio');
-            audioElement.autoplay = true;
-            audioElement.srcObject = stream;
-            audioElement.volume = 1;
-            audioElement.style.display = 'none';
-            participant.appendChild(audioElement);
-        }
+        participantsContainer.appendChild(participant);
         
-        // Add to voice participants list instead of main participants list
-        const voiceParticipants = document.getElementById('voiceParticipants');
-        if (voiceParticipants) {
-            voiceParticipants.appendChild(participant);
+        console.log(`Added voice participant ${username} to ${channelId}`);
+    }
+
+    removeVoiceParticipant(userId, channelId) {
+        if (channelId) {
+            const channelKey = channelId.replace('-voice', '');
+            const participant = document.getElementById(`voice-participant-${userId}-${channelKey}`);
+            if (participant) {
+                participant.remove();
+            }
+        } else {
+            // Remove from all channels if no specific channel provided
+            const allParticipants = document.querySelectorAll(`[id^="voice-participant-${userId}-"]`);
+            allParticipants.forEach(p => p.remove());
         }
+    }
+
+    clearVoiceParticipants(channelId) {
+        if (channelId) {
+            const channelKey = channelId.replace('-voice', '');
+            const participantsContainer = document.getElementById(`voiceParticipants-${channelKey}`);
+            if (participantsContainer) {
+                participantsContainer.innerHTML = '';
+            }
+        } else {
+            // Clear all voice channels
+            ['diamond', 'spade', 'club', 'heart'].forEach(channel => {
+                const container = document.getElementById(`voiceParticipants-${channel}`);
+                if (container) {
+                    container.innerHTML = '';
+                }
+            });
+        }
+    }
+
+    addParticipant(userId, stream, isSelf = false, username = 'Anonymous', userColor = 'purple') {
+        // This is for the main voice view participants list (REMOVED - not needed)
+        // We only show participants under voice channels now
+        return;
     }
 
     removeParticipant(userId) {
-        const participant = document.getElementById(`participant-${userId}`);
-        if (participant) {
-            participant.remove();
-        }
+        // Remove from main participants list (REMOVED - not needed)
+        return;
     }
 
     clearParticipants() {
-        if (this.elements.participantsList) {
-            this.elements.participantsList.innerHTML = '';
-        }
+        // Clear main participants list (REMOVED - not needed)
+        return;
     }
 
     updateMuteStatus(isMuted) {
@@ -1859,6 +2342,26 @@ class UIManager {
                 button.classList.toggle('muted', isMuted);
             }
         });
+
+        // Update mic status in voice participants
+        const myParticipants = document.querySelectorAll(`[id*="voice-participant-${this.getUserId()}-"]`);
+        myParticipants.forEach(participant => {
+            const micStatus = participant.querySelector('.mic-status');
+            if (micStatus) {
+                micStatus.classList.toggle('muted', isMuted);
+            }
+        });
+    }
+
+    updateUserMicStatus(userId, isMuted) {
+        // Update mic status for a specific user in voice participants
+        const userParticipants = document.querySelectorAll(`[id*="voice-participant-${userId}-"]`);
+        userParticipants.forEach(participant => {
+            const micStatus = participant.querySelector('.mic-status');
+            if (micStatus) {
+                micStatus.classList.toggle('muted', isMuted);
+            }
+        });
     }
 
     updateConnectionStatus(status, text) {
@@ -1869,45 +2372,89 @@ class UIManager {
         }
     }
 
+    // Chat message sender
     sendChatMessage() {
         if (!this.elements.messageInput) return;
         
         const message = this.elements.messageInput.value.trim();
         if (!message) return;
         
-        this.emit('send-message', message);
+        console.log('UI sending message:', message, 'to channel:', this.currentTextChannel);
+        this.emit('send-message', { message, channel: this.currentTextChannel });
         this.elements.messageInput.value = '';
     }
 
-    addChatMessage(username, message, timestamp) {
+    // ENHANCED: Add chat message with delete functionality
+    addChatMessage(messageData) {
         if (!this.elements.chatMessages) return;
 
         const messageElement = document.createElement('div');
         messageElement.className = 'message';
+        messageElement.id = `message-${messageData.id}`;
 
         const messageHeader = document.createElement('div');
         messageHeader.className = 'message-header';
 
         const author = document.createElement('span');
         author.className = 'message-author';
-        author.textContent = username;
+        author.textContent = messageData.username;
 
         const time = document.createElement('span');
         time.className = 'message-timestamp';
-        time.textContent = new Date(timestamp).toLocaleTimeString();
+        time.textContent = new Date(messageData.timestamp).toLocaleTimeString();
 
         messageHeader.appendChild(author);
         messageHeader.appendChild(time);
 
         const content = document.createElement('div');
         content.className = 'message-content';
-        content.textContent = message;
+        content.textContent = messageData.message;
+
+        // Add delete button for own messages
+        const isOwnMessage = messageData.userId === this.getUserId();
+        if (isOwnMessage) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'message-delete-btn';
+            deleteBtn.innerHTML = '🗑️';
+            deleteBtn.title = 'Delete message';
+            deleteBtn.style.display = 'none'; // Hidden by default
+            
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showDeleteConfirmation(messageData.id);
+            });
+            
+            messageElement.appendChild(deleteBtn);
+            
+            // Show delete button on hover
+            messageElement.addEventListener('mouseenter', () => {
+                deleteBtn.style.display = 'block';
+            });
+            
+            messageElement.addEventListener('mouseleave', () => {
+                deleteBtn.style.display = 'none';
+            });
+        }
 
         messageElement.appendChild(messageHeader);
         messageElement.appendChild(content);
 
         this.elements.chatMessages.appendChild(messageElement);
         this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;
+    }
+
+    showDeleteConfirmation(messageId) {
+        const confirmed = confirm('Do you want to delete this message?');
+        if (confirmed) {
+            this.emit('delete-message', messageId);
+        }
+    }
+
+    removeChatMessage(messageId) {
+        const messageElement = document.getElementById(`message-${messageId}`);
+        if (messageElement) {
+            messageElement.remove();
+        }
     }
 
     async populateAudioDevices() {
@@ -2000,6 +2547,18 @@ class UIManager {
         return colorEmojis[color] || colorEmojis['purple'];
     }
 
+    getUserId() {
+        return window.proximityApp ? window.proximityApp.myUserId : null;
+    }
+
+    getCurrentVoiceChannel() {
+        return this.currentVoiceChannel;
+    }
+
+    getCurrentTextChannel() {
+        return this.currentTextChannel;
+    }
+
     // Event system
     on(event, callback) {
         if (!this.eventHandlers[event]) {
@@ -2087,7 +2646,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _server_ServerManager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./server/ServerManager.js */ "./src/renderer/js/server/ServerManager.js");
 /* harmony import */ var _chat_ChatManager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./chat/ChatManager.js */ "./src/renderer/js/chat/ChatManager.js");
 /* harmony import */ var _settings_SettingsManager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./settings/SettingsManager.js */ "./src/renderer/js/settings/SettingsManager.js");
-// src/renderer/js/app.js - Fixed with no auto voice join and proper leave logic
+// src/renderer/js/app.js - Fixed navigation and channel persistence
 
 
 
@@ -2115,13 +2674,44 @@ class ProximityApp {
         
         // State
         this.currentServer = null;
-        this.currentChannel = null;
+        this.currentTextChannel = 'diamond';
+        this.currentVoiceChannel = null;
         this.myUserId = null;
         this.isInHub = false;
-        this.isInVoiceChannel = false;
         this.hubUsers = [];
         
+        // Global chat message storage (persistent across sessions)
+        this.globalChatHistory = this.loadGlobalChatHistory();
+        
         this.init();
+    }
+
+    loadGlobalChatHistory() {
+        try {
+            const saved = localStorage.getItem('proximity-chat-history');
+            return saved ? JSON.parse(saved) : {
+                diamond: [],
+                spade: [],
+                club: [],
+                heart: []
+            };
+        } catch (error) {
+            console.error('Failed to load chat history:', error);
+            return {
+                diamond: [],
+                spade: [],
+                club: [],
+                heart: []
+            };
+        }
+    }
+
+    saveGlobalChatHistory() {
+        try {
+            localStorage.setItem('proximity-chat-history', JSON.stringify(this.globalChatHistory));
+        } catch (error) {
+            console.error('Failed to save chat history:', error);
+        }
     }
 
     async init() {
@@ -2144,6 +2734,12 @@ class ProximityApp {
             
             // Setup settings controls
             this.setupSettingsControls();
+            
+            // Setup map buttons for voice channels
+            this.setupMapButtons();
+            
+            // Setup mini map modal
+            this.setupMiniMapModal();
             
             // Try to connect to server with fallback
             await this.connectWithFallback();
@@ -2177,17 +2773,199 @@ class ProximityApp {
     }
 
     setupEventListeners() {
-        // Navigation
+        // Navigation - FIXED: Don't leave voice channel when switching pages
         this.uiManager.on('page-change', (page) => this.handlePageChange(page));
         this.uiManager.on('join-hub', () => this.joinHub());
         this.uiManager.on('leave-channel', () => this.leaveCurrentChannel());
         this.uiManager.on('mute-toggle', () => this.audioManager.toggleMute());
         
-        // Chat
-        this.uiManager.on('send-message', (message) => this.chatManager.sendMessage(message));
+        // Channel events
+        this.uiManager.on('text-channel-change', (channelId) => this.switchTextChannel(channelId));
+        this.uiManager.on('join-voice-channel', (channelId) => this.joinVoiceChannel(channelId));
+        this.uiManager.on('leave-voice-channel', (channelId) => this.leaveVoiceChannel(channelId));
+        
+        // Chat events
+        this.uiManager.on('send-message', (data) => {
+            console.log('App received send-message event:', data);
+            this.sendChatMessage(data.message, data.channel);
+        });
+        
+        this.uiManager.on('delete-message', (messageId) => this.deleteMessage(messageId));
         
         // Settings
         this.uiManager.on('settings-change', (settings) => this.settingsManager.update(settings));
+    }
+
+    setupMiniMapModal() {
+        // Create mini map modal
+        const modalHTML = `
+            <div id="miniMapModal" class="mini-map-modal" style="display: none;">
+                <div class="mini-map-content">
+                    <div class="mini-map-header">
+                        <h4>Channel Map</h4>
+                        <button id="closeMiniMap" class="close-btn">×</button>
+                    </div>
+                    <canvas id="miniProximityMap" width="400" height="300"></canvas>
+                    <div class="mini-map-controls">
+                        <div class="proximity-info">
+                            <span>Range: <span id="miniProximityRange">100px</span></span>
+                            <input type="range" id="miniProximitySlider" min="50" max="300" value="100" class="proximity-slider">
+                        </div>
+                        <button id="miniCenterBtn" class="btn secondary">Center</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Setup mini map controls
+        const closeMiniMap = document.getElementById('closeMiniMap');
+        const miniProximitySlider = document.getElementById('miniProximitySlider');
+        const miniProximityRange = document.getElementById('miniProximityRange');
+        const miniCenterBtn = document.getElementById('miniCenterBtn');
+        
+        if (closeMiniMap) {
+            closeMiniMap.addEventListener('click', () => this.closeMiniMap());
+        }
+        
+        if (miniProximitySlider && miniProximityRange) {
+            miniProximitySlider.addEventListener('input', (e) => {
+                const range = parseInt(e.target.value);
+                miniProximityRange.textContent = `${range}px`;
+                if (this.proximityMap) {
+                    this.proximityMap.setProximityRange(range);
+                }
+                // Sync with main slider
+                const mainSlider = document.getElementById('proximitySlider');
+                if (mainSlider) {
+                    mainSlider.value = range;
+                    document.getElementById('proximityRange').textContent = `${range}px`;
+                }
+            });
+        }
+        
+        if (miniCenterBtn) {
+            miniCenterBtn.addEventListener('click', () => {
+                if (this.proximityMap) {
+                    this.proximityMap.centerMyPosition();
+                }
+            });
+        }
+        
+        // Click outside to close
+        const modal = document.getElementById('miniMapModal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeMiniMap();
+                }
+            });
+        }
+    }
+
+    openMiniMap() {
+        if (!this.currentVoiceChannel) {
+            this.uiManager.showNotification('Join a voice channel first', 'warning');
+            return;
+        }
+        
+        const modal = document.getElementById('miniMapModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            
+            // Initialize mini proximity map
+            const miniCanvas = document.getElementById('miniProximityMap');
+            if (miniCanvas && this.proximityMap) {
+                // Copy main map state to mini map
+                this.miniProximityMap = new _proximity_ProximityMap_js__WEBPACK_IMPORTED_MODULE_3__.ProximityMap(miniCanvas, this);
+                
+                // Copy users from main map
+                this.proximityMap.users.forEach((user, userId) => {
+                    this.miniProximityMap.addUser(userId, user.username, user.isSelf, user.audioElement);
+                    this.miniProximityMap.updateUserPosition(userId, user.x, user.y);
+                    this.miniProximityMap.updateUserColor(userId, user.color);
+                });
+                
+                this.miniProximityMap.setProximityRange(this.proximityMap.proximityRange);
+            }
+        }
+    }
+
+    closeMiniMap() {
+        const modal = document.getElementById('miniMapModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        if (this.miniProximityMap) {
+            this.miniProximityMap = null;
+        }
+    }
+
+    setupMapButtons() {
+        // Setup map buttons for voice channels
+        const mapButtons = document.querySelectorAll('.map-button');
+        mapButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent voice channel toggle
+                const voiceChannel = button.dataset.voiceChannel;
+                
+                if (this.currentVoiceChannel !== voiceChannel) {
+                    this.uiManager.showNotification('Join the voice channel first to access the map', 'warning');
+                    return;
+                }
+                
+                // Open mini map instead of switching pages
+                this.openMiniMap();
+            });
+        });
+    }
+
+    // FIXED: Don't remove duplicate send function
+    sendChatMessage(message, channel) {
+        if (!message.trim()) return;
+
+        if (!this.connectionManager.socket) {
+            console.error('Not connected to server');
+            return;
+        }
+
+        if (!this.isInHub) {
+            console.error('Not in hub');
+            return;
+        }
+
+        const username = this.settingsManager.get('username') || 'Anonymous';
+        const targetChannel = channel || this.currentTextChannel;
+        
+        console.log('Sending chat message:', message, 'to channel:', targetChannel);
+
+        // Create message with unique ID
+        const messageData = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+            roomId: 'hub',
+            message: message,
+            username: username,
+            channel: targetChannel,
+            timestamp: Date.now(),
+            userId: this.myUserId
+        };
+
+        this.connectionManager.socket.emit('send-chat-message', messageData);
+    }
+
+    deleteMessage(messageId) {
+        if (!this.connectionManager.socket) {
+            console.error('Not connected to server');
+            return;
+        }
+
+        console.log('Deleting message:', messageId);
+
+        this.connectionManager.socket.emit('delete-chat-message', {
+            messageId: messageId,
+            userId: this.myUserId
+        });
     }
 
     setupMapControls() {
@@ -2201,6 +2979,12 @@ class ProximityApp {
                 proximityRangeDisplay.textContent = `${range}px`;
                 if (this.proximityMap) {
                     this.proximityMap.setProximityRange(range);
+                }
+                // Sync with mini map slider
+                const miniSlider = document.getElementById('miniProximitySlider');
+                if (miniSlider) {
+                    miniSlider.value = range;
+                    document.getElementById('miniProximityRange').textContent = `${range}px`;
                 }
             });
         }
@@ -2232,6 +3016,15 @@ class ProximityApp {
                 }
             });
         }
+
+        // Map leave channel button
+        const mapLeaveChannelBtn = document.getElementById('mapLeaveChannelBtn');
+        if (mapLeaveChannelBtn) {
+            mapLeaveChannelBtn.addEventListener('click', () => {
+                console.log('Map leave button clicked');
+                this.leaveCurrentChannel();
+            });
+        }
     }
 
     setupSettingsControls() {
@@ -2244,11 +3037,12 @@ class ProximityApp {
             });
         }
 
-        // Audio device selectors
+        // Audio device selectors - FIXED: Prevent auto-switching on page change
         const audioDeviceSelect = document.getElementById('audioDevice');
         if (audioDeviceSelect) {
             audioDeviceSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
+                if (e.target.value && !this.isPopulatingDevices) {
+                    this.settingsManager.set('audioInputDevice', e.target.value);
                     this.audioManager.changeInputDevice(e.target.value)
                         .then(() => this.uiManager.showNotification('Audio input device changed', 'success'))
                         .catch(() => this.uiManager.showNotification('Failed to change audio input device', 'error'));
@@ -2259,7 +3053,8 @@ class ProximityApp {
         const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
         if (audioOutputDeviceSelect) {
             audioOutputDeviceSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
+                if (e.target.value && !this.isPopulatingDevices) {
+                    this.settingsManager.set('audioOutputDevice', e.target.value);
                     this.audioManager.changeOutputDevice(e.target.value)
                         .then(() => this.uiManager.showNotification('Audio output device changed', 'success'))
                         .catch(() => this.uiManager.showNotification('Failed to change audio output device', 'error'));
@@ -2377,13 +3172,61 @@ class ProximityApp {
         socket.on('answer', ({ answer, from }) => this.audioManager.handleAnswer(answer, from));
         socket.on('ice-candidate', ({ candidate, from }) => this.audioManager.handleIceCandidate(candidate, from));
         
-        // Chat events
-        socket.on('chat-message', (data) => this.chatManager.addMessage(data));
+        // Mic status events
+        socket.on('user-mic-status', ({ userId, isMuted }) => {
+            this.uiManager.updateUserMicStatus(userId, isMuted);
+        });
+        
+        // Chat events - FIXED: Store messages globally and permanently
+        socket.on('chat-message', (data) => {
+            console.log('Chat message received:', data);
+            const channel = data.channel || 'diamond';
+            
+            // Store message globally and permanently
+            if (!this.globalChatHistory[channel]) {
+                this.globalChatHistory[channel] = [];
+            }
+            
+            const messageData = {
+                id: data.id,
+                username: data.username,
+                message: data.message,
+                timestamp: data.timestamp,
+                userId: data.userId
+            };
+            
+            this.globalChatHistory[channel].push(messageData);
+            this.saveGlobalChatHistory();
+            
+            // Show message if it's for current channel
+            if (channel === this.currentTextChannel) {
+                this.uiManager.addChatMessage(messageData);
+            }
+        });
+        
+        socket.on('message-deleted', (data) => {
+            console.log('Message deleted:', data);
+            const { messageId, channel } = data;
+            
+            // Remove from global history
+            if (this.globalChatHistory[channel]) {
+                this.globalChatHistory[channel] = this.globalChatHistory[channel].filter(msg => msg.id !== messageId);
+                this.saveGlobalChatHistory();
+            }
+            
+            // Remove from UI if in current channel
+            if (channel === this.currentTextChannel) {
+                this.uiManager.removeChatMessage(messageId);
+            }
+        });
         
         // Position events
         socket.on('position-update', ({ userId, x, y }) => {
             if (this.proximityMap) {
                 this.proximityMap.updateUserPosition(userId, x, y);
+            }
+            if (this.miniProximityMap) {
+                this.miniProximityMap.updateUserPosition(userId, x, y);
             }
         });
     }
@@ -2395,22 +3238,25 @@ class ProximityApp {
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
             
-            // Join the hub room (text only initially)
+            // Join the hub room
             this.connectionManager.socket.emit('join-hub', {
                 username,
                 userColor
             });
             
             this.isInHub = true;
-            this.isInVoiceChannel = false; // Don't auto-join voice
             this.currentServer = { id: 'hub', name: 'Community Hub' };
-            this.currentChannel = { id: 'general', type: 'text' };
+            this.currentTextChannel = 'diamond';
+            // DON'T reset voice channel - preserve it across navigation
             
-            // Update UI - stay in text channel
+            // Update UI - start in text channel
             this.uiManager.showServerView(this.currentServer);
             
-            // Setup voice channel click handler but don't auto-join
-            this.setupVoiceChannelHandler();
+            // Load persistent chat history
+            this.loadChatForCurrentChannel();
+            
+            // Hide leave channel button initially (unless in voice)
+            this.updateLeaveButtonVisibility();
             
             this.uiManager.showNotification('Joined Community Hub', 'success');
             
@@ -2420,87 +3266,158 @@ class ProximityApp {
         }
     }
 
-    setupVoiceChannelHandler() {
-        const voiceChannel = document.querySelector('[data-channel-id="general-voice"]');
-        if (voiceChannel) {
-            voiceChannel.addEventListener('click', () => {
-                if (!this.isInVoiceChannel) {
-                    this.joinVoiceChannel();
-                } else {
-                    this.uiManager.showNotification('Already in voice channel', 'info');
-                }
-            });
+    // FIXED: Load persistent chat history when switching channels
+    switchTextChannel(channelId) {
+        console.log('Switching text channel to:', channelId);
+        this.currentTextChannel = channelId;
+        this.loadChatForCurrentChannel();
+        this.chatManager.setCurrentChannel(channelId);
+    }
+
+    loadChatForCurrentChannel() {
+        // Clear current chat
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.innerHTML = `
+                <div class="welcome-message">
+                    <p>Welcome to the ${this.currentTextChannel} channel!</p>
+                </div>
+            `;
+            
+            // Load persistent chat history for this channel
+            if (this.globalChatHistory[this.currentTextChannel]) {
+                this.globalChatHistory[this.currentTextChannel].forEach(msg => {
+                    this.uiManager.addChatMessage(msg);
+                });
+            }
         }
     }
 
-    async joinVoiceChannel() {
+    async joinVoiceChannel(channelId) {
+        // FIXED: Check if already in this voice channel
+        if (this.currentVoiceChannel === channelId) {
+            this.uiManager.showNotification('Already in this voice channel', 'info');
+            return;
+        }
+        
         try {
-            console.log('Joining voice channel...');
+            console.log('Joining voice channel:', channelId);
             
-            // Initialize audio if needed
+            // Initialize audio if needed with better error handling
             if (!this.audioManager.isInitialized()) {
-                await this.audioManager.initialize();
+                try {
+                    await this.audioManager.initialize();
+                } catch (audioError) {
+                    this.uiManager.showNotification(audioError.message, 'error');
+                    return;
+                }
             }
             
-            this.isInVoiceChannel = true;
-            this.currentChannel = { id: 'general-voice', type: 'voice' };
+            // Leave current voice channel if in one
+            if (this.currentVoiceChannel) {
+                this.leaveVoiceChannel(this.currentVoiceChannel);
+            }
             
-            // Switch to voice view
-            this.uiManager.switchToChannel('general-voice', 'voice');
+            this.currentVoiceChannel = channelId;
             
-            // Add self to proximity map
+            // Emit to server
+            this.connectionManager.socket.emit('join-voice-channel', { channelId });
+            
+            // Add self to voice channel participants
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
             
+            this.uiManager.addVoiceParticipant(this.myUserId, username, userColor, channelId, true);
+            
+            // Add self to proximity map
             if (this.proximityMap) {
                 this.proximityMap.addUser(this.myUserId, username, true);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
             
-            // Add self to participants list
-            this.uiManager.addParticipant(this.myUserId, null, true, username, userColor);
+            // Connect to existing voice users in this channel
+            this.hubUsers.forEach(user => {
+                if (user.userId !== this.myUserId && user.voiceChannel === channelId) {
+                    this.audioManager.connectToUser(user.userId, user.username, user.userColor);
+                    this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
+                }
+            });
             
-            // Connect to existing voice users
-            if (this.hubUsers) {
-                this.hubUsers.forEach(user => {
-                    if (user.userId !== this.myUserId) {
-                        this.audioManager.connectToUser(user.userId, user.username, user.userColor);
-                    }
-                });
-            }
+            // Show leave channel button now that we're in voice
+            this.updateLeaveButtonVisibility();
             
-            this.uiManager.showNotification('Joined voice channel', 'success');
+            this.uiManager.showNotification(`Joined ${channelId} voice channel`, 'success');
             
         } catch (error) {
             console.error('Failed to join voice channel:', error);
             this.uiManager.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');
+            this.currentVoiceChannel = null;
         }
     }
 
-    handleHubUsers(users) {
-        this.hubUsers = users; // Store for voice channel joining
+    leaveVoiceChannel(channelId) {
+        console.log('Leaving voice channel:', channelId);
         
-        // Only setup voice connections if we're in voice channel
-        if (this.isInVoiceChannel) {
-            // Clear existing participants
-            this.uiManager.clearParticipants();
+        if (this.currentVoiceChannel === channelId) {
+            // Emit to server
+            this.connectionManager.socket.emit('leave-voice-channel', { channelId });
+            
+            // Disconnect from all users
+            this.audioManager.disconnectAll();
+            
+            // Clear voice UI
+            this.uiManager.removeVoiceParticipant(this.myUserId, channelId);
+            
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
             }
             
-            // Add self first
-            const username = this.settingsManager.get('username') || 'Anonymous';
-            const userColor = this.settingsManager.get('userColor') || 'purple';
+            this.currentVoiceChannel = null;
             
-            this.uiManager.addParticipant(this.myUserId, null, true, username, userColor);
+            // Hide leave channel button
+            this.updateLeaveButtonVisibility();
+            
+            this.uiManager.showNotification(`Left ${channelId} voice channel`, 'info');
+        }
+    }
+
+    // FIXED: Update leave button visibility based on voice channel status
+    updateLeaveButtonVisibility() {
+        const leaveChannelBtn = document.getElementById('leaveChannelBtn');
+        const mapLeaveChannelBtn = document.getElementById('mapLeaveChannelBtn');
+        
+        const shouldShow = this.currentVoiceChannel !== null;
+        
+        if (leaveChannelBtn) {
+            leaveChannelBtn.style.display = shouldShow ? 'block' : 'none';
+        }
+        if (mapLeaveChannelBtn) {
+            mapLeaveChannelBtn.style.display = shouldShow ? 'block' : 'none';
+        }
+    }
+
+    handleHubUsers(users) {
+        this.hubUsers = users;
+        
+        // Update all voice channel participant lists
+        this.updateAllVoiceChannelParticipants(users);
+        
+        // If in voice channel, handle connections
+        if (this.currentVoiceChannel) {
+            // Clear proximity map and re-add users
             if (this.proximityMap) {
+                this.proximityMap.clearUsers();
+                
+                // Re-add self
+                const username = this.settingsManager.get('username') || 'Anonymous';
+                const userColor = this.settingsManager.get('userColor') || 'purple';
                 this.proximityMap.addUser(this.myUserId, username, true);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
             
-            // Add other users and establish WebRTC connections
+            // Add other users in the same voice channel
             users.forEach(user => {
-                if (user.userId !== this.myUserId) {
+                if (user.userId !== this.myUserId && user.voiceChannel === this.currentVoiceChannel) {
                     this.handleUserJoined(user);
                     this.audioManager.connectToUser(user.userId, user.username, user.userColor);
                 }
@@ -2508,11 +3425,39 @@ class ProximityApp {
         }
     }
 
+    updateAllVoiceChannelParticipants(users) {
+        // Clear all voice channel participants first
+        this.uiManager.clearVoiceParticipants();
+        
+        // Group users by voice channel
+        const usersByChannel = {};
+        users.forEach(user => {
+            if (user.voiceChannel) {
+                if (!usersByChannel[user.voiceChannel]) {
+                    usersByChannel[user.voiceChannel] = [];
+                }
+                usersByChannel[user.voiceChannel].push(user);
+            }
+        });
+        
+        // Add participants to each voice channel
+        Object.entries(usersByChannel).forEach(([channelId, channelUsers]) => {
+            channelUsers.forEach(user => {
+                this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
+            });
+        });
+        
+        // Add self to current voice channel if in one
+        if (this.currentVoiceChannel) {
+            const username = this.settingsManager.get('username') || 'Anonymous';
+            const userColor = this.settingsManager.get('userColor') || 'purple';
+            this.uiManager.addVoiceParticipant(this.myUserId, username, userColor, this.currentVoiceChannel, true);
+        }
+    }
+
     handleUserJoined(user) {
-        // Only add to voice if we're in voice channel
-        if (this.isInVoiceChannel) {
-            this.uiManager.addParticipant(user.userId, null, false, user.username, user.userColor);
-            
+        // Add to current voice channel if they're in the same one
+        if (this.currentVoiceChannel && user.voiceChannel === this.currentVoiceChannel) {
             if (this.proximityMap) {
                 this.proximityMap.addUser(user.userId, user.username, false);
                 this.proximityMap.updateUserColor(user.userId, user.userColor);
@@ -2521,10 +3466,16 @@ class ProximityApp {
             // Establish WebRTC connection
             this.audioManager.connectToUser(user.userId, user.username, user.userColor);
         }
+        
+        // Always add to voice channel participant list if they're in a voice channel
+        if (user.voiceChannel) {
+            this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, user.voiceChannel, false);
+        }
     }
 
     handleUserLeft(user) {
-        this.uiManager.removeParticipant(user.userId);
+        // Remove from all UI elements
+        this.uiManager.removeVoiceParticipant(user.userId);
         
         if (this.proximityMap) {
             this.proximityMap.removeUser(user.userId);
@@ -2534,22 +3485,43 @@ class ProximityApp {
     }
 
     handlePageChange(page) {
+        // FIXED: Don't affect voice channel when switching pages
         if (page === 'map' && this.proximityMap) {
             this.proximityMap.resizeCanvas();
         }
         
         if (page === 'settings') {
-            this.uiManager.populateAudioDevices();
+            // FIXED: Prevent device switching on page change
+            this.isPopulatingDevices = true;
+            this.uiManager.populateAudioDevices().then(() => {
+                // Restore saved devices
+                const savedInputDevice = this.settingsManager.get('audioInputDevice');
+                const savedOutputDevice = this.settingsManager.get('audioOutputDevice');
+                
+                if (savedInputDevice) {
+                    const inputSelect = document.getElementById('audioDevice');
+                    if (inputSelect) inputSelect.value = savedInputDevice;
+                }
+                
+                if (savedOutputDevice) {
+                    const outputSelect = document.getElementById('audioOutputDevice');
+                    if (outputSelect) outputSelect.value = savedOutputDevice;
+                }
+                
+                this.isPopulatingDevices = false;
+            });
+            
             this.audioManager.startPersistentVisualizer();
         } else {
             this.audioManager.stopPersistentVisualizer();
         }
     }
 
+    // FIXED: Leave channel functionality - only leaves voice, not hub
     leaveCurrentChannel() {
         console.log('Leave channel called, current state:', {
             isInHub: this.isInHub,
-            isInVoiceChannel: this.isInVoiceChannel
+            currentVoiceChannel: this.currentVoiceChannel
         });
         
         if (!this.isInHub) {
@@ -2557,61 +3529,59 @@ class ProximityApp {
             return;
         }
         
-        if (this.isInVoiceChannel) {
-            // Leave voice channel, go back to text
+        if (this.currentVoiceChannel) {
+            // Leave voice channel only
             console.log('Leaving voice channel...');
+            this.leaveVoiceChannel(this.currentVoiceChannel);
             
-            // Disconnect from all users
-            this.audioManager.disconnectAll();
-            
-            // Clear voice UI
-            this.uiManager.clearParticipants();
-            if (this.proximityMap) {
-                this.proximityMap.clearUsers();
-            }
-            
-            this.isInVoiceChannel = false;
-            this.currentChannel = { id: 'general', type: 'text' };
-            
-            // Switch back to text channel view
-            this.uiManager.switchToChannel('general', 'text');
-            this.uiManager.showNotification('Left voice channel', 'info');
+            // Update UI to remove voice channel selection
+            this.uiManager.updateVoiceChannelUI(null);
         } else {
-            // Leave the entire hub
-            console.log('Leaving hub entirely...');
-            this.connectionManager.socket.emit('leave-hub');
-            
-            this.isInHub = false;
-            this.isInVoiceChannel = false;
-            this.currentServer = null;
-            this.currentChannel = null;
-            
-            // Return to home
-            this.uiManager.switchPage('home');
-            this.uiManager.showNotification('Left the hub', 'info');
+            this.uiManager.showNotification('Not in a voice channel', 'info');
         }
     }
 
     updateParticipantName() {
-        const selfParticipant = document.getElementById(`participant-${this.myUserId}`);
-        if (selfParticipant) {
-            const nameSpan = selfParticipant.querySelector('span:last-child');
-            if (nameSpan) {
-                nameSpan.textContent = `${this.settingsManager.get('username') || 'You'} (You)`;
+        const newUsername = this.settingsManager.get('username') || 'Anonymous';
+        
+        // Update in voice participants
+        if (this.currentVoiceChannel) {
+            const channelKey = this.currentVoiceChannel.replace('-voice', '');
+            const voiceParticipant = document.getElementById(`voice-participant-${this.myUserId}-${channelKey}`);
+            if (voiceParticipant) {
+                const nameSpan = voiceParticipant.querySelector('span:last-child');
+                if (nameSpan) {
+                    nameSpan.textContent = newUsername;
+                }
             }
         }
         
+        // Update in proximity map
         if (this.proximityMap && this.myUserId) {
             const user = this.proximityMap.users.get(this.myUserId);
             if (user) {
-                user.username = this.settingsManager.get('username') || 'You';
+                user.username = newUsername;
             }
         }
     }
 
     updateParticipantColor() {
+        const newColor = this.settingsManager.get('userColor');
+        
         if (this.proximityMap && this.myUserId) {
-            this.proximityMap.updateUserColor(this.myUserId, this.settingsManager.get('userColor'));
+            this.proximityMap.updateUserColor(this.myUserId, newColor);
+        }
+        
+        // Update voice participant avatar
+        if (this.currentVoiceChannel) {
+            const channelKey = this.currentVoiceChannel.replace('-voice', '');
+            const voiceParticipant = document.getElementById(`voice-participant-${this.myUserId}-${channelKey}`);
+            if (voiceParticipant) {
+                const avatar = voiceParticipant.querySelector('.participant-avatar');
+                if (avatar) {
+                    avatar.textContent = this.uiManager.getColorEmoji(newColor);
+                }
+            }
         }
     }
 
@@ -2630,7 +3600,7 @@ class ProximityApp {
             
         } catch (error) {
             console.error('Error testing microphone:', error);
-            this.uiManager.showNotification('Failed to test microphone', 'error');
+            this.uiManager.showNotification('Failed to test microphone: ' + error.message, 'error');
         }
     }
 
@@ -2645,18 +3615,18 @@ class ProximityApp {
 
     // Public methods for other managers to use
     sendPositionUpdate(x, y) {
-        if (this.connectionManager.socket && this.isInHub) {
+        if (this.connectionManager.socket && this.isInHub && this.currentVoiceChannel) {
             this.connectionManager.socket.emit('position-update', {
-                roomId: 'hub-general-voice',
+                roomId: this.currentVoiceChannel,
                 x, y
             });
         }
     }
 
     updateMicStatus(isMuted) {
-        if (this.connectionManager.socket && this.isInHub) {
+        if (this.connectionManager.socket && this.isInHub && this.currentVoiceChannel) {
             this.connectionManager.socket.emit('mic-status', {
-                roomId: 'hub-general-voice',
+                roomId: this.currentVoiceChannel,
                 isMuted
             });
         }

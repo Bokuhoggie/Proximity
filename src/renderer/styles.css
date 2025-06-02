@@ -1537,3 +1537,153 @@ body {
     font-size: 0.9rem;
     line-height: 1.4;
 }
+
+/* Mini Map Modal */
+.mini-map-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.mini-map-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    width: 500px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: modal-appear 0.3s ease;
+    overflow: hidden;
+}
+
+.mini-map-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--dark-bg);
+}
+
+.mini-map-header h4 {
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#miniProximityMap {
+    width: 100%;
+    height: 300px;
+    border-radius: 0;
+    background: #0f0f23;
+    cursor: crosshair;
+    display: block;
+}
+
+.mini-map-controls {
+    padding: 1rem;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.mini-map-controls .proximity-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.mini-map-controls .proximity-slider {
+    width: 120px;
+    height: 4px;
+}
+
+/* Chat Message Delete Styles */
+.message {
+    position: relative;
+    padding: 0.5rem 0;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.message:hover {
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.message-delete-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.5rem;
+    background: rgba(239, 68, 68, 0.8);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+.message-delete-btn:hover {
+    background: var(--danger);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.message-delete-btn:active {
+    transform: scale(0.95);
+}
+
+/* Update existing message styles to accommodate delete button */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    padding-right: 2.5rem; /* Space for delete button */
+}
+
+.message-content {
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding-right: 2.5rem; /* Space for delete button */
+    word-wrap: break-word;
+}

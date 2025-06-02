@@ -23,7 +23,6 @@
                     <div class="nav-icon">🏠</div>
                     <span class="nav-text">Home</span>
                 </div>
-                <!-- Community Hub will be added here by JavaScript -->
                 <div class="nav-item" data-page="map">
                     <div class="nav-icon">🗺️</div>
                     <span class="nav-text">Channel Map</span>
@@ -40,7 +39,9 @@
                     <h3>My Servers</h3>
                     <button id="createServerBtn" class="create-server-btn" title="Create Server">+</button>
                 </div>
-                <div id="myServersList" class="servers-list"></div>
+                <div id="myServersList" class="servers-list">
+                    <!-- Community Hub will be added here -->
+                </div>
             </div>
         </nav>
 
@@ -79,25 +80,28 @@
                     <!-- Server Sidebar -->
                     <div class="server-sidebar">
                         <div class="server-info">
-                            <div class="server-info-header">
-                                <div class="server-info-text">
-                                    <h3 id="currentServerName">Community Hub</h3>
-                                    <div class="server-invite">
-                                        <span>Server:</span>
-                                        <code id="serverInviteDisplay">COMMUNITY-HUB</code>
-                                        <button id="copyInviteBtn" class="copy-btn" title="Copy server info">📋</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <h3 id="currentServerName">Community Hub</h3>
                         </div>
                         
                         <div class="channels-section">
                             <div class="channel-category">
                                 <h4>💬 Text Channels</h4>
                                 <div class="channel-list" id="textChannelsList">
-                                    <div class="channel-item active" data-channel-type="text" data-channel-id="general">
-                                        <span class="channel-icon">#</span>
-                                        <span class="channel-name">general</span>
+                                    <div class="channel-item active" data-channel-type="text" data-channel-id="diamond">
+                                        <span class="channel-icon">💎</span>
+                                        <span class="channel-name">diamond</span>
+                                    </div>
+                                    <div class="channel-item" data-channel-type="text" data-channel-id="spade">
+                                        <span class="channel-icon">♠️</span>
+                                        <span class="channel-name">spade</span>
+                                    </div>
+                                    <div class="channel-item" data-channel-type="text" data-channel-id="club">
+                                        <span class="channel-icon">♣️</span>
+                                        <span class="channel-name">club</span>
+                                    </div>
+                                    <div class="channel-item" data-channel-type="text" data-channel-id="heart">
+                                        <span class="channel-icon">♥️</span>
+                                        <span class="channel-name">heart</span>
                                     </div>
                                 </div>
                             </div>
@@ -105,10 +109,45 @@
                             <div class="channel-category">
                                 <h4>🔊 Voice Channels</h4>
                                 <div class="channel-list" id="voiceChannelsList">
-                                    <div class="channel-item" data-channel-type="voice" data-channel-id="general-voice">
-                                        <span class="channel-icon">🔊</span>
-                                        <span class="channel-name">General Voice</span>
-                                        <div class="voice-participants" id="voiceParticipants"></div>
+                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="diamond-voice">
+                                        <div class="voice-channel-header">
+                                            <div class="voice-channel-info">
+                                                <span class="channel-icon">💎</span>
+                                                <span class="channel-name">Diamond Voice</span>
+                                            </div>
+                                            <button class="map-button" data-voice-channel="diamond-voice" title="Open in Map">🗺️</button>
+                                        </div>
+                                        <div class="voice-participants" id="voiceParticipants-diamond"></div>
+                                    </div>
+                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="spade-voice">
+                                        <div class="voice-channel-header">
+                                            <div class="voice-channel-info">
+                                                <span class="channel-icon">♠️</span>
+                                                <span class="channel-name">Spade Voice</span>
+                                            </div>
+                                            <button class="map-button" data-voice-channel="spade-voice" title="Open in Map">🗺️</button>
+                                        </div>
+                                        <div class="voice-participants" id="voiceParticipants-spade"></div>
+                                    </div>
+                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="club-voice">
+                                        <div class="voice-channel-header">
+                                            <div class="voice-channel-info">
+                                                <span class="channel-icon">♣️</span>
+                                                <span class="channel-name">Club Voice</span>
+                                            </div>
+                                            <button class="map-button" data-voice-channel="club-voice" title="Open in Map">🗺️</button>
+                                        </div>
+                                        <div class="voice-participants" id="voiceParticipants-club"></div>
+                                    </div>
+                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="heart-voice">
+                                        <div class="voice-channel-header">
+                                            <div class="voice-channel-info">
+                                                <span class="channel-icon">♥️</span>
+                                                <span class="channel-name">Heart Voice</span>
+                                            </div>
+                                            <button class="map-button" data-voice-channel="heart-voice" title="Open in Map">🗺️</button>
+                                        </div>
+                                        <div class="voice-participants" id="voiceParticipants-heart"></div>
                                     </div>
                                 </div>
                             </div>
@@ -119,10 +158,7 @@
                                 <span class="icon">🎤</span>
                                 <span class="text">Mute</span>
                             </button>
-                            <div class="leave-buttons">
-                                <button id="leaveChannelServerBtn" class="btn warning">Leave Channel</button>
-                                <button id="leaveServerBtn" class="btn danger">Leave Hub</button>
-                            </div>
+                            <button id="leaveChannelBtn" class="btn danger" style="display: none;">Leave Channel</button>
                         </div>
                     </div>
                     
@@ -131,8 +167,8 @@
                         <!-- Text Chat View -->
                         <div class="content-view active" id="text-chat-view">
                             <div class="chat-header">
-                                <h3># general</h3>
-                                <p>Welcome to the Community Hub general chat</p>
+                                <h3 id="currentChannelName"># diamond</h3>
+                                <p id="currentChannelDescription">Welcome to the Community Hub diamond chat</p>
                             </div>
                             <div class="chat-messages" id="chatMessages">
                                 <div class="welcome-message">
@@ -140,7 +176,7 @@
                                 </div>
                             </div>
                             <div class="chat-input-container">
-                                <input type="text" id="messageInput" placeholder="Message #general" class="chat-input">
+                                <input type="text" id="messageInput" placeholder="Message #diamond" class="chat-input">
                                 <button id="sendMessageBtn" class="send-btn">Send</button>
                             </div>
                         </div>
@@ -148,7 +184,7 @@
                         <!-- Voice Channel View -->
                         <div class="content-view" id="voice-channel-view">
                             <div class="voice-header">
-                                <h3>🔊 General Voice</h3>
+                                <h3 id="currentVoiceChannelName">🔊 Diamond Voice</h3>
                                 <p>Connected to Community Hub voice channel</p>
                             </div>
                             <div class="voice-content">
@@ -198,7 +234,7 @@
                                     <span class="icon">🤖</span>
                                     <span class="text">Add Test Bot</span>
                                 </button>
-                                <button id="leaveChannelBtn" class="btn danger">
+                                <button id="mapLeaveChannelBtn" class="btn danger" style="display: none;">
                                     <span class="icon">🚪</span>
                                     <span class="text">Leave Channel</span>
                                 </button>
@@ -322,7 +358,7 @@
         }, 2000);
     </script>
 
-    <!-- Add color picker styles -->
+    <!-- Add styles -->
     <style>
         .user-color-picker {
             display: flex;
@@ -352,6 +388,101 @@
         .color-pink { background: #ec4899; }
         .color-indigo { background: #6366f1; }
         .color-cyan { background: #06b6d4; }
+
+        /* Voice channel styles */
+        .voice-channel {
+            margin-bottom: 0.5rem;
+        }
+
+        .voice-channel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .voice-channel-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .voice-channel-header:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .voice-channel-header.active {
+            background: var(--secondary-purple);
+            color: var(--text-primary);
+        }
+
+        .map-button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .voice-channel-header:hover .map-button {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .map-button:hover {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--text-primary);
+        }
+
+        .voice-participants {
+            margin-left: 1.5rem;
+            padding: 0.25rem 0;
+        }
+
+        .voice-participant {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            margin: 0.1rem 0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .voice-participant:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .voice-participant .participant-avatar {
+            font-size: 12px;
+        }
+
+        .voice-participant .mic-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            transition: background-color 0.2s ease;
+        }
+
+        .voice-participant .mic-status.muted {
+            background: var(--danger);
+        }
     </style>
 </body>
 </html>
