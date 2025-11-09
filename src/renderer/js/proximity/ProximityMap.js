@@ -96,16 +96,20 @@ export class ProximityMap {
         }
     }
 
-    // FIXED: Sync position between main map and minimap
+    // FIXED: Sync position between main map and minimap with coordinate scaling
     syncWithOtherMaps(userId, x, y) {
         // Don't create infinite loops
         if (this.syncing) return;
         
-        // Sync with main map if this is minimap
+        // Sync with main map if this is minimap (scale coordinates up)
         if (this.isMinimapInstance && window.proximityApp?.proximityMap) {
-            window.proximityApp.proximityMap.syncing = true;
-            window.proximityApp.proximityMap.updateUserPosition(userId, x, y);
-            window.proximityApp.proximityMap.updateAudioProximity();
+            const mainMap = window.proximityApp.proximityMap;
+            const scaleX = mainMap.canvas.width / this.canvas.width;
+            const scaleY = mainMap.canvas.height / this.canvas.height;
+            
+            mainMap.syncing = true;
+            mainMap.updateUserPosition(userId, x * scaleX, y * scaleY);
+            mainMap.updateAudioProximity();
             setTimeout(() => {
                 if (window.proximityApp?.proximityMap) {
                     window.proximityApp.proximityMap.syncing = false;
@@ -113,11 +117,15 @@ export class ProximityMap {
             }, 10);
         }
         
-        // Sync with minimap if this is main map
+        // Sync with minimap if this is main map (scale coordinates down)
         if (!this.isMinimapInstance && window.proximityApp?.miniProximityMap) {
-            window.proximityApp.miniProximityMap.syncing = true;
-            window.proximityApp.miniProximityMap.updateUserPosition(userId, x, y);
-            window.proximityApp.miniProximityMap.updateAudioProximity();
+            const miniMap = window.proximityApp.miniProximityMap;
+            const scaleX = miniMap.canvas.width / this.canvas.width;
+            const scaleY = miniMap.canvas.height / this.canvas.height;
+            
+            miniMap.syncing = true;
+            miniMap.updateUserPosition(userId, x * scaleX, y * scaleY);
+            miniMap.updateAudioProximity();
             setTimeout(() => {
                 if (window.proximityApp?.miniProximityMap) {
                     window.proximityApp.miniProximityMap.syncing = false;
@@ -152,9 +160,17 @@ export class ProximityMap {
     }
 
     addUser(userId, username, isSelf = false, audioElement = null) {
-        // Center spawn position with slight randomization
-        const x = this.canvas.width / 2 + (Math.random() - 0.5) * 100;
-        const y = this.canvas.height / 2 + (Math.random() - 0.5) * 100;
+        // Ensure canvas is properly sized before positioning
+        if (this.canvas.width === 0 || this.canvas.height === 0) {
+            this.resizeCanvas();
+        }
+        
+        // Center spawn position with slight randomization, ensuring bounds
+        const margin = 30; // Keep users away from edges
+        const x = Math.max(margin, Math.min(this.canvas.width - margin, 
+            this.canvas.width / 2 + (Math.random() - 0.5) * 100));
+        const y = Math.max(margin, Math.min(this.canvas.height - margin, 
+            this.canvas.height / 2 + (Math.random() - 0.5) * 100));
         
         let userColor = 'blue';
         if (isSelf && this.app && this.app.settingsManager) {
@@ -279,8 +295,10 @@ export class ProximityMap {
     updateUserPosition(userId, x, y) {
         if (this.users.has(userId)) {
             const user = this.users.get(userId);
-            user.x = x;
-            user.y = y;
+            // Ensure positions are within canvas bounds
+            const margin = 20;
+            user.x = Math.max(margin, Math.min(this.canvas.width - margin, x));
+            user.y = Math.max(margin, Math.min(this.canvas.height - margin, y));
             user.lastUpdate = Date.now();
         }
     }

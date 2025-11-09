@@ -4,161 +4,77 @@
     <title>Proximity - Voice Chat</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com; media-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com; media-src 'self';">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Navigation Sidebar -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h1 class="logo">PROXIMITY</h1>
-                <div class="connection-status">
-                    <span id="connectionIndicator" class="status-indicator offline"></span>
-                    <span id="connectionText">Offline</span>
-                </div>
-            </div>
-            <div class="nav-items">
-                <div class="nav-item active" data-page="home">
-                    <div class="nav-icon">🏠</div>
-                    <span class="nav-text">Home</span>
-                </div>
-                <div class="nav-item" data-page="map">
-                    <div class="nav-icon">🗺️</div>
-                    <span class="nav-text">Channel Map</span>
-                </div>
-                <div class="nav-item" data-page="settings">
-                    <div class="nav-icon">⚙️</div>
-                    <span class="nav-text">Settings</span>
-                </div>
-            </div>
-
-            <!-- My Servers Section -->
-            <div class="my-servers-section">
-                <div class="servers-header">
-                    <h3>My Servers</h3>
-                    <button id="createServerBtn" class="create-server-btn" title="Create Server">+</button>
-                </div>
-                <div id="myServersList" class="servers-list">
-                    <!-- Community Hub will be added here -->
-                </div>
-            </div>
-        </nav>
-
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- Home Page -->
-            <div class="page active" id="home-page">
-                <div class="home-container">
-                    <div class="home-content">
-                        <div class="logo-section">
-                            <div class="home-logo">
-                                <div class="logo-icon">🎯</div>
-                                <h1>PROXIMITY</h1>
-                                <p>Connect through proximity-based voice chat</p>
-                            </div>
-                        </div>
-                        
-                        <div class="home-actions">
-                            <button id="joinHubBtn" class="home-action-btn join">
-                                <span class="action-icon">🏢</span>
-                                <span class="action-text">Join Community Hub</span>
-                            </button>
-                        </div>
-                        
-                        <div class="servers-section">
-                            <h3>Available Servers</h3>
-                            <div id="availableServersList" class="available-servers-list"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Server View Page -->
-            <div class="page" id="server-view-page">
+            <div class="page active" id="server-view-page">
                 <div class="server-layout">
                     <!-- Server Sidebar -->
                     <div class="server-sidebar">
                         <div class="server-info">
-                            <h3 id="currentServerName">Community Hub</h3>
+                            <h1 class="logo">PROXIMITY</h1>
                         </div>
-                        
+
                         <div class="channels-section">
                             <div class="channel-category">
-                                <h4>💬 Text Channels</h4>
+                                <h4>💬 Chat</h4>
                                 <div class="channel-list" id="textChannelsList">
-                                    <div class="channel-item active" data-channel-type="text" data-channel-id="diamond">
-                                        <span class="channel-icon">💎</span>
-                                        <span class="channel-name">diamond</span>
-                                    </div>
-                                    <div class="channel-item" data-channel-type="text" data-channel-id="spade">
-                                        <span class="channel-icon">♠️</span>
-                                        <span class="channel-name">spade</span>
-                                    </div>
-                                    <div class="channel-item" data-channel-type="text" data-channel-id="club">
-                                        <span class="channel-icon">♣️</span>
-                                        <span class="channel-name">club</span>
-                                    </div>
-                                    <div class="channel-item" data-channel-type="text" data-channel-id="heart">
-                                        <span class="channel-icon">♥️</span>
-                                        <span class="channel-name">heart</span>
+                                    <div class="channel-item active" data-channel-type="text" data-channel-id="general">
+                                        <span class="channel-icon">#</span>
+                                        <span class="channel-name">general</span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="channel-category">
-                                <h4>🔊 Voice Channels</h4>
+                                <h4>🔊 Voice</h4>
                                 <div class="channel-list" id="voiceChannelsList">
-                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="diamond-voice">
+                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="general-voice">
                                         <div class="voice-channel-header">
                                             <div class="voice-channel-info">
-                                                <span class="channel-icon">💎</span>
-                                                <span class="channel-name">Diamond Voice</span>
+                                                <span class="channel-icon">🔊</span>
+                                                <span class="channel-name">Voice Chat</span>
                                             </div>
-                                            <button class="map-button" data-voice-channel="diamond-voice" title="Open in Map">🗺️</button>
+                                            <button class="map-button" data-voice-channel="general-voice" title="Open in Map">🗺️</button>
                                         </div>
-                                        <div class="voice-participants" id="voiceParticipants-diamond"></div>
-                                    </div>
-                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="spade-voice">
-                                        <div class="voice-channel-header">
-                                            <div class="voice-channel-info">
-                                                <span class="channel-icon">♠️</span>
-                                                <span class="channel-name">Spade Voice</span>
-                                            </div>
-                                            <button class="map-button" data-voice-channel="spade-voice" title="Open in Map">🗺️</button>
-                                        </div>
-                                        <div class="voice-participants" id="voiceParticipants-spade"></div>
-                                    </div>
-                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="club-voice">
-                                        <div class="voice-channel-header">
-                                            <div class="voice-channel-info">
-                                                <span class="channel-icon">♣️</span>
-                                                <span class="channel-name">Club Voice</span>
-                                            </div>
-                                            <button class="map-button" data-voice-channel="club-voice" title="Open in Map">🗺️</button>
-                                        </div>
-                                        <div class="voice-participants" id="voiceParticipants-club"></div>
-                                    </div>
-                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="heart-voice">
-                                        <div class="voice-channel-header">
-                                            <div class="voice-channel-info">
-                                                <span class="channel-icon">♥️</span>
-                                                <span class="channel-name">Heart Voice</span>
-                                            </div>
-                                            <button class="map-button" data-voice-channel="heart-voice" title="Open in Map">🗺️</button>
-                                        </div>
-                                        <div class="voice-participants" id="voiceParticipants-heart"></div>
+                                        <div class="voice-participants" id="voiceParticipants-general"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="user-controls">
                             <button id="muteButton" class="control-button">
                                 <span class="icon">🎤</span>
                                 <span class="text">Mute</span>
                             </button>
                             <button id="leaveChannelBtn" class="btn danger" style="display: none;">Leave Channel</button>
+
+                            <!-- User Status Selector -->
+                            <div class="user-status-section">
+                                <div class="status-selector">
+                                    <div class="status-option active" data-status="online" title="Online">
+                                        <span class="status-dot online"></span>
+                                    </div>
+                                    <div class="status-option" data-status="idle" title="Idle">
+                                        <span class="status-dot idle"></span>
+                                    </div>
+                                    <div class="status-option" data-status="invisible" title="Invisible">
+                                        <span class="status-dot invisible"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings Button -->
+                            <button id="settingsButton" class="control-button settings-btn">
+                                <span class="icon">⚙️</span>
+                                <span class="text">Settings</span>
+                            </button>
                         </div>
                     </div>
                     
@@ -167,25 +83,25 @@
                         <!-- Text Chat View -->
                         <div class="content-view active" id="text-chat-view">
                             <div class="chat-header">
-                                <h3 id="currentChannelName"># diamond</h3>
-                                <p id="currentChannelDescription">Welcome to the Community Hub diamond chat</p>
+                                <h3 id="currentChannelName"># general</h3>
+                                <p id="currentChannelDescription">Welcome to the Proximity Room</p>
                             </div>
                             <div class="chat-messages" id="chatMessages">
                                 <div class="welcome-message">
-                                    <p>Welcome to the Community Hub! This is where everyone gathers to chat and connect.</p>
+                                    <p>Welcome! This is where everyone gathers to chat and connect.</p>
                                 </div>
                             </div>
                             <div class="chat-input-container">
-                                <input type="text" id="messageInput" placeholder="Message #diamond" class="chat-input">
+                                <input type="text" id="messageInput" placeholder="Message #general" class="chat-input">
                                 <button id="sendMessageBtn" class="send-btn">Send</button>
                             </div>
                         </div>
-                        
+
                         <!-- Voice Channel View -->
                         <div class="content-view" id="voice-channel-view">
                             <div class="voice-header">
-                                <h3 id="currentVoiceChannelName">🔊 Diamond Voice</h3>
-                                <p>Connected to Community Hub voice channel</p>
+                                <h3 id="currentVoiceChannelName">🔊 Voice Chat</h3>
+                                <p>Connected to voice channel</p>
                             </div>
                             <div class="voice-content">
                                 <div class="participants-section">
@@ -348,11 +264,157 @@
         </main>
     </div>
 
+    <!-- First Time Setup Modal -->
+    <div id="firstTimeSetupModal" class="setup-modal" style="display: none;">
+        <div class="setup-modal-content">
+            <div class="setup-header">
+                <h2>Welcome to Proximity</h2>
+                <p>Let's set up your audio before you get started</p>
+            </div>
+
+            <div class="setup-body">
+                <div class="setup-step">
+                    <div class="step-icon">🎤</div>
+                    <h3>Microphone Access</h3>
+                    <p>We need permission to access your microphone for voice chat</p>
+                    <button id="requestMicBtn" class="btn primary">Grant Microphone Access</button>
+                    <p id="micStatus" class="status-text"></p>
+                </div>
+
+                <div class="setup-step" id="deviceSetupStep" style="display: none;">
+                    <div class="step-icon">🔊</div>
+                    <h3>Audio Devices</h3>
+
+                    <div class="setup-device-group">
+                        <label for="setupMicDevice">Microphone</label>
+                        <select id="setupMicDevice" class="setting-select">
+                            <option value="">Select Microphone</option>
+                        </select>
+                    </div>
+
+                    <div class="setup-device-group">
+                        <label for="setupOutputDevice">Speakers/Headphones</label>
+                        <select id="setupOutputDevice" class="setting-select">
+                            <option value="">Select Output Device</option>
+                        </select>
+                    </div>
+
+                    <div class="setup-test-section">
+                        <button id="setupTestMic" class="btn secondary">Test Microphone</button>
+                        <button id="setupTestOutput" class="btn secondary">Test Output</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-footer">
+                <button id="completeSetupBtn" class="btn primary" disabled>Complete Setup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="setup-modal" style="display: none;">
+        <div class="setup-modal-content settings-modal-content">
+            <div class="setup-header">
+                <h2>Settings</h2>
+                <button id="closeSettingsBtn" class="close-btn">×</button>
+            </div>
+
+            <div class="setup-body settings-body">
+                <div class="setting-group">
+                    <h3>Audio Settings</h3>
+
+                    <div class="setting-item device-selector">
+                        <label for="audioDevice">Microphone Device</label>
+                        <div class="device-selector-row">
+                            <select id="audioDevice" class="setting-select">
+                                <option value="">Select Audio Device</option>
+                            </select>
+                            <button id="inputDeviceLockBtn" class="device-lock-btn" title="Lock input device">🔓</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item device-selector">
+                        <label for="audioOutputDevice">Output Device</label>
+                        <div class="device-selector-row">
+                            <select id="audioOutputDevice" class="setting-select">
+                                <option value="">Select Output Device</option>
+                            </select>
+                            <button id="outputDeviceLockBtn" class="device-lock-btn" title="Lock output device">🔓</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label for="audioGain">Microphone Gain</label>
+                        <input type="range" id="audioGain" min="0" max="100" value="50" class="setting-slider">
+                        <span class="slider-value">50%</span>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="noiseSupression" checked>
+                            Enable Noise Suppression
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="echoCancellation" checked>
+                            Enable Echo Cancellation
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>Microphone Monitor</label>
+                        <div id="persistentVisualizerContainer" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border-dark);">
+                            <div id="micStatusText" style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                Click "Test Microphone" to start monitoring
+                            </div>
+                            <div style="width: 100%; height: 20px; background: var(--bg-darkest); border-radius: 10px; overflow: hidden; position: relative;">
+                                <div id="persistentMicLevelFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%); transition: width 0.1s ease; border-radius: 10px;"></div>
+                                <span id="persistentVolumeLevel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: bold; color: var(--text-primary); text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Profile Settings</h3>
+
+                    <div class="setting-item">
+                        <label for="username">Display Name</label>
+                        <input type="text" id="username" placeholder="Enter your name" class="setting-input">
+                    </div>
+
+                    <div class="setting-item">
+                        <label>User Color</label>
+                        <div class="user-color-picker">
+                            <button type="button" class="color-option color-blue" data-color="blue" aria-label="Blue"></button>
+                            <button type="button" class="color-option color-green" data-color="green" aria-label="Green"></button>
+                            <button type="button" class="color-option color-purple selected" data-color="purple" aria-label="Purple"></button>
+                            <button type="button" class="color-option color-red" data-color="red" aria-label="Red"></button>
+                            <button type="button" class="color-option color-orange" data-color="orange" aria-label="Orange"></button>
+                            <button type="button" class="color-option color-pink" data-color="pink" aria-label="Pink"></button>
+                            <button type="button" class="color-option color-indigo" data-color="indigo" aria-label="Indigo"></button>
+                            <button type="button" class="color-option color-cyan" data-color="cyan" aria-label="Cyan"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button id="testMicrophone" class="btn secondary">Test Microphone</button>
+                    <button id="testOutputButton" class="btn secondary">Test Output</button>
+                    <button id="resetSettings" class="btn danger">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Load Socket.IO from CDN first -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
-    
+
     <!-- Load our main application -->
-    <script type="module" src="js/app.js"></script>
+    <script src="dist/bundle.js"></script>
     
     <!-- Fallback check -->
     <script>
@@ -515,6 +577,127 @@
             background: var(--secondary-purple);
             color: var(--text-primary);
             border-color: var(--secondary-purple);
+        }
+
+        .server-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .share-server-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .share-server-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--text-primary);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .server-card {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .server-card:hover {
+            border-color: var(--secondary-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .server-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .server-card-header .server-icon {
+            font-size: 1.5rem;
+        }
+
+        .server-card-header h4 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .server-description {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .server-stats {
+            display: flex;
+            gap: 1rem;
+            margin: 0.75rem 0;
+        }
+
+        .stat {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .join-server-btn {
+            background: var(--secondary-purple);
+            color: var(--text-primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .join-server-btn:hover {
+            background: var(--primary-purple);
+        }
+
+        .available-servers-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .server-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .server-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .server-item .server-icon {
+            font-size: 1.25rem;
+        }
+
+        .server-item .server-name {
+            font-weight: 500;
         }
     </style>
 </body>

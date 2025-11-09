@@ -1,10 +1,8 @@
-// src/renderer/js/app.js - Fixed navigation and channel persistence
+// src/renderer/js/app.js - Simplified single-room version
 import { ConnectionManager } from './core/ConnectionManager.js';
 import { UIManager } from './ui/UIManager.js';
 import { AudioManager } from './audio/AudioManager.js';
 import { ProximityMap } from './proximity/ProximityMap.js';
-import { ServerManager } from './server/ServerManager.js';
-import { ChatManager } from './chat/ChatManager.js';
 import { SettingsManager } from './settings/SettingsManager.js';
 
 // Try Railway first, fallback to localhost for development
@@ -14,48 +12,35 @@ const FALLBACK_URL = 'http://localhost:3000';
 class ProximityApp {
     constructor() {
         console.log('ProximityApp initializing...');
-        
+
         // Core managers
         this.connectionManager = new ConnectionManager(SERVER_URL);
         this.uiManager = new UIManager();
         this.audioManager = new AudioManager();
         this.settingsManager = new SettingsManager();
-        this.serverManager = new ServerManager();
-        this.chatManager = new ChatManager();
         this.proximityMap = null;
         this.miniProximityMap = null;
-        
-        // State
-        this.currentServer = null;
-        this.currentTextChannel = 'diamond';
+
+        // State - simplified to single channel
+        this.currentTextChannel = 'general';
         this.currentVoiceChannel = null;
         this.myUserId = null;
         this.isInHub = false;
         this.hubUsers = [];
-        
-        // Global chat message storage (persistent across sessions)
+
+        // Chat message storage (persistent across sessions)
         this.globalChatHistory = this.loadGlobalChatHistory();
-        
+
         this.init();
     }
 
     loadGlobalChatHistory() {
         try {
             const saved = localStorage.getItem('proximity-chat-history');
-            return saved ? JSON.parse(saved) : {
-                diamond: [],
-                spade: [],
-                club: [],
-                heart: []
-            };
+            return saved ? JSON.parse(saved) : { general: [] };
         } catch (error) {
             console.error('Failed to load chat history:', error);
-            return {
-                diamond: [],
-                spade: [],
-                club: [],
-                heart: []
-            };
+            return { general: [] };
         }
     }
 
@@ -71,34 +56,48 @@ class ProximityApp {
         try {
             // Initialize settings first
             await this.settingsManager.load();
-            
+
             // Initialize UI
             this.uiManager.init();
             this.setupEventListeners();
-            
+
             // Initialize proximity map
             this.proximityMap = new ProximityMap(
-                document.getElementById('proximityMap'), 
+                document.getElementById('proximityMap'),
                 this
             );
-            
+
             // Setup map controls
             this.setupMapControls();
-            
+
             // Setup settings controls
             this.setupSettingsControls();
-            
+
             // Setup map buttons for voice channels
             this.setupMapButtons();
-            
+
             // Setup mini map modal
             this.setupMiniMapModal();
-            
-            // Try to connect to server with fallback
-            await this.connectWithFallback();
-            
-            console.log('ProximityApp initialized successfully');
-            
+
+            // TEMPORARILY DISABLED: Backend connection
+            // await this.connectWithFallback();
+
+            // AUTO-JOIN: Simulate being in the room from the start
+            this.isInHub = true;
+            this.myUserId = 'local-user-' + Math.random().toString(36).substr(2, 9);
+            console.log('ProximityApp initialized in LOCAL MODE (no backend)');
+
+            // Setup first-time modal and settings
+            this.setupFirstTimeModal();
+            this.setupSettingsModal();
+            this.setupStatusSelector();
+
+            // Show first-time setup if never completed
+            const setupCompleted = localStorage.getItem('proximity-setup-completed');
+            if (!setupCompleted) {
+                this.showFirstTimeSetup();
+            }
+
         } catch (error) {
             console.error('Failed to initialize app:', error);
             this.uiManager.showNotification('Failed to initialize app', 'error');
@@ -126,25 +125,24 @@ class ProximityApp {
     }
 
     setupEventListeners() {
-        // Navigation - FIXED: Don't leave voice channel when switching pages
+        // Navigation
         this.uiManager.on('page-change', (page) => this.handlePageChange(page));
         this.uiManager.on('join-hub', () => this.joinHub());
         this.uiManager.on('leave-channel', () => this.leaveCurrentChannel());
         this.uiManager.on('mute-toggle', () => this.audioManager.toggleMute());
-        
-        // Channel events
-        this.uiManager.on('text-channel-change', (channelId) => this.switchTextChannel(channelId));
+
+        // Channel events - simplified
         this.uiManager.on('join-voice-channel', (channelId) => this.joinVoiceChannel(channelId));
         this.uiManager.on('leave-voice-channel', (channelId) => this.leaveVoiceChannel(channelId));
-        
+
         // Chat events
         this.uiManager.on('send-message', (data) => {
             console.log('App received send-message event:', data);
-            this.sendChatMessage(data.message, data.channel);
+            this.sendChatMessage(data.message);
         });
-        
+
         this.uiManager.on('delete-message', (messageId) => this.deleteMessage(messageId));
-        
+
         // Settings
         this.uiManager.on('settings-change', (settings) => this.settingsManager.update(settings));
     }
@@ -173,25 +171,25 @@ class ProximityApp {
                 </div>
             </div>
         `;
-        
+
         document.body.insertAdjacentHTML('beforeend', modalHTML);
-        
+
         // Setup mini map controls
         const closeMiniMap = document.getElementById('closeMiniMap');
         const miniProximitySlider = document.getElementById('miniProximitySlider');
         const miniProximityRange = document.getElementById('miniProximityRange');
         const miniCenterBtn = document.getElementById('miniCenterBtn');
         const miniToggleTestBot = document.getElementById('miniToggleTestBot');
-        
+
         if (closeMiniMap) {
             closeMiniMap.addEventListener('click', () => this.closeMiniMap());
         }
-        
+
         if (miniProximitySlider && miniProximityRange) {
             miniProximitySlider.addEventListener('input', (e) => {
                 const range = parseInt(e.target.value);
                 miniProximityRange.textContent = `${range}px`;
-                
+
                 // Update both maps
                 if (this.proximityMap) {
                     this.proximityMap.setProximityRange(range);
@@ -199,7 +197,7 @@ class ProximityApp {
                 if (this.miniProximityMap) {
                     this.miniProximityMap.setProximityRange(range);
                 }
-                
+
                 // Sync with main slider
                 const mainSlider = document.getElementById('proximitySlider');
                 if (mainSlider) {
@@ -208,7 +206,7 @@ class ProximityApp {
                 }
             });
         }
-        
+
         if (miniCenterBtn) {
             miniCenterBtn.addEventListener('click', () => {
                 if (this.proximityMap) {
@@ -216,8 +214,7 @@ class ProximityApp {
                 }
             });
         }
-        
-        // FIXED: Test bot toggle for mini map
+
         if (miniToggleTestBot) {
             miniToggleTestBot.addEventListener('click', () => {
                 if (this.proximityMap) {
@@ -225,31 +222,29 @@ class ProximityApp {
                         // Remove test bot
                         this.proximityMap.removeTestBot();
                         miniToggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
-                        
-                        // Update main toggle button too
+
                         const mainToggleBtn = document.getElementById('toggleTestBot');
                         if (mainToggleBtn) {
                             mainToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
                         }
-                        
+
                         this.uiManager.showNotification('Test bot removed', 'info');
                     } else {
                         // Add test bot
                         this.proximityMap.addTestBot();
                         miniToggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-                        
-                        // Update main toggle button too
+
                         const mainToggleBtn = document.getElementById('toggleTestBot');
                         if (mainToggleBtn) {
                             mainToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
                         }
-                        
+
                         this.uiManager.showNotification('Test bot added - move around to test proximity!', 'success');
                     }
                 }
             });
         }
-        
+
         // Click outside to close
         const modal = document.getElementById('miniMapModal');
         if (modal) {
@@ -266,61 +261,64 @@ class ProximityApp {
             this.uiManager.showNotification('Join a voice channel first', 'warning');
             return;
         }
-        
+
         const modal = document.getElementById('miniMapModal');
         if (modal) {
             modal.style.display = 'flex';
-            
-            // FIXED: Initialize mini proximity map properly
+
             const miniCanvas = document.getElementById('miniProximityMap');
             if (miniCanvas && this.proximityMap) {
-                // Create new minimap instance
                 this.miniProximityMap = new ProximityMap(miniCanvas, this);
                 this.miniProximityMap.setMinimapMode(true);
-                
-                // Copy ALL users from main map to mini map
-                this.proximityMap.users.forEach((user, userId) => {
-                    // Don't copy audio elements to minimap, only main map handles audio
-                    const audioElement = userId === this.proximityMap.testBotId ? null : user.audioElement;
-                    
-                    this.miniProximityMap.users.set(userId, {
-                        x: user.x,
-                        y: user.y,
-                        username: user.username,
-                        isSelf: user.isSelf,
-                        audioElement: audioElement,
-                        lastUpdate: user.lastUpdate,
-                        color: user.color,
-                        isBot: user.isBot || false,
-                        isActive: user.isActive || false
-                    });
-                    
-                    if (user.isSelf) {
-                        this.miniProximityMap.myUserId = userId;
+
+                setTimeout(() => {
+                    if (this.miniProximityMap) {
+                        this.miniProximityMap.resizeCanvas();
+
+                        // Copy users from main map to mini map
+                        this.proximityMap.users.forEach((user, userId) => {
+                            const audioElement = userId === this.proximityMap.testBotId ? null : user.audioElement;
+
+                            const mainCanvas = this.proximityMap.canvas;
+                            const miniCanvas = this.miniProximityMap.canvas;
+                            const scaleX = miniCanvas.width / mainCanvas.width;
+                            const scaleY = miniCanvas.height / mainCanvas.height;
+
+                            this.miniProximityMap.users.set(userId, {
+                                x: user.x * scaleX,
+                                y: user.y * scaleY,
+                                username: user.username,
+                                isSelf: user.isSelf,
+                                audioElement: audioElement,
+                                lastUpdate: user.lastUpdate,
+                                color: user.color,
+                                isBot: user.isBot || false,
+                                isActive: user.isActive || false
+                            });
+
+                            if (user.isSelf) {
+                                this.miniProximityMap.myUserId = userId;
+                            }
+                        });
+
+                        if (this.proximityMap.testBotId) {
+                            this.miniProximityMap.testBotId = this.proximityMap.testBotId;
+                            const miniToggleBtn = document.getElementById('miniToggleTestBot');
+                            if (miniToggleBtn) {
+                                miniToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
+                            }
+                        }
+
+                        this.miniProximityMap.setProximityRange(this.proximityMap.proximityRange);
+
+                        const miniSlider = document.getElementById('miniProximitySlider');
+                        const miniRangeDisplay = document.getElementById('miniProximityRange');
+                        if (miniSlider && miniRangeDisplay) {
+                            miniSlider.value = this.proximityMap.proximityRange;
+                            miniRangeDisplay.textContent = `${this.proximityMap.proximityRange}px`;
+                        }
                     }
-                });
-                
-                // Copy test bot state
-                if (this.proximityMap.testBotId) {
-                    this.miniProximityMap.testBotId = this.proximityMap.testBotId;
-                    
-                    // Update mini map test bot button
-                    const miniToggleBtn = document.getElementById('miniToggleTestBot');
-                    if (miniToggleBtn) {
-                        miniToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-                    }
-                }
-                
-                // Copy proximity range
-                this.miniProximityMap.setProximityRange(this.proximityMap.proximityRange);
-                
-                // Update mini map range display
-                const miniSlider = document.getElementById('miniProximitySlider');
-                const miniRangeDisplay = document.getElementById('miniProximityRange');
-                if (miniSlider && miniRangeDisplay) {
-                    miniSlider.value = this.proximityMap.proximityRange;
-                    miniRangeDisplay.textContent = `${this.proximityMap.proximityRange}px`;
-                }
+                }, 100);
             }
         }
     }
@@ -330,45 +328,34 @@ class ProximityApp {
         if (modal) {
             modal.style.display = 'none';
         }
-        
-        // FIXED: Properly clean up minimap instance
+
         if (this.miniProximityMap) {
-            // Stop any test bot movement in minimap
             if (this.miniProximityMap.testBotMovementInterval) {
                 clearInterval(this.miniProximityMap.testBotMovementInterval);
             }
-            
             this.miniProximityMap = null;
         }
     }
 
     setupMapButtons() {
-        // Setup map buttons for voice channels
         const mapButtons = document.querySelectorAll('.map-button');
         mapButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent voice channel toggle
+                e.stopPropagation();
                 const voiceChannel = button.dataset.voiceChannel;
-                
+
                 if (this.currentVoiceChannel !== voiceChannel) {
                     this.uiManager.showNotification('Join the voice channel first to access the map', 'warning');
                     return;
                 }
-                
-                // Open mini map instead of switching pages
+
                 this.openMiniMap();
             });
         });
     }
 
-    // FIXED: Don't remove duplicate send function
-    sendChatMessage(message, channel) {
+    sendChatMessage(message) {
         if (!message.trim()) return;
-
-        if (!this.connectionManager.socket) {
-            console.error('Not connected to server');
-            return;
-        }
 
         if (!this.isInHub) {
             console.error('Not in hub');
@@ -376,22 +363,32 @@ class ProximityApp {
         }
 
         const username = this.settingsManager.get('username') || 'Anonymous';
-        const targetChannel = channel || this.currentTextChannel;
-        
-        console.log('Sending chat message:', message, 'to channel:', targetChannel);
 
-        // Create message with unique ID
+        console.log('Sending chat message:', message);
+
         const messageData = {
             id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
             roomId: 'hub',
             message: message,
             username: username,
-            channel: targetChannel,
+            channel: 'general',
             timestamp: Date.now(),
             userId: this.myUserId
         };
 
-        this.connectionManager.socket.emit('send-chat-message', messageData);
+        // LOCAL MODE: Save message locally instead of sending to server
+        if (!this.globalChatHistory.general) {
+            this.globalChatHistory.general = [];
+        }
+
+        this.globalChatHistory.general.push(messageData);
+        this.saveGlobalChatHistory();
+        this.uiManager.addChatMessage(messageData);
+
+        // If backend is connected, also send to server
+        if (this.connectionManager.socket) {
+            this.connectionManager.socket.emit('send-chat-message', messageData);
+        }
     }
 
     deleteMessage(messageId) {
@@ -412,7 +409,7 @@ class ProximityApp {
         // Proximity slider
         const proximitySlider = document.getElementById('proximitySlider');
         const proximityRangeDisplay = document.getElementById('proximityRange');
-        
+
         if (proximitySlider && proximityRangeDisplay) {
             proximitySlider.addEventListener('input', (e) => {
                 const range = parseInt(e.target.value);
@@ -420,7 +417,6 @@ class ProximityApp {
                 if (this.proximityMap) {
                     this.proximityMap.setProximityRange(range);
                 }
-                // Sync with mini map slider
                 const miniSlider = document.getElementById('miniProximitySlider');
                 if (miniSlider) {
                     miniSlider.value = range;
@@ -438,35 +434,31 @@ class ProximityApp {
                 }
             });
         }
-        
-        // FIXED: Test bot toggle with proper state management
+
+        // Test bot toggle
         const toggleTestBotBtn = document.getElementById('toggleTestBot');
         if (toggleTestBotBtn) {
             toggleTestBotBtn.addEventListener('click', () => {
                 if (this.proximityMap) {
                     if (this.proximityMap.testBotId) {
-                        // Remove test bot
                         this.proximityMap.removeTestBot();
                         toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
-                        
-                        // Update mini map test bot button too
+
                         const miniToggleBtn = document.getElementById('miniToggleTestBot');
                         if (miniToggleBtn) {
                             miniToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
                         }
-                        
+
                         this.uiManager.showNotification('Test bot removed', 'info');
                     } else {
-                        // Add test bot
                         this.proximityMap.addTestBot();
                         toggleTestBotBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-                        
-                        // Update mini map test bot button too
+
                         const miniToggleBtn = document.getElementById('miniToggleTestBot');
                         if (miniToggleBtn) {
                             miniToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
                         }
-                        
+
                         this.uiManager.showNotification('Test bot added - move around to test proximity!', 'success');
                     }
                 }
@@ -493,7 +485,7 @@ class ProximityApp {
             });
         }
 
-        // Audio device selectors - FIXED: Prevent auto-switching on page change
+        // Audio device selectors
         const audioDeviceSelect = document.getElementById('audioDevice');
         if (audioDeviceSelect) {
             audioDeviceSelect.addEventListener('change', (e) => {
@@ -524,7 +516,7 @@ class ProximityApp {
             audioGainSlider.addEventListener('input', (e) => {
                 this.settingsManager.set('audioGain', parseInt(e.target.value));
                 this.audioManager.setGain(parseInt(e.target.value));
-                
+
                 const valueDisplay = document.querySelector('.slider-value');
                 if (valueDisplay) {
                     valueDisplay.textContent = `${e.target.value}%`;
@@ -539,7 +531,7 @@ class ProximityApp {
                 const selectedColor = e.target.dataset.color;
                 colorOptions.forEach(opt => opt.classList.remove('selected'));
                 option.classList.add('selected');
-                
+
                 this.settingsManager.set('userColor', selectedColor);
                 this.updateParticipantColor();
                 this.uiManager.showNotification(`User color changed to ${selectedColor}`, 'success');
@@ -592,7 +584,7 @@ class ProximityApp {
 
     setupConnectionHandlers() {
         const socket = this.connectionManager.socket;
-        
+
         socket.on('connect', () => {
             console.log('Connected to server');
             this.myUserId = socket.id;
@@ -627,22 +619,20 @@ class ProximityApp {
         socket.on('offer', ({ offer, from }) => this.audioManager.handleOffer(offer, from));
         socket.on('answer', ({ answer, from }) => this.audioManager.handleAnswer(answer, from));
         socket.on('ice-candidate', ({ candidate, from }) => this.audioManager.handleIceCandidate(candidate, from));
-        
+
         // Mic status events
         socket.on('user-mic-status', ({ userId, isMuted }) => {
             this.uiManager.updateUserMicStatus(userId, isMuted);
         });
-        
-        // Chat events - FIXED: Store messages globally and permanently
+
+        // Chat events
         socket.on('chat-message', (data) => {
             console.log('Chat message received:', data);
-            const channel = data.channel || 'diamond';
-            
-            // Store message globally and permanently
-            if (!this.globalChatHistory[channel]) {
-                this.globalChatHistory[channel] = [];
+
+            if (!this.globalChatHistory.general) {
+                this.globalChatHistory.general = [];
             }
-            
+
             const messageData = {
                 id: data.id,
                 username: data.username,
@@ -650,32 +640,25 @@ class ProximityApp {
                 timestamp: data.timestamp,
                 userId: data.userId
             };
-            
-            this.globalChatHistory[channel].push(messageData);
+
+            this.globalChatHistory.general.push(messageData);
             this.saveGlobalChatHistory();
-            
-            // Show message if it's for current channel
-            if (channel === this.currentTextChannel) {
-                this.uiManager.addChatMessage(messageData);
-            }
+
+            this.uiManager.addChatMessage(messageData);
         });
-        
+
         socket.on('message-deleted', (data) => {
             console.log('Message deleted:', data);
-            const { messageId, channel } = data;
-            
-            // Remove from global history
-            if (this.globalChatHistory[channel]) {
-                this.globalChatHistory[channel] = this.globalChatHistory[channel].filter(msg => msg.id !== messageId);
+            const { messageId } = data;
+
+            if (this.globalChatHistory.general) {
+                this.globalChatHistory.general = this.globalChatHistory.general.filter(msg => msg.id !== messageId);
                 this.saveGlobalChatHistory();
             }
-            
-            // Remove from UI if in current channel
-            if (channel === this.currentTextChannel) {
-                this.uiManager.removeChatMessage(messageId);
-            }
+
+            this.uiManager.removeChatMessage(messageId);
         });
-        
+
         // Position events
         socket.on('position-update', ({ userId, x, y }) => {
             if (this.proximityMap) {
@@ -690,59 +673,43 @@ class ProximityApp {
     async joinHub() {
         try {
             console.log('Joining hub...');
-            
+
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
-            
-            // Join the hub room
+
             this.connectionManager.socket.emit('join-hub', {
                 username,
                 userColor
             });
-            
+
             this.isInHub = true;
-            this.currentServer = { id: 'hub', name: 'Community Hub' };
-            this.currentTextChannel = 'diamond';
-            // DON'T reset voice channel - preserve it across navigation
-            
-            // Update UI - start in text channel
-            this.uiManager.showServerView(this.currentServer);
-            
-            // Load persistent chat history
+            this.currentTextChannel = 'general';
+
+            this.uiManager.showServerView({ id: 'hub', name: 'Proximity Room' });
+
             this.loadChatForCurrentChannel();
-            
-            // Hide leave channel button initially (unless in voice)
+
             this.updateLeaveButtonVisibility();
-            
-            this.uiManager.showNotification('Joined Community Hub', 'success');
-            
+
+            this.uiManager.showNotification('Joined Proximity Room', 'success');
+
         } catch (error) {
             console.error('Failed to join hub:', error);
-            this.uiManager.showNotification('Failed to join hub', 'error');
+            this.uiManager.showNotification('Failed to join room', 'error');
         }
     }
 
-    // FIXED: Load persistent chat history when switching channels
-    switchTextChannel(channelId) {
-        console.log('Switching text channel to:', channelId);
-        this.currentTextChannel = channelId;
-        this.loadChatForCurrentChannel();
-        this.chatManager.setCurrentChannel(channelId);
-    }
-
     loadChatForCurrentChannel() {
-        // Clear current chat
         const chatMessages = document.getElementById('chatMessages');
         if (chatMessages) {
             chatMessages.innerHTML = `
                 <div class="welcome-message">
-                    <p>Welcome to the ${this.currentTextChannel} channel!</p>
+                    <p>Welcome to general chat!</p>
                 </div>
             `;
-            
-            // Load persistent chat history for this channel
-            if (this.globalChatHistory[this.currentTextChannel]) {
-                this.globalChatHistory[this.currentTextChannel].forEach(msg => {
+
+            if (this.globalChatHistory.general) {
+                this.globalChatHistory.general.forEach(msg => {
                     this.uiManager.addChatMessage(msg);
                 });
             }
@@ -750,16 +717,14 @@ class ProximityApp {
     }
 
     async joinVoiceChannel(channelId) {
-        // FIXED: Check if already in this voice channel
         if (this.currentVoiceChannel === channelId) {
             this.uiManager.showNotification('Already in this voice channel', 'info');
             return;
         }
-        
+
         try {
             console.log('Joining voice channel:', channelId);
-            
-            // Initialize audio if needed with better error handling
+
             if (!this.audioManager.isInitialized()) {
                 try {
                     await this.audioManager.initialize();
@@ -768,45 +733,38 @@ class ProximityApp {
                     return;
                 }
             }
-            
-            // Leave current voice channel if in one
+
             if (this.currentVoiceChannel) {
                 await this.leaveVoiceChannel(this.currentVoiceChannel);
             }
-            
+
             this.currentVoiceChannel = channelId;
-            
-            // Emit to server
+
             this.connectionManager.socket.emit('join-voice-channel', { channelId });
-            
-            // Add self to voice channel participants
+
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
-            
+
             this.uiManager.addVoiceParticipant(this.myUserId, username, userColor, channelId, true);
-            
-            // Add self to proximity map
+
             if (this.proximityMap) {
                 this.proximityMap.addUser(this.myUserId, username, true);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
-            
-            // Connect to existing voice users in this channel
+
             this.hubUsers.forEach(user => {
                 if (user.userId !== this.myUserId && user.voiceChannel === channelId) {
                     this.audioManager.connectToUser(user.userId, user.username, user.userColor);
                     this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
                 }
             });
-            
-            // Show leave channel button now that we're in voice
+
             this.updateLeaveButtonVisibility();
-            
-            // ADDED: Play join sound
+
             await this.audioManager.playJoinSound();
-            
-            this.uiManager.showNotification(`Joined ${channelId} voice channel`, 'success');
-            
+
+            this.uiManager.showNotification(`Joined voice channel`, 'success');
+
         } catch (error) {
             console.error('Failed to join voice channel:', error);
             this.uiManager.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');
@@ -816,196 +774,43 @@ class ProximityApp {
 
     async leaveVoiceChannel(channelId) {
         console.log('Leaving voice channel:', channelId);
-        
+
         if (this.currentVoiceChannel === channelId) {
-            // ADDED: Play leave sound before disconnecting
             try {
                 await this.audioManager.playLeaveSound();
             } catch (error) {
                 console.warn('Could not play leave sound:', error);
             }
-            
-            // Emit to server
+
             this.connectionManager.socket.emit('leave-voice-channel', { channelId });
-            
-            // Disconnect from all users
+
             this.audioManager.disconnectAll();
-            
-            // Clear voice UI
+
             this.uiManager.removeVoiceParticipant(this.myUserId, channelId);
-            
+
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
             }
-            
+            if (this.miniProximityMap) {
+                this.miniProximityMap.clearUsers();
+            }
+
             this.currentVoiceChannel = null;
-            
-            // Hide leave channel button
+
+            this.uiManager.updateVoiceChannelUI(null);
+
             this.updateLeaveButtonVisibility();
-            
-            this.uiManager.showNotification(`Left ${channelId} voice channel`, 'info');
+
+            this.uiManager.showNotification(`Left voice channel`, 'info');
         }
     }
 
-    setupSettingsControls() {
-        // Username input
-        const usernameInput = document.getElementById('username');
-        if (usernameInput) {
-            usernameInput.addEventListener('input', (e) => {
-                this.settingsManager.set('username', e.target.value.trim());
-                this.updateParticipantName();
-            });
-        }
-
-        // Audio device selectors with lock functionality
-        const audioDeviceSelect = document.getElementById('audioDevice');
-        if (audioDeviceSelect) {
-            audioDeviceSelect.addEventListener('change', (e) => {
-                if (e.target.value && !this.isPopulatingDevices) {
-                    this.settingsManager.set('audioInputDevice', e.target.value);
-                    this.audioManager.changeInputDevice(e.target.value)
-                        .then(() => this.uiManager.showNotification('Audio input device changed', 'success'))
-                        .catch(() => this.uiManager.showNotification('Failed to change audio input device', 'error'));
-                }
-            });
-        }
-
-        const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
-        if (audioOutputDeviceSelect) {
-            audioOutputDeviceSelect.addEventListener('change', (e) => {
-                if (e.target.value && !this.isPopulatingDevices) {
-                    this.settingsManager.set('audioOutputDevice', e.target.value);
-                    this.audioManager.changeOutputDevice(e.target.value)
-                        .then(() => this.uiManager.showNotification('Audio output device changed', 'success'))
-                        .catch(() => this.uiManager.showNotification('Failed to change audio output device', 'error'));
-                }
-            });
-        }
-
-        // ADDED: Device lock buttons
-        this.setupDeviceLockButtons();
-
-        // Audio gain slider
-        const audioGainSlider = document.getElementById('audioGain');
-        if (audioGainSlider) {
-            audioGainSlider.addEventListener('input', (e) => {
-                this.settingsManager.set('audioGain', parseInt(e.target.value));
-                this.audioManager.setGain(parseInt(e.target.value));
-                
-                const valueDisplay = document.querySelector('.slider-value');
-                if (valueDisplay) {
-                    valueDisplay.textContent = `${e.target.value}%`;
-                }
-            });
-        }
-
-        // Color picker
-        const colorOptions = document.querySelectorAll('.color-option');
-        colorOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                const selectedColor = e.target.dataset.color;
-                colorOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                
-                this.settingsManager.set('userColor', selectedColor);
-                this.updateParticipantColor();
-                this.uiManager.showNotification(`User color changed to ${selectedColor}`, 'success');
-            });
-        });
-
-        // Checkboxes
-        const noiseSupressionCheck = document.getElementById('noiseSupression');
-        if (noiseSupressionCheck) {
-            noiseSupressionCheck.addEventListener('change', (e) => {
-                this.settingsManager.set('noiseSupression', e.target.checked);
-            });
-        }
-
-        const echoCancellationCheck = document.getElementById('echoCancellation');
-        if (echoCancellationCheck) {
-            echoCancellationCheck.addEventListener('change', (e) => {
-                this.settingsManager.set('echoCancellation', e.target.checked);
-            });
-        }
-
-        const autoJoinCheck = document.getElementById('autoJoin');
-        if (autoJoinCheck) {
-            autoJoinCheck.addEventListener('change', (e) => {
-                this.settingsManager.set('autoJoin', e.target.checked);
-            });
-        }
-
-        // Test buttons
-        const testMicrophoneBtn = document.getElementById('testMicrophone');
-        if (testMicrophoneBtn) {
-            testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
-        }
-
-        const testOutputButton = document.getElementById('testOutputButton');
-        if (testOutputButton) {
-            testOutputButton.addEventListener('click', () => this.testOutput());
-        }
-
-        const resetSettingsBtn = document.getElementById('resetSettings');
-        if (resetSettingsBtn) {
-            resetSettingsBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to reset all settings to defaults?')) {
-                    this.settingsManager.reset();
-                    this.uiManager.showNotification('Settings reset to defaults', 'success');
-                }
-            });
-        }
-    }
-
-    // ADDED: Device lock button setup
-    setupDeviceLockButtons() {
-        // Create and add input device lock button
-        const audioDeviceSelect = document.getElementById('audioDevice');
-        if (audioDeviceSelect && !document.getElementById('inputDeviceLockBtn')) {
-            const inputLockBtn = document.createElement('button');
-            inputLockBtn.id = 'inputDeviceLockBtn';
-            inputLockBtn.className = 'device-lock-btn';
-            inputLockBtn.innerHTML = '🔓';
-            inputLockBtn.title = 'Lock input device';
-            
-            inputLockBtn.addEventListener('click', () => {
-                const currentDevice = audioDeviceSelect.value;
-                const isLocked = this.audioManager.toggleInputDeviceLock(currentDevice);
-                this.audioManager.updateDeviceLockUI();
-            });
-            
-            audioDeviceSelect.parentElement.appendChild(inputLockBtn);
-        }
-
-        // Create and add output device lock button
-        const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
-        if (audioOutputDeviceSelect && !document.getElementById('outputDeviceLockBtn')) {
-            const outputLockBtn = document.createElement('button');
-            outputLockBtn.id = 'outputDeviceLockBtn';
-            outputLockBtn.className = 'device-lock-btn';
-            outputLockBtn.innerHTML = '🔓';
-            outputLockBtn.title = 'Lock output device';
-            
-            outputLockBtn.addEventListener('click', () => {
-                const currentDevice = audioOutputDeviceSelect.value;
-                const isLocked = this.audioManager.toggleOutputDeviceLock(currentDevice);
-                this.audioManager.updateDeviceLockUI();
-            });
-            
-            audioOutputDeviceSelect.parentElement.appendChild(outputLockBtn);
-        }
-
-        // Update UI on page load
-        this.audioManager.updateDeviceLockUI();
-    }
-
-    // FIXED: Update leave button visibility based on voice channel status
     updateLeaveButtonVisibility() {
         const leaveChannelBtn = document.getElementById('leaveChannelBtn');
         const mapLeaveChannelBtn = document.getElementById('mapLeaveChannelBtn');
-        
+
         const shouldShow = this.currentVoiceChannel !== null;
-        
+
         if (leaveChannelBtn) {
             leaveChannelBtn.style.display = shouldShow ? 'block' : 'none';
         }
@@ -1016,24 +821,19 @@ class ProximityApp {
 
     handleHubUsers(users) {
         this.hubUsers = users;
-        
-        // Update all voice channel participant lists
+
         this.updateAllVoiceChannelParticipants(users);
-        
-        // If in voice channel, handle connections
+
         if (this.currentVoiceChannel) {
-            // Clear proximity map and re-add users
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
-                
-                // Re-add self
+
                 const username = this.settingsManager.get('username') || 'Anonymous';
                 const userColor = this.settingsManager.get('userColor') || 'purple';
                 this.proximityMap.addUser(this.myUserId, username, true);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
-            
-            // Add other users in the same voice channel
+
             users.forEach(user => {
                 if (user.userId !== this.myUserId && user.voiceChannel === this.currentVoiceChannel) {
                     this.handleUserJoined(user);
@@ -1044,10 +844,8 @@ class ProximityApp {
     }
 
     updateAllVoiceChannelParticipants(users) {
-        // Clear all voice channel participants first
         this.uiManager.clearVoiceParticipants();
-        
-        // Group users by voice channel
+
         const usersByChannel = {};
         users.forEach(user => {
             if (user.voiceChannel) {
@@ -1057,15 +855,13 @@ class ProximityApp {
                 usersByChannel[user.voiceChannel].push(user);
             }
         });
-        
-        // Add participants to each voice channel
+
         Object.entries(usersByChannel).forEach(([channelId, channelUsers]) => {
             channelUsers.forEach(user => {
                 this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
             });
         });
-        
-        // Add self to current voice channel if in one
+
         if (this.currentVoiceChannel) {
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
@@ -1074,85 +870,74 @@ class ProximityApp {
     }
 
     handleUserJoined(user) {
-        // Add to current voice channel if they're in the same one
         if (this.currentVoiceChannel && user.voiceChannel === this.currentVoiceChannel) {
             if (this.proximityMap) {
                 this.proximityMap.addUser(user.userId, user.username, false);
                 this.proximityMap.updateUserColor(user.userId, user.userColor);
             }
-            
-            // Establish WebRTC connection
+
             this.audioManager.connectToUser(user.userId, user.username, user.userColor);
         }
-        
-        // Always add to voice channel participant list if they're in a voice channel
+
         if (user.voiceChannel) {
             this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, user.voiceChannel, false);
         }
     }
 
     handleUserLeft(user) {
-        // Remove from all UI elements
         this.uiManager.removeVoiceParticipant(user.userId);
-        
+
         if (this.proximityMap) {
             this.proximityMap.removeUser(user.userId);
         }
-        
+
         this.audioManager.disconnectFromUser(user.userId);
     }
 
     handlePageChange(page) {
-        // FIXED: Don't affect voice channel when switching pages
         if (page === 'map' && this.proximityMap) {
             this.proximityMap.resizeCanvas();
         }
-        
+
         if (page === 'settings') {
-            // FIXED: Prevent device switching on page change
             this.isPopulatingDevices = true;
             this.uiManager.populateAudioDevices().then(() => {
-                // Restore saved devices
                 const savedInputDevice = this.settingsManager.get('audioInputDevice');
                 const savedOutputDevice = this.settingsManager.get('audioOutputDevice');
-                
+
                 if (savedInputDevice) {
                     const inputSelect = document.getElementById('audioDevice');
                     if (inputSelect) inputSelect.value = savedInputDevice;
                 }
-                
+
                 if (savedOutputDevice) {
                     const outputSelect = document.getElementById('audioOutputDevice');
                     if (outputSelect) outputSelect.value = savedOutputDevice;
                 }
-                
+
                 this.isPopulatingDevices = false;
             });
-            
+
             this.audioManager.startPersistentVisualizer();
         } else {
             this.audioManager.stopPersistentVisualizer();
         }
     }
 
-    // FIXED: Leave channel functionality - only leaves voice, not hub
     leaveCurrentChannel() {
         console.log('Leave channel called, current state:', {
             isInHub: this.isInHub,
             currentVoiceChannel: this.currentVoiceChannel
         });
-        
+
         if (!this.isInHub) {
             this.uiManager.showNotification('Not in any channel', 'warning');
             return;
         }
-        
+
         if (this.currentVoiceChannel) {
-            // Leave voice channel only
             console.log('Leaving voice channel...');
             this.leaveVoiceChannel(this.currentVoiceChannel);
-            
-            // Update UI to remove voice channel selection
             this.uiManager.updateVoiceChannelUI(null);
         } else {
             this.uiManager.showNotification('Not in a voice channel', 'info');
@@ -1161,8 +946,7 @@ class ProximityApp {
 
     updateParticipantName() {
         const newUsername = this.settingsManager.get('username') || 'Anonymous';
-        
-        // Update in voice participants
+
         if (this.currentVoiceChannel) {
             const channelKey = this.currentVoiceChannel.replace('-voice', '');
             const voiceParticipant = document.getElementById(`voice-participant-${this.myUserId}-${channelKey}`);
@@ -1173,8 +957,7 @@ class ProximityApp {
                 }
             }
         }
-        
-        // Update in proximity map
+
         if (this.proximityMap && this.myUserId) {
             const user = this.proximityMap.users.get(this.myUserId);
             if (user) {
@@ -1185,12 +968,11 @@ class ProximityApp {
 
     updateParticipantColor() {
         const newColor = this.settingsManager.get('userColor');
-        
+
         if (this.proximityMap && this.myUserId) {
             this.proximityMap.updateUserColor(this.myUserId, newColor);
         }
-        
-        // Update voice participant avatar
+
         if (this.currentVoiceChannel) {
             const channelKey = this.currentVoiceChannel.replace('-voice', '');
             const voiceParticipant = document.getElementById(`voice-participant-${this.myUserId}-${channelKey}`);
@@ -1208,14 +990,14 @@ class ProximityApp {
             if (!this.audioManager.isInitialized()) {
                 await this.audioManager.initialize();
             }
-            
+
             await this.audioManager.testMicrophone();
             this.uiManager.showNotification('Microphone test - speak now! 🎤', 'info');
-            
+
             setTimeout(() => {
                 this.uiManager.showNotification('Microphone test complete!', 'success');
             }, 10000);
-            
+
         } catch (error) {
             console.error('Error testing microphone:', error);
             this.uiManager.showNotification('Failed to test microphone: ' + error.message, 'error');
@@ -1248,6 +1030,164 @@ class ProximityApp {
                 isMuted
             });
         }
+    }
+
+    // First-Time Setup Modal
+    showFirstTimeSetup() {
+        const modal = document.getElementById('firstTimeSetupModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    setupFirstTimeModal() {
+        const requestMicBtn = document.getElementById('requestMicBtn');
+        const completeSetupBtn = document.getElementById('completeSetupBtn');
+        const micStatus = document.getElementById('micStatus');
+        const deviceSetupStep = document.getElementById('deviceSetupStep');
+        const setupMicDevice = document.getElementById('setupMicDevice');
+        const setupOutputDevice = document.getElementById('setupOutputDevice');
+        const setupTestMic = document.getElementById('setupTestMic');
+        const setupTestOutput = document.getElementById('setupTestOutput');
+
+        // Request microphone access
+        if (requestMicBtn) {
+            requestMicBtn.addEventListener('click', async () => {
+                try {
+                    await this.audioManager.initialize();
+
+                    micStatus.textContent = '✓ Microphone access granted!';
+                    micStatus.className = 'status-text success';
+
+                    // Show device selection step
+                    deviceSetupStep.style.display = 'block';
+
+                    // Populate device selectors
+                    await this.populateSetupDevices();
+
+                    // Enable complete button
+                    completeSetupBtn.disabled = false;
+
+                } catch (error) {
+                    micStatus.textContent = '✗ Failed to access microphone: ' + error.message;
+                    micStatus.className = 'status-text error';
+                }
+            });
+        }
+
+        // Test buttons in setup
+        if (setupTestMic) {
+            setupTestMic.addEventListener('click', () => this.testMicrophone());
+        }
+
+        if (setupTestOutput) {
+            setupTestOutput.addEventListener('click', () => this.testOutput());
+        }
+
+        // Complete setup
+        if (completeSetupBtn) {
+            completeSetupBtn.addEventListener('click', () => {
+                // Save selected devices
+                if (setupMicDevice.value) {
+                    this.settingsManager.set('audioInputDevice', setupMicDevice.value);
+                }
+                if (setupOutputDevice.value) {
+                    this.settingsManager.set('audioOutputDevice', setupOutputDevice.value);
+                }
+
+                // Mark setup as completed
+                localStorage.setItem('proximity-setup-completed', 'true');
+
+                // Hide modal
+                const modal = document.getElementById('firstTimeSetupModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+
+                this.uiManager.showNotification('Setup complete! Welcome to Proximity!', 'success');
+            });
+        }
+    }
+
+    async populateSetupDevices() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+
+            const setupMicDevice = document.getElementById('setupMicDevice');
+            const setupOutputDevice = document.getElementById('setupOutputDevice');
+
+            // Clear existing options
+            setupMicDevice.innerHTML = '<option value="">Select Microphone</option>';
+            setupOutputDevice.innerHTML = '<option value="">Select Output Device</option>';
+
+            devices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.textContent = device.label || `${device.kind} ${device.deviceId.substring(0, 8)}`;
+
+                if (device.kind === 'audioinput') {
+                    setupMicDevice.appendChild(option.cloneNode(true));
+                } else if (device.kind === 'audiooutput') {
+                    setupOutputDevice.appendChild(option.cloneNode(true));
+                }
+            });
+
+        } catch (error) {
+            console.error('Failed to populate devices:', error);
+        }
+    }
+
+    // Settings Modal
+    setupSettingsModal() {
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+        if (settingsButton) {
+            settingsButton.addEventListener('click', () => {
+                if (settingsModal) {
+                    settingsModal.style.display = 'flex';
+                }
+            });
+        }
+
+        if (closeSettingsBtn) {
+            closeSettingsBtn.addEventListener('click', () => {
+                if (settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Close on backdrop click
+        if (settingsModal) {
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    // Status Selector
+    setupStatusSelector() {
+        const statusOptions = document.querySelectorAll('.status-option');
+
+        statusOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove active from all
+                statusOptions.forEach(opt => opt.classList.remove('active'));
+
+                // Add active to clicked
+                option.classList.add('active');
+
+                const status = option.dataset.status;
+                console.log('User status changed to:', status);
+
+                // Save to settings
+                this.settingsManager.set('userStatus', status);
+            });
+        });
     }
 }
 

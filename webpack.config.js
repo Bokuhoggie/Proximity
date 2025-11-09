@@ -14,11 +14,31 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       }
-      // Removed babel-loader rule since we're using ES6 modules directly
     ]
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js', '.mjs'],
+    fallback: {
+      "util": false,
+      "crypto": false,
+      "stream": false,
+      "buffer": false,
+      "process": false,
+      "path": false,
+      "fs": false,
+      "os": false,
+      "http": false,
+      "https": false,
+      "url": false,
+      "querystring": false,
+      "zlib": false,
+      "net": false,
+      "tls": false,
+      "child_process": false
+    }
+  },
+  externals: {
+    'electron': 'commonjs electron'
   },
   devtool: 'source-map'
 };

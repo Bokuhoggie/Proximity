@@ -13,6 +13,7 @@ export class UIManager {
         this.addHubToServers();
         this.setupHomePageEvents();
         this.setupChannelHandlers();
+        this.setupShareServerButton();
     }
 
     cacheElements() {
@@ -46,6 +47,9 @@ export class UIManager {
         
         // Home page elements
         this.elements.joinHubBtn = document.getElementById('joinHubBtn');
+        
+        // Share server button
+        this.elements.shareServerBtn = document.getElementById('shareServerBtn');
         
         // Channel lists
         this.elements.textChannelsList = document.getElementById('textChannelsList');
@@ -127,7 +131,7 @@ export class UIManager {
     }
 
     addHubToServers() {
-        // Add Community Hub to My Servers section
+        // Add Hub to My Servers section
         const myServersList = document.getElementById('myServersList');
         if (myServersList) {
             const hubServer = document.createElement('div');
@@ -135,7 +139,7 @@ export class UIManager {
             hubServer.dataset.serverId = 'hub';
             hubServer.innerHTML = `
                 <div class="server-icon">🏢</div>
-                <span class="server-name">Community Hub</span>
+                <span class="server-name">Hub</span>
             `;
             
             hubServer.addEventListener('click', () => {
@@ -146,6 +150,155 @@ export class UIManager {
             
             myServersList.appendChild(hubServer);
         }
+        
+        // Also add Hub to Available Servers section on home page
+        const availableServersList = document.getElementById('availableServersList');
+        if (availableServersList) {
+            const hubServerCard = document.createElement('div');
+            hubServerCard.className = 'server-card';
+            hubServerCard.innerHTML = `
+                <div class="server-card-header">
+                    <div class="server-icon">🏢</div>
+                    <h4>Hub</h4>
+                </div>
+                <p class="server-description">The main server where everyone can connect and chat</p>
+                <div class="server-stats">
+                    <span class="stat">🟢 Online</span>
+                    <span class="stat">👥 Public</span>
+                </div>
+                <button class="join-server-btn">Join Server</button>
+            `;
+            
+            const joinBtn = hubServerCard.querySelector('.join-server-btn');
+            joinBtn.addEventListener('click', () => {
+                console.log('Join Hub clicked');
+                this.switchPage('server-view');
+                this.emit('join-hub');
+            });
+            
+            availableServersList.appendChild(hubServerCard);
+        }
+    }
+
+    setupShareServerButton() {
+        if (this.elements.shareServerBtn) {
+            this.elements.shareServerBtn.addEventListener('click', () => {
+                this.shareServer();
+            });
+        }
+    }
+
+    shareServer() {
+        const serverUrl = `${window.location.origin}/join/hub`;
+        const shareText = `Join the Hub server on Proximity! ${serverUrl}`;
+        
+        // Try to use the native share API if available
+        if (navigator.share) {
+            navigator.share({
+                title: 'Join Hub Server',
+                text: 'Join the Hub server on Proximity!',
+                url: serverUrl
+            }).catch(err => {
+                console.log('Error sharing:', err);
+                this.fallbackShare(shareText);
+            });
+        } else {
+            this.fallbackShare(shareText);
+        }
+    }
+
+    fallbackShare(shareText) {
+        // Fallback: copy to clipboard
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareText).then(() => {
+                this.showNotification('Server link copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Failed to copy to clipboard:', err);
+                this.showShareDialog(shareText);
+            });
+        } else {
+            this.showShareDialog(shareText);
+        }
+    }
+
+    showShareDialog(shareText) {
+        // Create a temporary dialog for sharing
+        const dialog = document.createElement('div');
+        dialog.className = 'share-dialog';
+        dialog.innerHTML = `
+            <div class="share-dialog-content">
+                <h3>Share Server</h3>
+                <p>Share this link with others to invite them to the Hub:</p>
+                <div class="share-link-container">
+                    <input type="text" value="${shareText}" readonly class="share-link-input">
+                    <button class="copy-btn" onclick="this.parentElement.querySelector('input').select(); document.execCommand('copy'); this.textContent='Copied!';">Copy</button>
+                </div>
+                <button class="close-dialog-btn" onclick="this.parentElement.parentElement.remove();">Close</button>
+            </div>
+        `;
+        
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .share-dialog {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+            .share-dialog-content {
+                background: var(--dark-bg);
+                padding: 2rem;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                max-width: 500px;
+                width: 90%;
+            }
+            .share-link-container {
+                display: flex;
+                gap: 0.5rem;
+                margin: 1rem 0;
+            }
+            .share-link-input {
+                flex: 1;
+                padding: 0.5rem;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+            }
+            .copy-btn, .close-dialog-btn {
+                padding: 0.5rem 1rem;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .copy-btn {
+                background: var(--secondary-purple);
+                color: var(--text-primary);
+            }
+            .close-dialog-btn {
+                background: var(--border);
+                color: var(--text-primary);
+                margin-top: 1rem;
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(dialog);
+        
+        // Select the text
+        const input = dialog.querySelector('.share-link-input');
+        input.select();
+        
+        this.showNotification('Share dialog opened', 'info');
     }
 
     switchPage(pageName) {
