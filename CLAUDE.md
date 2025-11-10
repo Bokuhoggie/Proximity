@@ -81,31 +81,22 @@ src/
 │       └── ui/          # UI management
 ```
 
-## OAuth Configuration
-- **Client ID**: `580999552333-m2uei964tsmeugiqjbijrbjoak8decd3.apps.googleusercontent.com`
-- **Client Secret**: `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`
-- **Provider**: Google OAuth 2.0
-- **Scopes**: Basic profile information (email, name)
+## Authentication
+**Status**: OAuth/Firebase authentication removed for MVP simplicity
+- App uses localStorage for settings (username, color, audio preferences)
+- No authentication required to use the app
+- Users identified by Socket.IO session ID during voice chat
 
-## Current Issues to Fix
+## Current Status - MVP Complete! ✅
 
-### 1. Firebase Module Import Error
-```
-Uncaught TypeError: Failed to resolve module specifier "firebase/app". 
-Relative references must start with either "/", "./", or "../".
-```
-**Fix**: Update Firebase imports to use proper ES module syntax
-
-### 2. Content Security Policy Warning
-```
-Electron Security Warning (Insecure Content-Security-Policy)
-```
-**Fix**: Update CSP to remove unsafe-eval while maintaining functionality
-
-### 3. Map Navigation Issue
-- **Current**: Map is accessible from main navigation
-- **Desired**: Map should only be accessible from within voice channels
-- **Fix**: Remove map from navbar, add map buttons to voice channels only
+All major issues resolved:
+- ✅ Single voice channel and text channel
+- ✅ Socket.IO signaling server created
+- ✅ Voice channel leave button fixed
+- ✅ Connection overlay with Railway priority
+- ✅ Test suite created (15/16 tests passing)
+- ✅ Simplified UI (removed 800+ lines of code)
+- ✅ Railway deployment configured
 
 ## Development Commands
 
