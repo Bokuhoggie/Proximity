@@ -544,6 +544,17 @@ class ProximityApp {
             });
         }
 
+        const muteWhileMovingCheck = document.getElementById('muteWhileMoving');
+        if (muteWhileMovingCheck) {
+            muteWhileMovingCheck.addEventListener('change', (e) => {
+                this.settingsManager.set('muteWhileMoving', e.target.checked);
+                // Update audio immediately if in voice channel
+                if (this.proximityMap) {
+                    this.proximityMap.updateAudioProximity();
+                }
+            });
+        }
+
         // Test buttons
         const testMicrophoneBtn = document.getElementById('testMicrophone');
         if (testMicrophoneBtn) {

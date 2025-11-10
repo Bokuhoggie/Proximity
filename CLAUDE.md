@@ -12,34 +12,30 @@ Proximity is a real-time voice chat application built with Electron that simulat
 - **Visual Feedback**: Dashed circles show your proximity range
 
 ### 🗺️ Interactive Map System
+- **Modal Map**: Opens as overlay when in voice channel
 - **Real-time Map**: Live updates showing all users in the voice channel
 - **Map Controls**: Center position, adjust range, add test bots
-- **Mini Map Modal**: Accessible from voice channels for quick map access
+- **Quick Access**: Map button available directly in voice channel
 - **Test Bot**: Add AI bot that moves around to test proximity audio
 
-### 💬 Text Chat Channels
-- **Multiple Channels**: Diamond (💎), Spade (♠️), Club (♣️), Heart (♥️)
-- **Persistent Chat**: Messages are saved and persist across sessions
-- **Channel Switching**: Easy switching between text channels
-- **Message Management**: Delete your own messages
+### 💬 Text Chat
+- **Single Channel**: General chat for all users
+- **Persistent Chat**: Messages are saved and persist across sessions using localStorage
+- **Real-time Sync**: Messages sync across all connected users
 
 ### 🔊 Voice Channels
-- **Multiple Voice Channels**: Separate voice rooms for different groups
-- **Voice Participants**: See who's in each voice channel
+- **Single Voice Channel**: One unified voice room for all users
+- **Voice Participants**: See who's in the voice channel
 - **Mute Controls**: Mute/unmute microphone
 - **Join/Leave**: Easy voice channel management
+- **Mute While Moving**: Optional toggle to mute moving users (audio returns after 0.5s stationary)
 
 ### 🎨 User Customization
-- **Display Names**: Set your username
+- **Display Names**: Set your username (prompted on startup)
 - **Color Selection**: Choose from 8 different user colors
-- **Audio Settings**: Microphone gain, noise suppression, echo cancellation
+- **Audio Settings**: Noise suppression, echo cancellation, mute while moving
 - **Device Selection**: Choose input/output audio devices
-
-### 🔐 OAuth Authentication
-- **Google OAuth**: Sign in with Google account
-- **Cloud Sync**: Settings sync across devices
-- **User Profiles**: Persistent user data
-- **Optional Auth**: Can use app without authentication
+- **Persistent Settings**: All settings saved to localStorage
 
 ## Current Technical Stack
 
@@ -51,9 +47,9 @@ Proximity is a real-time voice chat application built with Electron that simulat
 
 ### Backend
 - **Node.js**: Server runtime
-- **Socket.io**: Real-time communication
-- **Express**: Web server framework
-- **Firebase**: Authentication and user data storage
+- **Socket.io**: Real-time communication and WebRTC signaling
+- **Express**: Web server framework with health endpoints
+- **Railway**: Cloud hosting for signaling server
 
 ### Audio Technology
 - **WebRTC**: Peer-to-peer audio streaming
@@ -87,16 +83,21 @@ src/
 - No authentication required to use the app
 - Users identified by Socket.IO session ID during voice chat
 
-## Current Status - MVP Complete! ✅
+## Current Status - Production Ready! ✅
 
-All major issues resolved:
+All major features implemented:
 - ✅ Single voice channel and text channel
-- ✅ Socket.IO signaling server created
-- ✅ Voice channel leave button fixed
+- ✅ Socket.IO signaling server created and deployed
+- ✅ Voice channel join/leave/rejoin working
 - ✅ Connection overlay with Railway priority
+- ✅ Join hub screen on startup
+- ✅ Persistent chat messages (localStorage)
+- ✅ Modal map system
+- ✅ Mute while moving toggle
 - ✅ Test suite created (15/16 tests passing)
 - ✅ Simplified UI (removed 800+ lines of code)
 - ✅ Railway deployment configured
+- ✅ Production build optimization (webpack)
 
 ## Development Commands
 
@@ -104,20 +105,32 @@ All major issues resolved:
 # Install dependencies
 npm install
 
-# Run in development mode
+# Run in development mode (Electron only)
 npm run dev
 
-# Run server and app together
+# Run server and app together (for local development)
 npm run dev:all
 
-# Build for production
+# Build for production (all platforms with webpack optimization)
 npm run build
 
-# Run webpack
-npm run webpack
+# Build for specific platforms
+npm run build:win    # Windows
+npm run build:mac    # macOS
+npm run build:linux  # Linux
 
-# Watch mode for webpack
-npm run watch
+# Run server only (Railway uses this)
+npm start
+
+# Webpack commands
+npm run webpack       # Development build
+npm run webpack:prod  # Production build (minified, no source maps)
+npm run watch         # Watch mode for development
+
+# Testing
+npm test              # Run all tests
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
 ```
 
 ## Server Configuration
@@ -125,24 +138,27 @@ npm run watch
 - **Fallback**: Local development server (`http://localhost:3000`)
 - **Auto-fallback**: App automatically tries Railway first, then localhost
 
-## Authentication Flow
-1. User opens app
-2. After 2 seconds, auth prompt appears (if not dismissed recently)
-3. User can sign in with Google or dismiss
-4. If authenticated, settings sync from cloud
-5. User profile displayed in settings
-6. Settings changes automatically sync to cloud
+## User Flow
+1. User opens app → Join hub screen appears
+2. Enter username → Click "Join Hub"
+3. Main app loads with connection to Railway server
+4. Click voice channel map button (🗺️) to open proximity map
+5. Join voice channel to start spatial audio communication
+6. Drag around map to change audio volume based on proximity
+7. Messages in general chat persist across sessions
 
 ## Map System Details
-- **Canvas Size**: 800x600 (main), 400x300 (mini)
-- **User Representation**: Colored circles with usernames
-- **Proximity Range**: Visual dashed circle around user
-- **Audio Calculation**: Volume based on distance between users
+- **Canvas Size**: 800x600 modal overlay
+- **User Representation**: Colored circles with usernames and activity indicators
+- **Proximity Range**: Visual dashed circles showing audio ranges
+- **Audio Calculation**: Volume based on distance with edge feathering and extended range
+- **Movement Detection**: Tracks user movement with 500ms stationary timer
 - **Movement**: Drag to move, real-time sync with other users
+- **Test Bot**: Optional bot with looping audio for proximity testing
 
-## Next Steps
-1. Fix Firebase import errors
-2. Implement proper OAuth authentication
-3. Restructure map access (voice channels only)
-4. Test and debug authentication flow
-5. Improve security configuration
+## Key Settings
+- **Mute While Moving**: When enabled, mutes other users' audio while they're moving (audio returns after 0.5s stationary)
+- **Noise Suppression**: Reduces background noise
+- **Echo Cancellation**: Prevents audio feedback
+- **User Color**: 8 color options for map representation
+- **Audio Devices**: Select specific input/output devices

@@ -10,7 +10,8 @@ export class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
-            audioOutputDevice: ''
+            audioOutputDevice: '',
+            muteWhileMoving: false
         };
         this.storageKey = 'proximity-settings';
     }
@@ -64,7 +65,8 @@ export class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
-            audioOutputDevice: ''
+            audioOutputDevice: '',
+            muteWhileMoving: false
         };
         this.save();
         this.applyToUI();
@@ -101,6 +103,11 @@ export class SettingsManager {
         const autoJoinCheck = document.getElementById('autoJoin');
         if (autoJoinCheck) {
             autoJoinCheck.checked = this.settings.autoJoin;
+        }
+
+        const muteWhileMovingCheck = document.getElementById('muteWhileMoving');
+        if (muteWhileMovingCheck) {
+            muteWhileMovingCheck.checked = this.settings.muteWhileMoving;
         }
 
         // Color picker

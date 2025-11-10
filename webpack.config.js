@@ -1,12 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: './src/renderer/js/app.js',
   target: 'electron-renderer',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'src/renderer/dist')
+    path: path.resolve(__dirname, 'src/renderer/dist'),
+    clean: true
   },
   module: {
     rules: [
@@ -40,5 +41,10 @@ module.exports = {
   externals: {
     'electron': 'commonjs electron'
   },
-  devtool: 'source-map'
+  devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  }
 };

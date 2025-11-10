@@ -13,6 +13,7 @@ export class ProximityMap {
         this.testBotMovementInterval = null;
         this.isMinimapInstance = false; // Track if this is a minimap
         this.syncing = false; // Prevent infinite sync loops
+        this.movementTimers = new Map(); // Track movement timers for each user
         
         // Audio constants for proximity calculation
         this.EDGE_START = 0.75; // When edge effects begin
@@ -300,6 +301,27 @@ export class ProximityMap {
             user.x = Math.max(margin, Math.min(this.canvas.width - margin, x));
             user.y = Math.max(margin, Math.min(this.canvas.height - margin, y));
             user.lastUpdate = Date.now();
+
+            // Mark user as moving and set timer to mark as stationary
+            if (userId !== this.myUserId) {
+                user.isMoving = true;
+
+                // Clear existing timer for this user
+                if (this.movementTimers.has(userId)) {
+                    clearTimeout(this.movementTimers.get(userId));
+                }
+
+                // Set new timer to mark user as stationary after 500ms
+                const timer = setTimeout(() => {
+                    if (this.users.has(userId)) {
+                        this.users.get(userId).isMoving = false;
+                        this.updateAudioProximity();
+                    }
+                    this.movementTimers.delete(userId);
+                }, 500);
+
+                this.movementTimers.set(userId, timer);
+            }
         }
     }
 
@@ -369,7 +391,10 @@ export class ProximityMap {
         if (!this.myUserId || !this.users.has(this.myUserId)) return;
 
         const myUser = this.users.get(this.myUserId);
-        
+
+        // Check if mute while moving is enabled
+        const muteWhileMoving = this.app?.settingsManager?.get('muteWhileMoving') || false;
+
         this.users.forEach((user, userId) => {
             if (userId === this.myUserId || !user.audioElement) return;
 
@@ -379,9 +404,9 @@ export class ProximityMap {
 
             // Calculate volume based on proximity (0 to 1)
             let volume = 0;
-            
+
             const normalizedDistance = distance / this.proximityRange;
-            
+
             if (normalizedDistance <= this.OUTER_RANGE) {
                 if (normalizedDistance > this.EDGE_START && normalizedDistance <= 1.0) {
                     // Extra feathering at the edge
@@ -396,6 +421,11 @@ export class ProximityMap {
                     volume = Math.max(0, 1 - normalizedDistance);
                     volume = Math.pow(volume, 0.4);
                 }
+            }
+
+            // Apply mute while moving setting
+            if (muteWhileMoving && user.isMoving && !user.isBot) {
+                volume = 0;
             }
 
             // Apply volume with smoothing

@@ -34,6 +34,10 @@
 - [x] Test bot for proximity testing
 - [x] Microphone mute/unmute
 - [x] Audio device selection
+- [x] Mute while moving toggle (mutes moving users until 0.5s stationary)
+- [x] Join hub screen on startup
+- [x] Chat message persistence
+- [x] Modal map system
 
 ## Deployment Steps
 
@@ -115,14 +119,25 @@ You should see:
 5. Chat messages sync between both users
 
 ### Step 6: Build for Distribution
+
+Build for all platforms:
 ```bash
 npm run build
+```
+
+Or build for specific platform:
+```bash
+npm run build:win    # Windows only
+npm run build:mac    # macOS only
+npm run build:linux  # Linux only
 ```
 
 Creates installers in `dist/` folder:
 - Windows: `Proximity Setup.exe`
 - Mac: `Proximity.dmg`
 - Linux: `Proximity.AppImage`
+
+Note: Production builds automatically optimize webpack bundle (no source maps, minified code)
 
 ## Post-Deployment Monitoring
 
