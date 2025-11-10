@@ -21,9 +21,16 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      // Disable cache in dev mode
+      cache: !process.argv.includes('--dev')
     }
   });
+
+  // Clear cache in dev mode
+  if (process.argv.includes('--dev')) {
+    mainWindow.webContents.session.clearCache();
+  }
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
 
