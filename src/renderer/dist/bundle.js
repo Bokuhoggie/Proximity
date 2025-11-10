@@ -2056,7 +2056,7 @@ class UIManager {
         this.eventHandlers = {};
         this.elements = {};
         this.currentVoiceChannel = null;
-        this.currentTextChannel = 'diamond';
+        this.currentTextChannel = 'general';
     }
 
     init() {
@@ -2386,8 +2386,8 @@ class UIManager {
     }
 
     setupHubChannels() {
-        // Start in diamond text channel
-        this.switchToTextChannel('diamond');
+        // Start in general text channel
+        this.switchToTextChannel('general');
         this.currentVoiceChannel = null;
     }
 
@@ -2404,13 +2404,10 @@ class UIManager {
         
         // Update chat UI
         const channelNames = {
-            diamond: { name: '💎 diamond', desc: 'Welcome to the diamond chat' },
-            spade: { name: '♠️ spade', desc: 'Welcome to the spade chat' },
-            club: { name: '♣️ club', desc: 'Welcome to the club chat' },
-            heart: { name: '♥️ heart', desc: 'Welcome to the heart chat' }
+            general: { name: '# general', desc: 'Welcome to the Proximity Room' }
         };
-        
-        const channelInfo = channelNames[channelId] || channelNames.diamond;
+
+        const channelInfo = channelNames[channelId] || channelNames.general;
         
         if (this.elements.currentChannelName) {
             this.elements.currentChannelName.textContent = `# ${channelId}`;
