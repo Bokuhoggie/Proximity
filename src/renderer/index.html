@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Connection Status Overlay -->
+    <div id="connectionOverlay" class="connection-overlay" style="display: none;">
+        <div class="connection-content">
+            <h1>🌐 Proximity</h1>
+            <div class="connection-status">
+                <div class="spinner"></div>
+                <h2 id="connectionStatusText">Connecting to Railway server...</h2>
+                <p id="connectionStatusDetail">Attempting to connect to https://proximityserver-production.up.railway.app</p>
+                <div class="connection-actions" id="connectionActions" style="display: none;">
+                    <button id="retryConnectionBtn" class="btn primary">Retry Connection</button>
+                    <button id="useLocalServerBtn" class="btn secondary">Use Local Server</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- Main Content Area -->
         <main class="main-content">

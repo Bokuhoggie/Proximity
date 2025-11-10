@@ -89,26 +89,78 @@ class ProximityApp {
     }
 
     async connectWithFallback() {
+        // Show connection overlay
+        this.showConnectionOverlay('Connecting to Railway server...', SERVER_URL);
+
         try {
             await this.connectionManager.connect();
             this.myUserId = this.connectionManager.socket.id;
             this.setupConnectionHandlers();
+            this.hideConnectionOverlay();
+            this.uiManager.showNotification('Connected to Railway server', 'success');
         } catch (error) {
-            console.warn('Railway server failed, trying localhost...', error);
-            try {
-                this.connectionManager = new ConnectionManager(FALLBACK_URL);
-                await this.connectionManager.connect();
-                this.myUserId = this.connectionManager.socket.id;
-                this.setupConnectionHandlers();
-                this.uiManager.showNotification('Connected to local server', 'warning');
-            } catch (fallbackError) {
-                console.error('Both servers failed:', fallbackError);
-                this.uiManager.showNotification('Could not connect to any server', 'error');
+            console.warn('Railway server failed:', error);
+            this.showConnectionOverlay('Railway server unavailable', SERVER_URL, true);
+        }
+    }
+
+    async connectToLocalServer() {
+        this.showConnectionOverlay('Connecting to local server...', FALLBACK_URL);
+
+        try {
+            this.connectionManager = new ConnectionManager(FALLBACK_URL);
+            await this.connectionManager.connect();
+            this.myUserId = this.connectionManager.socket.id;
+            this.setupConnectionHandlers();
+            this.hideConnectionOverlay();
+            this.uiManager.showNotification('Connected to local server', 'warning');
+        } catch (error) {
+            console.error('Local server connection failed:', error);
+            this.showConnectionOverlay('Could not connect to any server', FALLBACK_URL, true);
+        }
+    }
+
+    showConnectionOverlay(statusText, serverUrl, showActions = false) {
+        const overlay = document.getElementById('connectionOverlay');
+        const statusTextEl = document.getElementById('connectionStatusText');
+        const statusDetailEl = document.getElementById('connectionStatusDetail');
+        const actionsEl = document.getElementById('connectionActions');
+
+        if (overlay && statusTextEl && statusDetailEl) {
+            overlay.style.display = 'flex';
+            statusTextEl.textContent = statusText;
+            statusDetailEl.textContent = `Server: ${serverUrl}`;
+
+            if (actionsEl) {
+                actionsEl.style.display = showActions ? 'flex' : 'none';
             }
         }
     }
 
+    hideConnectionOverlay() {
+        const overlay = document.getElementById('connectionOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
     setupEventListeners() {
+        // Connection overlay buttons
+        const retryBtn = document.getElementById('retryConnectionBtn');
+        const useLocalBtn = document.getElementById('useLocalServerBtn');
+
+        if (retryBtn) {
+            retryBtn.addEventListener('click', () => {
+                this.connectWithFallback();
+            });
+        }
+
+        if (useLocalBtn) {
+            useLocalBtn.addEventListener('click', () => {
+                this.connectToLocalServer();
+            });
+        }
+
         // Navigation
         this.uiManager.on('page-change', (page) => this.handlePageChange(page));
         this.uiManager.on('join-hub', () => this.joinHub());
