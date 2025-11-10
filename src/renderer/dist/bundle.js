@@ -2907,12 +2907,10 @@ class ProximityApp {
             // Initialize UI
             this.uiManager.init();
             this.setupEventListeners();
+            this.setupJoinHubScreen();
 
-            // Initialize proximity map
-            this.proximityMap = new _proximity_ProximityMap_js__WEBPACK_IMPORTED_MODULE_3__.ProximityMap(
-                document.getElementById('proximityMap'),
-                this
-            );
+            // Initialize proximity map (will be created when needed in modal)
+            // this.proximityMap will be created in openMapModal()
 
             // Setup map controls
             this.setupMapControls();
@@ -2992,6 +2990,45 @@ class ProximityApp {
         }
     }
 
+    setupJoinHubScreen() {
+        const joinHubButton = document.getElementById('joinHubButton');
+        const joinHubUsername = document.getElementById('joinHubUsername');
+        const joinHubScreen = document.getElementById('joinHubScreen');
+        const mainApp = document.getElementById('mainApp');
+
+        // Load saved username
+        const savedUsername = this.settingsManager.get('username') || '';
+        if (joinHubUsername) {
+            joinHubUsername.value = savedUsername;
+        }
+
+        const handleJoin = () => {
+            const username = joinHubUsername.value.trim() || 'Anonymous';
+
+            // Save username
+            this.settingsManager.set('username', username);
+
+            // Hide join screen, show main app
+            if (joinHubScreen) joinHubScreen.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'block';
+
+            // Join hub
+            this.joinHub();
+        };
+
+        if (joinHubButton) {
+            joinHubButton.addEventListener('click', handleJoin);
+        }
+
+        if (joinHubUsername) {
+            joinHubUsername.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleJoin();
+                }
+            });
+        }
+    }
+
     setupEventListeners() {
         // Connection overlay buttons
         const retryBtn = document.getElementById('retryConnectionBtn');
@@ -3044,9 +3081,109 @@ class ProximityApp {
                     return;
                 }
 
-                this.openMiniMap();
+                this.openMapModal();
             });
         });
+    }
+
+    openMapModal() {
+        if (!this.currentVoiceChannel) {
+            this.uiManager.showNotification('Join a voice channel first', 'warning');
+            return;
+        }
+
+        const modal = document.getElementById('mapModal');
+        if (modal) {
+            modal.style.display = 'flex';
+
+            const canvas = document.getElementById('modalProximityMap');
+            if (canvas && !this.proximityMap) {
+                // Create proximity map if it doesn't exist
+                this.proximityMap = new _proximity_ProximityMap_js__WEBPACK_IMPORTED_MODULE_3__.ProximityMap(canvas, this);
+                this.proximityMap.resizeCanvas();
+
+                // Add current user to map
+                const username = this.settingsManager.get('username') || 'Anonymous';
+                const userColor = this.settingsManager.get('userColor') || 'purple';
+                this.proximityMap.addUser(this.myUserId, username, true);
+                this.proximityMap.updateUserColor(this.myUserId, userColor);
+            }
+
+            // Setup modal controls
+            this.setupModalMapControls();
+        }
+    }
+
+    closeMapModal() {
+        const modal = document.getElementById('mapModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    setupModalMapControls() {
+        const closeBtn = document.getElementById('closeMapModal');
+        const proximitySlider = document.getElementById('modalProximitySlider');
+        const proximityRange = document.getElementById('modalProximityRange');
+        const centerBtn = document.getElementById('modalCenterBtn');
+        const toggleTestBot = document.getElementById('modalToggleTestBot');
+
+        // Close button (only set once)
+        if (closeBtn && !closeBtn.hasAttribute('data-listener')) {
+            closeBtn.setAttribute('data-listener', 'true');
+            closeBtn.addEventListener('click', () => this.closeMapModal());
+        }
+
+        // Click outside to close
+        const modal = document.getElementById('mapModal');
+        if (modal && !modal.hasAttribute('data-listener')) {
+            modal.setAttribute('data-listener', 'true');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeMapModal();
+                }
+            });
+        }
+
+        // Proximity slider
+        if (proximitySlider && proximityRange) {
+            proximitySlider.value = this.proximityMap ? this.proximityMap.proximityRange : 100;
+            proximityRange.textContent = `${proximitySlider.value}px`;
+
+            proximitySlider.addEventListener('input', (e) => {
+                const range = parseInt(e.target.value);
+                proximityRange.textContent = `${range}px`;
+                if (this.proximityMap) {
+                    this.proximityMap.setProximityRange(range);
+                }
+            });
+        }
+
+        // Center button
+        if (centerBtn) {
+            centerBtn.addEventListener('click', () => {
+                if (this.proximityMap) {
+                    this.proximityMap.centerMyPosition();
+                }
+            });
+        }
+
+        // Test bot toggle
+        if (toggleTestBot) {
+            toggleTestBot.addEventListener('click', () => {
+                if (this.proximityMap) {
+                    if (this.proximityMap.testBotId) {
+                        this.proximityMap.removeTestBot();
+                        toggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
+                        this.uiManager.showNotification('Test bot removed', 'info');
+                    } else {
+                        this.proximityMap.addTestBot();
+                        toggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
+                        this.uiManager.showNotification('Test bot added - move around to test proximity!', 'success');
+                    }
+                }
+            });
+        }
     }
 
     sendChatMessage(message) {
@@ -3331,9 +3468,10 @@ class ProximityApp {
             const messageData = {
                 id: data.id,
                 username: data.username,
-                message: data.message,
+                message: data.content || data.message, // Support both formats
                 timestamp: data.timestamp,
-                userId: data.userId
+                userId: data.userId,
+                userColor: data.userColor
             };
 
             this.globalChatHistory.general.push(messageData);
@@ -3486,8 +3624,13 @@ class ProximityApp {
 
             this.uiManager.removeVoiceParticipant(this.myUserId, channelId);
 
+            // Clear and destroy proximity map
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
+                if (this.proximityMap.testBotMovementInterval) {
+                    clearInterval(this.proximityMap.testBotMovementInterval);
+                }
+                this.proximityMap = null;
             }
 
             this.currentVoiceChannel = null;

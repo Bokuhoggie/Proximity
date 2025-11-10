@@ -24,7 +24,19 @@
         </div>
     </div>
 
-    <div class="app-container">
+    <!-- Join Hub Screen -->
+    <div id="joinHubScreen" class="join-hub-screen">
+        <div class="join-hub-content">
+            <h1>🌐 Proximity</h1>
+            <p class="tagline">Voice chat with spatial audio</p>
+            <div class="join-form">
+                <input type="text" id="joinHubUsername" placeholder="Enter your username" maxlength="20" />
+                <button id="joinHubButton" class="btn primary large">Join Hub</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" style="display: none;" id="mainApp">
         <!-- Main Content Area -->
         <main class="main-content">
             <!-- Server View Page -->
@@ -286,6 +298,30 @@
                     <button id="modalTestMicrophone" class="btn secondary">Test Microphone</button>
                     <button id="modalTestOutput" class="btn secondary">Test Output</button>
                     <button id="modalResetSettings" class="btn danger">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proximity Map Modal -->
+    <div id="mapModal" class="map-modal" style="display: none;">
+        <div class="map-modal-content">
+            <div class="map-modal-header">
+                <h3>🗺️ Proximity Map</h3>
+                <button id="closeMapModal" class="close-btn">×</button>
+            </div>
+            <div class="map-modal-body">
+                <canvas id="modalProximityMap" width="800" height="600"></canvas>
+                <div class="map-controls">
+                    <div class="proximity-info">
+                        <label>Proximity Range: <span id="modalProximityRange">100px</span></label>
+                        <input type="range" id="modalProximitySlider" min="50" max="300" value="100" class="proximity-slider">
+                    </div>
+                    <button id="modalCenterBtn" class="btn secondary">📍 Center</button>
+                    <button id="modalToggleTestBot" class="btn secondary">
+                        <span class="icon">🤖</span>
+                        <span class="text">Add Test Bot</span>
+                    </button>
                 </div>
             </div>
         </div>
