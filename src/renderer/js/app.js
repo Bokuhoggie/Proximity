@@ -786,9 +786,10 @@ class ProximityApp {
         console.log('Handling voice channel users:', users);
 
         users.forEach(user => {
-            // Add user to proximity map
+            // Add user to proximity map with their position
             if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
-                this.proximityMap.addUser(user.id, user.username, false);
+                console.log(`Adding user ${user.username} to map with position:`, user.position);
+                this.proximityMap.addUser(user.id, user.username, false, null, user.position);
                 this.proximityMap.updateUserColor(user.id, user.userColor);
             }
 
@@ -803,9 +804,10 @@ class ProximityApp {
     handleUserJoinedVoice(user) {
         console.log('Handling user joined voice:', user);
 
-        // Add to proximity map
+        // Add to proximity map with their position
         if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
-            this.proximityMap.addUser(user.id, user.username, false);
+            console.log(`Adding newly joined user ${user.username} to map with position:`, user.position);
+            this.proximityMap.addUser(user.id, user.username, false, null, user.position);
             this.proximityMap.updateUserColor(user.id, user.userColor);
         }
 
