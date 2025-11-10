@@ -279,6 +279,7 @@ body {
 
 .server-sidebar {
     width: 280px;
+    height: 100%;
     background: var(--bg-darker);
     border-right: 1px solid var(--border-dark);
     display: flex;
@@ -486,6 +487,7 @@ body {
 /* Server Main Content */
 .server-main-content {
     flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
