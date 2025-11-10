@@ -1037,6 +1037,7 @@ class ProximityMap {
         this.testBotMovementInterval = null;
         this.isMinimapInstance = false; // Track if this is a minimap
         this.syncing = false; // Prevent infinite sync loops
+        this.movementTimers = new Map(); // Track movement timers for each user
         
         // Audio constants for proximity calculation
         this.EDGE_START = 0.75; // When edge effects begin
@@ -1324,6 +1325,27 @@ class ProximityMap {
             user.x = Math.max(margin, Math.min(this.canvas.width - margin, x));
             user.y = Math.max(margin, Math.min(this.canvas.height - margin, y));
             user.lastUpdate = Date.now();
+
+            // Mark user as moving and set timer to mark as stationary
+            if (userId !== this.myUserId) {
+                user.isMoving = true;
+
+                // Clear existing timer for this user
+                if (this.movementTimers.has(userId)) {
+                    clearTimeout(this.movementTimers.get(userId));
+                }
+
+                // Set new timer to mark user as stationary after 500ms
+                const timer = setTimeout(() => {
+                    if (this.users.has(userId)) {
+                        this.users.get(userId).isMoving = false;
+                        this.updateAudioProximity();
+                    }
+                    this.movementTimers.delete(userId);
+                }, 500);
+
+                this.movementTimers.set(userId, timer);
+            }
         }
     }
 
@@ -1393,7 +1415,10 @@ class ProximityMap {
         if (!this.myUserId || !this.users.has(this.myUserId)) return;
 
         const myUser = this.users.get(this.myUserId);
-        
+
+        // Check if mute while moving is enabled
+        const muteWhileMoving = this.app?.settingsManager?.get('muteWhileMoving') || false;
+
         this.users.forEach((user, userId) => {
             if (userId === this.myUserId || !user.audioElement) return;
 
@@ -1403,9 +1428,9 @@ class ProximityMap {
 
             // Calculate volume based on proximity (0 to 1)
             let volume = 0;
-            
+
             const normalizedDistance = distance / this.proximityRange;
-            
+
             if (normalizedDistance <= this.OUTER_RANGE) {
                 if (normalizedDistance > this.EDGE_START && normalizedDistance <= 1.0) {
                     // Extra feathering at the edge
@@ -1420,6 +1445,11 @@ class ProximityMap {
                     volume = Math.max(0, 1 - normalizedDistance);
                     volume = Math.pow(volume, 0.4);
                 }
+            }
+
+            // Apply mute while moving setting
+            if (muteWhileMoving && user.isMoving && !user.isBot) {
+                volume = 0;
             }
 
             // Apply volume with smoothing
@@ -1886,7 +1916,8 @@ class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
-            audioOutputDevice: ''
+            audioOutputDevice: '',
+            muteWhileMoving: false
         };
         this.storageKey = 'proximity-settings';
     }
@@ -1940,7 +1971,8 @@ class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
-            audioOutputDevice: ''
+            audioOutputDevice: '',
+            muteWhileMoving: false
         };
         this.save();
         this.applyToUI();
@@ -1977,6 +2009,11 @@ class SettingsManager {
         const autoJoinCheck = document.getElementById('autoJoin');
         if (autoJoinCheck) {
             autoJoinCheck.checked = this.settings.autoJoin;
+        }
+
+        const muteWhileMovingCheck = document.getElementById('muteWhileMoving');
+        if (muteWhileMovingCheck) {
+            muteWhileMovingCheck.checked = this.settings.muteWhileMoving;
         }
 
         // Color picker
@@ -3392,6 +3429,17 @@ class ProximityApp {
             });
         }
 
+        const muteWhileMovingCheck = document.getElementById('muteWhileMoving');
+        if (muteWhileMovingCheck) {
+            muteWhileMovingCheck.addEventListener('change', (e) => {
+                this.settingsManager.set('muteWhileMoving', e.target.checked);
+                // Update audio immediately if in voice channel
+                if (this.proximityMap) {
+                    this.proximityMap.updateAudioProximity();
+                }
+            });
+        }
+
         // Test buttons
         const testMicrophoneBtn = document.getElementById('testMicrophone');
         if (testMicrophoneBtn) {
@@ -3447,7 +3495,23 @@ class ProximityApp {
             this.handleUserLeft(user);
         });
 
-        // Voice events
+        // Voice channel events
+        socket.on('voice-channel-users', (users) => {
+            console.log('Voice channel users:', users);
+            this.handleVoiceChannelUsers(users);
+        });
+
+        socket.on('user-joined-voice', (user) => {
+            console.log('User joined voice:', user);
+            this.handleUserJoinedVoice(user);
+        });
+
+        socket.on('user-left-voice', (userId) => {
+            console.log('User left voice:', userId);
+            this.handleUserLeftVoice(userId);
+        });
+
+        // WebRTC signaling events
         socket.on('offer', ({ offer, from }) => this.audioManager.handleOffer(offer, from));
         socket.on('answer', ({ answer, from }) => this.audioManager.handleAnswer(answer, from));
         socket.on('ice-candidate', ({ candidate, from }) => this.audioManager.handleIceCandidate(candidate, from));
@@ -3588,12 +3652,7 @@ class ProximityApp {
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
 
-            this.hubUsers.forEach(user => {
-                if (user.userId !== this.myUserId && user.voiceChannel === channelId) {
-                    this.audioManager.connectToUser(user.userId, user.username, user.userColor);
-                    this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
-                }
-            });
+            // Other users will be added via 'voice-channel-users' socket event
 
             this.updateLeaveButtonVisibility();
 
@@ -3606,6 +3665,57 @@ class ProximityApp {
             this.uiManager.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');
             this.currentVoiceChannel = null;
         }
+    }
+
+    handleVoiceChannelUsers(users) {
+        console.log('Handling voice channel users:', users);
+
+        users.forEach(user => {
+            // Add user to proximity map
+            if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
+                this.proximityMap.addUser(user.id, user.username, false);
+                this.proximityMap.updateUserColor(user.id, user.userColor);
+            }
+
+            // Setup WebRTC connection
+            this.audioManager.connectToUser(user.id, user.username, user.userColor);
+
+            // Add to voice participants UI
+            this.uiManager.addVoiceParticipant(user.id, user.username, user.userColor, this.currentVoiceChannel, false);
+        });
+    }
+
+    handleUserJoinedVoice(user) {
+        console.log('Handling user joined voice:', user);
+
+        // Add to proximity map
+        if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
+            this.proximityMap.addUser(user.id, user.username, false);
+            this.proximityMap.updateUserColor(user.id, user.userColor);
+        }
+
+        // Setup WebRTC connection
+        this.audioManager.connectToUser(user.id, user.username, user.userColor);
+
+        // Add to voice participants UI
+        this.uiManager.addVoiceParticipant(user.id, user.username, user.userColor, this.currentVoiceChannel, false);
+
+        this.uiManager.showNotification(`${user.username} joined voice chat`, 'info');
+    }
+
+    handleUserLeftVoice(userId) {
+        console.log('Handling user left voice:', userId);
+
+        // Remove from proximity map
+        if (this.proximityMap) {
+            this.proximityMap.removeUser(userId);
+        }
+
+        // Disconnect WebRTC
+        this.audioManager.disconnectUser(userId);
+
+        // Remove from voice participants UI
+        this.uiManager.removeVoiceParticipant(userId, this.currentVoiceChannel);
     }
 
     async leaveVoiceChannel(channelId) {

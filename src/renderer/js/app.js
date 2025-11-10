@@ -610,7 +610,23 @@ class ProximityApp {
             this.handleUserLeft(user);
         });
 
-        // Voice events
+        // Voice channel events
+        socket.on('voice-channel-users', (users) => {
+            console.log('Voice channel users:', users);
+            this.handleVoiceChannelUsers(users);
+        });
+
+        socket.on('user-joined-voice', (user) => {
+            console.log('User joined voice:', user);
+            this.handleUserJoinedVoice(user);
+        });
+
+        socket.on('user-left-voice', (userId) => {
+            console.log('User left voice:', userId);
+            this.handleUserLeftVoice(userId);
+        });
+
+        // WebRTC signaling events
         socket.on('offer', ({ offer, from }) => this.audioManager.handleOffer(offer, from));
         socket.on('answer', ({ answer, from }) => this.audioManager.handleAnswer(answer, from));
         socket.on('ice-candidate', ({ candidate, from }) => this.audioManager.handleIceCandidate(candidate, from));
@@ -751,12 +767,7 @@ class ProximityApp {
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
             }
 
-            this.hubUsers.forEach(user => {
-                if (user.userId !== this.myUserId && user.voiceChannel === channelId) {
-                    this.audioManager.connectToUser(user.userId, user.username, user.userColor);
-                    this.uiManager.addVoiceParticipant(user.userId, user.username, user.userColor, channelId, false);
-                }
-            });
+            // Other users will be added via 'voice-channel-users' socket event
 
             this.updateLeaveButtonVisibility();
 
@@ -769,6 +780,57 @@ class ProximityApp {
             this.uiManager.showNotification('Failed to join voice channel. Please allow microphone access.', 'error');
             this.currentVoiceChannel = null;
         }
+    }
+
+    handleVoiceChannelUsers(users) {
+        console.log('Handling voice channel users:', users);
+
+        users.forEach(user => {
+            // Add user to proximity map
+            if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
+                this.proximityMap.addUser(user.id, user.username, false);
+                this.proximityMap.updateUserColor(user.id, user.userColor);
+            }
+
+            // Setup WebRTC connection
+            this.audioManager.connectToUser(user.id, user.username, user.userColor);
+
+            // Add to voice participants UI
+            this.uiManager.addVoiceParticipant(user.id, user.username, user.userColor, this.currentVoiceChannel, false);
+        });
+    }
+
+    handleUserJoinedVoice(user) {
+        console.log('Handling user joined voice:', user);
+
+        // Add to proximity map
+        if (this.proximityMap && !this.proximityMap.users.has(user.id)) {
+            this.proximityMap.addUser(user.id, user.username, false);
+            this.proximityMap.updateUserColor(user.id, user.userColor);
+        }
+
+        // Setup WebRTC connection
+        this.audioManager.connectToUser(user.id, user.username, user.userColor);
+
+        // Add to voice participants UI
+        this.uiManager.addVoiceParticipant(user.id, user.username, user.userColor, this.currentVoiceChannel, false);
+
+        this.uiManager.showNotification(`${user.username} joined voice chat`, 'info');
+    }
+
+    handleUserLeftVoice(userId) {
+        console.log('Handling user left voice:', userId);
+
+        // Remove from proximity map
+        if (this.proximityMap) {
+            this.proximityMap.removeUser(userId);
+        }
+
+        // Disconnect WebRTC
+        this.audioManager.disconnectUser(userId);
+
+        // Remove from voice participants UI
+        this.uiManager.removeVoiceParticipant(userId, this.currentVoiceChannel);
     }
 
     async leaveVoiceChannel(channelId) {
