@@ -153,14 +153,21 @@ export class AudioManager {
         try {
             console.log('🎤 Initializing audio...');
             
-            // Use locked device if available
+            // Get the saved input device from settings
+            const savedInputDevice = window.proximityApp?.settingsManager.get('audioInputDevice');
+
+            // Determine the device to use: locked > saved > default
+            let deviceId = null;
+            if (this.isInputLocked && this.lockedInputDevice) {
+                deviceId = this.lockedInputDevice;
+                console.log('Using locked input device:', deviceId);
+            } else if (savedInputDevice) {
+                deviceId = savedInputDevice;
+                console.log('Using saved input device:', deviceId);
+            }
+
             const constraints = {
-                audio: this.isInputLocked && this.lockedInputDevice ? {
-                    deviceId: { exact: this.lockedInputDevice },
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                } : {
+                audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
                     autoGainControl: true
@@ -168,8 +175,22 @@ export class AudioManager {
                 video: false
             };
 
+            if (deviceId) {
+                constraints.audio.deviceId = { exact: deviceId };
+            }
+
             // Get microphone stream
-            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            try {
+                this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch (error) {
+                if (deviceId) {
+                    console.warn('Failed to get preferred audio device, trying default device...');
+                    delete constraints.audio.deviceId;
+                    this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } else {
+                    throw error;
+                }
+            }
             console.log('✅ Microphone access granted!');
             
             // Verify we have audio tracks

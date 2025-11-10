@@ -76,12 +76,12 @@ npm run dev:all
 
 ### Server
 - **Local**: `http://localhost:3000`
-- **Railway**: `https://myserver2-production.up.railway.app` (needs redeployment with new code)
+- **Railway**: `https://proximityserver-production.up.railway.app` (needs redeployment with new code)
 
 ### Client Config
 Located in `src/renderer/js/app.js` lines 8-9:
 ```javascript
-const SERVER_URL = 'https://myserver2-production.up.railway.app';
+const SERVER_URL = 'https://proximityserver-production.up.railway.app';
 const FALLBACK_URL = 'http://localhost:3000';
 ```
 

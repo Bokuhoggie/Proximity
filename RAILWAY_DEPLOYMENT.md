@@ -164,8 +164,11 @@ If you have your own VPS or home server:
 
 ---
 
-**Note**: You already have a Railway server at `myserver2-production.up.railway.app`. You can either:
-1. **Redeploy to existing Railway instance** - Push your updated code and Railway will automatically deploy
-2. **Create a new Railway project** - Follow steps above for a fresh deployment
+**Note**: You have renamed your Railway project to `ProximityServer` at `proximityserver-production.up.railway.app`.
 
-For existing Railway server, just push your code and it will auto-deploy!
+To deploy:
+1. **Push your updated code** - `git push origin main`
+2. **Railway will automatically deploy** - Watch the deployment in Railway dashboard
+3. **Verify deployment** - Visit `https://proximityserver-production.up.railway.app/health`
+
+Your app is already configured to use this URL!

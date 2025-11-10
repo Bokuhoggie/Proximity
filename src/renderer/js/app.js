@@ -6,7 +6,7 @@ import { ProximityMap } from './proximity/ProximityMap.js';
 import { SettingsManager } from './settings/SettingsManager.js';
 
 // Try Railway first, fallback to localhost for development
-const SERVER_URL = 'https://myserver2-production.up.railway.app';
+const SERVER_URL = 'https://proximityserver-production.up.railway.app';
 const FALLBACK_URL = 'http://localhost:3000';
 
 class ProximityApp {

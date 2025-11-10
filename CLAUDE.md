@@ -130,7 +130,7 @@ npm run watch
 ```
 
 ## Server Configuration
-- **Primary**: Railway deployment (`https://myserver2-production.up.railway.app`)
+- **Primary**: Railway deployment (`https://proximityserver-production.up.railway.app`)
 - **Fallback**: Local development server (`http://localhost:3000`)
 - **Auto-fallback**: App automatically tries Railway first, then localhost
 

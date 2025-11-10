@@ -49,7 +49,7 @@ The signaling server handles:
 
 ## Connection Flow
 
-1. App tries to connect to Railway (`https://myserver2-production.up.railway.app`)
+1. App tries to connect to Railway (`https://proximityserver-production.up.railway.app`)
 2. If Railway fails, automatically falls back to `http://localhost:3000`
 3. User joins hub with username and color
 4. User can join voice channels and text channels

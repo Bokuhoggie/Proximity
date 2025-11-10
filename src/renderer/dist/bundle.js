@@ -167,14 +167,21 @@ class AudioManager {
         try {
             console.log('🎤 Initializing audio...');
             
-            // Use locked device if available
+            // Get the saved input device from settings
+            const savedInputDevice = window.proximityApp?.settingsManager.get('audioInputDevice');
+
+            // Determine the device to use: locked > saved > default
+            let deviceId = null;
+            if (this.isInputLocked && this.lockedInputDevice) {
+                deviceId = this.lockedInputDevice;
+                console.log('Using locked input device:', deviceId);
+            } else if (savedInputDevice) {
+                deviceId = savedInputDevice;
+                console.log('Using saved input device:', deviceId);
+            }
+
             const constraints = {
-                audio: this.isInputLocked && this.lockedInputDevice ? {
-                    deviceId: { exact: this.lockedInputDevice },
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                } : {
+                audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
                     autoGainControl: true
@@ -182,8 +189,22 @@ class AudioManager {
                 video: false
             };
 
+            if (deviceId) {
+                constraints.audio.deviceId = { exact: deviceId };
+            }
+
             // Get microphone stream
-            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            try {
+                this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch (error) {
+                if (deviceId) {
+                    console.warn('Failed to get preferred audio device, trying default device...');
+                    delete constraints.audio.deviceId;
+                    this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } else {
+                    throw error;
+                }
+            }
             console.log('✅ Microphone access granted!');
             
             // Verify we have audio tracks
@@ -2906,24 +2927,12 @@ class ProximityApp {
             // Setup mini map modal
             this.setupMiniMapModal();
 
-            // TEMPORARILY DISABLED: Backend connection
-            // await this.connectWithFallback();
+            // Re-enable backend connection
+            await this.connectWithFallback();
 
-            // AUTO-JOIN: Simulate being in the room from the start
-            this.isInHub = true;
-            this.myUserId = 'local-user-' + Math.random().toString(36).substr(2, 9);
-            console.log('ProximityApp initialized in LOCAL MODE (no backend)');
-
-            // Setup first-time modal and settings
-            this.setupFirstTimeModal();
+            // Setup settings modal and status selector (NO STARTUP MODAL)
             this.setupSettingsModal();
             this.setupStatusSelector();
-
-            // Show first-time setup if never completed
-            const setupCompleted = localStorage.getItem('proximity-setup-completed');
-            if (!setupCompleted) {
-                this.showFirstTimeSetup();
-            }
 
         } catch (error) {
             console.error('Failed to initialize app:', error);
@@ -3567,7 +3576,13 @@ class ProximityApp {
 
             this.currentVoiceChannel = channelId;
 
-            this.connectionManager.socket.emit('join-voice-channel', { channelId });
+            if (this.connectionManager.socket) {
+                this.connectionManager.socket.emit('join-voice-channel', { channelId });
+            } else {
+                console.error('Socket not available, cannot join voice channel.');
+                this.uiManager.showNotification('Error: Not connected to server', 'error');
+                return;
+            }
 
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
@@ -3856,111 +3871,6 @@ class ProximityApp {
                 roomId: this.currentVoiceChannel,
                 isMuted
             });
-        }
-    }
-
-    // First-Time Setup Modal
-    showFirstTimeSetup() {
-        const modal = document.getElementById('firstTimeSetupModal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-    }
-
-    setupFirstTimeModal() {
-        const requestMicBtn = document.getElementById('requestMicBtn');
-        const completeSetupBtn = document.getElementById('completeSetupBtn');
-        const micStatus = document.getElementById('micStatus');
-        const deviceSetupStep = document.getElementById('deviceSetupStep');
-        const setupMicDevice = document.getElementById('setupMicDevice');
-        const setupOutputDevice = document.getElementById('setupOutputDevice');
-        const setupTestMic = document.getElementById('setupTestMic');
-        const setupTestOutput = document.getElementById('setupTestOutput');
-
-        // Request microphone access
-        if (requestMicBtn) {
-            requestMicBtn.addEventListener('click', async () => {
-                try {
-                    await this.audioManager.initialize();
-
-                    micStatus.textContent = '✓ Microphone access granted!';
-                    micStatus.className = 'status-text success';
-
-                    // Show device selection step
-                    deviceSetupStep.style.display = 'block';
-
-                    // Populate device selectors
-                    await this.populateSetupDevices();
-
-                    // Enable complete button
-                    completeSetupBtn.disabled = false;
-
-                } catch (error) {
-                    micStatus.textContent = '✗ Failed to access microphone: ' + error.message;
-                    micStatus.className = 'status-text error';
-                }
-            });
-        }
-
-        // Test buttons in setup
-        if (setupTestMic) {
-            setupTestMic.addEventListener('click', () => this.testMicrophone());
-        }
-
-        if (setupTestOutput) {
-            setupTestOutput.addEventListener('click', () => this.testOutput());
-        }
-
-        // Complete setup
-        if (completeSetupBtn) {
-            completeSetupBtn.addEventListener('click', () => {
-                // Save selected devices
-                if (setupMicDevice.value) {
-                    this.settingsManager.set('audioInputDevice', setupMicDevice.value);
-                }
-                if (setupOutputDevice.value) {
-                    this.settingsManager.set('audioOutputDevice', setupOutputDevice.value);
-                }
-
-                // Mark setup as completed
-                localStorage.setItem('proximity-setup-completed', 'true');
-
-                // Hide modal
-                const modal = document.getElementById('firstTimeSetupModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                }
-
-                this.uiManager.showNotification('Setup complete! Welcome to Proximity!', 'success');
-            });
-        }
-    }
-
-    async populateSetupDevices() {
-        try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-
-            const setupMicDevice = document.getElementById('setupMicDevice');
-            const setupOutputDevice = document.getElementById('setupOutputDevice');
-
-            // Clear existing options
-            setupMicDevice.innerHTML = '<option value="">Select Microphone</option>';
-            setupOutputDevice.innerHTML = '<option value="">Select Output Device</option>';
-
-            devices.forEach(device => {
-                const option = document.createElement('option');
-                option.value = device.deviceId;
-                option.textContent = device.label || `${device.kind} ${device.deviceId.substring(0, 8)}`;
-
-                if (device.kind === 'audioinput') {
-                    setupMicDevice.appendChild(option.cloneNode(true));
-                } else if (device.kind === 'audiooutput') {
-                    setupOutputDevice.appendChild(option.cloneNode(true));
-                }
-            });
-
-        } catch (error) {
-            console.error('Failed to populate devices:', error);
         }
     }
 
