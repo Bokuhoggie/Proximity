@@ -410,6 +410,9 @@ export class UIManager {
     }
 
     updateVoiceChannelUI(activeChannelId) {
+        // Update internal state
+        this.currentVoiceChannel = activeChannelId;
+
         // Update voice channel header states
         const voiceChannelHeaders = document.querySelectorAll('.voice-channel-header');
         voiceChannelHeaders.forEach(header => {
