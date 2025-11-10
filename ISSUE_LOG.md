@@ -1,8 +1,29 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 10, 2025 - 10:03 AM
+**Last Updated:** November 10, 2025 - 10:15 AM
 
 ## 🔴 Critical Issues
+
+### 0. Audio Still Playing After Leaving Channel
+**Status:** ✅ FIXED (Nov 10, 2025 10:15 AM)
+**Priority:** Critical
+**Reported:** Nov 10, 2025 10:06 AM
+
+**Problem:**
+- User leaves voice channel but can still hear other users talking
+- Audio elements not properly stopped on disconnect
+- disconnectAll() only closed WebRTC connections, didn't stop audio playback
+
+**Solution Implemented:**
+- Enhanced `AudioManager.disconnectAll()` to stop and remove audio elements
+- Now queries `audio[data-user-id]` and calls `pause()`, clears `srcObject`, and `remove()`
+- Added logging for each audio element being stopped
+
+**Fixed In:** Commit ac57af6
+**Files Modified:**
+- `src/renderer/js/audio/AudioManager.js:811-827`
+
+---
 
 ### 1. Audio Device Selection Not Working
 **Status:** Open
