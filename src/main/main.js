@@ -27,6 +27,9 @@ function createWindow() {
     }
   });
 
+  // Maximize window on startup
+  mainWindow.maximize();
+
   // Clear cache in dev mode
   if (process.argv.includes('--dev')) {
     mainWindow.webContents.session.clearCache();
