@@ -809,8 +809,21 @@ export class AudioManager {
     }
 
     disconnectAll() {
+        console.log('🔇 Disconnecting all audio connections');
+
+        // Close all peer connections
         this.peerConnections.forEach(pc => pc.close());
         this.peerConnections.clear();
+
+        // Stop and remove all remote audio elements
+        document.querySelectorAll('audio[data-user-id]').forEach(audio => {
+            console.log('Stopping audio for:', audio.dataset.userId);
+            audio.pause();
+            audio.srcObject = null;
+            audio.remove();
+        });
+
+        console.log('✅ All audio disconnected');
     }
 
     toggleMute() {
