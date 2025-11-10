@@ -645,12 +645,27 @@ export class UIManager {
     }
 
     async populateAudioDevices() {
-        if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) return;
-        
+        if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) {
+            console.warn('Audio device select elements not found');
+            return;
+        }
+
         try {
+            // Request microphone permission first to get device labels
+            let stream = null;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log('✅ Microphone permission granted for device enumeration');
+            } catch (permError) {
+                console.warn('⚠️ Microphone permission denied, device labels may not be available:', permError);
+            }
+
+            // Now enumerate devices (labels will be available if permission was granted)
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
+
+            console.log(`Found ${audioInputs.length} audio inputs and ${audioOutputs.length} audio outputs`);
 
             this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
             this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
@@ -660,6 +675,7 @@ export class UIManager {
                 option.value = device.deviceId;
                 option.textContent = device.label || `Microphone ${index + 1}`;
                 this.elements.audioDeviceSelect.appendChild(option);
+                console.log(`  Input: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
 
             audioOutputs.forEach((device, index) => {
@@ -667,9 +683,17 @@ export class UIManager {
                 option.value = device.deviceId;
                 option.textContent = device.label || `Speaker ${index + 1}`;
                 this.elements.audioOutputDeviceSelect.appendChild(option);
+                console.log(`  Output: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
+
+            // Stop the temporary stream used for permission
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            console.log('✅ Audio devices populated successfully');
         } catch (error) {
-            console.error('Error populating audio devices:', error);
+            console.error('❌ Error populating audio devices:', error);
         }
     }
 
