@@ -19,7 +19,6 @@ class ProximityApp {
         this.audioManager = new AudioManager();
         this.settingsManager = new SettingsManager();
         this.proximityMap = null;
-        this.miniProximityMap = null;
 
         // State - simplified to single channel
         this.currentTextChannel = 'general';
@@ -76,27 +75,12 @@ class ProximityApp {
             // Setup map buttons for voice channels
             this.setupMapButtons();
 
-            // Setup mini map modal
-            this.setupMiniMapModal();
 
-            // TEMPORARILY DISABLED: Backend connection
-            // await this.connectWithFallback();
+            // Re-enable backend connection
+            await this.connectWithFallback();
 
-            // AUTO-JOIN: Simulate being in the room from the start
-            this.isInHub = true;
-            this.myUserId = 'local-user-' + Math.random().toString(36).substr(2, 9);
-            console.log('ProximityApp initialized in LOCAL MODE (no backend)');
-
-            // Setup first-time modal and settings
-            this.setupFirstTimeModal();
+            // Setup settings modal (NO STARTUP MODAL)
             this.setupSettingsModal();
-            this.setupStatusSelector();
-
-            // Show first-time setup if never completed
-            const setupCompleted = localStorage.getItem('proximity-setup-completed');
-            if (!setupCompleted) {
-                this.showFirstTimeSetup();
-            }
 
         } catch (error) {
             console.error('Failed to initialize app:', error);
@@ -147,195 +131,6 @@ class ProximityApp {
         this.uiManager.on('settings-change', (settings) => this.settingsManager.update(settings));
     }
 
-    setupMiniMapModal() {
-        // Create mini map modal
-        const modalHTML = `
-            <div id="miniMapModal" class="mini-map-modal" style="display: none;">
-                <div class="mini-map-content">
-                    <div class="mini-map-header">
-                        <h4>Channel Map</h4>
-                        <button id="closeMiniMap" class="close-btn">×</button>
-                    </div>
-                    <canvas id="miniProximityMap" width="400" height="300"></canvas>
-                    <div class="mini-map-controls">
-                        <div class="proximity-info">
-                            <span>Range: <span id="miniProximityRange">100px</span></span>
-                            <input type="range" id="miniProximitySlider" min="50" max="300" value="100" class="proximity-slider">
-                        </div>
-                        <button id="miniCenterBtn" class="btn secondary">Center</button>
-                        <button id="miniToggleTestBot" class="btn secondary">
-                            <span class="icon">🤖</span>
-                            <span class="text">Add Test Bot</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-        // Setup mini map controls
-        const closeMiniMap = document.getElementById('closeMiniMap');
-        const miniProximitySlider = document.getElementById('miniProximitySlider');
-        const miniProximityRange = document.getElementById('miniProximityRange');
-        const miniCenterBtn = document.getElementById('miniCenterBtn');
-        const miniToggleTestBot = document.getElementById('miniToggleTestBot');
-
-        if (closeMiniMap) {
-            closeMiniMap.addEventListener('click', () => this.closeMiniMap());
-        }
-
-        if (miniProximitySlider && miniProximityRange) {
-            miniProximitySlider.addEventListener('input', (e) => {
-                const range = parseInt(e.target.value);
-                miniProximityRange.textContent = `${range}px`;
-
-                // Update both maps
-                if (this.proximityMap) {
-                    this.proximityMap.setProximityRange(range);
-                }
-                if (this.miniProximityMap) {
-                    this.miniProximityMap.setProximityRange(range);
-                }
-
-                // Sync with main slider
-                const mainSlider = document.getElementById('proximitySlider');
-                if (mainSlider) {
-                    mainSlider.value = range;
-                    document.getElementById('proximityRange').textContent = `${range}px`;
-                }
-            });
-        }
-
-        if (miniCenterBtn) {
-            miniCenterBtn.addEventListener('click', () => {
-                if (this.proximityMap) {
-                    this.proximityMap.centerMyPosition();
-                }
-            });
-        }
-
-        if (miniToggleTestBot) {
-            miniToggleTestBot.addEventListener('click', () => {
-                if (this.proximityMap) {
-                    if (this.proximityMap.testBotId) {
-                        // Remove test bot
-                        this.proximityMap.removeTestBot();
-                        miniToggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
-
-                        const mainToggleBtn = document.getElementById('toggleTestBot');
-                        if (mainToggleBtn) {
-                            mainToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Add Test Bot</span>';
-                        }
-
-                        this.uiManager.showNotification('Test bot removed', 'info');
-                    } else {
-                        // Add test bot
-                        this.proximityMap.addTestBot();
-                        miniToggleTestBot.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-
-                        const mainToggleBtn = document.getElementById('toggleTestBot');
-                        if (mainToggleBtn) {
-                            mainToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-                        }
-
-                        this.uiManager.showNotification('Test bot added - move around to test proximity!', 'success');
-                    }
-                }
-            });
-        }
-
-        // Click outside to close
-        const modal = document.getElementById('miniMapModal');
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.closeMiniMap();
-                }
-            });
-        }
-    }
-
-    openMiniMap() {
-        if (!this.currentVoiceChannel) {
-            this.uiManager.showNotification('Join a voice channel first', 'warning');
-            return;
-        }
-
-        const modal = document.getElementById('miniMapModal');
-        if (modal) {
-            modal.style.display = 'flex';
-
-            const miniCanvas = document.getElementById('miniProximityMap');
-            if (miniCanvas && this.proximityMap) {
-                this.miniProximityMap = new ProximityMap(miniCanvas, this);
-                this.miniProximityMap.setMinimapMode(true);
-
-                setTimeout(() => {
-                    if (this.miniProximityMap) {
-                        this.miniProximityMap.resizeCanvas();
-
-                        // Copy users from main map to mini map
-                        this.proximityMap.users.forEach((user, userId) => {
-                            const audioElement = userId === this.proximityMap.testBotId ? null : user.audioElement;
-
-                            const mainCanvas = this.proximityMap.canvas;
-                            const miniCanvas = this.miniProximityMap.canvas;
-                            const scaleX = miniCanvas.width / mainCanvas.width;
-                            const scaleY = miniCanvas.height / mainCanvas.height;
-
-                            this.miniProximityMap.users.set(userId, {
-                                x: user.x * scaleX,
-                                y: user.y * scaleY,
-                                username: user.username,
-                                isSelf: user.isSelf,
-                                audioElement: audioElement,
-                                lastUpdate: user.lastUpdate,
-                                color: user.color,
-                                isBot: user.isBot || false,
-                                isActive: user.isActive || false
-                            });
-
-                            if (user.isSelf) {
-                                this.miniProximityMap.myUserId = userId;
-                            }
-                        });
-
-                        if (this.proximityMap.testBotId) {
-                            this.miniProximityMap.testBotId = this.proximityMap.testBotId;
-                            const miniToggleBtn = document.getElementById('miniToggleTestBot');
-                            if (miniToggleBtn) {
-                                miniToggleBtn.innerHTML = '<span class="icon">🤖</span><span class="text">Remove Test Bot</span>';
-                            }
-                        }
-
-                        this.miniProximityMap.setProximityRange(this.proximityMap.proximityRange);
-
-                        const miniSlider = document.getElementById('miniProximitySlider');
-                        const miniRangeDisplay = document.getElementById('miniProximityRange');
-                        if (miniSlider && miniRangeDisplay) {
-                            miniSlider.value = this.proximityMap.proximityRange;
-                            miniRangeDisplay.textContent = `${this.proximityMap.proximityRange}px`;
-                        }
-                    }
-                }, 100);
-            }
-        }
-    }
-
-    closeMiniMap() {
-        const modal = document.getElementById('miniMapModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-
-        if (this.miniProximityMap) {
-            if (this.miniProximityMap.testBotMovementInterval) {
-                clearInterval(this.miniProximityMap.testBotMovementInterval);
-            }
-            this.miniProximityMap = null;
-        }
-    }
 
     setupMapButtons() {
         const mapButtons = document.querySelectorAll('.map-button');
@@ -664,9 +459,6 @@ class ProximityApp {
             if (this.proximityMap) {
                 this.proximityMap.updateUserPosition(userId, x, y);
             }
-            if (this.miniProximityMap) {
-                this.miniProximityMap.updateUserPosition(userId, x, y);
-            }
         });
     }
 
@@ -740,7 +532,13 @@ class ProximityApp {
 
             this.currentVoiceChannel = channelId;
 
-            this.connectionManager.socket.emit('join-voice-channel', { channelId });
+            if (this.connectionManager.socket) {
+                this.connectionManager.socket.emit('join-voice-channel', { channelId });
+            } else {
+                console.error('Socket not available, cannot join voice channel.');
+                this.uiManager.showNotification('Error: Not connected to server', 'error');
+                return;
+            }
 
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
@@ -790,9 +588,6 @@ class ProximityApp {
 
             if (this.proximityMap) {
                 this.proximityMap.clearUsers();
-            }
-            if (this.miniProximityMap) {
-                this.miniProximityMap.clearUsers();
             }
 
             this.currentVoiceChannel = null;
@@ -930,7 +725,8 @@ class ProximityApp {
             currentVoiceChannel: this.currentVoiceChannel
         });
 
-        if (!this.isInHub) {
+        // Check if user is in a voice channel or in the hub
+        if (!this.isInHub && !this.currentVoiceChannel) {
             this.uiManager.showNotification('Not in any channel', 'warning');
             return;
         }
@@ -1032,111 +828,6 @@ class ProximityApp {
         }
     }
 
-    // First-Time Setup Modal
-    showFirstTimeSetup() {
-        const modal = document.getElementById('firstTimeSetupModal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-    }
-
-    setupFirstTimeModal() {
-        const requestMicBtn = document.getElementById('requestMicBtn');
-        const completeSetupBtn = document.getElementById('completeSetupBtn');
-        const micStatus = document.getElementById('micStatus');
-        const deviceSetupStep = document.getElementById('deviceSetupStep');
-        const setupMicDevice = document.getElementById('setupMicDevice');
-        const setupOutputDevice = document.getElementById('setupOutputDevice');
-        const setupTestMic = document.getElementById('setupTestMic');
-        const setupTestOutput = document.getElementById('setupTestOutput');
-
-        // Request microphone access
-        if (requestMicBtn) {
-            requestMicBtn.addEventListener('click', async () => {
-                try {
-                    await this.audioManager.initialize();
-
-                    micStatus.textContent = '✓ Microphone access granted!';
-                    micStatus.className = 'status-text success';
-
-                    // Show device selection step
-                    deviceSetupStep.style.display = 'block';
-
-                    // Populate device selectors
-                    await this.populateSetupDevices();
-
-                    // Enable complete button
-                    completeSetupBtn.disabled = false;
-
-                } catch (error) {
-                    micStatus.textContent = '✗ Failed to access microphone: ' + error.message;
-                    micStatus.className = 'status-text error';
-                }
-            });
-        }
-
-        // Test buttons in setup
-        if (setupTestMic) {
-            setupTestMic.addEventListener('click', () => this.testMicrophone());
-        }
-
-        if (setupTestOutput) {
-            setupTestOutput.addEventListener('click', () => this.testOutput());
-        }
-
-        // Complete setup
-        if (completeSetupBtn) {
-            completeSetupBtn.addEventListener('click', () => {
-                // Save selected devices
-                if (setupMicDevice.value) {
-                    this.settingsManager.set('audioInputDevice', setupMicDevice.value);
-                }
-                if (setupOutputDevice.value) {
-                    this.settingsManager.set('audioOutputDevice', setupOutputDevice.value);
-                }
-
-                // Mark setup as completed
-                localStorage.setItem('proximity-setup-completed', 'true');
-
-                // Hide modal
-                const modal = document.getElementById('firstTimeSetupModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                }
-
-                this.uiManager.showNotification('Setup complete! Welcome to Proximity!', 'success');
-            });
-        }
-    }
-
-    async populateSetupDevices() {
-        try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-
-            const setupMicDevice = document.getElementById('setupMicDevice');
-            const setupOutputDevice = document.getElementById('setupOutputDevice');
-
-            // Clear existing options
-            setupMicDevice.innerHTML = '<option value="">Select Microphone</option>';
-            setupOutputDevice.innerHTML = '<option value="">Select Output Device</option>';
-
-            devices.forEach(device => {
-                const option = document.createElement('option');
-                option.value = device.deviceId;
-                option.textContent = device.label || `${device.kind} ${device.deviceId.substring(0, 8)}`;
-
-                if (device.kind === 'audioinput') {
-                    setupMicDevice.appendChild(option.cloneNode(true));
-                } else if (device.kind === 'audiooutput') {
-                    setupOutputDevice.appendChild(option.cloneNode(true));
-                }
-            });
-
-        } catch (error) {
-            console.error('Failed to populate devices:', error);
-        }
-    }
-
     // Settings Modal
     setupSettingsModal() {
         const settingsButton = document.getElementById('settingsButton');
@@ -1167,27 +858,6 @@ class ProximityApp {
                 }
             });
         }
-    }
-
-    // Status Selector
-    setupStatusSelector() {
-        const statusOptions = document.querySelectorAll('.status-option');
-
-        statusOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                // Remove active from all
-                statusOptions.forEach(opt => opt.classList.remove('active'));
-
-                // Add active to clicked
-                option.classList.add('active');
-
-                const status = option.dataset.status;
-                console.log('User status changed to:', status);
-
-                // Save to settings
-                this.settingsManager.set('userStatus', status);
-            });
-        });
     }
 }
 

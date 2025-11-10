@@ -55,21 +55,6 @@
                             </button>
                             <button id="leaveChannelBtn" class="btn danger" style="display: none;">Leave Channel</button>
 
-                            <!-- User Status Selector -->
-                            <div class="user-status-section">
-                                <div class="status-selector">
-                                    <div class="status-option active" data-status="online" title="Online">
-                                        <span class="status-dot online"></span>
-                                    </div>
-                                    <div class="status-option" data-status="idle" title="Idle">
-                                        <span class="status-dot idle"></span>
-                                    </div>
-                                    <div class="status-option" data-status="invisible" title="Invisible">
-                                        <span class="status-dot invisible"></span>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Settings Button -->
                             <button id="settingsButton" class="control-button settings-btn">
                                 <span class="icon">⚙️</span>
@@ -77,7 +62,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Main Content Area -->
                     <div class="server-main-content">
                         <!-- Text Chat View -->
@@ -114,37 +99,36 @@
                 </div>
             </div>
 
-            <!-- Channel Map Page -->
+            <!-- Map Page -->
             <div class="page" id="map-page">
                 <header class="page-header">
-                    <h2>Channel Map</h2>
-                    <p>Move around to adjust voice proximity with other users</p>
+                    <h2>Proximity Map</h2>
+                    <p>Move around to experience spatial audio</p>
+
                     <div class="map-instructions">
                         <ul>
-                            <li>Drag your user icon to move around the map</li>
-                            <li>Users closer to you will sound louder</li>
-                            <li>The dashed circle shows your proximity range</li>
-                            <li>Use the slider to adjust your proximity range</li>
-                            <li>Test with the bot button to verify your audio works</li>
+                            <li>Drag your user to move around the map</li>
+                            <li>Get closer to others to hear them louder</li>
+                            <li>Adjust proximity range with the slider below</li>
+                            <li>Add a test bot to experiment with proximity audio</li>
                         </ul>
                     </div>
                 </header>
-                
+
                 <div class="map-section">
                     <div class="map-container">
                         <canvas id="proximityMap" width="800" height="600"></canvas>
+
                         <div class="map-controls">
                             <div class="proximity-info">
-                                <span>Proximity Range: <span id="proximityRange">100px</span></span>
+                                <span>Range: <span id="proximityRange">100px</span></span>
                                 <input type="range" id="proximitySlider" min="50" max="300" value="100" class="proximity-slider">
                             </div>
+
                             <div class="map-actions">
-                                <button id="centerMapBtn" class="btn secondary">Center Position</button>
-                            </div>
-                            <div class="map-voice-controls">
-                                <button id="mapMuteButton" class="control-button">
-                                    <span class="icon">🎤</span>
-                                    <span class="text">Mute</span>
+                                <button id="centerMapBtn" class="btn secondary">
+                                    <span class="icon">🎯</span>
+                                    <span class="text">Center</span>
                                 </button>
                                 <button id="toggleTestBot" class="btn secondary">
                                     <span class="icon">🤖</span>
@@ -165,58 +149,32 @@
                 <header class="page-header">
                     <h2>Settings</h2>
                 </header>
-                
+
                 <div class="settings-section">
                     <div class="setting-group">
                         <h3>Audio Settings</h3>
-                        
-                        <div class="setting-item device-selector">
+
+                        <div class="setting-item">
                             <label for="audioDevice">Microphone Device</label>
-                            <div class="device-selector-row">
-                                <select id="audioDevice" class="setting-select">
-                                    <option value="">Select Audio Device</option>
-                                </select>
-                                <button id="inputDeviceLockBtn" class="device-lock-btn" title="Lock input device">🔓</button>
-                            </div>
+                            <select id="audioDevice" class="setting-select">
+                                <option value="">Select Audio Device</option>
+                            </select>
                         </div>
 
-                        <div class="setting-item device-selector">
+                        <div class="setting-item">
                             <label for="audioOutputDevice">Output Device</label>
-                            <div class="device-selector-row">
-                                <select id="audioOutputDevice" class="setting-select">
-                                    <option value="">Select Output Device</option>
-                                </select>
-                                <button id="outputDeviceLockBtn" class="device-lock-btn" title="Lock output device">🔓</button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <label for="audioGain">Microphone Gain</label>
-                            <input type="range" id="audioGain" min="0" max="100" value="50" class="setting-slider">
-                            <span class="slider-value">50%</span>
-                        </div>
-
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="noiseSupression" checked>
-                                Enable Noise Suppression
-                            </label>
-                        </div>
-
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="echoCancellation" checked>
-                                Enable Echo Cancellation
-                            </label>
+                            <select id="audioOutputDevice" class="setting-select">
+                                <option value="">Select Output Device</option>
+                            </select>
                         </div>
 
                         <div class="setting-item">
                             <label>Microphone Monitor</label>
-                            <div id="persistentVisualizerContainer" style="margin-top: 0.5rem; padding: 1rem; background: var(--dark-bg); border-radius: 8px; border: 1px solid var(--border);">
+                            <div id="persistentVisualizerContainer" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border-dark);">
                                 <div id="micStatusText" style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">
                                     Click "Test Microphone" to start monitoring
                                 </div>
-                                <div style="width: 100%; height: 20px; background: var(--border); border-radius: 10px; overflow: hidden; position: relative;">
+                                <div style="width: 100%; height: 20px; background: var(--bg-darkest); border-radius: 10px; overflow: hidden; position: relative;">
                                     <div id="persistentMicLevelFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%); transition: width 0.1s ease; border-radius: 10px;"></div>
                                     <span id="persistentVolumeLevel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: bold; color: var(--text-primary); text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">0%</span>
                                 </div>
@@ -226,7 +184,7 @@
 
                     <div class="setting-group">
                         <h3>General Settings</h3>
-                        
+
                         <div class="setting-item">
                             <label for="username">Display Name</label>
                             <input type="text" id="username" placeholder="Enter your name" class="setting-input">
@@ -246,12 +204,6 @@
                             </div>
                         </div>
 
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="autoJoin">
-                                Auto-join hub on startup
-                            </label>
-                        </div>
                     </div>
 
                     <div class="settings-actions">
@@ -264,55 +216,7 @@
         </main>
     </div>
 
-    <!-- First Time Setup Modal -->
-    <div id="firstTimeSetupModal" class="setup-modal" style="display: none;">
-        <div class="setup-modal-content">
-            <div class="setup-header">
-                <h2>Welcome to Proximity</h2>
-                <p>Let's set up your audio before you get started</p>
-            </div>
-
-            <div class="setup-body">
-                <div class="setup-step">
-                    <div class="step-icon">🎤</div>
-                    <h3>Microphone Access</h3>
-                    <p>We need permission to access your microphone for voice chat</p>
-                    <button id="requestMicBtn" class="btn primary">Grant Microphone Access</button>
-                    <p id="micStatus" class="status-text"></p>
-                </div>
-
-                <div class="setup-step" id="deviceSetupStep" style="display: none;">
-                    <div class="step-icon">🔊</div>
-                    <h3>Audio Devices</h3>
-
-                    <div class="setup-device-group">
-                        <label for="setupMicDevice">Microphone</label>
-                        <select id="setupMicDevice" class="setting-select">
-                            <option value="">Select Microphone</option>
-                        </select>
-                    </div>
-
-                    <div class="setup-device-group">
-                        <label for="setupOutputDevice">Speakers/Headphones</label>
-                        <select id="setupOutputDevice" class="setting-select">
-                            <option value="">Select Output Device</option>
-                        </select>
-                    </div>
-
-                    <div class="setup-test-section">
-                        <button id="setupTestMic" class="btn secondary">Test Microphone</button>
-                        <button id="setupTestOutput" class="btn secondary">Test Output</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="setup-footer">
-                <button id="completeSetupBtn" class="btn primary" disabled>Complete Setup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
+    <!-- Settings Modal (NO STARTUP MODAL) -->
     <div id="settingsModal" class="setup-modal" style="display: none;">
         <div class="setup-modal-content settings-modal-content">
             <div class="setup-header">
@@ -324,57 +228,18 @@
                 <div class="setting-group">
                     <h3>Audio Settings</h3>
 
-                    <div class="setting-item device-selector">
-                        <label for="audioDevice">Microphone Device</label>
-                        <div class="device-selector-row">
-                            <select id="audioDevice" class="setting-select">
-                                <option value="">Select Audio Device</option>
-                            </select>
-                            <button id="inputDeviceLockBtn" class="device-lock-btn" title="Lock input device">🔓</button>
-                        </div>
-                    </div>
-
-                    <div class="setting-item device-selector">
-                        <label for="audioOutputDevice">Output Device</label>
-                        <div class="device-selector-row">
-                            <select id="audioOutputDevice" class="setting-select">
-                                <option value="">Select Output Device</option>
-                            </select>
-                            <button id="outputDeviceLockBtn" class="device-lock-btn" title="Lock output device">🔓</button>
-                        </div>
+                    <div class="setting-item">
+                        <label for="modalAudioDevice">Microphone Device</label>
+                        <select id="modalAudioDevice" class="setting-select">
+                            <option value="">Select Audio Device</option>
+                        </select>
                     </div>
 
                     <div class="setting-item">
-                        <label for="audioGain">Microphone Gain</label>
-                        <input type="range" id="audioGain" min="0" max="100" value="50" class="setting-slider">
-                        <span class="slider-value">50%</span>
-                    </div>
-
-                    <div class="setting-item">
-                        <label>
-                            <input type="checkbox" id="noiseSupression" checked>
-                            Enable Noise Suppression
-                        </label>
-                    </div>
-
-                    <div class="setting-item">
-                        <label>
-                            <input type="checkbox" id="echoCancellation" checked>
-                            Enable Echo Cancellation
-                        </label>
-                    </div>
-
-                    <div class="setting-item">
-                        <label>Microphone Monitor</label>
-                        <div id="persistentVisualizerContainer" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border-dark);">
-                            <div id="micStatusText" style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                Click "Test Microphone" to start monitoring
-                            </div>
-                            <div style="width: 100%; height: 20px; background: var(--bg-darkest); border-radius: 10px; overflow: hidden; position: relative;">
-                                <div id="persistentMicLevelFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%); transition: width 0.1s ease; border-radius: 10px;"></div>
-                                <span id="persistentVolumeLevel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: bold; color: var(--text-primary); text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">0%</span>
-                            </div>
-                        </div>
+                        <label for="modalAudioOutputDevice">Output Device</label>
+                        <select id="modalAudioOutputDevice" class="setting-select">
+                            <option value="">Select Output Device</option>
+                        </select>
                     </div>
                 </div>
 
@@ -382,13 +247,13 @@
                     <h3>Profile Settings</h3>
 
                     <div class="setting-item">
-                        <label for="username">Display Name</label>
-                        <input type="text" id="username" placeholder="Enter your name" class="setting-input">
+                        <label for="modalUsername">Display Name</label>
+                        <input type="text" id="modalUsername" placeholder="Enter your name" class="setting-input">
                     </div>
 
                     <div class="setting-item">
                         <label>User Color</label>
-                        <div class="user-color-picker">
+                        <div class="user-color-picker" id="modalColorPicker">
                             <button type="button" class="color-option color-blue" data-color="blue" aria-label="Blue"></button>
                             <button type="button" class="color-option color-green" data-color="green" aria-label="Green"></button>
                             <button type="button" class="color-option color-purple selected" data-color="purple" aria-label="Purple"></button>
@@ -402,9 +267,9 @@
                 </div>
 
                 <div class="settings-actions">
-                    <button id="testMicrophone" class="btn secondary">Test Microphone</button>
-                    <button id="testOutputButton" class="btn secondary">Test Output</button>
-                    <button id="resetSettings" class="btn danger">Reset to Defaults</button>
+                    <button id="modalTestMicrophone" class="btn secondary">Test Microphone</button>
+                    <button id="modalTestOutput" class="btn secondary">Test Output</button>
+                    <button id="modalResetSettings" class="btn danger">Reset to Defaults</button>
                 </div>
             </div>
         </div>
@@ -415,7 +280,7 @@
 
     <!-- Load our main application -->
     <script src="dist/bundle.js"></script>
-    
+
     <!-- Fallback check -->
     <script>
         setTimeout(() => {
@@ -425,280 +290,5 @@
             }
         }, 2000);
     </script>
-
-    <!-- Add styles -->
-    <style>
-        .user-color-picker {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .color-option {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            outline: none;
-            transition: border 0.2s, box-shadow 0.2s;
-            display: inline-block;
-        }
-        .color-option.selected,
-        .color-option:focus {
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--border, #a0aec0);
-        }
-        .color-blue { background: #3b82f6; }
-        .color-green { background: #10b981; }
-        .color-purple { background: #8b5cf6; }
-        .color-red { background: #ef4444; }
-        .color-orange { background: #f59e0b; }
-        .color-pink { background: #ec4899; }
-        .color-indigo { background: #6366f1; }
-        .color-cyan { background: #06b6d4; }
-
-        /* Voice channel styles */
-        .voice-channel {
-            margin-bottom: 0.5rem;
-        }
-
-        .voice-channel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .voice-channel-info {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-
-        .voice-channel-header:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--text-primary);
-        }
-
-        .voice-channel-header.active {
-            background: var(--secondary-purple);
-            color: var(--text-primary);
-        }
-
-        .map-button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .voice-channel-header:hover .map-button {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .map-button:hover {
-            background: rgba(139, 92, 246, 0.2);
-            color: var(--text-primary);
-        }
-
-        .voice-participants {
-            margin-left: 1.5rem;
-            padding: 0.25rem 0;
-        }
-
-        .voice-participant {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.5rem;
-            margin: 0.1rem 0;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .voice-participant:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--text-primary);
-        }
-
-        .voice-participant .participant-avatar {
-            font-size: 12px;
-        }
-
-        .voice-participant .mic-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            transition: background-color 0.2s ease;
-        }
-
-        .voice-participant .mic-status.muted {
-            background: var(--danger);
-        }
-
-        .device-selector-row {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .device-lock-btn {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .device-lock-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--text-primary);
-        }
-
-        .device-lock-btn.locked {
-            background: var(--secondary-purple);
-            color: var(--text-primary);
-            border-color: var(--secondary-purple);
-        }
-
-        .server-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .share-server-btn {
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .share-server-btn:hover {
-            background: rgba(139, 92, 246, 0.2);
-            color: var(--text-primary);
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-
-        .server-card {
-            background: var(--dark-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .server-card:hover {
-            border-color: var(--secondary-purple);
-            background: rgba(139, 92, 246, 0.05);
-        }
-
-        .server-card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .server-card-header .server-icon {
-            font-size: 1.5rem;
-        }
-
-        .server-card-header h4 {
-            margin: 0;
-            color: var(--text-primary);
-        }
-
-        .server-description {
-            color: var(--text-secondary);
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
-        }
-
-        .server-stats {
-            display: flex;
-            gap: 1rem;
-            margin: 0.75rem 0;
-        }
-
-        .stat {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .join-server-btn {
-            background: var(--secondary-purple);
-            color: var(--text-primary);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            width: 100%;
-        }
-
-        .join-server-btn:hover {
-            background: var(--primary-purple);
-        }
-
-        .available-servers-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .server-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .server-item:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--text-primary);
-        }
-
-        .server-item .server-icon {
-            font-size: 1.25rem;
-        }
-
-        .server-item .server-name {
-            font-weight: 500;
-        }
-    </style>
 </body>
 </html>
