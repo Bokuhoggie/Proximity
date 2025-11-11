@@ -243,6 +243,12 @@ class ProximityApp {
             // Map should already exist (created in joinVoiceChannel), just show it
             if (this.proximityMap) {
                 console.log('🗺️ Showing existing proximity map');
+
+                // Resize canvas now that modal is visible (in case it was 0x0 when created)
+                this.proximityMap.resizeCanvas();
+
+                // Force a render to display the map
+                this.proximityMap.render();
             } else {
                 console.warn('⚠️ Proximity map does not exist yet - this should not happen');
             }
@@ -1038,7 +1044,7 @@ class ProximityApp {
         }
 
         // Disconnect WebRTC
-        this.audioManager.disconnectUser(userId);
+        this.audioManager.disconnectFromUser(userId);
 
         // Remove from voice participants UI
         this.uiManager.removeVoiceParticipant(userId, this.currentVoiceChannel);
