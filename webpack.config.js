@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: './src/renderer/js/app.js',
-  target: 'electron-renderer',
+  target: 'web',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'src/renderer/dist'),

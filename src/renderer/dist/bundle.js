@@ -1,12 +1,17 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
-  \*****************************************************************/
-/***/ ((module) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _asyncToGenerator)
+/* harmony export */ });
 function asyncGeneratorStep(n, t, e, r, o, a, c) {
   try {
     var i = n[a](c),
@@ -32,57 +37,74 @@ function _asyncToGenerator(n) {
     });
   };
 }
-module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
-  \***************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-var toPropertyKey = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/toPropertyKey.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
 function _defineProperty(e, r, t) {
-  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+  return (r = (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r)) in e ? Object.defineProperty(e, r, {
     value: t,
     enumerable: !0,
     configurable: !0,
     writable: !0
   }) : e[r] = t, e;
 }
-module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/objectWithoutProperties.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/objectWithoutProperties.js ***!
-  \************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-var objectWithoutPropertiesLoose = __webpack_require__(/*! ./objectWithoutPropertiesLoose.js */ "./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutProperties)
+/* harmony export */ });
+/* harmony import */ var _objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./objectWithoutPropertiesLoose.js */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+
 function _objectWithoutProperties(e, t) {
   if (null == e) return {};
   var o,
     r,
-    i = objectWithoutPropertiesLoose(e, t);
+    i = (0,_objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, t);
   if (Object.getOwnPropertySymbols) {
     var n = Object.getOwnPropertySymbols(e);
     for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
   }
   return i;
 }
-module.exports = _objectWithoutProperties, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js ***!
-  \*****************************************************************************/
-/***/ ((module) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutPropertiesLoose)
+/* harmony export */ });
 function _objectWithoutPropertiesLoose(r, e) {
   if (null == r) return {};
   var t = {};
@@ -92,63 +114,81 @@ function _objectWithoutPropertiesLoose(r, e) {
   }
   return t;
 }
-module.exports = _objectWithoutPropertiesLoose, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/toPrimitive.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/toPrimitive.js ***!
-  \************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-var _typeof = (__webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/typeof.js")["default"]);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPrimitive)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
 function toPrimitive(t, r) {
-  if ("object" != _typeof(t) || !t) return t;
+  if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t) || !t) return t;
   var e = t[Symbol.toPrimitive];
   if (void 0 !== e) {
     var i = e.call(t, r || "default");
-    if ("object" != _typeof(i)) return i;
+    if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i)) return i;
     throw new TypeError("@@toPrimitive must return a primitive value.");
   }
   return ("string" === r ? String : Number)(t);
 }
-module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/toPropertyKey.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/toPropertyKey.js ***!
-  \**************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-var _typeof = (__webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/typeof.js")["default"]);
-var toPrimitive = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/toPrimitive.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPropertyKey)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
+
+
 function toPropertyKey(t) {
-  var i = toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : i + "";
+  var i = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t, "string");
+  return "symbol" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i) ? i : i + "";
 }
-module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
-  \*******************************************************/
-/***/ ((module) => {
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
 function _typeof(o) {
   "@babel/helpers - typeof";
 
-  return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
     return typeof o;
   } : function (o) {
     return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
+  }, _typeof(o);
 }
-module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
 
 /***/ }),
 
@@ -541,6 +581,514 @@ function qstring (val) {
 function ContentType (type) {
   this.parameters = Object.create(null)
   this.type = type
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/events/events.js":
+/*!***************************************!*\
+  !*** ./node_modules/events/events.js ***!
+  \***************************************/
+/***/ ((module) => {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
+}
+
+function ProcessEmitWarning(warning) {
+  if (console && console.warn) console.warn(warning);
+}
+
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+module.exports = EventEmitter;
+module.exports.once = once;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
+
+Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+  enumerable: true,
+  get: function() {
+    return defaultMaxListeners;
+  },
+  set: function(arg) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
+      throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
+    }
+    defaultMaxListeners = arg;
+  }
+});
+
+EventEmitter.init = function() {
+
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
+    throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
+  }
+  this._maxListeners = n;
+  return this;
+};
+
+function _getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return _getMaxListeners(this);
+};
+
+EventEmitter.prototype.emit = function emit(type) {
+  var args = [];
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
+  var doError = (type === 'error');
+
+  var events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    var er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+    // At least give some kind of context to the user
+    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  var handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    ReflectApply(handler, this, args);
+  } else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      ReflectApply(listeners[i], this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  checkListener(listener);
+
+  events = target._events;
+  if (events === undefined) {
+    events = target._events = Object.create(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener !== undefined) {
+      target.emit('newListener', type,
+                  listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (existing === undefined) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+        prepend ? [listener, existing] : [existing, listener];
+      // If we've already got an array, just append.
+    } else if (prepend) {
+      existing.unshift(listener);
+    } else {
+      existing.push(listener);
+    }
+
+    // Check for listener leak
+    m = _getMaxListeners(target);
+    if (m > 0 && existing.length > m && !existing.warned) {
+      existing.warned = true;
+      // No error code for this since it is a Warning
+      // eslint-disable-next-line no-restricted-syntax
+      var w = new Error('Possible EventEmitter memory leak detected. ' +
+                          existing.length + ' ' + String(type) + ' listeners ' +
+                          'added. Use emitter.setMaxListeners() to ' +
+                          'increase limit');
+      w.name = 'MaxListenersExceededWarning';
+      w.emitter = target;
+      w.type = type;
+      w.count = existing.length;
+      ProcessEmitWarning(w);
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = onceWrapper.bind(state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  checkListener(listener);
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      checkListener(listener);
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      checkListener(listener);
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = Object.keys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (events === undefined)
+    return [];
+
+  var evlistener = events[type];
+  if (evlistener === undefined)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ?
+    unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events !== undefined) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+};
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++)
+    list[index] = list[index + 1];
+  list.pop();
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function errorListener(err) {
+      emitter.removeListener(name, resolver);
+      reject(err);
+    }
+
+    function resolver() {
+      if (typeof emitter.removeListener === 'function') {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+
+    eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+    if (name !== 'error') {
+      addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    }
+  });
+}
+
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
 }
 
 
@@ -5163,7 +5711,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ServerControlledNamespacedValue: () => (/* binding */ ServerControlledNamespacedValue),
 /* harmony export */   UnstableValue: () => (/* binding */ UnstableValue)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2021 - 2022 The Matrix.org Foundation C.I.C.
@@ -5244,7 +5792,7 @@ class NamespacedValue {
 class ServerControlledNamespacedValue extends NamespacedValue {
   constructor() {
     super(...arguments);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "preferUnstable", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "preferUnstable", false);
   }
   setPreferUnstable(preferUnstable) {
     this.preferUnstable = preferUnstable;
@@ -5292,7 +5840,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ReEmitter: () => (/* binding */ ReEmitter),
 /* harmony export */   TypedReEmitter: () => (/* binding */ TypedReEmitter)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2015, 2016 OpenMarket Ltd
@@ -5318,7 +5866,7 @@ class ReEmitter {
   constructor(target) {
     this.target = target;
     // Map from emitter to event name to re-emitter
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "reEmitters", new WeakMap());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "reEmitters", new WeakMap());
   }
   reEmit(source, eventNames) {
     var _this = this;
@@ -5394,8 +5942,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ToDeviceMessageQueue: () => (/* binding */ ToDeviceMessageQueue)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _scheduler_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scheduler.js */ "./node_modules/matrix-js-sdk/lib/scheduler.js");
@@ -5435,11 +5983,11 @@ class ToDeviceMessageQueue {
     var _this = this;
     this.client = client;
     this.logger = logger;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sending", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "running", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryTimeout", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryAttempts", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sendQueue", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sending", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "running", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryTimeout", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryAttempts", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sendQueue", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.retryTimeout !== null) clearTimeout(_this.retryTimeout);
       _this.retryTimeout = null;
       if (_this.sending || !_this.running) return;
@@ -5484,7 +6032,7 @@ class ToDeviceMessageQueue {
      * Listen to sync state changes and automatically resend any pending events
      * once syncing is resumed
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onResumedSync", (state, oldState) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onResumedSync", (state, oldState) => {
       if (state === _sync_js__WEBPACK_IMPORTED_MODULE_5__.SyncState.Syncing && oldState !== _sync_js__WEBPACK_IMPORTED_MODULE_5__.SyncState.Syncing) {
         this.logger.info("Resuming queue after resumed sync");
         this.sendQueue();
@@ -5504,7 +6052,7 @@ class ToDeviceMessageQueue {
   }
   queueBatch(batch) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var batches = [];
       for (var i = 0; i < batch.batch.length; i += MAX_BATCH_SIZE) {
         var batchWithTxnId = {
@@ -5525,7 +6073,7 @@ class ToDeviceMessageQueue {
    */
   sendBatch(batch) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var contentMap = new _utils_js__WEBPACK_IMPORTED_MODULE_6__.MapWithDefault(() => new Map());
       for (var item of batch.batch) {
         contentMap.getOrCreate(item.userId).set(item.deviceId, item.payload);
@@ -5552,8 +6100,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AutoDiscoveryAction: () => (/* binding */ AutoDiscoveryAction),
 /* harmony export */   AutoDiscoveryError: () => (/* binding */ AutoDiscoveryError)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 /* harmony import */ var _version_support_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./version-support.js */ "./node_modules/matrix-js-sdk/lib/version-support.js");
@@ -5624,7 +6172,7 @@ class AutoDiscovery {
    */
   static fromDiscoveryConfig(wellknown) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _hsVersions$raw;
       // Step 1 is to get the config, which is provided to us here.
 
@@ -5790,7 +6338,7 @@ class AutoDiscovery {
    */
   static findClientConfig(domain) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!domain || typeof domain !== "string" || domain.length === 0) {
         throw new Error("'domain' must be a string of non-zero length");
       }
@@ -5860,7 +6408,7 @@ class AutoDiscovery {
    */
   static getRawClientConfig(domain) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _response$raw;
       if (!domain || typeof domain !== "string" || domain.length === 0) {
         throw new Error("'domain' must be a string of non-zero length");
@@ -5930,7 +6478,7 @@ class AutoDiscovery {
    * @internal
    */
   static fetchWellKnownObject(url) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var response;
       try {
         response = yield AutoDiscovery.fetch(url, {
@@ -5985,22 +6533,22 @@ class AutoDiscovery {
 // exactly the same as those in the spec. This is to hopefully
 // translate the meaning of the states in the spec, but also
 // support our own if needed.
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID", AutoDiscoveryError.Invalid);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_GENERIC_FAILURE", AutoDiscoveryError.GenericFailure);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_HS_BASE_URL", AutoDiscoveryError.InvalidHsBaseUrl);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_HOMESERVER", AutoDiscoveryError.InvalidHomeserver);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_IS_BASE_URL", AutoDiscoveryError.InvalidIsBaseUrl);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_IDENTITY_SERVER", AutoDiscoveryError.InvalidIdentityServer);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_IS", AutoDiscoveryError.InvalidIs);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_MISSING_WELLKNOWN", AutoDiscoveryError.MissingWellknown);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_INVALID_JSON", AutoDiscoveryError.InvalidJson);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ERROR_UNSUPPORTED_HOMESERVER_SPEC_VERSION", AutoDiscoveryError.UnsupportedHomeserverSpecVersion);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "ALL_ERRORS", Object.keys(AutoDiscoveryError));
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID", AutoDiscoveryError.Invalid);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_GENERIC_FAILURE", AutoDiscoveryError.GenericFailure);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_HS_BASE_URL", AutoDiscoveryError.InvalidHsBaseUrl);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_HOMESERVER", AutoDiscoveryError.InvalidHomeserver);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_IS_BASE_URL", AutoDiscoveryError.InvalidIsBaseUrl);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_IDENTITY_SERVER", AutoDiscoveryError.InvalidIdentityServer);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_IS", AutoDiscoveryError.InvalidIs);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_MISSING_WELLKNOWN", AutoDiscoveryError.MissingWellknown);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_INVALID_JSON", AutoDiscoveryError.InvalidJson);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ERROR_UNSUPPORTED_HOMESERVER_SPEC_VERSION", AutoDiscoveryError.UnsupportedHomeserverSpecVersion);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "ALL_ERRORS", Object.keys(AutoDiscoveryError));
 /**
  * The auto discovery failed. The client is expected to communicate
  * the error to the user and refuse logging in.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "FAIL_ERROR", AutoDiscoveryAction.FAIL_ERROR);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "FAIL_ERROR", AutoDiscoveryAction.FAIL_ERROR);
 /**
  * The auto discovery failed, however the client may still recover
  * from the problem. The client is recommended to that the same
@@ -6008,18 +6556,18 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery
  * what went wrong. The client may also treat this the same as
  * a FAIL_ERROR state.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "FAIL_PROMPT", AutoDiscoveryAction.FAIL_PROMPT);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "FAIL_PROMPT", AutoDiscoveryAction.FAIL_PROMPT);
 /**
  * The auto discovery didn't fail but did not find anything of
  * interest. The client is expected to prompt the user for more
  * information, or fail if it prefers.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "PROMPT", AutoDiscoveryAction.PROMPT);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "PROMPT", AutoDiscoveryAction.PROMPT);
 /**
  * The auto discovery was successful.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "SUCCESS", AutoDiscoveryAction.SUCCESS);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(AutoDiscovery, "fetchFn", void 0);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "SUCCESS", AutoDiscoveryAction.SUCCESS);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(AutoDiscovery, "fetchFn", void 0);
 //# sourceMappingURL=autodiscovery.js.map
 
 /***/ }),
@@ -6424,9 +6972,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   inMainTimelineForReceipt: () => (/* binding */ inMainTimelineForReceipt),
 /* harmony export */   threadIdForReceipt: () => (/* binding */ threadIdForReceipt)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/objectWithoutProperties.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _sync_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sync.js */ "./node_modules/matrix-js-sdk/lib/sync.js");
 /* harmony import */ var _models_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./models/event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
 /* harmony import */ var _store_stub_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/stub.js */ "./node_modules/matrix-js-sdk/lib/store/stub.js");
@@ -6483,7 +7031,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _excluded = ["server", "limit", "since"];
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015-2023 The Matrix.org Foundation C.I.C.
 
@@ -6805,98 +7353,98 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
     // one in logger.ts.
     super();
     _this = this;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "logger", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_15__.TypedReEmitter(this));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "olmVersion", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_15__.TypedReEmitter(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "olmVersion", null);
     // populated after initLegacyCrypto
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "usingExternalCrypto", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "_store", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "deviceId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "credentials", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "usingExternalCrypto", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "_store", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "deviceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "credentials", void 0);
     /**
      * Encryption key used for encrypting sensitive data (such as e2ee keys) in storage.
      *
      * As supplied in the constructor via {@link IMatrixClientCreateOpts#pickleKey}.
      * Used for migration from the legacy crypto to the rust crypto
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "legacyPickleKey", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "scheduler", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "clientRunning", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "timelineSupport", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "urlPreviewCache", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "identityServer", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "http", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "legacyPickleKey", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "scheduler", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "clientRunning", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "timelineSupport", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "urlPreviewCache", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "identityServer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "http", void 0);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "cryptoBackend", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "cryptoBackend", void 0);
     // one of crypto or rustCrypto
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "enableEncryptedStateEvents", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "cryptoCallbacks", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "enableEncryptedStateEvents", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "cryptoCallbacks", void 0);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "callEventHandler", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "callEventHandler", void 0);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "groupCallEventHandler", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "supportsCallTransfer", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "groupCallEventHandler", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "supportsCallTransfer", false);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "forceTURN", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "forceTURN", false);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "iceCandidatePoolSize", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "iceCandidatePoolSize", 0);
     // XXX: Intended private, used in code.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "idBaseUrl", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "baseUrl", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "isVoipWithNoMediaAllowed", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "disableVoip", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "useLivekitForGroupCalls", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "idBaseUrl", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "baseUrl", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "isVoipWithNoMediaAllowed", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "disableVoip", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "useLivekitForGroupCalls", void 0);
     // Note: these are all `protected` to let downstream consumers make mistakes if they want to.
     // We don't technically support this usage, but have reasons to do this.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "canSupportVoip", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "peekSync", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "isGuestAccount", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "ongoingScrollbacks", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "notifTimelineSet", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "canSupportVoip", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "peekSync", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "isGuestAccount", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "ongoingScrollbacks", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "notifTimelineSet", null);
     /**
      * Legacy crypto store used for migration from the legacy crypto to the rust crypto
      * @private
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "legacyCryptoStore", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "verificationMethods", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "fallbackICEServerAllowed", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "syncApi", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "roomNameGenerator", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "pushRules", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "syncLeftRoomsPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "syncedLeftRooms", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "clientOpts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "clientWellKnownIntervalID", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "canResetTimelineCallback", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "canSupport", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "legacyCryptoStore", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "verificationMethods", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "fallbackICEServerAllowed", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "syncApi", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "roomNameGenerator", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "pushRules", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "syncLeftRoomsPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "syncedLeftRooms", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "clientOpts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "clientWellKnownIntervalID", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "canResetTimelineCallback", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "canSupport", new Map());
     // The pushprocessor caches useful things, so keep one and re-use it
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "pushProcessor", new _pushprocessor_js__WEBPACK_IMPORTED_MODULE_12__.PushProcessor(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "pushProcessor", new _pushprocessor_js__WEBPACK_IMPORTED_MODULE_12__.PushProcessor(this));
     // Promise to a response of the server's /versions response
     // TODO: This should expire: https://github.com/matrix-org/matrix-js-sdk/issues/1020
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "serverVersionsPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "clientWellKnown", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "clientWellKnownPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "turnServers", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "turnServersExpiry", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "checkTurnServersIntervalID", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "txnCtr", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "mediaHandler", new _webrtc_mediaHandler_js__WEBPACK_IMPORTED_MODULE_34__.MediaHandler(this));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "sessionId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "serverVersionsPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "clientWellKnown", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "clientWellKnownPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "turnServers", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "turnServersExpiry", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "checkTurnServersIntervalID", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "txnCtr", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "mediaHandler", new _webrtc_mediaHandler_js__WEBPACK_IMPORTED_MODULE_34__.MediaHandler(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "sessionId", void 0);
     /** IDs of events which are currently being encrypted.
      *
      * This is part of the cancellation mechanism: if the event is no longer listed here when encryption completes,
      * that tells us that it has been cancelled, and we should not send it.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "eventsBeingEncrypted", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "useE2eForGroupCall", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "toDeviceMessageQueue", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "livekitServiceURL", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "_secretStorage", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "eventsBeingEncrypted", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "useE2eForGroupCall", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "toDeviceMessageQueue", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "livekitServiceURL", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "_secretStorage", void 0);
     // A manager for determining which invites should be ignored.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "ignoredInvites", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "matrixRTC", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "serverCapabilitiesService", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "startCallEventHandler", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "ignoredInvites", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "matrixRTC", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "serverCapabilitiesService", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "startCallEventHandler", () => {
       if (this.isInitialSyncComplete()) {
         if ((0,_webrtc_call_js__WEBPACK_IMPORTED_MODULE_6__.supportsMatrixCall)()) {
           this.callEventHandler.start();
@@ -6905,7 +7453,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
         this.off(ClientEvent.Sync, this.startCallEventHandler);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "startMatrixRTC", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "startMatrixRTC", () => {
       if (this.isInitialSyncComplete()) {
         this.matrixRTC.start();
         this.off(ClientEvent.Sync, this.startMatrixRTC);
@@ -6921,7 +7469,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
      * the last event in the live timeline of that context and if the read receipt
      * we have on record matches.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(this, "fixupRoomNotifications", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "fixupRoomNotifications", () => {
       if (this.isInitialSyncComplete()) {
         var _this$getRooms;
         var unreadRooms = ((_this$getRooms = this.getRooms()) !== null && _this$getRooms !== void 0 ? _this$getRooms : []).filter(room => {
@@ -6969,7 +7517,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
     this.scheduler = opts.scheduler;
     if (this.scheduler) {
       this.scheduler.setProcessFunction(/*#__PURE__*/function () {
-        var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (eventToSend) {
+        var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (eventToSend) {
           var room = _this.getRoom(eventToSend.getRoomId());
           if (eventToSend.status !== _models_event_js__WEBPACK_IMPORTED_MODULE_4__.EventStatus.SENDING) {
             _this.updatePendingEventStatus(room, eventToSend, _models_event_js__WEBPACK_IMPORTED_MODULE_4__.EventStatus.SENDING);
@@ -7048,7 +7596,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   startClient(opts) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (_this2.clientRunning) {
         // client is already running.
         return;
@@ -7176,7 +7724,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
 
     // delete the stores used by the rust matrix-sdk-crypto, in case they were used
     var deleteRustSdkStore = /*#__PURE__*/function () {
-      var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+      var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
         var indexedDB;
         try {
           indexedDB = globalThis.indexedDB;
@@ -7343,7 +7891,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   createGroupCall(roomId, type, isPtt, intent, dataChannelsEnabled, dataChannelOptions) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (_this4.getGroupCallForRoom(roomId)) {
         throw new Error("".concat(roomId, " already has an existing group call"));
       }
@@ -7493,7 +8041,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getCapabilities() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var caps = _this5.serverCapabilitiesService.getCachedCapabilities();
       if (caps) return caps;
       return _this5.serverCapabilitiesService.fetchCapabilities();
@@ -7543,7 +8091,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   initRustCrypto() {
     var _arguments = arguments,
       _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _args$cryptoDatabaseP3, _this6$legacyPickleKe;
       var args = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : {};
       if (_this6.cryptoBackend) {
@@ -7665,7 +8213,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   deleteKeysFromBackup(roomId, sessionId, version) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = _this7.makeKeyBackupPath(roomId, sessionId, version);
       yield _this7.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Delete, path.path, path.queryData, undefined, {
         prefix: _http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.ClientPrefix.V3
@@ -7772,7 +8320,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setAccountData(eventType, content) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // If the sync loop is not running, fall back to setAccountDataRaw.
       if (!_this8.clientRunning) {
         _this8.logger.warn("Calling `setAccountData` before the client is started: `getAccountData` may return inconsistent results.");
@@ -7846,7 +8394,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getAccountDataFromServer(eventType) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (_this9.isInitialSyncComplete()) {
         var _event = _this9.store.getAccountData(eventType);
         if (!_event) {
@@ -7873,7 +8421,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   deleteAccountData(eventType) {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var msc3391DeleteAccountDataServerSupport = _this0.canSupport.get(_feature_js__WEBPACK_IMPORTED_MODULE_43__.Feature.AccountDataDeletion);
       // if deletion is not supported overwrite with empty content
       if (msc3391DeleteAccountDataServerSupport === _feature_js__WEBPACK_IMPORTED_MODULE_43__.ServerSupport.Unsupported) {
@@ -7936,7 +8484,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   joinRoom(roomIdOrAlias) {
     var _arguments2 = arguments,
       _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _roomMember$events$me, _roomMember$events$me2;
       var opts = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : {};
       var room = _this1.getRoom(roomIdOrAlias);
@@ -8148,7 +8696,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setPowerLevel(roomId, userId, powerLevel) {
     var _this10 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _content;
       var content;
       if (_this10.clientRunning && _this10.isInitialSyncComplete()) {
@@ -8193,7 +8741,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line @typescript-eslint/naming-convention
   unstable_createLiveBeacon(roomId, beaconInfoContent) {
     var _this11 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return _this11.unstable_setLiveBeacon(roomId, beaconInfoContent);
     })();
   }
@@ -8207,7 +8755,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line @typescript-eslint/naming-convention
   unstable_setLiveBeacon(roomId, beaconInfoContent) {
     var _this12 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return _this12.sendStateEvent(roomId, _types_beacon_js__WEBPACK_IMPORTED_MODULE_39__.M_BEACON_INFO.name, beaconInfoContent, _this12.getUserId());
     })();
   }
@@ -8362,7 +8910,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
 
   encryptAndSendEvent(room, event, delayOptsOrQuery, queryDict) {
     var _this13 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var queryOpts = queryDict;
       if (delayOptsOrQuery && (0,_types_requests_js__WEBPACK_IMPORTED_MODULE_25__.isSendDelayedEventRequestOpts)(delayOptsOrQuery)) {
         return _this13.sendEventHttpRequest(event, delayOptsOrQuery, queryOpts);
@@ -8430,7 +8978,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   encryptEventIfNeeded(event, room) {
     var _this14 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // If the room is unknown, we cannot encrypt for it
       if (!room) return;
       if (!(yield _this14.shouldEncryptEventForRoom(event, room))) return;
@@ -8455,7 +9003,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   shouldEncryptEventForRoom(event, room) {
     var _this15 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this15$cryptoBackend;
       if (event.isEncrypted()) {
         // this event has already been encrypted; this happens if the
@@ -8762,7 +9310,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line
   _unstable_sendDelayedEvent(roomId, delayOpts, threadId, eventType, content, txnId) {
     var _this16 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this16.doesServerSupportUnstableFeature(UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_53__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "sendDelayedEvent");
       }
@@ -8790,7 +9338,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line
   _unstable_sendStickyDelayedEvent(roomId, stickDuration, delayOpts, threadId, eventType, content, txnId) {
     var _this17 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this17.doesServerSupportUnstableFeature(UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_53__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "getDelayedEvents");
       }
@@ -8824,7 +9372,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   _unstable_sendDelayedStateEvent(roomId, delayOpts, eventType, content) {
     var _arguments3 = arguments,
       _this18 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var stateKey = _arguments3.length > 4 && _arguments3[4] !== undefined ? _arguments3[4] : "";
       var opts = _arguments3.length > 5 && _arguments3[5] !== undefined ? _arguments3[5] : {};
       if (!(yield _this18.doesServerSupportUnstableFeature(UNSTABLE_MSC4140_DELAYED_EVENTS))) {
@@ -8852,7 +9400,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line
   _unstable_sendStickyEvent(roomId, stickDuration, threadId, eventType, content, txnId) {
     var _this19 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this19.doesServerSupportUnstableFeature(UNSTABLE_MSC4354_STICKY_EVENTS))) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_53__.UnsupportedStickyEventsEndpointError("Server does not support the sticky events", "sendStickyEvent");
       }
@@ -8881,7 +9429,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line
   _unstable_getDelayedEvents(status, delayId, fromToken) {
     var _this20 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this20.doesServerSupportUnstableFeature(UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_53__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "getDelayedEvents");
       }
@@ -8906,7 +9454,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   _unstable_updateDelayedEvent(delayId, action) {
     var _arguments4 = arguments,
       _this21 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var requestOptions = _arguments4.length > 2 && _arguments4[2] !== undefined ? _arguments4[2] : {};
       if (!(yield _this21.doesServerSupportUnstableFeature(UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_53__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "updateDelayedEvent");
@@ -8936,7 +9484,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   sendReceipt(event, receiptType, body) {
     var _arguments5 = arguments,
       _this22 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var unthreaded = _arguments5.length > 3 && _arguments5[3] !== undefined ? _arguments5[3] : false;
       if (_this22.isGuest()) {
         return Promise.resolve({}); // guests cannot send receipts so don't bother.
@@ -8972,7 +9520,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   sendReadReceipt(event) {
     var _arguments6 = arguments,
       _this23 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var receiptType = _arguments6.length > 1 && _arguments6[1] !== undefined ? _arguments6[1] : _types_read_receipts_js__WEBPACK_IMPORTED_MODULE_36__.ReceiptType.Read;
       var unthreaded = _arguments6.length > 2 && _arguments6[2] !== undefined ? _arguments6[2] : false;
       if (!event) return;
@@ -9001,7 +9549,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setRoomReadMarkers(roomId, rmEventId, rrEvent, rpEvent) {
     var _this24 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var room = _this24.getRoom(roomId);
       if (room !== null && room !== void 0 && room.hasPendingEvent(rmEventId)) {
         throw new Error("Cannot set read marker to a pending event (".concat(rmEventId, ")"));
@@ -9201,7 +9749,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   invite(roomId, userId) {
     var _arguments7 = arguments,
       _this25 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var opts = _arguments7.length > 2 && _arguments7[2] !== undefined ? _arguments7[2] : {};
       if (typeof opts != "object") {
         opts = {
@@ -9237,7 +9785,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   inviteByThreePid(roomId, medium, address) {
     var _this26 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this26$identityServe;
       var path = _utils_js__WEBPACK_IMPORTED_MODULE_10__.encodeUri("/rooms/$roomId/invite", {
         $roomId: roomId
@@ -9330,7 +9878,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   forget(roomId) {
     var _arguments8 = arguments,
       _this27 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var deleteRoom = _arguments8.length > 1 && _arguments8[1] !== undefined ? _arguments8[1] : true;
       // API returns an empty object
       var path = _utils_js__WEBPACK_IMPORTED_MODULE_10__.encodeUri("/rooms/$room_id/forget", {
@@ -9454,7 +10002,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setDisplayName(name) {
     var _this28 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var prom = yield _this28.setProfileInfo("displayname", {
         displayname: name
       });
@@ -9474,7 +10022,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setAvatarUrl(url) {
     var _this29 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var prom = yield _this29.setProfileInfo("avatar_url", {
         avatar_url: url
       });
@@ -9521,7 +10069,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setSyncPresence(presence) {
     var _this30 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this30$syncApi;
       (_this30$syncApi = _this30.syncApi) === null || _this30$syncApi === void 0 || _this30$syncApi.setPresence(presence);
     })();
@@ -9535,7 +10083,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setPresence(opts) {
     var _this31 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = _utils_js__WEBPACK_IMPORTED_MODULE_10__.encodeUri("/presence/$userId/status", {
         $userId: _this31.credentials.userId
       });
@@ -9653,7 +10201,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getEventTimeline(timelineSet, eventId) {
     var _this32 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this32$clientOpts, _ref4, _timelineSet$getTimel, _timelineSet$room$fin;
       // don't allow any timeline support unless it's been enabled.
       if (!_this32.timelineSupport) {
@@ -9727,7 +10275,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   getThreadTimeline(timelineSet, eventId) {
     var _this33 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this33$clientOpts;
       if (!_this33.supportsThreads()) {
         throw new Error("could not get thread timeline: no client support");
@@ -9869,7 +10417,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getLatestTimeline(timelineSet) {
     var _this34 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // don't allow any timeline support unless it's been enabled.
       if (!_this34.timelineSupport) {
         throw new Error("timeline support is disabled. Set the 'timelineSupport'" + " parameter to true when creating MatrixClient to enable it.");
@@ -10056,7 +10604,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
         params.from = token;
       }
       promise = this.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Get, path, params).then(/*#__PURE__*/function () {
-        var _ref5 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (res) {
+        var _ref5 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (res) {
           var token = res.next_token;
           var matrixEvents = [];
           res.notifications = res.notifications.filter(_utils_js__WEBPACK_IMPORTED_MODULE_10__.noUnsafeEventProps);
@@ -10136,7 +10684,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
         from: token !== null && token !== void 0 ? token : undefined,
         recurse: recurse || undefined
       }).then(/*#__PURE__*/function () {
-        var _ref6 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (res) {
+        var _ref6 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (res) {
           var mapper = _this35.getEventMapper();
           var matrixEvents = res.chunk.filter(_utils_js__WEBPACK_IMPORTED_MODULE_10__.noUnsafeEventProps).filter((0,_thread_utils_js__WEBPACK_IMPORTED_MODULE_48__.getRelationsThreadFilter)(thread.id)).map(mapper);
 
@@ -10443,7 +10991,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   requestTokenFromEndpoint(endpoint, params) {
     var _this36 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var postParams = Object.assign({}, params);
       return _this36.http.request(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Post, endpoint, undefined, postParams);
     })();
@@ -10739,7 +11287,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getOrCreateFilter(filterName, filter) {
     var _this37 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var filterId = _this37.store.getFilterIdByName(filterName);
       var existingId;
       if (filterId) {
@@ -10827,7 +11375,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // XXX: Intended private, used in code.
   checkTurnServers() {
     var _this38 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!_this38.supportsVoip()) {
         return;
       }
@@ -10943,7 +11491,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   fetchClientWellKnown() {
     var _this39 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this39$getDomain;
       // `getRawClientConfig` does not throw or reject on network errors, instead
       // it absorbs errors and returns `{}`.
@@ -10996,7 +11544,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line
   _unstable_getSharedRooms(userId) {
     var _this40 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // Initial variant of the MSC
       var sharedRoomsSupport = yield _this40.doesServerSupportUnstableFeature(UNSTABLE_MSC2666_SHARED_ROOMS);
 
@@ -11053,7 +11601,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getVersions() {
     var _this41 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (_this41.serverVersionsPromise) {
         return _this41.serverVersionsPromise;
       }
@@ -11080,7 +11628,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   isVersionSupported(version) {
     var _this42 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var {
         versions
       } = yield _this42.getVersions();
@@ -11096,7 +11644,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   doesServerSupportUnstableFeature(feature) {
     var _this43 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var response = yield _this43.getVersions();
       if (!response) return false;
       var unstableFeatures = response["unstable_features"];
@@ -11113,7 +11661,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   doesServerForceEncryptionForPreset(presetName) {
     var _this44 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var response = yield _this44.getVersions();
       if (!response) return false;
       var unstableFeatures = response["unstable_features"];
@@ -11125,7 +11673,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   doesServerSupportThread() {
     var _this45 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (yield _this45.isVersionSupported("v1.4")) {
         return {
           threads: _models_thread_js__WEBPACK_IMPORTED_MODULE_38__.FeatureSupport.Stable,
@@ -11194,7 +11742,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   relations(roomId, eventId, relationType, eventType) {
     var _arguments9 = arguments,
       _this46 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _result$next_batch, _result$prev_batch;
       var opts = _arguments9.length > 4 && _arguments9[4] !== undefined ? _arguments9[4] : {
         dir: _models_event_timeline_js__WEBPACK_IMPORTED_MODULE_11__.Direction.Backward
@@ -11561,7 +12109,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   loginRequest(data) {
     var _this47 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return yield _this47.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Post, "/login", undefined, data);
     })();
   }
@@ -11578,7 +12126,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   logout() {
     var _arguments0 = arguments,
       _this48 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var stopClient = _arguments0.length > 0 && _arguments0[0] !== undefined ? _arguments0[0] : false;
       if (stopClient) {
         _this48.stopClient();
@@ -11623,7 +12171,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   requestLoginToken(auth) {
     var _this49 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var body = {
         auth
       };
@@ -11660,7 +12208,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   createRoom(options) {
     var _this50 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var _this50$identityServe;
       // eslint-disable-line camelcase
       // some valid options include: room_alias_name, visibility, invite
@@ -11818,7 +12366,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   sendStateEvent(roomId, eventType, content) {
     var _arguments1 = arguments,
       _this51 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var stateKey = _arguments1.length > 3 && _arguments1[3] !== undefined ? _arguments1[3] : "";
       var opts = _arguments1.length > 4 && _arguments1[4] !== undefined ? _arguments1[4] : {};
       var room = _this51.getRoom(roomId);
@@ -11844,7 +12392,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   encryptStateEventIfNeeded(event, room) {
     var _this52 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!_this52.enableEncryptedStateEvents) {
         return;
       }
@@ -11910,7 +12458,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setRoomReadMarkersHttpRequest(roomId, rmEventId, rrEventId, rpEventId) {
     var _this53 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = _utils_js__WEBPACK_IMPORTED_MODULE_10__.encodeUri("/rooms/$roomId/read_markers", {
         $roomId: roomId
       });
@@ -11960,7 +12508,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
         limit,
         since
       } = _ref9,
-      options = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__(_ref9, _excluded);
+      options = (0,_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__["default"])(_ref9, _excluded);
     if (Object.keys(options).length === 0) {
       var queryParams = {
         server,
@@ -12153,7 +12701,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   doesServerSupportExtendedProfiles() {
     var _this54 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return (yield _this54.isVersionSupported("v1.16")) || (yield _this54.doesServerSupportUnstableFeature(UNSTABLE_MSC4133_EXTENDED_PROFILES)) || (yield _this54.doesServerSupportUnstableFeature(STABLE_MSC4133_EXTENDED_PROFILES));
     })();
   }
@@ -12165,7 +12713,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getExtendedProfileRequestPrefix() {
     var _this55 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if ((yield _this55.isVersionSupported("v1.16")) || (yield _this55.doesServerSupportUnstableFeature("uk.tcpip.msc4133.stable"))) {
         return _http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.ClientPrefix.V3;
       }
@@ -12185,7 +12733,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getExtendedProfile(userId) {
     var _this56 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this56.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12210,7 +12758,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getExtendedProfileProperty(userId, key) {
     var _this57 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this57.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12235,7 +12783,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setExtendedProfileProperty(key, value) {
     var _this58 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this58.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12261,7 +12809,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   deleteExtendedProfileProperty(key) {
     var _this59 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this59.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12287,7 +12835,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   patchExtendedProfile(profile) {
     var _this60 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this60.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12311,7 +12859,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setExtendedProfile(profile) {
     var _this61 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(yield _this61.doesServerSupportExtendedProfiles())) {
         throw new Error("Server does not support extended profiles");
       }
@@ -12343,7 +12891,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   addThreePidOnly(data) {
     var _this62 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = "/account/3pid/add";
       return _this62.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Post, path, undefined, data);
     })();
@@ -12362,7 +12910,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   bindThreePid(data) {
     var _this63 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = "/account/3pid/bind";
       return _this63.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Post, path, undefined, data);
     })();
@@ -12383,7 +12931,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   // eslint-disable-next-line camelcase
   ) {
     var _this64 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = "/account/3pid/unbind";
       var data = {
         medium,
@@ -12513,7 +13061,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getPushers() {
     var _this65 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var response = yield _this65.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Get, "/pushers");
 
       // Migration path for clients that connect to a homeserver that does not support
@@ -12949,7 +13497,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   identityHashedLookup(addressPairs, identityAccessToken) {
     var _this66 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var params = {
         // addresses: ["email@example.org", "10005550000"],
         // algorithm: "sha256",
@@ -12970,7 +13518,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
       // When picking an algorithm, we pick the hashed over no hashes
       if (hashes["algorithms"].includes("sha256")) {
         params["addresses"] = yield Promise.all(addressPairs.map(/*#__PURE__*/function () {
-          var _ref10 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (p) {
+          var _ref10 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (p) {
             var addr = p[0].toLowerCase(); // lowercase to get consistent hashes
             var med = p[1].toLowerCase();
             var hashBuffer = yield (0,_digest_js__WEBPACK_IMPORTED_MODULE_51__.sha256)("".concat(addr, " ").concat(med, " ").concat(params["pepper"]));
@@ -13035,7 +13583,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   lookupThreePid(medium, address, identityAccessToken) {
     var _this67 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // Note: we're using the V2 API by calling this function, but our
       // function contract requires a V1 response. We therefore have to
       // convert it manually.
@@ -13072,7 +13620,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   bulkLookupThreePids(query, identityAccessToken) {
     var _this68 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // Note: we're using the V2 API by calling this function, but our
       // function contract requires a V1 response. We therefore have to
       // convert it manually.
@@ -13151,7 +13699,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   encryptAndSendToDevice(eventType, devices, payload) {
     var _this69 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!_this69.cryptoBackend) {
         throw new Error("Cannot encrypt to device event, your client does not support encryption.");
       }
@@ -13317,7 +13865,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   unstableCreateFileTree(name) {
     var _this70 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var {
         room_id: roomId
       } = yield _this70.createRoom({
@@ -13423,7 +13971,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getRoomSummary(roomIdOrAlias, via) {
     var _this71 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var paramOpts = {
         prefix: "/_matrix/client/unstable/im.nheko.summary"
       };
@@ -13492,7 +14040,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   whoami() {
     var _this72 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return _this72.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Get, "/account/whoami");
     })();
   }
@@ -13505,7 +14053,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   timestampToEvent(roomId, timestamp, dir) {
     var _this73 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var path = _utils_js__WEBPACK_IMPORTED_MODULE_10__.encodeUri("/rooms/$roomId/timestamp_to_event", {
         $roomId: roomId
       });
@@ -13552,7 +14100,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   getAuthMetadata() {
     var _this74 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var authMetadata;
       try {
         authMetadata = yield _this74.http.request(_http_api_index_js__WEBPACK_IMPORTED_MODULE_18__.Method.Get, "/auth_metadata", undefined, undefined, {
@@ -13574,7 +14122,7 @@ class MatrixClient extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
     })();
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__(MatrixClient, "RESTORE_BACKUP_ERROR_BAD_KEY", "RESTORE_BACKUP_ERROR_BAD_KEY");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(MatrixClient, "RESTORE_BACKUP_ERROR_BAD_KEY", "RESTORE_BACKUP_ERROR_BAD_KEY");
 function getUnstableDelayQueryOpts(delayOpts) {
   return Object.fromEntries(Object.entries(delayOpts).map(_ref11 => {
     var [k, v] = _ref11;
@@ -13731,7 +14279,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DecryptionError: () => (/* binding */ DecryptionError)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
@@ -13787,7 +14335,7 @@ class DecryptionError extends Error {
   constructor(code, msg, details) {
     super(msg);
     this.code = code;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "detailedString", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "detailedString", void 0);
     this.name = "DecryptionError";
     this.detailedString = detailedStringForDecryptionError(this, details);
   }
@@ -13829,7 +14377,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   parseLocationEvent: () => (/* binding */ parseLocationEvent),
 /* harmony export */   parseTopicContent: () => (/* binding */ parseTopicContent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _types_extensible_events_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./@types/extensible_events.js */ "./node_modules/matrix-js-sdk/lib/@types/extensible_events.js");
 /* harmony import */ var _extensible_events_v1_utilities_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./extensible_events_v1/utilities.js */ "./node_modules/matrix-js-sdk/lib/extensible_events_v1/utilities.js");
@@ -13837,7 +14385,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _types_topic_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./@types/topic.js */ "./node_modules/matrix-js-sdk/lib/@types/topic.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2018 - 2022 The Matrix.org Foundation C.I.C.
 
@@ -14397,7 +14945,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deriveRecoveryKeyFromPassphrase: () => (/* reexport safe */ _key_passphrase_js__WEBPACK_IMPORTED_MODULE_3__.deriveRecoveryKeyFromPassphrase),
 /* harmony export */   encodeRecoveryKey: () => (/* reexport safe */ _recovery_key_js__WEBPACK_IMPORTED_MODULE_2__.encodeRecoveryKey)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _verification_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./verification.js */ "./node_modules/matrix-js-sdk/lib/crypto-api/verification.js");
 /* harmony import */ var _recovery_key_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./recovery-key.js */ "./node_modules/matrix-js-sdk/lib/crypto-api/recovery-key.js");
 /* harmony import */ var _key_passphrase_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./key-passphrase.js */ "./node_modules/matrix-js-sdk/lib/crypto-api/key-passphrase.js");
@@ -14516,7 +15064,7 @@ class AllDevicesIsolationMode {
    */
   constructor(errorOnVerifiedUserProblems) {
     this.errorOnVerifiedUserProblems = errorOnVerifiedUserProblems;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "kind", DeviceIsolationModeKind.AllDevicesIsolationMode);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "kind", DeviceIsolationModeKind.AllDevicesIsolationMode);
   }
 }
 
@@ -14531,7 +15079,7 @@ class AllDevicesIsolationMode {
  */
 class OnlySignedDevicesIsolationMode {
   constructor() {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "kind", DeviceIsolationModeKind.OnlySignedDevicesIsolationMode);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "kind", DeviceIsolationModeKind.OnlySignedDevicesIsolationMode);
   }
 }
 
@@ -14568,7 +15116,7 @@ class UserVerificationStatus {
      *
      * @returns true if the identity has changed in a way that needs user approval.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "needsUserApproval", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "needsUserApproval", void 0);
     this.needsUserApproval = needsUserApproval;
   }
 
@@ -14612,25 +15160,25 @@ class DeviceVerificationStatus {
      * This doesn't necessarily mean that we have verified the device, since we may not have verified the
      * owner's cross-signing key.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "signedByOwner", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "signedByOwner", void 0);
     /**
      * True if this device has been verified via cross signing.
      *
      * This does *not* take into account `trustCrossSignedDevices`.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "crossSigningVerified", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "crossSigningVerified", void 0);
     /**
      * TODO: tofu magic wtf does this do?
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "tofu", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "tofu", void 0);
     /**
      * True if the device has been marked as locally verified.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "localVerified", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "localVerified", void 0);
     /**
      * True if the client has been configured to trust cross-signed devices via {@link CryptoApi#setTrustCrossSignedDevices}.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "trustCrossSignedDevices", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "trustCrossSignedDevices", void 0);
     this.signedByOwner = (_opts$signedByOwner = opts.signedByOwner) !== null && _opts$signedByOwner !== void 0 ? _opts$signedByOwner : false;
     this.crossSigningVerified = (_opts$crossSigningVer = opts.crossSigningVerified) !== null && _opts$crossSigningVer !== void 0 ? _opts$crossSigningVer : false;
     this.tofu = (_opts$tofu = opts.tofu) !== null && _opts$tofu !== void 0 ? _opts$tofu : false;
@@ -14809,7 +15357,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deriveRecoveryKeyFromPassphrase: () => (/* binding */ deriveRecoveryKeyFromPassphrase)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 
 /*
  * Copyright 2024 The Matrix.org Foundation C.I.C.
@@ -14842,7 +15390,7 @@ function deriveRecoveryKeyFromPassphrase(_x, _x2, _x3) {
   return _deriveRecoveryKeyFromPassphrase.apply(this, arguments);
 }
 function _deriveRecoveryKeyFromPassphrase() {
-  _deriveRecoveryKeyFromPassphrase = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (passphrase, salt, iterations) {
+  _deriveRecoveryKeyFromPassphrase = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (passphrase, salt, iterations) {
     var numBits = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : DEFAULT_BIT_SIZE;
     if (!globalThis.crypto.subtle || !TextEncoder) {
       throw new Error("Password-based backup is not available on this platform");
@@ -15269,8 +15817,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   VERSION: () => (/* binding */ VERSION),
 /* harmony export */   upgradeDatabase: () => (/* binding */ upgradeDatabase)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _base_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/base.js");
 /* harmony import */ var _indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./indexeddb-crypto-store.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/indexeddb-crypto-store.js");
@@ -15309,7 +15857,7 @@ class Backend {
    */
   constructor(db) {
     this.db = db;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "nextTxnId", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "nextTxnId", 0);
     // make sure we close the db on `onversionchange` - otherwise
     // attempts to delete the database will block (and subsequent
     // attempts to re-create it will also block).
@@ -15319,20 +15867,20 @@ class Backend {
     };
   }
   containsData() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       throw Error("Not implemented for Backend");
     })();
   }
   startup() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // No work to do, as the startup is done by the caller (e.g IndexedDBCryptoStore)
       // by passing us a ready IDBDatabase instance
       return _this;
     })();
   }
   deleteAllData() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       throw Error("This is not implemented, call IDBFactory::deleteDatabase(dbName) instead.");
     })();
   }
@@ -15344,7 +15892,7 @@ class Backend {
    */
   getMigrationState() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var migrationState = _base_js__WEBPACK_IMPORTED_MODULE_3__.MigrationState.NOT_STARTED;
       yield _this2.doTxn("readonly", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_ACCOUNT], txn => {
         var objectStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_ACCOUNT);
@@ -15365,7 +15913,7 @@ class Backend {
    */
   setMigrationState(migrationState) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this3.doTxn("readwrite", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_ACCOUNT], txn => {
         var objectStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_ACCOUNT);
         objectStore.put(migrationState, _base_js__WEBPACK_IMPORTED_MODULE_3__.ACCOUNT_OBJECT_KEY_MIGRATION_STATE);
@@ -15487,7 +16035,7 @@ class Backend {
    */
   getEndToEndSessionsBatch() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = [];
       yield _this4.doTxn("readonly", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_SESSIONS], txn => {
         var objectStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_SESSIONS);
@@ -15523,9 +16071,9 @@ class Backend {
    */
   deleteEndToEndSessionsBatch(sessions) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this5.doTxn("readwrite", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_SESSIONS], /*#__PURE__*/function () {
-        var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (txn) {
+        var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (txn) {
           try {
             var objectStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_SESSIONS);
             var _loop = function* _loop() {
@@ -15607,7 +16155,7 @@ class Backend {
    */
   countEndToEndInboundGroupSessions() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = 0;
       yield _this6.doTxn("readonly", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS], txn => {
         var sessionStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS);
@@ -15627,7 +16175,7 @@ class Backend {
    */
   getEndToEndInboundGroupSessionsBatch() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = [];
       yield _this7.doTxn("readonly", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS, _indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_BACKUP], txn => {
         var sessionStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS);
@@ -15672,9 +16220,9 @@ class Backend {
    */
   deleteEndToEndInboundGroupSessionsBatch(sessions) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this8.doTxn("readwrite", [_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS], /*#__PURE__*/function () {
-        var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (txn) {
+        var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (txn) {
           try {
             var objectStore = txn.objectStore(_indexeddb_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__.IndexedDBCryptoStore.STORE_INBOUND_GROUP_SESSIONS);
             var _loop2 = function* _loop2() {
@@ -15730,7 +16278,7 @@ class Backend {
   }
   markSessionsNeedingBackup(sessions, txn) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!txn) {
         txn = _this9.db.transaction("sessions_needing_backup", "readwrite");
       }
@@ -15892,8 +16440,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   IndexedDBCryptoStore: () => (/* binding */ IndexedDBCryptoStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _localStorage_crypto_store_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./localStorage-crypto-store.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/localStorage-crypto-store.js");
 /* harmony import */ var _memory_crypto_store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./memory-crypto-store.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/memory-crypto-store.js");
@@ -15991,8 +16539,8 @@ class IndexedDBCryptoStore {
   constructor(indexedDB, dbName) {
     this.indexedDB = indexedDB;
     this.dbName = dbName;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "backendPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "backend", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "backendPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "backend", void 0);
   }
 
   /**
@@ -16004,7 +16552,7 @@ class IndexedDBCryptoStore {
    */
   containsData() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return IndexedDBCryptoStore.exists(_this.indexedDB, _this.dbName);
     })();
   }
@@ -16368,15 +16916,15 @@ class IndexedDBCryptoStore {
     return this.backend.doTxn(mode, stores, func, log);
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_ACCOUNT", "account");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_SESSIONS", "sessions");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_INBOUND_GROUP_SESSIONS", "inbound_group_sessions");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_INBOUND_GROUP_SESSIONS_WITHHELD", "inbound_group_sessions_withheld");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_SHARED_HISTORY_INBOUND_GROUP_SESSIONS", "shared_history_inbound_group_sessions");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_PARKED_SHARED_HISTORY", "parked_shared_history");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_DEVICE_DATA", "device_data");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_ROOMS", "rooms");
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(IndexedDBCryptoStore, "STORE_BACKUP", "sessions_needing_backup");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_ACCOUNT", "account");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_SESSIONS", "sessions");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_INBOUND_GROUP_SESSIONS", "inbound_group_sessions");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_INBOUND_GROUP_SESSIONS_WITHHELD", "inbound_group_sessions_withheld");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_SHARED_HISTORY_INBOUND_GROUP_SESSIONS", "shared_history_inbound_group_sessions");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_PARKED_SHARED_HISTORY", "parked_shared_history");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_DEVICE_DATA", "device_data");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_ROOMS", "rooms");
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(IndexedDBCryptoStore, "STORE_BACKUP", "sessions_needing_backup");
 //# sourceMappingURL=indexeddb-crypto-store.js.map
 
 /***/ }),
@@ -16392,7 +16940,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LocalStorageCryptoStore: () => (/* binding */ LocalStorageCryptoStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _memory_crypto_store_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./memory-crypto-store.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/memory-crypto-store.js");
 /* harmony import */ var _base_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/base.js");
@@ -16469,7 +17017,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   containsData() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return LocalStorageCryptoStore.exists(_this.store);
     })();
   }
@@ -16483,7 +17031,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   getMigrationState() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _getJsonItem;
       return (_getJsonItem = getJsonItem(_this2.store, KEY_END_TO_END_MIGRATION_STATE)) !== null && _getJsonItem !== void 0 ? _getJsonItem : _base_js__WEBPACK_IMPORTED_MODULE_3__.MigrationState.NOT_STARTED;
     })();
@@ -16498,7 +17046,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   setMigrationState(migrationState) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       setJsonItem(_this3.store, KEY_END_TO_END_MIGRATION_STATE, migrationState);
     })();
   }
@@ -16558,7 +17106,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   getEndToEndSessionsBatch() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = [];
       for (var i = 0; i < _this4.store.length; ++i) {
         var _this4$store$key;
@@ -16591,7 +17139,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   deleteEndToEndSessionsBatch(sessions) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var {
         deviceKey,
         sessionId
@@ -16626,7 +17174,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   countEndToEndInboundGroupSessions() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var count = 0;
       for (var i = 0; i < _this6.store.length; ++i) {
         var key = _this6.store.key(i);
@@ -16647,7 +17195,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   getEndToEndInboundGroupSessionsBatch() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var sessionsNeedingBackup = getJsonItem(_this7.store, KEY_SESSIONS_NEEDING_BACKUP) || {};
       var result = [];
       for (var i = 0; i < _this7.store.length; ++i) {
@@ -16690,7 +17238,7 @@ class LocalStorageCryptoStore extends _memory_crypto_store_js__WEBPACK_IMPORTED_
    */
   deleteEndToEndInboundGroupSessionsBatch(sessions) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var {
         senderKey,
         sessionId
@@ -16784,14 +17332,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MemoryCryptoStore: () => (/* binding */ MemoryCryptoStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _base_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base.js */ "./node_modules/matrix-js-sdk/lib/crypto/store/base.js");
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2017 - 2021 The Matrix.org Foundation C.I.C.
 
@@ -16829,16 +17377,16 @@ function decodeSessionKey(key) {
 
 class MemoryCryptoStore {
   constructor() {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "migrationState", _base_js__WEBPACK_IMPORTED_MODULE_3__.MigrationState.NOT_STARTED);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "account", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "crossSigningKeys", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "privateKeys", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sessions", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inboundGroupSessions", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inboundGroupSessionsWithheld", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "migrationState", _base_js__WEBPACK_IMPORTED_MODULE_3__.MigrationState.NOT_STARTED);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "account", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "crossSigningKeys", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "privateKeys", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sessions", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inboundGroupSessions", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inboundGroupSessionsWithheld", {});
     // Opaque device data object
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "rooms", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sessionsNeedingBackup", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "rooms", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sessionsNeedingBackup", {});
   }
   /**
    * Returns true if this CryptoStore has ever been initialised (ie, it might contain data).
@@ -16849,7 +17397,7 @@ class MemoryCryptoStore {
    */
   containsData() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // If it contains anything, it should contain an account.
       return _this.account !== null;
     })();
@@ -16864,7 +17412,7 @@ class MemoryCryptoStore {
    */
   startup() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // No startup work to do for the memory store.
       return _this2;
     })();
@@ -16888,7 +17436,7 @@ class MemoryCryptoStore {
    */
   getMigrationState() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this3.migrationState;
     })();
   }
@@ -16902,7 +17450,7 @@ class MemoryCryptoStore {
    */
   setMigrationState(migrationState) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this4.migrationState = migrationState;
     })();
   }
@@ -16960,7 +17508,7 @@ class MemoryCryptoStore {
    */
   getEndToEndSessionsBatch() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = [];
       for (var deviceSessions of Object.values(_this5.sessions)) {
         for (var session of Object.values(deviceSessions)) {
@@ -16989,7 +17537,7 @@ class MemoryCryptoStore {
    */
   deleteEndToEndSessionsBatch(sessions) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var {
         deviceKey,
         sessionId
@@ -17024,7 +17572,7 @@ class MemoryCryptoStore {
    */
   countEndToEndInboundGroupSessions() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return Object.keys(_this7.inboundGroupSessions).length;
     })();
   }
@@ -17038,7 +17586,7 @@ class MemoryCryptoStore {
    */
   getEndToEndInboundGroupSessionsBatch() {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var result = [];
       for (var [key, session] of Object.entries(_this8.inboundGroupSessions)) {
         result.push(_objectSpread(_objectSpread({}, decodeSessionKey(key)), {}, {
@@ -17068,7 +17616,7 @@ class MemoryCryptoStore {
    */
   deleteEndToEndInboundGroupSessionsBatch(sessions) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var {
         senderKey,
         sessionId
@@ -17113,7 +17661,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sha256: () => (/* binding */ sha256)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 
 /*
 Copyright 2024 The Matrix.org Foundation C.I.C.
@@ -17143,7 +17691,7 @@ function sha256(_x) {
   return _sha.apply(this, arguments);
 }
 function _sha() {
-  _sha = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (plaintext) {
+  _sha = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (plaintext) {
     if (!globalThis.crypto.subtle) {
       throw new Error("Crypto.subtle is not available: insecure context?");
     }
@@ -17169,8 +17717,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomWidgetClient: () => (/* binding */ RoomWidgetClient),
 /* harmony export */   RoomWidgetClientEvent: () => (/* binding */ RoomWidgetClientEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var matrix_widget_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! matrix-widget-api */ "./node_modules/matrix-widget-api/lib/index.js");
 /* harmony import */ var _models_event_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
@@ -17185,7 +17733,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _asyncIterator(r) { var n, t, o, e = 2; for ("undefined" != typeof Symbol && (t = Symbol.asyncIterator, o = Symbol.iterator); e--;) { if (t && null != (n = r[t])) return n.call(r); if (o && null != (n = r[o])) return new AsyncFromSyncIterator(n.call(r)); t = "@@asyncIterator", o = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
 function AsyncFromSyncIterator(r) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var n = r.done; return Promise.resolve(r.value).then(function (r) { return { value: r, done: n }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(r) { this.s = r, this.n = r.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, return: function _return(r) { var n = this.s.return; return void 0 === n ? Promise.resolve({ value: r, done: !0 }) : AsyncFromSyncIteratorContinuation(n.apply(this.s, arguments)); }, throw: function _throw(r) { var n = this.s.return; return void 0 === n ? Promise.reject(r) : AsyncFromSyncIteratorContinuation(n.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(r); }
 /*
@@ -17242,15 +17790,15 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
     this.widgetApi = widgetApi;
     this.capabilities = capabilities;
     this.roomId = roomId;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "room", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "widgetApiReady", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomStateSynced", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lifecycle", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncState", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingSendingEventsTxId", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "eventEmitter", new _matrix_js__WEBPACK_IMPORTED_MODULE_12__.TypedEventEmitter());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "updateTxId", /*#__PURE__*/function () {
-      var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (event) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "widgetApiReady", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomStateSynced", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lifecycle", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncState", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingSendingEventsTxId", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "eventEmitter", new _matrix_js__WEBPACK_IMPORTED_MODULE_12__.TypedEventEmitter());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "updateTxId", /*#__PURE__*/function () {
+      var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (event) {
         // We update the txId for remote echos that originate from this client.
         // This happens with the help of `pendingSendingEventsTxId` where we store all events that are currently sending
         // with their widget txId and once ready the final evId.
@@ -17296,8 +17844,8 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
         return _ref.apply(this, arguments);
       };
     }());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onEvent", /*#__PURE__*/function () {
-      var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (ev) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onEvent", /*#__PURE__*/function () {
+      var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (ev) {
         ev.preventDefault();
 
         // Verify the room ID matches, since it's possible for the client to
@@ -17339,8 +17887,8 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
         return _ref2.apply(this, arguments);
       };
     }());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onToDevice", /*#__PURE__*/function () {
-      var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (ev) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onToDevice", /*#__PURE__*/function () {
+      var _ref3 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (ev) {
         ev.preventDefault();
         var event = new _models_event_js__WEBPACK_IMPORTED_MODULE_3__.MatrixEvent({
           type: ev.detail.data.type,
@@ -17357,8 +17905,8 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
         return _ref3.apply(this, arguments);
       };
     }());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onStateUpdate", /*#__PURE__*/function () {
-      var _ref4 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (ev) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onStateUpdate", /*#__PURE__*/function () {
+      var _ref4 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (ev) {
         ev.preventDefault();
         if (!(yield _this.supportUpdateState())) {
           _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.warn("received update_state widget action but the widget driver did not claim to support 'org.matrix.msc2762_update_state'");
@@ -17392,7 +17940,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
     }());
     var transportSend = this.widgetApi.transport.send.bind(this.widgetApi.transport);
     this.widgetApi.transport.send = /*#__PURE__*/function () {
-      var _ref5 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (action, data) {
+      var _ref5 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (action, data) {
         try {
           return yield transportSend(action, data);
         } catch (error) {
@@ -17405,7 +17953,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
     }();
     var transportSendComplete = this.widgetApi.transport.sendComplete.bind(this.widgetApi.transport);
     this.widgetApi.transport.sendComplete = /*#__PURE__*/function () {
-      var _ref6 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (action, data) {
+      var _ref6 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (action, data) {
         try {
           return yield transportSendComplete(action, data);
         } catch (error) {
@@ -17475,14 +18023,14 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   }
   supportUpdateState() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return (yield _this2.widgetApi.getClientVersions()).includes(matrix_widget_api__WEBPACK_IMPORTED_MODULE_2__.UnstableApiVersion.MSC2762_UPDATE_STATE);
     })();
   }
   startClient() {
     var _arguments = arguments,
       _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var opts = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : {};
       _this3.lifecycle = new AbortController();
 
@@ -17515,7 +18063,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
         // We only get the most recent event for every type + state key combo,
         // so it doesn't really matter what order we inject them in
         yield Promise.all((_this3$capabilities$r = (_this3$capabilities$r2 = _this3.capabilities.receiveState) === null || _this3$capabilities$r2 === void 0 ? void 0 : _this3$capabilities$r2.map(/*#__PURE__*/function () {
-          var _ref0 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (_ref9) {
+          var _ref0 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (_ref9) {
             var {
               eventType,
               stateKey
@@ -17561,14 +18109,14 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   }
   joinRoom(roomIdOrAlias) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (roomIdOrAlias === _this4.roomId) return _this4.room;
       throw new Error("Unknown room: ".concat(roomIdOrAlias));
     })();
   }
   encryptAndSendEvent(room, event, delayOpts) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We need to extend the content with the redacts parameter
       // The js sdk uses event.redacts but the widget api uses event.content.redacts
       // This will be converted back to event.redacts in the widget driver.
@@ -17612,7 +18160,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   sendStateEvent(roomId, eventType, content) {
     var _arguments2 = arguments,
       _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var stateKey = _arguments2.length > 3 && _arguments2[3] !== undefined ? _arguments2[3] : "";
       var response = yield _this6.widgetApi.sendStateEvent(eventType, stateKey, content, roomId).catch(timeoutToConnectionError);
       if (response.event_id === undefined) {
@@ -17631,7 +18179,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   _unstable_sendDelayedStateEvent(roomId, delayOpts, eventType, content) {
     var _arguments3 = arguments,
       _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var stateKey = _arguments3.length > 4 && _arguments3[4] !== undefined ? _arguments3[4] : "";
       if (!(yield _this7.doesServerSupportUnstableFeature(_client_js__WEBPACK_IMPORTED_MODULE_6__.UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _matrix_js__WEBPACK_IMPORTED_MODULE_12__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "sendDelayedStateEvent");
@@ -17655,7 +18203,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   // eslint-disable-next-line
   _unstable_updateDelayedEvent(delayId, action) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!(yield _this8.doesServerSupportUnstableFeature(_client_js__WEBPACK_IMPORTED_MODULE_6__.UNSTABLE_MSC4140_DELAYED_EVENTS))) {
         throw new _matrix_js__WEBPACK_IMPORTED_MODULE_12__.UnsupportedDelayedEventsEndpointError("Server does not support the delayed events API", "updateDelayedEvent");
       }
@@ -17669,7 +18217,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
    */
   encryptAndSendToDevice(eventType, devices, payload) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // map: user Id → device Id → payload
       var contentMap = new _utils_js__WEBPACK_IMPORTED_MODULE_11__.MapWithDefault(() => new Map());
       for (var {
@@ -17683,14 +18231,14 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   }
   sendToDevice(eventType, contentMap) {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this0.widgetApi.sendToDevice(eventType, false, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.recursiveMapToObject)(contentMap)).catch(timeoutToConnectionError);
       return {};
     })();
   }
   getOpenIdToken() {
     var _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var token = yield _this1.widgetApi.requestOpenIDConnectToken().catch(timeoutToConnectionError);
       // the IOpenIDCredentials from the widget-api and IOpenIDToken form the matrix-js-sdk are compatible.
       // we still recreate the token to make this transparent and catch'able by the linter in case the types change in the future.
@@ -17704,7 +18252,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   }
   queueToDevice(_ref1) {
     var _this10 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         eventType,
         batch
@@ -17737,7 +18285,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
    */
   sendToDeviceViaWidgetApi(eventType, encrypted, contentMap) {
     var _this11 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this11.widgetApi.sendToDevice(eventType, encrypted, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.recursiveMapToObject)(contentMap)).catch(timeoutToConnectionError);
     })();
   }
@@ -17746,7 +18294,7 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   // and this method would otherwise complain about missing an access token
   checkTurnServers() {
     var _this12 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this12.turnServers.length > 0;
     })();
   }
@@ -17762,13 +18310,13 @@ class RoomWidgetClient extends _client_js__WEBPACK_IMPORTED_MODULE_6__.MatrixCli
   }
   ack(ev) {
     var _this13 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this13.widgetApi.transport.reply(ev.detail, {});
     })();
   }
   watchTurnServers() {
     var _this14 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var servers = _this14.widgetApi.getTurnServers();
       var onClientStopped = () => {
         servers.return(undefined);
@@ -17853,7 +18401,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   UnsupportedDelayedEventsEndpointError: () => (/* binding */ UnsupportedDelayedEventsEndpointError),
 /* harmony export */   UnsupportedStickyEventsEndpointError: () => (/* binding */ UnsupportedStickyEventsEndpointError)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
@@ -17883,7 +18431,7 @@ class InvalidCryptoStoreError extends Error {
     this.name = "InvalidCryptoStoreError";
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(InvalidCryptoStoreError, "TOO_NEW", InvalidCryptoStoreState.TooNew);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(InvalidCryptoStoreError, "TOO_NEW", InvalidCryptoStoreState.TooNew);
 class KeySignatureUploadError extends Error {
   constructor(message, value) {
     super(message);
@@ -17941,12 +18489,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   eventMapperFor: () => (/* binding */ eventMapperFor)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_event_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./models/event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2021 The Matrix.org Foundation C.I.C.
 
@@ -18083,7 +18631,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ServerSupport: () => (/* binding */ ServerSupport),
 /* harmony export */   buildFeatureSupportMap: () => (/* binding */ buildFeatureSupportMap)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
@@ -18151,7 +18699,7 @@ function buildFeatureSupportMap(_x) {
   return _buildFeatureSupportMap.apply(this, arguments);
 }
 function _buildFeatureSupportMap() {
-  _buildFeatureSupportMap = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (versions) {
+  _buildFeatureSupportMap = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (versions) {
     var supportMap = new Map();
     for (var [feature, supportCondition] of Object.entries(featureSupportResolver)) {
       var _versions$versions$in, _versions$versions, _supportCondition$uns, _supportCondition$uns2;
@@ -18372,12 +18920,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Filter: () => (/* binding */ Filter)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_sync_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./@types/sync.js */ "./node_modules/matrix-js-sdk/lib/@types/sync.js");
 /* harmony import */ var _filter_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter-component.js */ "./node_modules/matrix-js-sdk/lib/filter-component.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015 - 2021 Matrix.org Foundation C.I.C.
 
@@ -18431,9 +18979,9 @@ class Filter {
   constructor(userId, filterId) {
     this.userId = userId;
     this.filterId = filterId;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "definition", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomFilter", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomTimelineFilter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "definition", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomFilter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomTimelineFilter", void 0);
   }
 
   /**
@@ -18578,7 +19126,7 @@ class Filter {
     setProp(this.definition, "room.include_leave", includeLeave);
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(Filter, "LAZY_LOADING_MESSAGES_FILTER", {
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(Filter, "LAZY_LOADING_MESSAGES_FILTER", {
   lazy_load_members: true
 });
 //# sourceMappingURL=filter.js.map
@@ -18601,10 +19149,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TokenRefreshLogoutError: () => (/* binding */ TokenRefreshLogoutError),
 /* harmony export */   safeGetRetryAfterMs: () => (/* binding */ safeGetRetryAfterMs)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2022 - 2024 The Matrix.org Foundation C.I.C.
 
@@ -18698,9 +19246,9 @@ class MatrixError extends HTTPError {
     this.url = url;
     this.event = event;
     // The Matrix 'errcode' value, e.g. "M_FORBIDDEN".
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "errcode", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "errcode", void 0);
     // The raw Matrix error JSON used to construct this object.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "data", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "data", void 0);
     this.errcode = errorJson.errcode;
     this.name = errorJson.errcode || "Unknown error code";
     this.data = errorJson;
@@ -18830,8 +19378,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FetchHttpApi: () => (/* binding */ FetchHttpApi)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _method_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./method.js */ "./node_modules/matrix-js-sdk/lib/http-api/method.js");
 /* harmony import */ var _errors_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./errors.js */ "./node_modules/matrix-js-sdk/lib/http-api/errors.js");
@@ -18841,7 +19389,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
 
@@ -18873,8 +19421,8 @@ class FetchHttpApi {
     var _opts$useAuthorizatio;
     this.eventEmitter = eventEmitter;
     this.opts = opts;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "abortController", new AbortController());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "tokenRefresher", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "abortController", new AbortController());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "tokenRefresher", void 0);
     (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.checkObjectHasKeys)(opts, ["baseUrl", "prefix"]);
     if (!opts.onlyData) {
       throw new Error("Constructing FetchHttpApi without `onlyData=true` is no longer supported.");
@@ -18951,7 +19499,7 @@ class FetchHttpApi {
   doAuthedRequest(attempt, method, path, queryParams, body) {
     var _arguments = arguments,
       _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var paramOpts = _arguments.length > 5 && _arguments[5] !== undefined ? _arguments[5] : {};
       // avoid mutating paramOpts so they can be used on retry
       var opts = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.deepCopy)(paramOpts);
@@ -19038,7 +19586,7 @@ class FetchHttpApi {
   requestOtherUrl(method, url, body) {
     var _arguments2 = arguments,
       _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this2$opts$logger, _opts$localTimeoutMs, _opts$keepAlive, _body$constructor;
       var opts = _arguments2.length > 3 && _arguments2[3] !== undefined ? _arguments2[3] : {};
       if (opts.json !== undefined && opts.rawResponseBody !== undefined) {
@@ -19193,7 +19741,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   safeGetRetryAfterMs: () => (/* reexport safe */ _errors_js__WEBPACK_IMPORTED_MODULE_6__.safeGetRetryAfterMs),
 /* harmony export */   timeoutSignal: () => (/* reexport safe */ _utils_js__WEBPACK_IMPORTED_MODULE_7__.timeoutSignal)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _fetch_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fetch.js */ "./node_modules/matrix-js-sdk/lib/http-api/fetch.js");
 /* harmony import */ var _prefix_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./prefix.js */ "./node_modules/matrix-js-sdk/lib/http-api/prefix.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -19234,7 +19782,7 @@ limitations under the License.
 class MatrixHttpApi extends _fetch_js__WEBPACK_IMPORTED_MODULE_1__.FetchHttpApi {
   constructor() {
     super(...arguments);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "uploads", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "uploads", []);
   }
   /**
    * Upload content to the homeserver
@@ -19553,8 +20101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TokenRefreshOutcome: () => (/* binding */ TokenRefreshOutcome),
 /* harmony export */   TokenRefresher: () => (/* binding */ TokenRefresher)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _errors_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./errors.js */ "./node_modules/matrix-js-sdk/lib/http-api/errors.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 
@@ -19604,8 +20152,8 @@ class TokenRefresher {
      * Promise used to block authenticated requests during a token refresh to avoid repeated expected errors.
      * @private
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "tokenRefreshPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "latestTokenRefreshExpiry", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "tokenRefreshPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "latestTokenRefreshExpiry", void 0);
   }
   /**
    * This function is called before every request to ensure that the access token is valid.
@@ -19614,7 +20162,7 @@ class TokenRefresher {
    */
   prepareForRequest() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Ensure our token is refreshed before we build the headers/params
       yield _this.refreshIfNeeded();
       return {
@@ -19626,7 +20174,7 @@ class TokenRefresher {
   }
   refreshIfNeeded() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this2.tokenRefreshPromise) {
         return _this2.tokenRefreshPromise;
       }
@@ -19648,7 +20196,7 @@ class TokenRefresher {
    */
   handleUnknownToken(snapshot, attempt) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this3._handleUnknownToken(snapshot, attempt);
     })();
   }
@@ -19657,7 +20205,7 @@ class TokenRefresher {
 
   _handleUnknownToken(snapshot, attempt) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (snapshot !== null && snapshot !== void 0 && snapshot.expiry) {
         // If our token is unknown, but it should not have expired yet, then we should not refresh
         var expiresIn = snapshot.expiry.getTime() - Date.now();
@@ -19691,7 +20239,7 @@ class TokenRefresher {
    */
   doTokenRefresh(attempt) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this5.opts.refreshToken || !_this5.opts.tokenRefreshFunction) {
         var _this5$opts$logger;
         (_this5$opts$logger = _this5.opts.logger) === null || _this5$opts$logger === void 0 || _this5$opts$logger.error("Unable to refresh token - no refresh token or refresh function");
@@ -19749,7 +20297,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   retryNetworkOperation: () => (/* binding */ retryNetworkOperation),
 /* harmony export */   timeoutSignal: () => (/* binding */ timeoutSignal)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var content_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! content-type */ "./node_modules/content-type/index.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -19884,7 +20432,7 @@ function retryNetworkOperation(_x, _x2) {
  * @param retryConnectionError - Whether to retry on {@link ConnectionError} (CORS, connection is down, etc.)
  */
 function _retryNetworkOperation() {
-  _retryNetworkOperation = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (maxAttempts, callback) {
+  _retryNetworkOperation = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (maxAttempts, callback) {
     var attempts = 0;
     var lastConnectionError = null;
     while (attempts < maxAttempts) {
@@ -20013,8 +20561,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   InteractiveAuth: () => (/* binding */ InteractiveAuth),
 /* harmony export */   NoAuthFlowFoundError: () => (/* binding */ NoAuthFlowFoundError)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 
@@ -20090,7 +20638,7 @@ class NoAuthFlowFoundError extends Error {
     super(m);
     this.required_stages = required_stages;
     this.flows = flows;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "name", "NoAuthFlowFoundError");
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "name", "NoAuthFlowFoundError");
   }
 }
 
@@ -20122,29 +20670,29 @@ class NoAuthFlowFoundError extends Error {
 class InteractiveAuth {
   constructor(opts) {
     var _this = this;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "matrixClient", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inputs", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientSecret", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "requestCallback", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "busyChangedCallback", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "stateUpdatedCallback", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "requestEmailTokenCallback", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "supportedStages", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "matrixClient", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inputs", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientSecret", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "requestCallback", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "busyChangedCallback", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "stateUpdatedCallback", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "requestEmailTokenCallback", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "supportedStages", void 0);
     // The current latest data or error received from the server during the user interactive auth flow.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "data", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "emailSid", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "requestingEmailToken", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "attemptAuthDeferred", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "chosenFlow", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "currentStage", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "emailAttempt", 1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "data", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "emailSid", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "requestingEmailToken", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "attemptAuthDeferred", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "chosenFlow", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "currentStage", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "emailAttempt", 1);
     // if we are currently trying to submit an auth dict (which includes polling)
     // the promise the will resolve/reject when it completes
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "submitPromise", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "submitPromise", null);
     /**
      * Requests a new email token and sets the email sid for the validation session
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "requestEmailToken", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "requestEmailToken", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.requestingEmailToken) {
         _logger_js__WEBPACK_IMPORTED_MODULE_2__.logger.trace("Requesting email token. Attempt: " + _this.emailAttempt);
         // If we've picked a flow with email auth, we send the email
@@ -20188,7 +20736,7 @@ class InteractiveAuth {
    */
   attemptAuth() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this2$data;
       // This promise will be quite long-lived and will resolve when the
       // request is authenticated and completes successfully.
@@ -20222,7 +20770,7 @@ class InteractiveAuth {
    */
   poll() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this3.data.session) return;
       // likewise don't poll if there is no auth session in progress
       if (!_this3.attemptAuthDeferred) return;
@@ -20301,7 +20849,7 @@ class InteractiveAuth {
   submitAuthDict(authData) {
     var _arguments = arguments,
       _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this4$data;
       var background = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : false;
       if (!_this4.attemptAuthDeferred) {
@@ -20382,7 +20930,7 @@ class InteractiveAuth {
   doRequest(auth) {
     var _arguments2 = arguments,
       _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var background = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : false;
       try {
         var result = yield _this5.requestCallback(auth, background);
@@ -20591,7 +21139,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   LogSpan: () => (/* binding */ LogSpan),
 /* harmony export */   logger: () => (/* binding */ logger)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var loglevel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! loglevel */ "./node_modules/loglevel/lib/loglevel.js");
 
 /*
@@ -20708,7 +21256,7 @@ var logger = getPrefixedLogger();
 class LogSpan {
   constructor(parent, name) {
     this.parent = parent;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "name", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "name", void 0);
     this.name = name + ":";
   }
   trace() {
@@ -21272,7 +21820,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CallMembership: () => (/* binding */ CallMembership),
 /* harmony export */   DEFAULT_EXPIRE_DURATION: () => (/* binding */ DEFAULT_EXPIRE_DURATION)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_room_member_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/room-member.js */ "./node_modules/matrix-js-sdk/lib/models/room-member.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _MatrixRTCSession_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MatrixRTCSession.js */ "./node_modules/matrix-js-sdk/lib/matrixrtc/MatrixRTCSession.js");
@@ -21415,11 +21963,11 @@ class CallMembership {
   constructor(/** The Matrix event that this membership is based on */
   matrixEvent, data) {
     this.matrixEvent = matrixEvent;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "membershipData", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "membershipData", void 0);
     /** The parsed data from the Matrix event.
      * To access checked eventId and sender from the matrixEvent.
      * Class construction will fail if these values cannot get obtained. */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "matrixEventData", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "matrixEventData", void 0);
     var eventId = matrixEvent.getId();
     var sender = matrixEvent.getSender();
     if (eventId === undefined) throw new Error("parentEvent is missing eventId field");
@@ -21743,8 +22291,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   EncryptionManager: () => (/* binding */ EncryptionManager)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _randomstring_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../randomstring.js */ "./node_modules/matrix-js-sdk/lib/randomstring.js");
 /* harmony import */ var _base64_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../base64.js */ "./node_modules/matrix-js-sdk/lib/base64.js");
@@ -21796,24 +22344,24 @@ class EncryptionManager {
     this.transport = transport;
     this.statistics = statistics;
     this.onEncryptionKeysChanged = onEncryptionKeysChanged;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "manageMediaKeys", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "keysEventUpdateTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "makeNewKeyTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "setNewKeyTimeouts", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "encryptionKeys", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lastEncryptionKeyUpdateRequest", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "manageMediaKeys", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "keysEventUpdateTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "makeNewKeyTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "setNewKeyTimeouts", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "encryptionKeys", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lastEncryptionKeyUpdateRequest", void 0);
     // We use this to store the last membership fingerprints we saw, so we can proactively re-send encryption keys
     // if it looks like a membership has been updated.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lastMembershipFingerprints", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "latestGeneratedKeyIndex", -1);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "joinConfig", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "joined", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lastMembershipFingerprints", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "latestGeneratedKeyIndex", -1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "joinConfig", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "joined", false);
     /**
      * Re-sends the encryption keys room event
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sendEncryptionKeysEvent", /*#__PURE__*/function () {
-      var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (indexToSend) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sendEncryptionKeysEvent", /*#__PURE__*/function () {
+      var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (indexToSend) {
         if (_this.keysEventUpdateTimeout !== undefined) {
           clearTimeout(_this.keysEventUpdateTimeout);
           _this.keysEventUpdateTimeout = undefined;
@@ -21859,11 +22407,11 @@ class EncryptionManager {
         return _ref.apply(this, arguments);
       };
     }());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onNewKeyReceived", (userId, deviceId, keyBase64Encoded, index, timestamp) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onNewKeyReceived", (userId, deviceId, keyBase64Encoded, index, timestamp) => {
       this.logger.debug("Received key over key transport ".concat(userId, ":").concat(deviceId, " at index ").concat(index));
       this.setEncryptionKey(userId, deviceId, index, keyBase64Encoded, timestamp);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRotateKeyTimeout", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRotateKeyTimeout", () => {
       if (!this.manageMediaKeys) return;
       this.makeNewKeyTimeout = undefined;
       this.logger.info("Making new sender key for key rotation");
@@ -22178,8 +22726,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   slotDescriptionToId: () => (/* binding */ slotDescriptionToId),
 /* harmony export */   slotIdToDescription: () => (/* binding */ slotIdToDescription)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _models_event_timeline_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../models/event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
@@ -22199,7 +22747,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2023 - 2024 The Matrix.org Foundation C.I.C.
 
@@ -22483,21 +23031,21 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
     this.roomSubset = roomSubset;
     this.memberships = memberships;
     this.slotDescription = slotDescription;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "membershipManager", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "encryptionManager", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "joinConfig", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingNotificationToSend", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "membershipManager", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "encryptionManager", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "joinConfig", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingNotificationToSend", void 0);
     /**
      * This timeout is responsible to track any expiration. We need to know when we have to start
      * to ignore other call members. There is no callback for this. This timeout will always be configured to
      * emit when the next membership expires.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "expiryTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "expiryTimeout", void 0);
     /**
      * The statistics for this session.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "statistics", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "statistics", {
       counters: {
         roomEventEncryptionKeysSent: 0,
         roomEventEncryptionKeysReceived: 0
@@ -22506,17 +23054,17 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
         roomEventEncryptionKeysReceivedTotalAge: 0
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_15__.TypedReEmitter(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_15__.TypedReEmitter(this));
     /**
      * Call this when the Matrix room members have changed.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomMemberUpdate", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomMemberUpdate", () => {
       this.recalculateSessionMembers();
     });
     /**
      * Call this when a sticky event update has occured.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onStickyEventUpdate", (added, updated, removed) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onStickyEventUpdate", (added, updated, removed) => {
       if ([...added, ...removed, ...updated.flatMap(v => [v.current, v.previous])].some(e => e.getType() === _types_event_js__WEBPACK_IMPORTED_MODULE_5__.EventType.RTCMembership)) {
         this.recalculateSessionMembers();
       }
@@ -22524,7 +23072,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
     /**
      * Call this when something changed that may impacts the current MatrixRTC members in this session.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRTCSessionMemberUpdate", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRTCSessionMemberUpdate", () => {
       this.recalculateSessionMembers();
     });
     /**
@@ -22534,7 +23082,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
      *
      * This function should be called when the room members or call memberships might have changed.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "recalculateSessionMembers", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "recalculateSessionMembers", () => {
       var _this$encryptionManag;
       var oldMemberships = this.memberships;
       this.memberships = MatrixRTCSession.sessionMembershipsForSlot(this.room, this.slotDescription);
@@ -22590,7 +23138,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
    */
   stop() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this$membershipManag7;
       yield (_this$membershipManag7 = _this.membershipManager) === null || _this$membershipManag7 === void 0 ? void 0 : _this$membershipManag7.leave(1000);
       if (_this.expiryTimeout) {
@@ -22669,7 +23217,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
   leaveRoomSession() {
     var _arguments = arguments,
       _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var timeout = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : undefined;
       if (!_this2.isJoined()) {
         _this2.logger.info("Not joined to session in room ".concat(_this2.roomSubset.roomId, ": ignoring leave call"));
@@ -22724,7 +23272,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
   }
   updateCallIntent(callIntent) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this3$membershipMana, _this3$membershipMana2;
       var myMembership = (_this3$membershipMana = _this3.membershipManager) === null || _this3$membershipMana === void 0 ? void 0 : _this3$membershipMana.ownMembership;
       if (!myMembership) {
@@ -22779,7 +23327,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
   sendCallNotify(parentEventId, notificationType, callIntent) {
     var _this4 = this;
     var sendLegacyNotificationEvent = /*#__PURE__*/function () {
-      var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+      var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         var content = {
           "application": "m.call",
           "m.mentions": {
@@ -22800,7 +23348,7 @@ class MatrixRTCSession extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
       };
     }();
     var sendNewNotificationEvent = /*#__PURE__*/function () {
-      var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+      var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         var content = {
           "m.mentions": {
             user_ids: [],
@@ -22855,7 +23403,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MatrixRTCSessionManager: () => (/* binding */ MatrixRTCSessionManager),
 /* harmony export */   MatrixRTCSessionManagerEvents: () => (/* binding */ MatrixRTCSessionManagerEvents)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _models_room_state_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/room-state.js */ "./node_modules/matrix-js-sdk/lib/models/room-state.js");
@@ -22912,12 +23460,12 @@ class MatrixRTCSessionManager extends _models_typed_event_emitter_js__WEBPACK_IM
     // is only ever one single room session object for any given room for the lifetime of the
     // client: that way there can never be any code holding onto a stale object that is no
     // longer the correct session object for the room.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomSessions", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "logger", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onRoom", room => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomSessions", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onRoom", room => {
       this.refreshRoom(room);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onEvent", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onEvent", event => {
       if (!event.unstableStickyExpiresAt) return; // Not sticky, not interested.
 
       if (event.getType() !== _types_event_js__WEBPACK_IMPORTED_MODULE_5__.EventType.RTCMembership) return;
@@ -22925,7 +23473,7 @@ class MatrixRTCSessionManager extends _models_typed_event_emitter_js__WEBPACK_IM
       if (!room) return;
       this.refreshRoom(room);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onRoomState", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onRoomState", event => {
       if (event.getType() !== _types_event_js__WEBPACK_IMPORTED_MODULE_5__.EventType.GroupCallMemberPrefix) {
         return;
       }
@@ -23017,8 +23565,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MembershipManager: () => (/* binding */ MembershipManager),
 /* harmony export */   StickyEventMembershipManager: () => (/* binding */ StickyEventMembershipManager)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var p_retry__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! p-retry */ "./node_modules/p-retry/index.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _types_requests_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../@types/requests.js */ "./node_modules/matrix-js-sdk/lib/@types/requests.js");
@@ -23034,7 +23582,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2025 The Matrix.org Foundation C.I.C.
 
@@ -23271,7 +23819,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   updateCallIntent(callIntent) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.activated || !_this.ownMembership) {
         throw Error("You cannot update your intent before joining the call");
       }
@@ -23296,29 +23844,29 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
     this.room = room;
     this.client = client;
     this.slotDescription = slotDescription;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "activated", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callIntent", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "leavePromiseResolvers", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_ownMembership", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "activated", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callIntent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "leavePromiseResolvers", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_ownMembership", void 0);
     // scheduler
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oldStatus", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "scheduler", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oldStatus", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "scheduler", void 0);
     // MembershipManager mutable state.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "state", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "state", void 0);
     // Membership Event static parameters:
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "deviceId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "memberId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "rtcTransport", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "deviceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "memberId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "rtcTransport", void 0);
     /** @deprecated This will be removed in favor or rtcTransport becoming a list of actively used transports */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "fociPreferred", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "fociPreferred", void 0);
     // Config:
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "delayedLeaveEventDelayMsOverride", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "delayedLeaveEventDelayMsOverride", void 0);
     // an abstraction to switch between sending state or a sticky event
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientSendDelayedDisconnectMembership", () => this.client._unstable_sendDelayedStateEvent(this.room.roomId, {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientSendDelayedDisconnectMembership", () => this.client._unstable_sendDelayedStateEvent(this.room.roomId, {
       delay: this.delayedLeaveEventDelayMs
     }, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.GroupCallMemberPrefix, {}, this.memberId));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientSendMembership", myMembership => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientSendMembership", myMembership => {
       return this.client.sendStateEvent(this.room.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.GroupCallMemberPrefix, myMembership, this.memberId);
     });
     this.logger = (parentLogger !== null && parentLogger !== void 0 ? parentLogger : _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger).getChild("[MembershipManager]");
@@ -23399,7 +23947,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   // LOOP HANDLER:
   membershipLoopHandler(type) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       switch (type) {
         case MembershipActionType.SendDelayedEvent:
           {
@@ -23465,7 +24013,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   // HANDLERS (used in the membershipLoopHandler)
   sendOrResendDelayedLeaveEvent() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We can reach this at the start of a call (where we do not yet have a membership: state.hasMemberStateEvent=false)
       // or during a call if the state event canceled our delayed event or caused by an unexpected error that removed our delayed event.
       // (Another client could have canceled it, the homeserver might have removed/lost it due to a restart, ...)
@@ -23514,7 +24062,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   cancelKnownDelayIdBeforeSendDelayedEvent(delayId) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Remove all running updates and restarts
       return yield _this4.client._unstable_updateDelayedEvent(delayId, _types_requests_js__WEBPACK_IMPORTED_MODULE_3__.UpdateDelayedEventAction.Cancel).then(() => {
         _this4.state.delayId = undefined;
@@ -23552,7 +24100,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   restartDelayedEvent(delayId) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Compute the duration until we expect the server to send the delayed leave event.
       var durationUntilServerDelayedLeave = _this5.state.expectedServerDelayLeaveTs ? _this5.state.expectedServerDelayLeaveTs - Date.now() : undefined;
       var abortPromise = new Promise((_, reject) => {
@@ -23601,7 +24149,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   sendScheduledDelayedLeaveEventOrFallbackToSendLeaveEvent(delayId) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return yield _this6.client._unstable_updateDelayedEvent(delayId, _types_requests_js__WEBPACK_IMPORTED_MODULE_3__.UpdateDelayedEventAction.Send).then(() => {
         _this6.state.hasMemberStateEvent = false;
         _this6.resetRateLimitCounter(MembershipActionType.SendScheduledDelayedLeaveEvent);
@@ -23626,7 +24174,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   sendJoinEvent() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return yield _this7.clientSendMembership(_this7.makeMyMembership(_this7.membershipEventExpiryMs)).then(() => {
         _this7.setAndEmitProbablyLeft(false);
         _this7.state.startTime = Date.now();
@@ -23664,7 +24212,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   updateExpiryOnJoinedEvent() {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var nextExpireUpdateIteration = _this8.state.expireUpdateIterations + 1;
       return yield _this8.clientSendMembership(_this8.makeMyMembership(_this8.membershipEventExpiryMs * nextExpireUpdateIteration)).then(() => {
         // Success, we reset retries and schedule update.
@@ -23685,7 +24233,7 @@ class MembershipManager extends _models_typed_event_emitter_js__WEBPACK_IMPORTED
   }
   sendFallbackLeaveEvent() {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return yield _this9.clientSendMembership({}).then(() => {
         _this9.resetRateLimitCounter(MembershipActionType.SendLeaveEvent);
         _this9.state.hasMemberStateEvent = false;
@@ -23929,12 +24477,12 @@ class StickyEventMembershipManager extends MembershipManager {
   constructor(joinConfig, room, clientWithSticky, sessionDescription, parentLogger) {
     super(joinConfig, room, clientWithSticky, sessionDescription, parentLogger);
     this.clientWithSticky = clientWithSticky;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientSendDelayedDisconnectMembership", () => this.clientWithSticky._unstable_sendStickyDelayedEvent(this.room.roomId, MEMBERSHIP_STICKY_DURATION_MS, {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientSendDelayedDisconnectMembership", () => this.clientWithSticky._unstable_sendStickyDelayedEvent(this.room.roomId, MEMBERSHIP_STICKY_DURATION_MS, {
       delay: this.delayedLeaveEventDelayMs
     }, null, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.RTCMembership, {
       msc4354_sticky_key: this.memberId
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientSendMembership", myMembership => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientSendMembership", myMembership => {
       return this.clientWithSticky._unstable_sendStickyEvent(this.room.roomId, MEMBERSHIP_STICKY_DURATION_MS, null, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.RTCMembership, _objectSpread(_objectSpread({}, myMembership), {}, {
         msc4354_sticky_key: this.memberId
       }));
@@ -23969,7 +24517,7 @@ class StickyEventMembershipManager extends MembershipManager {
     }, relationObject);
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(StickyEventMembershipManager, "nameMap", new Map([["sendStateEvent", "_unstable_sendStickyEvent"], ["sendDelayedStateEvent", "_unstable_sendStickyDelayedEvent"]]));
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(StickyEventMembershipManager, "nameMap", new Map([["sendStateEvent", "_unstable_sendStickyEvent"], ["sendDelayedStateEvent", "_unstable_sendStickyDelayedEvent"]]));
 //# sourceMappingURL=MembershipManager.js.map
 
 /***/ }),
@@ -23985,8 +24533,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ActionScheduler: () => (/* binding */ ActionScheduler)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _MembershipManager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MembershipManager.js */ "./node_modules/matrix-js-sdk/lib/matrixrtc/MembershipManager.js");
@@ -24013,17 +24561,17 @@ class ActionScheduler {
   constructor(/** This is the callback called for each scheduled action (`this.addAction()`) */
   membershipLoopHandler, parentLogger) {
     this.membershipLoopHandler = membershipLoopHandler;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", void 0);
     /**
      * This is tracking the state of the scheduler loop.
      * Only used to prevent starting the loop twice.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "running", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "running", false);
     // function for the wakeup mechanism (in case we add an action externally and need to leave the current sleep)
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "wakeup", update => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "wakeup", update => {
       this.logger.error("Cannot call wakeup before calling `startWithJoin()`");
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_actions", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_actions", []);
     this.logger = (parentLogger !== null && parentLogger !== void 0 ? parentLogger : _logger_js__WEBPACK_IMPORTED_MODULE_2__.logger).getChild("[NewMembershipActionScheduler]");
   }
   get actions() {
@@ -24039,7 +24587,7 @@ class ActionScheduler {
    */
   startWithJoin() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.running) {
         _this.logger.error("Cannot call startWithJoin() on NewMembershipActionScheduler while already running");
         return;
@@ -24129,8 +24677,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RTCEncryptionManager: () => (/* binding */ RTCEncryptionManager)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _base64_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base64.js */ "./node_modules/matrix-js-sdk/lib/base64.js");
 /* harmony import */ var _IKeyTransport_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./IKeyTransport.js */ "./node_modules/matrix-js-sdk/lib/matrixrtc/IKeyTransport.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -24181,25 +24729,25 @@ class RTCEncryptionManager {
     // This is a stop-gap solution for now. The preferred way to handle this case would be instead
     // to create a NoOpEncryptionManager that does nothing and use it for the session.
     // This will be done when removing the legacy EncryptionManager.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "manageMediaKeys", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "manageMediaKeys", false);
     /**
      * Store the key rings for each participant.
      * The encryption manager stores the keys because the application layer might not be ready yet to handle the keys.
      * The keys are stored and can be retrieved later when the application layer is ready {@link RTCEncryptionManager#getEncryptionKeys}.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "participantKeyRings", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "participantKeyRings", new Map());
     // The current per-sender media key for this device
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "outboundSession", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "outboundSession", null);
     /**
      * Ensures that there is only one distribute operation at a time for that call.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "currentKeyDistributionPromise", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "currentKeyDistributionPromise", null);
     /**
      * The time to wait before using the outbound session after it has been distributed.
      * This is to ensure that the key is delivered to all participants before it is used.
      * When creating the first key, this is set to 0 so that the key can be used immediately.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "useKeyDelay", 5000);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "useKeyDelay", 5000);
     /**
      * We want to avoid rolling out a new outbound key when the previous one was created less than `keyRotationGracePeriodMs` milliseconds ago.
      * This is to avoid expensive key rotations when users quickly join the call in a row.
@@ -24208,13 +24756,13 @@ class RTCEncryptionManager {
      * If it is lower, the current key will always be older than the grace period.
      * @private
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "keyRotationGracePeriodMs", 10000);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "keyRotationGracePeriodMs", 10000);
     /**
      * If a new key distribution is being requested while one is going on, we will set this flag to true.
      * This will ensure that a new round is started after the current one.
      * @private
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "needToEnsureKeyAgain", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "needToEnsureKeyAgain", false);
     /**
      * There is a possibility that keys arrive in the wrong order.
      * For example, after a quick join/leave/join, there will be 2 keys of index 0 distributed, and
@@ -24222,9 +24770,9 @@ class RTCEncryptionManager {
      * For that reason we keep a small buffer of keys for a limited time to disambiguate.
      * @private
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "keyBuffer", new _utils_js__WEBPACK_IMPORTED_MODULE_5__.OutdatedKeyFilter());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", undefined);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onNewKeyReceived", (userId, deviceId, keyBase64Encoded, index, timestamp) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "keyBuffer", new _utils_js__WEBPACK_IMPORTED_MODULE_5__.OutdatedKeyFilter());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", undefined);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onNewKeyReceived", (userId, deviceId, keyBase64Encoded, index, timestamp) => {
       var _this$logger2;
       // `manageMediaKeys` is a stop-gap solution for now. The preferred way to handle this case would be instead
       // to create a NoOpEncryptionManager that does nothing and use it for the session.
@@ -24336,7 +24884,7 @@ class RTCEncryptionManager {
   }
   rolloutOutboundKey() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this$outboundSession, _this$outboundSession2;
       var isFirstKey = _this.outboundSession == null;
       if (isFirstKey) {
@@ -24463,8 +25011,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RoomKeyTransport: () => (/* binding */ RoomKeyTransport)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _IKeyTransport_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IKeyTransport.js */ "./node_modules/matrix-js-sdk/lib/matrixrtc/IKeyTransport.js");
@@ -24502,7 +25050,7 @@ class RoomKeyTransport extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
     this.room = room;
     this.client = client;
     this.statistics = statistics;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger);
     this.setParentLogger(parentLogger !== null && parentLogger !== void 0 ? parentLogger : _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger);
   }
   start() {
@@ -24514,7 +25062,7 @@ class RoomKeyTransport extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
   consumeCallEncryptionEvent(event) {
     var _arguments = arguments,
       _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var isRetry = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : false;
       yield _this.client.decryptEventIfNeeded(event);
       if (event.isDecryptionFailure()) {
@@ -24541,7 +25089,7 @@ class RoomKeyTransport extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_
   /** implements {@link IKeyTransport#sendKey} */
   sendKey(keyBase64Encoded, index, members) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // members not used in room transports as the keys are sent to all room members
       var content = {
         keys: [{
@@ -24627,8 +25175,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   NotSupportedError: () => (/* binding */ NotSupportedError),
 /* harmony export */   ToDeviceKeyTransport: () => (/* binding */ ToDeviceKeyTransport)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _IKeyTransport_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./IKeyTransport.js */ "./node_modules/matrix-js-sdk/lib/matrixrtc/IKeyTransport.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -24680,8 +25228,8 @@ class ToDeviceKeyTransport extends _models_typed_event_emitter_js__WEBPACK_IMPOR
     this.roomId = roomId;
     this.client = client;
     this.statistics = statistics;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "logger", _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onToDeviceEvent", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "logger", _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onToDeviceEvent", event => {
       if (event.getType() !== _types_event_js__WEBPACK_IMPORTED_MODULE_6__.EventType.CallEncryptionKeysPrefix) {
         // Ignore this is not a call encryption event
         return;
@@ -24710,7 +25258,7 @@ class ToDeviceKeyTransport extends _models_typed_event_emitter_js__WEBPACK_IMPOR
   }
   sendKey(keyBase64Encoded, index, members) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var content = {
         keys: {
           index: index,
@@ -24810,10 +25358,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   isMyMembership: () => (/* binding */ isMyMembership),
 /* harmony export */   parseCallNotificationContent: () => (/* binding */ parseCallNotificationContent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
 
@@ -24938,7 +25486,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   OutdatedKeyFilter: () => (/* binding */ OutdatedKeyFilter),
 /* harmony export */   getParticipantId: () => (/* binding */ getParticipantId)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2025 The Matrix.org Foundation C.I.C.
@@ -24962,7 +25510,7 @@ limitations under the License.
 class OutdatedKeyFilter {
   constructor() {
     // Map of participantId -> keyIndex -> timestamp
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "tsBuffer", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "tsBuffer", new Map());
   }
 
   /**
@@ -25003,14 +25551,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MSC3089Branch: () => (/* binding */ MSC3089Branch)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _event_timeline_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2021 The Matrix.org Foundation C.I.C.
 
@@ -25076,7 +25624,7 @@ class MSC3089Branch {
    */
   delete() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       yield _this.client.sendStateEvent(_this.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.UNSTABLE_MSC3089_BRANCH.name, {}, _this.id);
       yield _this.client.redactEvent(_this.roomId, _this.id);
       var nextVersion = (yield _this.getVersionHistory())[1]; // [0] will be us
@@ -25099,7 +25647,7 @@ class MSC3089Branch {
    */
   setName(name) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       yield _this2.client.sendStateEvent(_this2.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.UNSTABLE_MSC3089_BRANCH.name, _objectSpread(_objectSpread({}, _this2.indexEvent.getContent()), {}, {
         name: name
       }), _this2.id);
@@ -25121,7 +25669,7 @@ class MSC3089Branch {
    */
   setLocked(locked) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       yield _this3.client.sendStateEvent(_this3.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.UNSTABLE_MSC3089_BRANCH.name, _objectSpread(_objectSpread({}, _this3.indexEvent.getContent()), {}, {
         locked: locked
       }), _this3.id);
@@ -25134,7 +25682,7 @@ class MSC3089Branch {
    */
   getFileInfo() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var event = yield _this4.getFileEvent();
       var file = event.getOriginalContent()["file"];
       var httpUrl = _this4.client.mxcUrlToHttp(file["url"]);
@@ -25154,7 +25702,7 @@ class MSC3089Branch {
    */
   getFileEvent() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var room = _this5.client.getRoom(_this5.roomId);
       if (!room) throw new Error("Unknown room");
       var event = room.getUnfilteredTimelineSet().findEventById(_this5.id);
@@ -25182,7 +25730,7 @@ class MSC3089Branch {
    */
   createNewVersion(name, encryptedContents, info, additionalContent) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var fileEventResponse = yield _this6.directory.createFile(name, encryptedContents, info, _objectSpread(_objectSpread({}, additionalContent !== null && additionalContent !== void 0 ? additionalContent : {}), {}, {
         "m.new_content": true,
         "m.relates_to": {
@@ -25213,7 +25761,7 @@ class MSC3089Branch {
    */
   getVersionHistory() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var fileHistory = [];
       fileHistory.push(_this7); // start with ourselves
 
@@ -25263,8 +25811,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MSC3089TreeSpace: () => (/* binding */ MSC3089TreeSpace),
 /* harmony export */   TreePermissions: () => (/* binding */ TreePermissions)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -25274,7 +25822,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2021 The Matrix.org Foundation C.I.C.
 
@@ -25347,7 +25895,7 @@ class MSC3089TreeSpace {
   constructor(client, roomId) {
     this.client = client;
     this.roomId = roomId;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "room", void 0);
     this.room = this.client.getRoom(this.roomId);
     if (!this.room) throw new Error("Unknown room");
   }
@@ -25380,7 +25928,7 @@ class MSC3089TreeSpace {
    */
   setName(name) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this.client.sendStateEvent(_this.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.RoomName, {
         name
       }, "");
@@ -25398,7 +25946,7 @@ class MSC3089TreeSpace {
   invite(userId) {
     var _arguments = arguments,
       _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var andSubspaces = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : true;
       var promises = [_this2.retryInvite(userId)];
       if (andSubspaces) {
@@ -25409,7 +25957,7 @@ class MSC3089TreeSpace {
   }
   retryInvite(userId) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.simpleRetryOperation)(() => _this3.client.invite(_this3.roomId, userId), e => {
         // We don't want to retry permission errors forever...
         if (e instanceof _http_api_index_js__WEBPACK_IMPORTED_MODULE_6__.MatrixError && e.errcode === "M_FORBIDDEN") {
@@ -25430,7 +25978,7 @@ class MSC3089TreeSpace {
    */
   setPermissions(userId, role) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _pls$events;
       var currentPls = _this4.room.currentState.getStateEvents(_types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.RoomPowerLevels, "");
       if (Array.isArray(currentPls)) throw new Error("Unexpected return type for power levels");
@@ -25485,7 +26033,7 @@ class MSC3089TreeSpace {
    */
   createDirectory(name) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var directory = yield _this5.client.unstableCreateFileTree(name);
       yield _this5.client.sendStateEvent(_this5.roomId, _types_event_js__WEBPACK_IMPORTED_MODULE_2__.EventType.SpaceChild, {
         via: [_this5.client.getDomain()]
@@ -25534,7 +26082,7 @@ class MSC3089TreeSpace {
    */
   delete() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var subdirectories = _this6.getDirectories();
       for (var dir of subdirectories) {
         yield dir.delete();
@@ -25622,7 +26170,7 @@ class MSC3089TreeSpace {
    */
   setOrder(index) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _currentChild$getCont2;
       if (_this7.isTopLevel) throw new Error("Cannot set order of top level spaces currently");
       var parentRoom = _this7.getParentRoom();
@@ -25732,7 +26280,7 @@ class MSC3089TreeSpace {
    */
   createFile(name, encryptedContents, info, additionalContent) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         content_uri: mxc
       } = yield _this8.client.uploadContent(encryptedContents, {
@@ -25809,7 +26357,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getBeaconInfoIdentifier: () => (/* binding */ getBeaconInfoIdentifier),
 /* harmony export */   isTimestampInDuration: () => (/* binding */ isTimestampInDuration)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _content_helpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../content-helpers.js */ "./node_modules/matrix-js-sdk/lib/content-helpers.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
@@ -25853,14 +26401,14 @@ class Beacon extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_3__.TypedE
   constructor(rootEvent) {
     super();
     this.rootEvent = rootEvent;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomId", void 0);
     // beaconInfo is assigned by setBeaconInfo in the constructor
     // ! to make tsc believe it is definitely assigned
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_beaconInfo", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_isLive", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "livenessWatchTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_latestLocationEvent", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "clearLatestLocation", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_beaconInfo", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_isLive", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "livenessWatchTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_latestLocationEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "clearLatestLocation", () => {
       this._latestLocationEvent = undefined;
       this.emit(BeaconEvent.LocationUpdate, this.latestLocationState);
     });
@@ -26137,7 +26685,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Device: () => (/* binding */ Device),
 /* harmony export */   DeviceVerification: () => (/* binding */ DeviceVerification)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
@@ -26171,21 +26719,21 @@ var DeviceVerification = /*#__PURE__*/function (DeviceVerification) {
 class Device {
   constructor(opts) {
     /** id of the device */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "deviceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "deviceId", void 0);
     /** id of the user that owns the device */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "userId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "userId", void 0);
     /** list of algorithms supported by this device */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "algorithms", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "algorithms", void 0);
     /** a map from `<key type>:<id> -> <base64-encoded key>` */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "keys", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "keys", void 0);
     /** whether the device has been verified/blocked by the user */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "verified", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "verified", void 0);
     /** a map `<userId, map<algorithm:device_id, signature>>` */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "signatures", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "signatures", void 0);
     /** display name of the device */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "displayName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "displayName", void 0);
     /** whether the device is a dehydrated device */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "dehydrated", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "dehydrated", false);
     this.deviceId = opts.deviceId;
     this.userId = opts.userId;
     this.algorithms = opts.algorithms;
@@ -26229,7 +26777,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   EventContext: () => (/* binding */ EventContext)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _event_timeline_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
 
 /*
@@ -26264,9 +26812,9 @@ class EventContext {
    */
   constructor(ourEvent) {
     this.ourEvent = ourEvent;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "timeline", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "ourEventIndex", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "paginateTokens", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "timeline", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "ourEventIndex", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "paginateTokens", {
       [_event_timeline_js__WEBPACK_IMPORTED_MODULE_1__.Direction.Backward]: null,
       [_event_timeline_js__WEBPACK_IMPORTED_MODULE_1__.Direction.Forward]: null
     });
@@ -26409,7 +26957,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DuplicateStrategy: () => (/* binding */ DuplicateStrategy),
 /* harmony export */   EventTimelineSet: () => (/* binding */ EventTimelineSet)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _event_timeline_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _room_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./room.js */ "./node_modules/matrix-js-sdk/lib/models/room.js");
@@ -26494,13 +27042,13 @@ class EventTimelineSet extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
     this.room = room;
     this.thread = thread;
     this.threadListType = threadListType;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "relations", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "timelineSupport", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "displayPendingEvents", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "liveTimeline", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "timelines", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_eventIdToTimeline", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "filter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "relations", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "timelineSupport", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "displayPendingEvents", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "liveTimeline", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "timelines", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_eventIdToTimeline", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "filter", void 0);
     this.timelineSupport = Boolean(opts.timelineSupport);
     this.liveTimeline = new _event_timeline_js__WEBPACK_IMPORTED_MODULE_1__.EventTimeline(this);
     this.displayPendingEvents = opts.pendingEvents !== false;
@@ -27235,7 +27783,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Direction: () => (/* binding */ Direction),
 /* harmony export */   EventTimeline: () => (/* binding */ EventTimeline)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _room_state_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./room-state.js */ "./node_modules/matrix-js-sdk/lib/models/room-state.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 
@@ -27295,19 +27843,19 @@ class EventTimeline {
   constructor(eventTimelineSet) {
     var _eventTimelineSet$roo, _eventTimelineSet$roo2;
     this.eventTimelineSet = eventTimelineSet;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "name", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "events", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "baseIndex", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "startState", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "endState", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "name", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "events", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "baseIndex", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "startState", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "endState", void 0);
     // If we have a roomId then we delegate pagination token storage to the room state objects `startState` and
     // `endState`, but for things like the notification timeline which mix multiple rooms we store the tokens ourselves.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "startToken", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "endToken", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "prevTimeline", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "nextTimeline", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "paginationRequests", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "startToken", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "endToken", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "prevTimeline", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "nextTimeline", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "paginationRequests", {
       [Direction.Backward]: null,
       [Direction.Forward]: null
     });
@@ -27665,12 +28213,12 @@ class EventTimeline {
  * Symbolic constant for methods which take a 'direction' argument:
  * refers to the start of the timeline, or backwards in time.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(EventTimeline, "BACKWARDS", Direction.Backward);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(EventTimeline, "BACKWARDS", Direction.Backward);
 /**
  * Symbolic constant for methods which take a 'direction' argument:
  * refers to the end of the timeline, or forwards in time.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(EventTimeline, "FORWARDS", Direction.Forward);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(EventTimeline, "FORWARDS", Direction.Forward);
 //# sourceMappingURL=event-timeline.js.map
 
 /***/ }),
@@ -27689,8 +28237,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MatrixEvent: () => (/* binding */ MatrixEvent),
 /* harmony export */   MatrixEventEvent: () => (/* binding */ MatrixEventEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var matrix_events_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! matrix-events-sdk */ "./node_modules/matrix-events-sdk/lib/index.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
@@ -27853,63 +28401,63 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
     // of space if we don't intern it.
     this.event = event;
     // applied push rule and action for this event
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pushDetails", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_replacingEvent", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_localRedactionEvent", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_isCancelled", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clearEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pushDetails", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_replacingEvent", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_localRedactionEvent", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_isCancelled", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clearEvent", void 0);
     /* Message hiding, as specified by https://github.com/matrix-org/matrix-doc/pull/3531.
      Note: We're returning this object, so any value stored here MUST be frozen.
     */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "visibility", MESSAGE_VISIBLE);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "visibility", MESSAGE_VISIBLE);
     // Not all events will be extensible-event compatible, so cache a flag in
     // addition to a falsy cached event value. We check the flag later on in
     // a public getter to decide if the cache is valid.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_hasCachedExtEv", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_cachedExtEv", undefined);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_hasCachedExtEv", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_cachedExtEv", undefined);
     /** If we failed to decrypt this event, the reason for the failure. Otherwise, `null`. */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_decryptionFailureReason", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_decryptionFailureReason", null);
     /* curve25519 key which we believe belongs to the sender of the event. See
      * getSenderKey()
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "senderCurve25519Key", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "senderCurve25519Key", null);
     /* ed25519 key which the sender of this event (for olm) or the creator of
      * the megolm session (for megolm) claims to own. See getClaimedEd25519Key()
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "claimedEd25519Key", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "claimedEd25519Key", null);
     /* curve25519 keys of devices involved in telling us about the
      * senderCurve25519Key and claimedEd25519Key.
      * See getForwardingCurve25519KeyChain().
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "forwardingCurve25519KeyChain", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "forwardingCurve25519KeyChain", []);
     /* where the decryption key is untrusted
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "untrusted", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "untrusted", null);
     /* if we have a process decrypting this event, a Promise which resolves
      * when it is finished. Normally null.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "decryptionPromise", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "decryptionPromise", null);
     /* flag to indicate if we should retry decrypting this event after the
      * first attempt (eg, we have received new data which means that a second
      * attempt may succeed)
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryDecryption", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryDecryption", false);
     /* The txnId with which this event was sent if it was during this session,
      * allows for a unique ID which does not change when the event comes back down sync.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "txnId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "txnId", void 0);
     /**
      * A reference to the thread this event belongs to
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "thread", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threadId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "thread", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threadId", void 0);
     /* Set an approximate timestamp for the event relative the local clock.
      * This will inherently be approximate because it doesn't take into account
      * the time between the server putting the 'age' field on the event as it sent
      * it to us and the time we're now constructing this event, but that's better
      * than assuming the local clock is in sync with the origin HS's clock.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localTimestamp", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localTimestamp", void 0);
     /**
      * The room member who sent this event, or null e.g.
      * this is a presence event. This is only guaranteed to be set for events that
@@ -27918,21 +28466,21 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sender", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sender", null);
     /**
      * The room member who is the target of this event, e.g.
      * the invitee, the person being banned, etc.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "target", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "status", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "target", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "status", null);
     /**
      * most recent error associated with sending the event, if any
      * @privateRemarks
      * Should be read-only. May not be a MatrixError.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "error", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "error", null);
     /**
      * True if this event is 'forward looking', meaning
      * that getDirectionalContent() will return event.content and not event.prev_content.
@@ -27941,8 +28489,8 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "forwardLooking", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "forwardLooking", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", void 0);
     /**
      * The timestamp for when this event should expire, in milliseconds.
      * Prefers using the server-provided value, but will fall back to local calculation.
@@ -27952,7 +28500,7 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
      * If the event is not a sticky event (or not supported by the server),
      * then this returns `undefined`.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "unstableStickyExpiresAt", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "unstableStickyExpiresAt", void 0);
     ["state_key", "type", "sender", "room_id", "membership"].forEach(prop => {
       if (typeof event[prop] !== "string") return;
       event[prop] = (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.internaliseString)(event[prop]);
@@ -28399,7 +28947,7 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
   attemptDecryption(crypto) {
     var _arguments = arguments,
       _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var options = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : {};
       // start with a couple of sanity checks.
       if (!_this.isEncrypted()) {
@@ -28446,7 +28994,7 @@ class MatrixEvent extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.T
   decryptionLoop(crypto) {
     var _arguments2 = arguments,
       _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var options = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : {};
       // make sure that this method never runs completely synchronously.
       // (doing so would mean that we would clear decryptionPromise *before*
@@ -29394,7 +29942,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PolicyRecommendation: () => (/* reexport safe */ _invites_ignorer_types_js__WEBPACK_IMPORTED_MODULE_5__.PolicyRecommendation),
 /* harmony export */   PolicyScope: () => (/* reexport safe */ _invites_ignorer_types_js__WEBPACK_IMPORTED_MODULE_5__.PolicyScope)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _event_timeline_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
 /* harmony import */ var _types_partials_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../@types/partials.js */ "./node_modules/matrix-js-sdk/lib/@types/partials.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -29454,7 +30002,7 @@ class IgnoredInvites {
    */
   addRule(scope, entity, reason) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var target = yield _this.getOrCreateTargetRoom();
       var response = yield _this.client.sendStateEvent(target.roomId, scopeToEventTypeMap[scope], {
         entity,
@@ -29470,7 +30018,7 @@ class IgnoredInvites {
    */
   removeRule(event) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this2.client.redactEvent(event.getRoomId(), event.getId());
     })();
   }
@@ -29493,7 +30041,7 @@ class IgnoredInvites {
    */
   addSource(roomId) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We attempt to join the room *before* calling
       // `await this.getOrCreateSourceRooms()` to decrease the duration
       // of the racy section.
@@ -29523,7 +30071,7 @@ class IgnoredInvites {
    */
   getRuleForInvite(_ref) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         sender,
         roomId
@@ -29604,7 +30152,7 @@ class IgnoredInvites {
    */
   getOrCreateTargetRoom() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var ignoreInvitesPolicies = _this5.getIgnoreInvitesPolicies();
       var target = ignoreInvitesPolicies.target;
       // Validate `target`. If it is invalid, trash out the current `target`
@@ -29651,7 +30199,7 @@ class IgnoredInvites {
    */
   getOrCreateSourceRooms() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var ignoreInvitesPolicies = _this6.getIgnoreInvitesPolicies();
       var sources = ignoreInvitesPolicies.sources;
 
@@ -29706,7 +30254,7 @@ class IgnoredInvites {
    */
   withIgnoreInvitesPolicies(cb) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         policies,
         ignoreInvitesPolicies
@@ -29773,8 +30321,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PollEvent: () => (/* binding */ PollEvent),
 /* harmony export */   isPollEvent: () => (/* binding */ isPollEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var matrix_events_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! matrix-events-sdk */ "./node_modules/matrix-events-sdk/lib/index.js");
 /* harmony import */ var _types_polls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../@types/polls.js */ "./node_modules/matrix-js-sdk/lib/@types/polls.js");
 /* harmony import */ var _relations_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./relations.js */ "./node_modules/matrix-js-sdk/lib/models/relations.js");
@@ -29830,18 +30378,18 @@ class Poll extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.TypedEve
     this.rootEvent = rootEvent;
     this.matrixClient = matrixClient;
     this.room = room;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pollEvent", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_isFetchingResponses", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "relationsNextBatch", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "responses", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "endEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pollEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_isFetchingResponses", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "relationsNextBatch", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "responses", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "endEvent", void 0);
     /**
      * Keep track of undecryptable relations
      * As incomplete result sets affect poll results
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "undecryptableRelationEventIds", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "countUndecryptableEvents", events => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "undecryptableRelationEventIds", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "countUndecryptableEvents", events => {
       var undecryptableEventIds = events.filter(event => event.isDecryptionFailure()).map(event => event.getId());
       var previousCount = this.undecryptableRelationsCount;
       this.undecryptableRelationEventIds = new Set([...this.undecryptableRelationEventIds, ...undecryptableEventIds]);
@@ -29873,7 +30421,7 @@ class Poll extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.TypedEve
   }
   getResponses() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // if we have already fetched some responses
       // just return them
       if (_this.responses) {
@@ -29921,7 +30469,7 @@ class Poll extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.TypedEve
   }
   fetchResponses() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this2$endEvent, _allRelations$nextBat;
       _this2._isFetchingResponses = true;
 
@@ -30084,7 +30632,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ReadReceipt: () => (/* binding */ ReadReceipt),
 /* harmony export */   synthesizeReceipt: () => (/* binding */ synthesizeReceipt)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_read_receipts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../@types/read_receipts.js */ "./node_modules/matrix-js-sdk/lib/@types/read_receipts.js");
 /* harmony import */ var _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -30095,7 +30643,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -30155,8 +30703,8 @@ class ReadReceipt extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__.T
     // which pass in an event ID and get back some receipts, so we also store
     // a pre-cached list for this purpose.
     // Map: receipt type → user Id → receipt
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "receipts", new _utils_js__WEBPACK_IMPORTED_MODULE_3__.MapWithDefault(() => new Map()));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "receiptCacheByEventId", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "receipts", new _utils_js__WEBPACK_IMPORTED_MODULE_3__.MapWithDefault(() => new Map()));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "receiptCacheByEventId", new Map());
   }
   /**
    * Gets the latest receipt for a given user in the room
@@ -30473,7 +31021,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RelatedRelations: () => (/* binding */ RelatedRelations)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2022 The Matrix.org Foundation C.I.C.
@@ -30493,7 +31041,7 @@ limitations under the License.
 
 class RelatedRelations {
   constructor(relations) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "relations", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "relations", void 0);
     this.relations = relations.filter(r => !!r);
   }
   getRelations() {
@@ -30521,7 +31069,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RelationsContainer: () => (/* binding */ RelationsContainer)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _relations_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./relations.js */ "./node_modules/matrix-js-sdk/lib/models/relations.js");
 /* harmony import */ var _event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
 
@@ -30549,7 +31097,7 @@ class RelationsContainer {
     this.room = room;
     // A tree of objects to access a set of related children for an event, as in:
     // this.relations.get(parentEventId).get(relationType).get(relationEventType)
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "relations", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "relations", new Map());
   }
 
   /**
@@ -30671,8 +31219,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Relations: () => (/* binding */ Relations),
 /* harmony export */   RelationsEvent: () => (/* binding */ RelationsEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
@@ -30734,21 +31282,21 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
     this.relationType = relationType;
     this.eventType = eventType;
     this.altEventTypes = altEventTypes;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "relationEventIds", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "relations", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "annotationsByKey", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "annotationsBySender", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sortedAnnotationsByKey", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "targetEvent", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "creationEmitted", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "client", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "relationEventIds", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "relations", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "annotationsByKey", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "annotationsBySender", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sortedAnnotationsByKey", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "targetEvent", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "creationEmitted", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "client", void 0);
     /**
      * Listens for event status changes to remove cancelled events.
      *
      * @param event - The event whose status has changed
      * @param status - The new status
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onEventStatus", (event, status) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onEventStatus", (event, status) => {
       if (!event.isSending()) {
         // Sending is done, so we don't need to listen anymore
         event.removeListener(_event_js__WEBPACK_IMPORTED_MODULE_2__.MatrixEventEvent.Status, this.onEventStatus);
@@ -30771,8 +31319,8 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
      *
      * @param redactedEvent - The original relation event that is about to be redacted.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onBeforeRedaction", /*#__PURE__*/function () {
-      var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (redactedEvent) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onBeforeRedaction", /*#__PURE__*/function () {
+      var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (redactedEvent) {
         if (!_this.relations.has(redactedEvent)) {
           return;
         }
@@ -30801,7 +31349,7 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
    */
   addEvent(event) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this2.relationEventIds.has(event.getId())) {
         return;
       }
@@ -30843,7 +31391,7 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
    */
   removeEvent(event) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this3.relations.has(event)) {
         return;
       }
@@ -30960,7 +31508,7 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
    */
   getLastReplacement() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this4.relationType !== _types_event_js__WEBPACK_IMPORTED_MODULE_4__.RelationType.Replace) {
         // Aggregating on last only makes sense for this relation type
         return null;
@@ -31003,7 +31551,7 @@ class Relations extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_5__.Typ
    */
   setTargetEvent(event) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this5.targetEvent) {
         return;
       }
@@ -31049,7 +31597,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomMember: () => (/* binding */ RoomMember),
 /* harmony export */   RoomMemberEvent: () => (/* binding */ RoomMemberEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _content_repo_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../content-repo.js */ "./node_modules/matrix-js-sdk/lib/content-repo.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -31097,45 +31645,45 @@ class RoomMember extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_4__.Ty
     super();
     this.roomId = roomId;
     this.userId = userId;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_isOutOfBand", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "modified", -1);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "requestedProfileInfo", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_isOutOfBand", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "modified", -1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "requestedProfileInfo", false);
     // used by sync.ts
     // XXX these should be read-only
     /**
      * True if the room member is currently typing.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "typing", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "typing", false);
     /**
      * The human-readable name for this room member. This will be
      * disambiguated with a suffix of " (\@user_id:matrix.org)" if another member shares the
      * same displayname.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "name", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "name", void 0);
     /**
      * The ambiguous displayname of this room member.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "rawDisplayName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "rawDisplayName", void 0);
     /**
      * The power level for this room member.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "powerLevel", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "powerLevel", 0);
     /**
      * The User object for this room member, if one exists.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "user", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "user", void 0);
     /**
      * The membership state for this room member e.g. 'join'.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "membership", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "membership", void 0);
     /**
      * True if the member's name is disambiguated.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "disambiguate", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "disambiguate", false);
     /**
      * The events describing this RoomMember.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "events", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "events", {});
     this.name = userId;
     this.rawDisplayName = userId;
     this.updateModifiedTime();
@@ -31410,7 +31958,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RoomReceipts: () => (/* binding */ RoomReceipts)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_read_receipts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../@types/read_receipts.js */ "./node_modules/matrix-js-sdk/lib/@types/read_receipts.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _room_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./room.js */ "./node_modules/matrix-js-sdk/lib/models/room.js");
@@ -31442,16 +31990,16 @@ limitations under the License.
  */
 class RoomReceipts {
   constructor(room) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "room", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "threadedReceipts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "unthreadedReceipts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "danglingReceipts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "threadedReceipts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "unthreadedReceipts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "danglingReceipts", void 0);
     /**
      * Look for dangling receipts for the given event ID,
      * and add them to the thread of unthread receipts if found.
      * @param event - the event to look for
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onTimelineEvent", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onTimelineEvent", event => {
       var eventId = event.getId();
       if (!eventId) return;
       var danglingReceipts = this.danglingReceipts.remove(eventId);
@@ -31601,15 +32149,15 @@ class DanglingReceipt {
 }
 class UserReceipts {
   constructor(room) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "room", void 0);
     /**
      * The real receipt for this user.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "real", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "real", void 0);
     /**
      * The synthetic receipt for this user. If this is defined, it is later than real.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "synthetic", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "synthetic", void 0);
     this.room = room;
     this.real = undefined;
     this.synthetic = undefined;
@@ -31655,9 +32203,9 @@ class UserReceipts {
  */
 class ReceiptsByUser {
   constructor(room) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "room", void 0);
     /** map of userId: UserReceipts */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "data", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "data", void 0);
     this.room = room;
     this.data = new Map();
   }
@@ -31712,9 +32260,9 @@ class ReceiptsByUser {
  */
 class ThreadedReceipts {
   constructor(room) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "room", void 0);
     /** map of threadId: ReceiptsByUser */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "data", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "data", void 0);
     this.room = room;
     this.data = new Map();
   }
@@ -31750,7 +32298,7 @@ class DanglingReceipts {
     /**
      * eventId: DanglingReceipt[]
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "data", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "data", new Map());
   }
   /**
    * Remember the supplied dangling receipt.
@@ -31822,8 +32370,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomState: () => (/* binding */ RoomState),
 /* harmony export */   RoomStateEvent: () => (/* binding */ RoomStateEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _room_member_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./room-member.js */ "./node_modules/matrix-js-sdk/lib/models/room-member.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -31919,39 +32467,39 @@ class RoomState extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.Typ
     super();
     this.roomId = roomId;
     this.oobMemberFlags = oobMemberFlags;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_10__.TypedReEmitter(this));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "sentinels", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", new _ReEmitter_js__WEBPACK_IMPORTED_MODULE_10__.TypedReEmitter(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "sentinels", {});
     // userId: RoomMember
     // stores fuzzy matches to a list of userIDs (applies utils.removeHiddenChars to keys)
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "displayNameToUserIds", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "userIdsToDisplayNames", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "tokenToInvite", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "displayNameToUserIds", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "userIdsToDisplayNames", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "tokenToInvite", {});
     // 3pid invite state_key to m.room.member invite
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "joinedMemberCount", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "joinedMemberCount", null);
     // cache of the number of joined members
     // joined members count from summary api
     // once set, we know the server supports the summary api
     // and we should only trust that
     // we could also only trust that before OOB members
     // are loaded but doesn't seem worth the hassle atm
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "summaryJoinedMemberCount", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "summaryJoinedMemberCount", null);
     // same for invited member count
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "invitedMemberCount", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "summaryInvitedMemberCount", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "modified", -1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "invitedMemberCount", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "summaryInvitedMemberCount", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "modified", -1);
     // XXX: Should be read-only
     // The room member dictionary, keyed on the user's ID.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "members", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "members", {});
     // userId: RoomMember
     // The state events dictionary, keyed on the event type and then the state_key value.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "events", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "events", new Map());
     // Map<eventType, Map<stateKey, MatrixEvent>>
     // The pagination token for this state.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "paginationToken", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "beacons", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_liveBeaconIds", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "paginationToken", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "beacons", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_liveBeaconIds", []);
     // We only wants to print warnings about bad room state once.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getVersionWarning", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getVersionWarning", false);
     this.updateModifiedTime();
   }
 
@@ -32244,7 +32792,7 @@ class RoomState extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.Typ
   }
   processBeaconEvents(events, matrixClient) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!events.length ||
       // discard locations if we have no beacons
       !_this.beacons.size) {
@@ -32279,7 +32827,7 @@ class RoomState extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_8__.Typ
           } catch (_unused) {
             if (event.isDecryptionFailure()) {
               // add an event listener for once the event is decrypted.
-              event.once(_event_js__WEBPACK_IMPORTED_MODULE_6__.MatrixEventEvent.Decrypted, /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+              event.once(_event_js__WEBPACK_IMPORTED_MODULE_6__.MatrixEventEvent.Decrypted, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
                 processBeaconRelation(relatedToEventId, event);
               }));
             }
@@ -32871,7 +33419,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomStickyEventsEvent: () => (/* binding */ RoomStickyEventsEvent),
 /* harmony export */   RoomStickyEventsStore: () => (/* binding */ RoomStickyEventsStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 
@@ -32901,18 +33449,18 @@ class RoomStickyEventsStore extends _typed_event_emitter_js__WEBPACK_IMPORTED_MO
      * The events are ordered in latest to earliest expiry, so that the first event
      * in the array will always be the "current" one.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "stickyEventsMap", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "stickyEventsMap", new Map());
     /**
      * These are sticky events that have no sticky key and therefore exist outside the tuple
      * system above. They are just held in this Set until they expire.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "unkeyedStickyEvents", new Set());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "stickyEventTimer", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "nextStickyEventExpiryTs", Number.MAX_SAFE_INTEGER);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "unkeyedStickyEvents", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "stickyEventTimer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "nextStickyEventExpiryTs", Number.MAX_SAFE_INTEGER);
     /**
      * Clean out any expired sticky events.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "cleanExpiredStickyEvents", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "cleanExpiredStickyEvents", () => {
       var now = Date.now();
       var removedEvents = [];
 
@@ -33298,8 +33846,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomEvent: () => (/* binding */ RoomEvent),
 /* harmony export */   RoomNameType: () => (/* binding */ RoomNameType)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var matrix_events_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! matrix-events-sdk */ "./node_modules/matrix-events-sdk/lib/index.js");
 /* harmony import */ var _event_timeline_set_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./event-timeline-set.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline-set.js");
 /* harmony import */ var _event_timeline_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
@@ -33329,7 +33877,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015 - 2023 The Matrix.org Foundation C.I.C.
 
@@ -33456,36 +34004,36 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
     this.client = client;
     this.myUserId = myUserId;
     this.opts = opts;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "txnToEvent", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "txnToEvent", new Map());
     // Pending in-flight requests { string: MatrixEvent }
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "notificationCounts", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "bumpStamp", undefined);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threadNotifications", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "cachedThreadReadReceipts", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "notificationCounts", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "bumpStamp", undefined);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threadNotifications", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "cachedThreadReadReceipts", new Map());
     // Useful to know at what point the current user has started using threads in this room
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oldestThreadedReceiptTs", Infinity);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oldestThreadedReceiptTs", Infinity);
     /**
      * A record of the latest unthread receipts per user
      * This is useful in determining whether a user has read a thread or not
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "unthreadedReceipts", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "timelineSets", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "polls", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "unthreadedReceipts", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "timelineSets", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "polls", new Map());
     /**
      * Empty array if the timeline sets have not been initialised. After initialisation:
      * 0: All threads
      * 1: Threads the current user has participated in
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threadsTimelineSets", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threadsTimelineSets", []);
     // any filtered timeline sets we're maintaining for this room
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "filteredTimelineSets", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "filteredTimelineSets", {});
     // filter_id: timelineSet
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "timelineNeedsRefresh", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingEventList", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "timelineNeedsRefresh", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingEventList", void 0);
     // read by megolm via getter; boolean value - null indicates "use global value"
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "blacklistUnverifiedDevices", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "selfMembership", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "blacklistUnverifiedDevices", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "selfMembership", void 0);
     /**
      * A `Hero` is a stripped `m.room.member` event which contains the important renderable fields from the event.
      *
@@ -33495,55 +34043,55 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
      * a `Hero` object based on the user id we get from the summary. Obviously, in that case,
      * the `Hero` will lack a `displayName` or `avatarUrl`.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "heroes", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "heroes", null);
     // flags to stop logspam about missing m.room.create events
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getTypeWarning", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "membersPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getTypeWarning", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "membersPromise", void 0);
     // XXX: These should be read-only
     /**
      * The human-readable display name for this room.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "name", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "name", void 0);
     /**
      * The un-homoglyphed name for this room.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "normalizedName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "normalizedName", void 0);
     /**
      * Dict of room tags; the keys are the tag name and the values
      * are any metadata associated with the tag - e.g. `{ "fav" : { order: 1 } }`
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "tags", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "tags", {});
     // $tagName: { $metadata: $value }
     /**
      * accountData Dict of per-room account_data events; the keys are the
      * event type and the values are the events.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "accountData", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "accountData", new Map());
     // $eventType: $event
     /**
      * The room summary.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "summary", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "summary", null);
     /**
      * oldState The state of the room at the time of the oldest event in the live timeline.
      *
      * @deprecated Present for backwards compatibility.
      *             Use getLiveTimeline().getState(EventTimeline.BACKWARDS) instead
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oldState", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oldState", void 0);
     /**
      * currentState The state of the room at the time of the newest event in the timeline.
      *
      * @deprecated Present for backwards compatibility.
      *             Use getLiveTimeline().getState(EventTimeline.FORWARDS) instead.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "currentState", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "relations", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "currentState", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "relations", void 0);
     /**
      * A collection of events known by the client
      * This is not a comprehensive list of the threads that exist in this room
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threads", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threads", new Map());
     /**
      * A mapping of eventId to all visibility changes to apply
      * to the event, by chronological order, as per
@@ -33560,19 +34108,19 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
      *
      * @experimental
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "visibilityEvents", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "visibilityEvents", new Map());
     /**
      * The latest receipts (synthetic and real) for each user in each thread
      * (and unthreaded).
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomReceipts", new _room_receipts_js__WEBPACK_IMPORTED_MODULE_23__.RoomReceipts(this));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomReceipts", new _room_receipts_js__WEBPACK_IMPORTED_MODULE_23__.RoomReceipts(this));
     /**
      * Stores and tracks sticky events
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "stickyEvents", new _room_sticky_events_js__WEBPACK_IMPORTED_MODULE_27__.RoomStickyEventsStore());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threadTimelineSetsPromise", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "threadsReady", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "updateThreadRootEvents", (thread, toStartOfTimeline, recreateEvent) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "stickyEvents", new _room_sticky_events_js__WEBPACK_IMPORTED_MODULE_27__.RoomStickyEventsStore());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threadTimelineSetsPromise", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "threadsReady", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "updateThreadRootEvents", (thread, toStartOfTimeline, recreateEvent) => {
       if (thread.length) {
         var _this$threadsTimeline;
         this.updateThreadRootEvent((_this$threadsTimeline = this.threadsTimelineSets) === null || _this$threadsTimeline === void 0 ? void 0 : _this$threadsTimeline[0], thread, toStartOfTimeline, recreateEvent);
@@ -33582,7 +34130,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
         }
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "updateThreadRootEvent", (timelineSet, thread, toStartOfTimeline, recreateEvent) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "updateThreadRootEvent", (timelineSet, thread, toStartOfTimeline, recreateEvent) => {
       if (timelineSet && thread.rootEvent) {
         if (recreateEvent) {
           timelineSet.removeEvent(thread.id);
@@ -33602,7 +34150,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
         }
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "tryApplyRedaction", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "tryApplyRedaction", event => {
       // FIXME: apply redactions to notification list
 
       // NB: We continue to add the redaction event to the timeline at the
@@ -33680,7 +34228,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
           decrypt: false
         });
         events.forEach(/*#__PURE__*/function () {
-          var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (serializedEvent) {
+          var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (serializedEvent) {
             var event = mapper(serializedEvent);
             yield client.decryptEventIfNeeded(event);
             event.setStatus(_event_status_js__WEBPACK_IMPORTED_MODULE_8__.EventStatus.NOT_SENT);
@@ -33702,7 +34250,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
   }
   createThreadsTimelineSets() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this2$client;
       if (_this2.threadTimelineSetsPromise) {
         return _this2.threadTimelineSetsPromise;
@@ -33736,7 +34284,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   decryptCriticalEvents() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this3.client.getCrypto()) return;
       var readReceiptEventId = _this3.getEventReadUpTo(_this3.client.getUserId(), true);
       var events = _this3.getLiveTimeline().getEvents();
@@ -33755,7 +34303,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   decryptAllEvents() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this4.client.getCrypto()) return;
       var decryptionPromises = _this4.getUnfilteredTimelineSet().getLiveTimeline().getEvents().slice(0) // copy before reversing
       .reverse().map(event => _this4.client.decryptEventIfNeeded(event));
@@ -33794,7 +34342,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   getRecommendedVersion() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var capabilities = {};
       try {
         capabilities = yield _this5.client.getCapabilities();
@@ -34177,7 +34725,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
   }
   loadMembersFromServer() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var lastSyncToken = _this6.client.store.getSyncToken();
       var response = yield _this6.client.members(_this6.roomId, undefined, _types_membership_js__WEBPACK_IMPORTED_MODULE_25__.KnownMembership.Leave, lastSyncToken !== null && lastSyncToken !== void 0 ? lastSyncToken : undefined);
       return response.chunk;
@@ -34185,7 +34733,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
   }
   loadMembers() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // were the members loaded from the server?
       var fromServer = false;
       var rawMembersEvents = yield _this7.client.store.getOutOfBandMembers(_this7.roomId);
@@ -34276,7 +34824,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   clearLoadedMembersIfNeeded() {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this8.opts.lazyLoadMembers && _this8.membersPromise) {
         yield _this8.loadMembersIfNeeded();
         yield _this8.client.store.clearOutOfBandMembers(_this8.roomId);
@@ -34312,7 +34860,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   refreshLiveTimeline() {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var liveTimelineBefore = _this9.getLiveTimeline();
       var forwardPaginationToken = liveTimelineBefore.getPaginationToken(_event_timeline_js__WEBPACK_IMPORTED_MODULE_4__.EventTimeline.FORWARDS);
       var backwardPaginationToken = liveTimelineBefore.getPaginationToken(_event_timeline_js__WEBPACK_IMPORTED_MODULE_4__.EventTimeline.BACKWARDS);
@@ -35011,7 +35559,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   getEncryptionTargetMembers() {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this0.loadMembersIfNeeded();
       var members = _this0.getMembersWithMembership(_types_membership_js__WEBPACK_IMPORTED_MODULE_25__.KnownMembership.Join);
       if (_this0.shouldEncryptForInvitedMembers()) {
@@ -35123,7 +35671,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
   getThreadListFilter() {
     var _arguments = arguments,
       _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var filterType = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : _thread_js__WEBPACK_IMPORTED_MODULE_18__.ThreadFilterType.All;
       var myUserId = _this1.client.getUserId();
       var filter = new _filter_js__WEBPACK_IMPORTED_MODULE_15__.Filter(myUserId);
@@ -35145,7 +35693,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
   }
   createThreadTimelineSet(filterType) {
     var _this10 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var timelineSet;
       if (_thread_js__WEBPACK_IMPORTED_MODULE_18__.Thread.hasServerSideListSupport) {
         timelineSet = new _event_timeline_set_js__WEBPACK_IMPORTED_MODULE_3__.EventTimelineSet(_this10, _objectSpread(_objectSpread({}, _this10.opts), {}, {
@@ -35200,7 +35748,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   fetchRoomThreads() {
     var _this11 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this11.threadsReady || !_this11.client.supportsThreads()) {
         return;
       }
@@ -35263,7 +35811,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   processPollEvents(events) {
     var _this12 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var event of events) {
         try {
           // Continue if the event is a clear text, non-poll event.
@@ -35294,7 +35842,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   processPollEvent(event) {
     var _this13 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (event.isDecryptionFailure()) {
         event.once(_event_js__WEBPACK_IMPORTED_MODULE_7__.MatrixEventEvent.Decrypted, maybeDecryptedEvent => {
           _this13.processPollEvent(maybeDecryptedEvent);
@@ -35329,7 +35877,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   fetchRoomThreadList(filter) {
     var _this14 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this14.client.supportsThreads()) return;
       if (_this14.threadsTimelineSets.length === 0) return;
       var timelineSet = filter === _thread_js__WEBPACK_IMPORTED_MODULE_18__.ThreadFilterType.My ? _this14.threadsTimelineSets[1] : _this14.threadsTimelineSets[0];
@@ -35969,7 +36517,7 @@ class Room extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_21__.ReadReceipt {
    */
   addLiveEvents(events, addLiveEventOptions) {
     var _this15 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         duplicateStrategy,
         fromCache,
@@ -36963,8 +37511,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   determineFeatureSupport: () => (/* binding */ determineFeatureSupport),
 /* harmony export */   threadFilterTypeToFilter: () => (/* binding */ threadFilterTypeToFilter)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _ReEmitter_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ReEmitter.js */ "./node_modules/matrix-js-sdk/lib/ReEmitter.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
@@ -36980,7 +37528,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2021 - 2023 The Matrix.org Foundation C.I.C.
 
@@ -37043,9 +37591,9 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
     /**
      * A reference to all the events ID at the bottom of the threads
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "timelineSet", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_currentUserParticipated", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "timelineSet", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_currentUserParticipated", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", void 0);
     /**
      * The last event in this thread, if we don't yet have this in the timeline.
      *
@@ -37078,32 +37626,32 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
      *
      * -- andyb
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lastEvent", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "replyCount", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lastPendingEvent", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingReplyCount", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "room", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "client", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingEventOrdering", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "processRootEventPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lastEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "replyCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lastPendingEvent", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingReplyCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "room", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "client", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingEventOrdering", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "processRootEventPromise", void 0);
     /**
      * Whether or not we need to fetch the initial set of events for the thread. We can
      * only do this if the server has support for it, so if it doesn't we just pretend
      * that we've already fetched them.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "initialEventsFetched", !Thread.hasServerSideSupport);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "initalEventFetchProm", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "initialEventsFetched", !Thread.hasServerSideSupport);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "initalEventFetchProm", void 0);
     /**
      * An array of events to add to the timeline once the thread has been initialised
      * with server suppport.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "replayEvents", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onTimelineReset", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "replayEvents", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onTimelineReset", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We hit a gappy sync, ask the server for an update
       yield _this.processRootEventPromise;
       _this.processRootEventPromise = undefined;
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onBeforeRedaction", (event, redaction) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onBeforeRedaction", (event, redaction) => {
       if (event !== null && event !== void 0 && event.isRelation(THREAD_RELATION_TYPE.name) && this.room.eventShouldLiveIn(event).threadId === this.id && event.getId() !== this.id &&
       // the root event isn't counted in the length so ignore this redaction
       !redaction.status // only respect it when it succeeds
@@ -37113,8 +37661,8 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
         this.emit(ThreadEvent.Update, this);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRedaction", /*#__PURE__*/function () {
-      var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (event, room, threadRootId) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRedaction", /*#__PURE__*/function () {
+      var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (event, room, threadRootId) {
         if (threadRootId !== _this.id) return; // ignore redactions for other timelines
         if (_this.replyCount <= 0) {
           for (var threadEvent of _this.timeline) {
@@ -37137,7 +37685,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
         return _ref2.apply(this, arguments);
       };
     }());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onTimelineEvent", (event, room, toStartOfTimeline) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onTimelineEvent", (event, room, toStartOfTimeline) => {
       // Add a synthesized receipt when paginating forward in the timeline
       if (!toStartOfTimeline) {
         var sender = event.getSender();
@@ -37150,11 +37698,11 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
       }
       this.onEcho(event, toStartOfTimeline !== null && toStartOfTimeline !== void 0 ? toStartOfTimeline : false);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onLocalEcho", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onLocalEcho", event => {
       this.onEcho(event, false);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onEcho", /*#__PURE__*/function () {
-      var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (event, toStartOfTimeline) {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onEcho", /*#__PURE__*/function () {
+      var _ref3 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (event, toStartOfTimeline) {
         if (event.threadRootId !== _this.id) return; // ignore echoes for other timelines
         if (_this.lastEvent === event) return; // ignore duplicate events
         yield _this.updateThreadMetadata();
@@ -37197,7 +37745,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   }
   fetchRootEvent() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Always fetch the root event, even if we already have it, so we can get the latest
       // state (via unsigned).
       try {
@@ -37403,7 +37951,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   }
   processEvent(event) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (event) {
         _this3.setEventMetadata(event);
         yield _this3.fetchEditsWhereNeeded(event);
@@ -37435,7 +37983,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   }
   processRootEvent() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var bundledRelationship = _this4.getRootEventBundledRelationship();
       if (Thread.hasServerSideSupport && bundledRelationship) {
         _this4.replyCount = bundledRelationship.count;
@@ -37476,7 +38024,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
    */
   resetLiveTimeline(backPaginationToken, forwardPaginationToken) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var oldLive = _this5.liveTimeline;
       _this5.timelineSet.resetLiveTimeline(backPaginationToken !== null && backPaginationToken !== void 0 ? backPaginationToken : undefined, forwardPaginationToken !== null && forwardPaginationToken !== void 0 ? forwardPaginationToken : undefined);
       var newLive = _this5.liveTimeline;
@@ -37513,7 +38061,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   }
   updateThreadFromRootEvent() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (Thread.hasServerSideSupport) {
         // Ensure we show *something* as soon as possible, we'll update it as soon as we get better data, but we
         // don't want the thread preview to be empty if we can avoid it
@@ -37527,7 +38075,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   }
   updateThreadMetadata() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this7.updatePendingReplyCount();
       if (!_this7.processRootEventPromise) {
         // We only want to do this once otherwise we end up rolling back to the last unsigned summary we have for the thread
@@ -37587,7 +38135,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
   fetchEditsWhereNeeded() {
     var _arguments = arguments,
       _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this8$client$canSupp;
       var recursionSupport = (_this8$client$canSupp = _this8.client.canSupport.get(_feature_js__WEBPACK_IMPORTED_MODULE_13__.Feature.RelationsRecursion)) !== null && _this8$client$canSupp !== void 0 ? _this8$client$canSupp : _feature_js__WEBPACK_IMPORTED_MODULE_13__.ServerSupport.Unsupported;
       if (recursionSupport === _feature_js__WEBPACK_IMPORTED_MODULE_13__.ServerSupport.Unsupported) {
@@ -37595,7 +38143,7 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
           events[_key] = _arguments[_key];
         }
         return Promise.all(events.filter(isAnEncryptedThreadMessage).map(/*#__PURE__*/function () {
-          var _ref4 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (event) {
+          var _ref4 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (event) {
             try {
               var relations = yield _this8.client.relations(_this8.roomId, event.getId(), _types_event_js__WEBPACK_IMPORTED_MODULE_4__.RelationType.Replace, event.getType(), {
                 limit: 1
@@ -37820,9 +38368,9 @@ class Thread extends _read_receipt_js__WEBPACK_IMPORTED_MODULE_11__.ReadReceipt 
  * @returns true if this event is encrypted and is a message that is part of a
  * thread - either inside it, or a root.
  */
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(Thread, "hasServerSideSupport", FeatureSupport.None);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(Thread, "hasServerSideListSupport", FeatureSupport.None);
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(Thread, "hasServerSideFwdPaginationSupport", FeatureSupport.None);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(Thread, "hasServerSideSupport", FeatureSupport.None);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(Thread, "hasServerSideListSupport", FeatureSupport.None);
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(Thread, "hasServerSideFwdPaginationSupport", FeatureSupport.None);
 function isAnEncryptedThreadMessage(event) {
   return event.isEncrypted() && (event.isRelation(THREAD_RELATION_TYPE.name) || event.isThreadRoot);
 }
@@ -37858,8 +38406,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EventEmitterEvents: () => (/* binding */ EventEmitterEvents),
 /* harmony export */   TypedEventEmitter: () => (/* binding */ TypedEventEmitter)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! events */ "events");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 
 /*
 Copyright 2021 The Matrix.org Foundation C.I.C.
@@ -37947,7 +38495,7 @@ class TypedEventEmitter extends events__WEBPACK_IMPORTED_MODULE_1__.EventEmitter
   emitPromised(event) {
     var _arguments = arguments,
       _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var _len2 = _arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = _arguments[_key2];
       }
@@ -38102,7 +38650,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   User: () => (/* binding */ User),
 /* harmony export */   UserEvent: () => (/* binding */ UserEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 
 /*
@@ -38139,59 +38687,59 @@ class User extends _typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_1__.TypedEve
   constructor(userId) {
     super();
     this.userId = userId;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "modified", -1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "modified", -1);
     /**
      * The 'displayname' of the user if known.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "displayName", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "rawDisplayName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "displayName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "rawDisplayName", void 0);
     /**
      * The 'avatar_url' of the user if known.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "avatarUrl", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "avatarUrl", void 0);
     /**
      * The presence status message if known.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "presenceStatusMsg", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "presenceStatusMsg", void 0);
     /**
      * The presence enum if known.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "presence", "offline");
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "presence", "offline");
     /**
      * Timestamp (ms since the epoch) for when we last received presence data for this user.
      * We can subtract lastActiveAgo from this to approximate an absolute value for when a user was last active.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "lastActiveAgo", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "lastActiveAgo", 0);
     /**
      * The time elapsed in ms since the user interacted proactively with the server,
      * or we saw a message from the user
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "lastPresenceTs", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "lastPresenceTs", 0);
     /**
      * Whether we should consider lastActiveAgo to be an approximation
      * and that the user should be seen as active 'now'
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "currentlyActive", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "currentlyActive", false);
     /**
      * The events describing this user.
      * @privateRemarks
      * Should be read-only
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "events", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "events", {});
     this.displayName = userId;
     this.rawDisplayName = userId;
     this.updateModifiedTime();
@@ -38340,8 +38888,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   generateOidcAuthorizationUrl: () => (/* binding */ generateOidcAuthorizationUrl),
 /* harmony export */   generateScope: () => (/* binding */ generateScope)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var oidc_client_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! oidc-client-ts */ "./node_modules/oidc-client-ts/dist/esm/oidc-client-ts.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _randomstring_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../randomstring.js */ "./node_modules/matrix-js-sdk/lib/randomstring.js");
@@ -38352,7 +38900,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
 
@@ -38397,7 +38945,7 @@ var generateScope = deviceId => {
 
 // https://www.rfc-editor.org/rfc/rfc7636
 var generateCodeChallenge = /*#__PURE__*/function () {
-  var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (codeVerifier) {
+  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (codeVerifier) {
     if (!globalThis.crypto.subtle) {
       // @TODO(kerrya) should this be allowed? configurable?
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.warn("A secure context is required to generate code challenge. Using plain text code challenge");
@@ -38442,7 +38990,7 @@ var generateAuthorizationParams = _ref2 => {
  * @returns a Promise with the url as a string
  */
 var generateAuthorizationUrl = /*#__PURE__*/function () {
-  var _ref4 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (authorizationUrl, clientId, _ref3) {
+  var _ref4 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (authorizationUrl, clientId, _ref3) {
     var {
       scope,
       redirectUri,
@@ -38484,7 +39032,7 @@ var generateAuthorizationUrl = /*#__PURE__*/function () {
  * @returns a Promise with the url as a string
  */
 var generateOidcAuthorizationUrl = /*#__PURE__*/function () {
-  var _ref6 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (_ref5) {
+  var _ref6 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (_ref5) {
     var {
       metadata,
       redirectUri,
@@ -38560,7 +39108,7 @@ var normalizeBearerTokenResponseTokenType = response => ({
  *      when the request fails, or the returned token response is invalid.
  */
 var completeAuthorizationCodeGrant = /*#__PURE__*/function () {
-  var _ref7 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (code, state) {
+  var _ref7 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (code, state) {
     /**
      * Element Web strips and changes the url on starting the app
      * Use the code and state from query params to rebuild a url
@@ -38646,15 +39194,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   discoverAndValidateOIDCIssuerWellKnown: () => (/* binding */ discoverAndValidateOIDCIssuerWellKnown),
 /* harmony export */   validateAuthMetadataAndKeys: () => (/* binding */ validateAuthMetadataAndKeys)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var oidc_client_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! oidc-client-ts */ "./node_modules/oidc-client-ts/dist/esm/oidc-client-ts.js");
 /* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validate.js */ "./node_modules/matrix-js-sdk/lib/oidc/validate.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
 
@@ -38687,7 +39235,7 @@ limitations under the License.
  * @deprecated in favour of {@link MatrixClient#getAuthMetadata}
  */
 var discoverAndValidateOIDCIssuerWellKnown = /*#__PURE__*/function () {
-  var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (issuer) {
+  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (issuer) {
     var issuerOpenIdConfigUrl = new URL(".well-known/openid-configuration", issuer);
     var issuerWellKnownResponse = yield fetch(issuerOpenIdConfigUrl, {
       method: _http_api_index_js__WEBPACK_IMPORTED_MODULE_4__.Method.Get,
@@ -38708,7 +39256,7 @@ var discoverAndValidateOIDCIssuerWellKnown = /*#__PURE__*/function () {
  * @returns validated authentication metadata and signing keys
  */
 var validateAuthMetadataAndKeys = /*#__PURE__*/function () {
-  var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (authMetadata) {
+  var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (authMetadata) {
     var validatedIssuerConfig = (0,_validate_js__WEBPACK_IMPORTED_MODULE_3__.validateAuthMetadata)(authMetadata);
 
     // create a temporary settings store, so we can use metadata service for discovery
@@ -38857,7 +39405,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DEVICE_CODE_SCOPE: () => (/* binding */ DEVICE_CODE_SCOPE),
 /* harmony export */   registerOidcClient: () => (/* binding */ registerOidcClient)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _error_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./error.js */ "./node_modules/matrix-js-sdk/lib/oidc/error.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -38910,7 +39458,7 @@ var urlHasCommonBase = (base, urlStr) => {
  * @throws when registration is not supported, on failed request or invalid response
  */
 var registerOidcClient = /*#__PURE__*/function () {
-  var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (delegatedAuthConfig, clientMetadata) {
+  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (delegatedAuthConfig, clientMetadata) {
     if (!delegatedAuthConfig.registration_endpoint) {
       throw new Error(_error_js__WEBPACK_IMPORTED_MODULE_1__.OidcError.DynamicRegistrationNotSupported);
     }
@@ -38982,8 +39530,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   OidcTokenRefresher: () => (/* binding */ OidcTokenRefresher)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var oidc_client_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! oidc-client-ts */ "./node_modules/oidc-client-ts/dist/esm/oidc-client-ts.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 /* harmony import */ var _authorize_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./authorize.js */ "./node_modules/matrix-js-sdk/lib/oidc/authorize.js");
@@ -39050,14 +39598,14 @@ class OidcTokenRefresher {
      *
      * Will reject if the client initialisation fails.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oidcClientReady", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oidcClient", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inflightRefreshRequest", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oidcClientReady", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oidcClient", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inflightRefreshRequest", void 0);
     this.oidcClientReady = this.initialiseOidcClient(issuer, clientId, deviceId, redirectUri);
   }
   initialiseOidcClient(issuer, clientId, deviceId, redirectUri) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         var _config$signingKeys;
         var config = yield (0,_discovery_js__WEBPACK_IMPORTED_MODULE_5__.discoverAndValidateOIDCIssuerWellKnown)(issuer);
@@ -39089,7 +39637,7 @@ class OidcTokenRefresher {
    */
   doRefreshAccessToken(refreshToken) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this2.inflightRefreshRequest) {
         _this2.inflightRefreshRequest = _this2.getNewTokens(refreshToken);
       }
@@ -39117,11 +39665,11 @@ class OidcTokenRefresher {
    * @param tokens.refreshToken - OPTIONAL new refresh token
    */
   persistTokens(tokens) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {})();
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {})();
   } // NOOP
   getNewTokens(refreshToken) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this3.oidcClient) {
         throw new Error("Cannot get new token before OIDC client is initialised.");
       }
@@ -39362,13 +39910,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PushProcessor: () => (/* binding */ PushProcessor)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _types_PushRules_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./@types/PushRules.js */ "./node_modules/matrix-js-sdk/lib/@types/PushRules.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015 - 2021 The Matrix.org Foundation C.I.C.
 
@@ -39533,7 +40081,7 @@ class PushProcessor {
      * Maps the original key from the push rules to a list of property names
      * after unescaping.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "parsedKeys", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "parsedKeys", new Map());
   }
   /**
    * Convert a list of actions into a object with the actions as keys and their values
@@ -40066,7 +40614,7 @@ class PushProcessor {
     return null;
   }
 }
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(PushProcessor, "cachedGlobToRegex", {});
+(0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(PushProcessor, "cachedGlobToRegex", {});
 //# sourceMappingURL=pushprocessor.js.map
 
 /***/ }),
@@ -40392,7 +40940,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ReceiptAccumulator: () => (/* binding */ ReceiptAccumulator)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 
@@ -40428,9 +40976,9 @@ limitations under the License.
 class ReceiptAccumulator {
   constructor() {
     /** user_id -\> most-recently-received unthreaded receipt */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "unthreadedReadReceipts", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "unthreadedReadReceipts", new Map());
     /** thread_id -\> user_id -\> most-recently-received receipt for this thread */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "threadedReadReceipts", new _utils_js__WEBPACK_IMPORTED_MODULE_2__.MapWithDefault(() => new Map()));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "threadedReadReceipts", new _utils_js__WEBPACK_IMPORTED_MODULE_2__.MapWithDefault(() => new Map()));
   }
   /**
    * Provide an unthreaded receipt for this user. Overwrites any other
@@ -40606,7 +41154,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MatrixScheduler: () => (/* binding */ MatrixScheduler)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -40694,10 +41242,10 @@ class MatrixScheduler {
     var queueAlgorithm = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MatrixScheduler.QUEUE_MESSAGES;
     this.retryAlgorithm = retryAlgorithm;
     this.queueAlgorithm = queueAlgorithm;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "queues", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "activeQueues", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "procFn", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "processQueue", queueName => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "queues", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "activeQueues", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "procFn", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "processQueue", queueName => {
       // get head of queue
       var obj = this.peekNextEvent(queueName);
       if (!obj) {
@@ -40887,7 +41435,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   calculateKeyCheck: () => (/* binding */ calculateKeyCheck),
 /* harmony export */   trimTrailingEquals: () => (/* binding */ trimTrailingEquals)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _randomstring_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./randomstring.js */ "./node_modules/matrix-js-sdk/lib/randomstring.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -41020,7 +41568,7 @@ class ServerSideSecretStorageImpl {
    */
   getDefaultKeyId() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _defaultKey$key;
       var defaultKey = yield _this.accountDataAdapter.getAccountDataFromServer("m.secret_storage.default_key");
       if (!defaultKey) return null;
@@ -41079,7 +41627,7 @@ class ServerSideSecretStorageImpl {
    */
   addKey(algorithm, opts, keyId) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (algorithm !== SECRET_STORAGE_ALGORITHM_V1_AES) {
         throw new Error("Unknown key algorithm ".concat(algorithm));
       }
@@ -41124,7 +41672,7 @@ class ServerSideSecretStorageImpl {
    */
   getKey(keyId) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!keyId) {
         keyId = yield _this3.getDefaultKeyId();
       }
@@ -41145,7 +41693,7 @@ class ServerSideSecretStorageImpl {
    */
   hasKey(keyId) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var key = yield _this4.getKey(keyId);
       return Boolean(key);
     })();
@@ -41160,7 +41708,7 @@ class ServerSideSecretStorageImpl {
    * @returns whether or not the key matches
    */
   checkKey(key, info) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (info.algorithm === SECRET_STORAGE_ALGORITHM_V1_AES) {
         if (info.mac) {
           var {
@@ -41182,7 +41730,7 @@ class ServerSideSecretStorageImpl {
    */
   store(name, secret, keys) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (secret === null) {
         // remove secret
         yield _this5.accountDataAdapter.setAccountData(name, {});
@@ -41239,7 +41787,7 @@ class ServerSideSecretStorageImpl {
    */
   get(name) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var secretInfo = yield _this6.accountDataAdapter.getAccountDataFromServer(name);
       if (!secretInfo) {
         return;
@@ -41283,7 +41831,7 @@ class ServerSideSecretStorageImpl {
    */
   isStored(name) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // check if secret exists
       var secretInfo = yield _this7.accountDataAdapter.getAccountDataFromServer(name);
       if (!(secretInfo !== null && secretInfo !== void 0 && secretInfo.encrypted)) return null;
@@ -41308,7 +41856,7 @@ class ServerSideSecretStorageImpl {
   }
   getSecretStorageKey(keys, name) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this8.callbacks.getSecretStorageKey) {
         throw new Error("No getSecretStorageKey callback supplied");
       }
@@ -41395,8 +41943,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RoomVersionStability: () => (/* binding */ RoomVersionStability),
 /* harmony export */   ServerCapabilities: () => (/* binding */ ServerCapabilities)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _http_api_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./http-api/index.js */ "./node_modules/matrix-js-sdk/lib/http-api/index.js");
 
 
@@ -41442,19 +41990,19 @@ class ServerCapabilities {
     var _this = this;
     this.logger = logger;
     this.http = http;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "capabilities", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "refreshTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "capabilities", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "refreshTimeout", void 0);
     /**
      * Fetches the latest server capabilities from the homeserver and returns them, or rejects
      * on failure.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "fetchCapabilities", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "fetchCapabilities", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var resp = yield _this.http.authedRequest(_http_api_index_js__WEBPACK_IMPORTED_MODULE_2__.Method.Get, "/capabilities");
       _this.capabilities = resp["capabilities"];
       return _this.capabilities;
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "poll", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "poll", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         yield _this.fetchCapabilities();
         _this.clearTimeouts();
@@ -41553,8 +42101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SlidingSyncSdk: () => (/* binding */ SlidingSyncSdk)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _models_room_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/room.js */ "./node_modules/matrix-js-sdk/lib/models/room.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -41614,7 +42162,7 @@ class ExtensionE2EE {
   }
   onRequest(isInitial) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (isInitial) {
         // In SSS, the `?pos=` contains the stream position for device list updates.
         // If we do not have a `?pos=` (e.g because we forgot it, or because the server
@@ -41632,7 +42180,7 @@ class ExtensionE2EE {
   }
   onResponse(data) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       // Handle device list updates
       if (data.device_lists) {
         yield _this2.crypto.processDeviceLists(data.device_lists);
@@ -41648,7 +42196,7 @@ class ExtensionToDevice {
   constructor(client, cryptoCallbacks) {
     this.client = client;
     this.cryptoCallbacks = cryptoCallbacks;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "nextBatch", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "nextBatch", null);
   }
   name() {
     return "to_device";
@@ -41658,7 +42206,7 @@ class ExtensionToDevice {
   }
   onRequest(isInitial) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return {
         since: _this3.nextBatch !== null ? _this3.nextBatch : undefined,
         limit: 100,
@@ -41668,7 +42216,7 @@ class ExtensionToDevice {
   }
   onResponse(data) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var events = data["events"] || [];
       var receivedToDeviceMessages;
       if (_this4.cryptoCallbacks) {
@@ -41697,7 +42245,7 @@ class ExtensionAccountData {
     return _sliding_sync_js__WEBPACK_IMPORTED_MODULE_9__.ExtensionState.PostProcess;
   }
   onRequest(isInitial) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return {
         enabled: true
       };
@@ -41705,7 +42253,7 @@ class ExtensionAccountData {
   }
   onResponse(data) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (data.global && data.global.length > 0) {
         _this5.processGlobalAccountData(data.global);
       }
@@ -41756,7 +42304,7 @@ class ExtensionTyping {
     return _sliding_sync_js__WEBPACK_IMPORTED_MODULE_9__.ExtensionState.PostProcess;
   }
   onRequest(isInitial) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return {
         enabled: true
       };
@@ -41764,7 +42312,7 @@ class ExtensionTyping {
   }
   onResponse(data) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(data !== null && data !== void 0 && data.rooms)) {
         return;
       }
@@ -41785,7 +42333,7 @@ class ExtensionReceipts {
     return _sliding_sync_js__WEBPACK_IMPORTED_MODULE_9__.ExtensionState.PostProcess;
   }
   onRequest(isInitial) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return {
         enabled: true
       };
@@ -41793,7 +42341,7 @@ class ExtensionReceipts {
   }
   onResponse(data) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       if (!(data !== null && data !== void 0 && data.rooms)) {
         return;
       }
@@ -41814,13 +42362,13 @@ class SlidingSyncSdk {
   constructor(slidingSync, client, opts, syncOpts) {
     this.slidingSync = slidingSync;
     this.client = client;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "opts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "syncOpts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "syncState", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "syncStateData", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "lastPos", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "failCount", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "notifEvents", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "opts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "syncOpts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "syncState", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "syncStateData", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "lastPos", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "failCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "notifEvents", []);
     this.opts = (0,_sync_js__WEBPACK_IMPORTED_MODULE_7__.defaultClientOpts)(opts);
     this.syncOpts = (0,_sync_js__WEBPACK_IMPORTED_MODULE_7__.defaultSyncApiOpts)(syncOpts);
     if (client.getNotifTimelineSet()) {
@@ -41838,7 +42386,7 @@ class SlidingSyncSdk {
   }
   onRoomData(roomId, roomData) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var room = _this8.client.store.getRoom(roomId);
       if (!room) {
         if (!roomData.initial) {
@@ -41901,7 +42449,7 @@ class SlidingSyncSdk {
    * @returns Resolved when they've been added to the store.
    */
   syncLeftRooms() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return []; // TODO
     })();
   }
@@ -41914,7 +42462,7 @@ class SlidingSyncSdk {
    * store.
    */
   peek(roomId) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       return null; // TODO
     })();
   }
@@ -42006,7 +42554,7 @@ class SlidingSyncSdk {
   }
   processRoomData(client, room, roomData) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       roomData = ensureNameEvent(client, room.roomId, roomData);
       var stateEvents = mapEvents(_this9.client, room.roomId, roomData.required_state);
       // Prevent events from being decrypted ahead of time
@@ -42166,7 +42714,7 @@ class SlidingSyncSdk {
       // we'll purge this once we've fully processed the sync response
       _this9.addNotifications(timelineEvents);
       var processRoomEvent = /*#__PURE__*/function () {
-        var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* (e) {
+        var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* (e) {
           client.emit(_client_js__WEBPACK_IMPORTED_MODULE_6__.ClientEvent.Event, e);
           if (e.isState() && e.getType() == _types_event_js__WEBPACK_IMPORTED_MODULE_10__.EventType.RoomEncryption && _this9.syncOpts.cryptoCallbacks) {
             yield _this9.syncOpts.cryptoCallbacks.onCryptoEvent(room, e);
@@ -42201,7 +42749,7 @@ class SlidingSyncSdk {
   injectRoomEvents(room, stateEventList) {
     var _arguments = arguments,
       _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       var timelineEventList = _arguments.length > 2 && _arguments[2] !== undefined ? _arguments[2] : [];
       var numLive = _arguments.length > 3 && _arguments[3] !== undefined ? _arguments[3] : 0;
       // If there are no events in the timeline yet, initialise it with
@@ -42321,7 +42869,7 @@ class SlidingSyncSdk {
    */
   sync() {
     var _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(function* () {
       _this1.syncOpts.logger.debug("Sliding sync init loop");
 
       //   1) We need to get push rules so we can check if events should bing as we get
@@ -42479,8 +43027,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SlidingSyncEvent: () => (/* binding */ SlidingSyncEvent),
 /* harmony export */   SlidingSyncState: () => (/* binding */ SlidingSyncState)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -42564,10 +43112,10 @@ class SlidingList {
    * @param list - The range, sort and filter values to use for this list.
    */
   constructor(list) {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "list", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isModified", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "list", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isModified", void 0);
     // returned data
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "joinedCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "joinedCount", 0);
     this.replaceList(list);
   }
 
@@ -42689,22 +43237,22 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
     this.roomSubscriptionInfo = roomSubscriptionInfo;
     this.client = client;
     this.timeoutMS = timeoutMS;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "lists", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "listModifiedCount", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "terminated", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "lists", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "listModifiedCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "terminated", false);
     // flag set when resend() is called because we cannot rely on detecting AbortError in JS SDK :(
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "needsResend", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "needsResend", false);
     // map of extension name to req/resp handler
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "extensions", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "desiredRoomSubscriptions", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "extensions", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "desiredRoomSubscriptions", new Set());
     // the *desired* room subscriptions
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "confirmedRoomSubscriptions", new Set());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "confirmedRoomSubscriptions", new Set());
     // map of custom subscription name to the subscription
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "customSubscriptions", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "customSubscriptions", new Map());
     // map of room ID to custom subscription name
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomIdToCustomSubscription", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingReq", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "abortController", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomIdToCustomSubscription", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingReq", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "abortController", void 0);
     this.lists = new Map();
     lists.forEach((list, key) => {
       this.lists.set(key, new SlidingList(list));
@@ -42855,7 +43403,7 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
   }
   getExtensionRequest(isInitial) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var ext = {};
       for (var extName in _this.extensions) {
         ext[extName] = yield _this.extensions[extName].onRequest(isInitial);
@@ -42865,9 +43413,9 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
   }
   onPreExtensionsResponse(ext) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield Promise.all(Object.keys(ext).map(/*#__PURE__*/function () {
-        var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (extName) {
+        var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (extName) {
           if (_this2.extensions[extName].when() == ExtensionState.PreProcess) {
             yield _this2.extensions[extName].onResponse(ext[extName]);
           }
@@ -42880,9 +43428,9 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
   }
   onPostExtensionsResponse(ext) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield Promise.all(Object.keys(ext).map(/*#__PURE__*/function () {
-        var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (extName) {
+        var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (extName) {
           if (_this3.extensions[extName].when() == ExtensionState.PostProcess) {
             yield _this3.extensions[extName].onResponse(ext[extName]);
           }
@@ -42901,7 +43449,7 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
    */
   invokeRoomDataListeners(roomId, roomData) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!roomData.required_state) {
         roomData.required_state = [];
       }
@@ -42963,7 +43511,7 @@ class SlidingSync extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODUL
    */
   start() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this5.abortController = new AbortController();
       var currentPos;
       var _loop = function* _loop() {
@@ -43083,8 +43631,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LocalIndexedDBStoreBackend: () => (/* binding */ LocalIndexedDBStoreBackend)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _sync_accumulator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../sync-accumulator.js */ "./node_modules/matrix-js-sdk/lib/sync-accumulator.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _indexeddb_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../indexeddb-helpers.js */ "./node_modules/matrix-js-sdk/lib/indexeddb-helpers.js");
@@ -43222,13 +43770,13 @@ class LocalIndexedDBStoreBackend {
   constructor(indexedDB) {
     var dbName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "default";
     this.indexedDB = indexedDB;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "dbName", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncAccumulator", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "db", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "disconnected", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_isNewlyCreated", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncToDatabasePromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingUserPresenceData", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "dbName", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncAccumulator", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "db", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "disconnected", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_isNewlyCreated", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncToDatabasePromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingUserPresenceData", []);
     this.dbName = "matrix-js-sdk:" + dbName;
     this.syncAccumulator = new _sync_accumulator_js__WEBPACK_IMPORTED_MODULE_2__.SyncAccumulator();
   }
@@ -43263,7 +43811,7 @@ class LocalIndexedDBStoreBackend {
       _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.log("can't yet open LocalIndexedDBStoreBackend because it is open elsewhere");
     };
     _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.log("LocalIndexedDBStoreBackend.connect: awaiting connection...");
-    return reqAsEventPromise(req).then(/*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return reqAsEventPromise(req).then(/*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.log("LocalIndexedDBStoreBackend.connect: connected");
       _this.db = req.result;
 
@@ -43361,7 +43909,7 @@ class LocalIndexedDBStoreBackend {
    */
   setOutOfBandMembers(roomId, membershipEvents) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.log("LL: backend about to store ".concat(membershipEvents.length) + " members for ".concat(roomId));
       var tx = _this2.db.transaction(["oob_membership_events"], "readwrite");
       var store = tx.objectStore("oob_membership_events");
@@ -43385,7 +43933,7 @@ class LocalIndexedDBStoreBackend {
   }
   clearOutOfBandMembers(roomId) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // the approach to delete all members for a room
       // is to get the min and max state key from the index
       // for that room, and then delete between those
@@ -43477,7 +44025,7 @@ class LocalIndexedDBStoreBackend {
    */
   syncToDatabase(userTuples) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this4.syncToDatabasePromise) {
         _logger_js__WEBPACK_IMPORTED_MODULE_5__.logger.warn("Skipping syncToDatabase() as persist already in flight");
         _this4.pendingUserPresenceData.push(...userTuples);
@@ -43490,7 +44038,7 @@ class LocalIndexedDBStoreBackend {
   }
   doSyncToDatabase(userTuples) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         var syncData = _this5.syncAccumulator.getJSON(true);
         yield Promise.all([_this5.persistUserPresenceEvents(userTuples), _this5.persistAccountData(syncData.accountData), _this5.persistSyncData(syncData.nextBatch, syncData.roomsData)]);
@@ -43628,7 +44176,7 @@ class LocalIndexedDBStoreBackend {
   }
   storeClientOptions(options) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var txn = _this6.db.transaction(["client_options"], "readwrite");
       var store = txn.objectStore("client_options");
       store.put({
@@ -43641,7 +44189,7 @@ class LocalIndexedDBStoreBackend {
   }
   saveToDeviceBatches(batches) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var txn = _this7.db.transaction(["to_device_queue"], "readwrite");
       var store = txn.objectStore("to_device_queue");
       for (var batch of batches) {
@@ -43652,7 +44200,7 @@ class LocalIndexedDBStoreBackend {
   }
   getOldestToDeviceBatch() {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var txn = _this8.db.transaction(["to_device_queue"], "readonly");
       var store = txn.objectStore("to_device_queue");
       var cursor = yield reqAsCursorPromise(store.openCursor());
@@ -43668,7 +44216,7 @@ class LocalIndexedDBStoreBackend {
   }
   removeToDeviceBatch(id) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var txn = _this9.db.transaction(["to_device_queue"], "readwrite");
       var store = txn.objectStore("to_device_queue");
       store.delete(id);
@@ -43681,7 +44229,7 @@ class LocalIndexedDBStoreBackend {
    */
   destroy() {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this0$db;
       (_this0$db = _this0.db) === null || _this0$db === void 0 || _this0$db.close();
     })();
@@ -43702,8 +44250,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RemoteIndexedDBStoreBackend: () => (/* binding */ RemoteIndexedDBStoreBackend)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 
 
@@ -43740,15 +44288,15 @@ class RemoteIndexedDBStoreBackend {
   constructor(workerFactory, dbName) {
     this.workerFactory = workerFactory;
     this.dbName = dbName;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "worker", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "nextSeq", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "worker", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "nextSeq", 0);
     // The currently in-flight requests to the actual backend
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inFlight", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inFlight", {});
     // seq: promise
     // Once we start connecting, we keep the promise and re-use it
     // if we try to connect again
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "startPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onWorkerMessage", ev => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "startPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onWorkerMessage", ev => {
       var msg = ev.data;
       if (msg.command == "closed") {
         var _this$onClose;
@@ -43858,19 +44406,19 @@ class RemoteIndexedDBStoreBackend {
   }
   saveToDeviceBatches(batches) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this.doCmd("saveToDeviceBatches", [batches]);
     })();
   }
   getOldestToDeviceBatch() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this2.doCmd("getOldestToDeviceBatch");
     })();
   }
   removeToDeviceBatch(id) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return _this3.doCmd("removeToDeviceBatch", [id]);
     })();
   }
@@ -43907,7 +44455,7 @@ class RemoteIndexedDBStoreBackend {
    */
   destroy() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this4$worker;
       (_this4$worker = _this4.worker) === null || _this4$worker === void 0 || _this4$worker.terminate();
     })();
@@ -43928,8 +44476,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   IndexedDBStore: () => (/* binding */ IndexedDBStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _memory_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./memory.js */ "./node_modules/matrix-js-sdk/lib/store/memory.js");
 /* harmony import */ var _indexeddb_local_backend_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./indexeddb-local-backend.js */ "./node_modules/matrix-js-sdk/lib/store/indexeddb-local-backend.js");
 /* harmony import */ var _indexeddb_remote_backend_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./indexeddb-remote-backend.js */ "./node_modules/matrix-js-sdk/lib/store/indexeddb-remote-backend.js");
@@ -44012,16 +44560,16 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
    */
   constructor(opts) {
     super(opts);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "backend", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "startedUp", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncTs", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "backend", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "startedUp", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncTs", 0);
     // Records the last-modified-time of each user at the last point we saved
     // the database, such that we can derive the set if users that have been
     // modified since we last saved.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "userModifiedMap", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "userModifiedMap", {});
     // user_id : timestamp
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "emitter", new _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_7__.TypedEventEmitter());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onClose", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "emitter", new _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_7__.TypedEventEmitter());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onClose", () => {
       this.emitter.emit("closed");
     });
     /**
@@ -44029,25 +44577,25 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
      * client state to where it was at the last save, or null if there
      * is no saved sync data.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getSavedSync", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getSavedSync", this.degradable(() => {
       return this.backend.getSavedSync();
     }, "getSavedSync"));
     /** @returns whether or not the database was newly created in this session. */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isNewlyCreated", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isNewlyCreated", this.degradable(() => {
       return this.backend.isNewlyCreated();
     }, "isNewlyCreated"));
     /**
      * @returns If there is a saved sync, the nextBatch token
      * for this sync, otherwise null.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getSavedSyncToken", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getSavedSyncToken", this.degradable(() => {
       return this.backend.getNextBatchToken();
     }, "getSavedSyncToken"));
     /**
      * Delete all data from this store.
      * @returns Promise which resolves if the data was deleted from the database.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "deleteAllData", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "deleteAllData", this.degradable(() => {
       super.deleteAllData();
       return this.backend.clearDatabase().then(() => {
         _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.log("Deleted indexeddb data.");
@@ -44056,7 +44604,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
         throw err;
       });
     }, null));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reallySave", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reallySave", this.degradable(() => {
       this.syncTs = Date.now(); // set now to guard against multi-writes
 
       // work out changed users (this doesn't handle deletions but you
@@ -44072,7 +44620,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
       }
       return this.backend.syncToDatabase(userTuples);
     }, null));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "setSyncData", this.degradable(syncData => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "setSyncData", this.degradable(syncData => {
       return this.backend.setSyncData(syncData);
     }, "setSyncData"));
     /**
@@ -44081,7 +44629,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
      * @returns the events, potentially an empty array if OOB loading didn't yield any new members
      * @returns in case the members for this room haven't been stored yet
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getOutOfBandMembers", this.degradable(roomId => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getOutOfBandMembers", this.degradable(roomId => {
       return this.backend.getOutOfBandMembers(roomId);
     }, "getOutOfBandMembers"));
     /**
@@ -44091,18 +44639,18 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
      * @param membershipEvents - the membership events to store
      * @returns when all members have been stored
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "setOutOfBandMembers", this.degradable((roomId, membershipEvents) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "setOutOfBandMembers", this.degradable((roomId, membershipEvents) => {
       super.setOutOfBandMembers(roomId, membershipEvents);
       return this.backend.setOutOfBandMembers(roomId, membershipEvents);
     }, "setOutOfBandMembers"));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clearOutOfBandMembers", this.degradable(roomId => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clearOutOfBandMembers", this.degradable(roomId => {
       super.clearOutOfBandMembers(roomId);
       return this.backend.clearOutOfBandMembers(roomId);
     }, "clearOutOfBandMembers"));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getClientOptions", this.degradable(() => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getClientOptions", this.degradable(() => {
       return this.backend.getClientOptions();
     }, "getClientOptions"));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "storeClientOptions", this.degradable(options => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "storeClientOptions", this.degradable(options => {
       super.storeClientOptions(options);
       return this.backend.storeClientOptions(options);
     }, "storeClientOptions"));
@@ -44200,7 +44748,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
   degradable(func, fallback) {
     var _this = this;
     var fallbackFn = fallback ? super[fallback] : null;
-    return /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
@@ -44239,7 +44787,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
   getPendingEvents(roomId) {
     var _superprop_getGetPendingEvents = () => super.getPendingEvents,
       _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this2.localStorage) return _superprop_getGetPendingEvents().call(_this2, roomId);
       var serialized = _this2.localStorage.getItem(pendingEventsKey(roomId));
       if (serialized) {
@@ -44255,7 +44803,7 @@ class IndexedDBStore extends _memory_js__WEBPACK_IMPORTED_MODULE_2__.MemoryStore
   setPendingEvents(roomId, events) {
     var _superprop_getSetPendingEvents = () => super.setPendingEvents,
       _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this3.localStorage) return _superprop_getSetPendingEvents().call(_this3, roomId, events);
       if (events.length > 0) {
         _this3.localStorage.setItem(pendingEventsKey(roomId), JSON.stringify(events));
@@ -44350,8 +44898,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MemoryStore: () => (/* binding */ MemoryStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_room_state_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/room-state.js */ "./node_modules/matrix-js-sdk/lib/models/room-state.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _types_membership_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../@types/membership.js */ "./node_modules/matrix-js-sdk/lib/@types/membership.js");
@@ -44393,30 +44941,30 @@ class MemoryStore {
    */
   constructor() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "rooms", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "rooms", {});
     // roomId: Room
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "users", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "users", {});
     // userId: User
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncToken", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncToken", null);
     // userId: {
     //    filterId: Filter
     // }
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "filters", new _utils_js__WEBPACK_IMPORTED_MODULE_3__.MapWithDefault(() => new Map()));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "accountData", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "filters", new _utils_js__WEBPACK_IMPORTED_MODULE_3__.MapWithDefault(() => new Map()));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "accountData", new Map());
     // type: content
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localStorage", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "oobMembers", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localStorage", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "oobMembers", new Map());
     // roomId: [member events]
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingEvents", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "clientOptions", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingToDeviceBatches", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "nextToDeviceBatchId", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "createUser", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingEvents", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "clientOptions", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingToDeviceBatches", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "nextToDeviceBatchId", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "createUser", void 0);
     /**
      * Called when a room member in a room being tracked by this store has been
      * updated.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomMember", (event, state, member) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomMember", (event, state, member) => {
       var _this$createUser;
       if (member.membership === _types_membership_js__WEBPACK_IMPORTED_MODULE_4__.KnownMembership.Invite) {
         // We do NOT add invited members because people love to typo user IDs
@@ -44749,14 +45297,14 @@ class MemoryStore {
   }
   getPendingEvents(roomId) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this$pendingEvents$r;
       return (_this$pendingEvents$r = _this.pendingEvents[roomId]) !== null && _this$pendingEvents$r !== void 0 ? _this$pendingEvents$r : [];
     })();
   }
   setPendingEvents(roomId, events) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.pendingEvents[roomId] = events;
     })();
   }
@@ -44773,7 +45321,7 @@ class MemoryStore {
   }
   getOldestToDeviceBatch() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this3.pendingToDeviceBatches.length === 0) return null;
       return _this3.pendingToDeviceBatches[0];
     })();
@@ -44783,7 +45331,7 @@ class MemoryStore {
     return Promise.resolve();
   }
   destroy() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {})();
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {})();
   } // Nothing to do
 }
 //# sourceMappingURL=memory.js.map
@@ -44801,8 +45349,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   StubStore: () => (/* binding */ StubStore)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 
 /*
@@ -44830,9 +45378,9 @@ limitations under the License.
  */
 class StubStore {
   constructor() {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "accountData", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "accountData", new Map());
     // stub
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "fromToken", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "fromToken", null);
   }
   /** @returns whether or not the database was newly created in this session. */
   isNewlyCreated() {
@@ -45046,7 +45594,7 @@ class StubStore {
     return Promise.resolve();
   }
   getPendingEvents(roomId) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return [];
     })();
   }
@@ -45054,7 +45602,7 @@ class StubStore {
     return Promise.resolve();
   }
   saveToDeviceBatches(batch) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return Promise.resolve();
     })();
   }
@@ -45062,12 +45610,12 @@ class StubStore {
     return Promise.resolve(null);
   }
   removeToDeviceBatch(id) {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       return Promise.resolve();
     })();
   }
   destroy() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {})();
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {})();
   } // Nothing to do
 }
 //# sourceMappingURL=stub.js.map
@@ -45086,7 +45634,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Category: () => (/* binding */ Category),
 /* harmony export */   SyncAccumulator: () => (/* binding */ SyncAccumulator)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
 /* harmony import */ var _models_event_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/event.js */ "./node_modules/matrix-js-sdk/lib/models/event.js");
@@ -45159,18 +45707,18 @@ class SyncAccumulator {
   constructor() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     this.opts = opts;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "accountData", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "accountData", {});
     // $event_type: Object
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "inviteRooms", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "inviteRooms", {});
     // $roomId: { ... sync 'invite' json data ... }
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "knockRooms", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "knockRooms", {});
     // $roomId: { ... sync 'knock' json data ... }
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "joinRooms", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "joinRooms", {});
     // the /sync token which corresponds to the last time rooms were
     // accumulated. We remember this so that any caller can obtain a
     // coherent /sync response and know at what point they should be
     // streaming from without losing events.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "nextBatch", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "nextBatch", null);
     this.opts.maxTimelineEntries = this.opts.maxTimelineEntries || 50;
   }
   accumulate(syncResponse) {
@@ -45700,8 +46248,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   defaultSyncApiOpts: () => (/* binding */ defaultSyncApiOpts),
 /* harmony export */   processToDeviceMessages: () => (/* binding */ processToDeviceMessages)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_user_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/user.js */ "./node_modules/matrix-js-sdk/lib/models/user.js");
 /* harmony import */ var _models_room_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/room.js */ "./node_modules/matrix-js-sdk/lib/models/room.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -45720,7 +46268,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015 - 2023 The Matrix.org Foundation C.I.C.
 
@@ -45839,26 +46387,26 @@ class SyncApi {
   constructor(client, opts, syncOpts) {
     var _this = this;
     this.client = client;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncOpts", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_peekRoom", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "currentSyncRequest", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "abortController", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncState", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "syncStateData", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncOpts", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_peekRoom", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "currentSyncRequest", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "abortController", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncState", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "syncStateData", void 0);
     // additional data (eg. error object for failed sync)
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "catchingUp", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "running", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "keepAliveTimer", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "connectionReturnedResolvers", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "notifEvents", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "catchingUp", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "running", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "keepAliveTimer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "connectionReturnedResolvers", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "notifEvents", []);
     // accumulator of sync events in the current sync response
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "failedSyncCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "failedSyncCount", 0);
     // Number of consecutive failed /sync requests
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "storeIsInvalid", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "storeIsInvalid", false);
     // flag set if the store needs to be cleared before we can start
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "presence", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getPushRules", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "presence", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getPushRules", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         _this.syncOpts.logger.debug("Getting push rules...");
         var result = yield _this.client.getPushRules();
@@ -45874,14 +46422,14 @@ class SyncApi {
         return _this.getPushRules(); // try again
       }
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "buildDefaultFilter", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "buildDefaultFilter", () => {
       var filter = new _filter_js__WEBPACK_IMPORTED_MODULE_5__.Filter(this.client.credentials.userId);
       if (this.client.canSupport.get(_feature_js__WEBPACK_IMPORTED_MODULE_15__.Feature.ThreadUnreadNotifications) !== _feature_js__WEBPACK_IMPORTED_MODULE_15__.ServerSupport.Unsupported) {
         filter.setUnreadThreadNotifications(true);
       }
       return filter;
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "prepareLazyLoadingForSync", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "prepareLazyLoadingForSync", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this.syncOpts.logger.debug("Prepare lazy loading for sync...");
       if (_this.client.isGuest()) {
         _this.opts.lazyLoadMembers = false;
@@ -45894,7 +46442,7 @@ class SyncApi {
         _this.opts.filter.setLazyLoadMembers(true);
       }
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "storeClientOptions", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "storeClientOptions", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         _this.syncOpts.logger.debug("Storing client options...");
         yield _this.client.storeClientOptions();
@@ -45904,7 +46452,7 @@ class SyncApi {
         throw err;
       }
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getFilter", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getFilter", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this.syncOpts.logger.debug("Getting filter...");
       var filter;
       if (_this.opts.filter) {
@@ -45929,14 +46477,14 @@ class SyncApi {
         filterId
       };
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "savedSyncPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "savedSyncPromise", void 0);
     /**
      * Event handler for the 'online' event
      * This event is generally unreliable and precise behaviour
      * varies between browsers, so we poll for connectivity too,
      * but this might help us reconnect a little faster.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onOnline", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onOnline", () => {
       this.syncOpts.logger.debug("Browser thinks we are back online");
       this.startKeepAlives(0);
     });
@@ -46015,7 +46563,7 @@ class SyncApi {
    */
   syncLeftRooms() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _data$rooms;
       var client = _this2.client;
 
@@ -46039,7 +46587,7 @@ class SyncApi {
         leaveRooms = _this2.mapSyncResponseToRoomArray(data.rooms.leave);
       }
       var rooms = yield Promise.all(leaveRooms.map(/*#__PURE__*/function () {
-        var _ref5 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (leaveObj) {
+        var _ref5 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (leaveObj) {
           var room = leaveObj.room;
           if (!leaveObj.isBrandNewRoom) {
             // the intention behind syncLeftRooms is to add in rooms which were
@@ -46181,7 +46729,7 @@ class SyncApi {
       localTimeoutMs: 50 * 1000,
       abortSignal: (_this$abortController = this.abortController) === null || _this$abortController === void 0 ? void 0 : _this$abortController.signal
     }).then(/*#__PURE__*/function () {
-      var _ref6 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (res) {
+      var _ref6 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (res) {
         if (_this3._peekRoom !== peekRoom) {
           _this3.syncOpts.logger.debug("Stopped peeking in room %s", peekRoom.roomId);
           return;
@@ -46252,7 +46800,7 @@ class SyncApi {
   }
   recoverFromSyncStartupError(savedSyncPromise, error) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Wait for the saved sync to complete - we send the pushrules and filter requests
       // before the saved sync has finished so they can run in parallel, but only process
       // the results after the saved sync is done. Equivalently, we wait for it to finish
@@ -46282,7 +46830,7 @@ class SyncApi {
    */
   sync() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _globalThis$window, _globalThis$window$ad;
       _this5.running = true;
       _this5.abortController = new AbortController();
@@ -46403,7 +46951,7 @@ class SyncApi {
    */
   syncFromCache(savedSync) {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this6.syncOpts.logger.debug("sync(): not doing HTTP hit, instead returning stored /sync data");
       var nextSyncToken = savedSync.nextBatch;
 
@@ -46443,7 +46991,7 @@ class SyncApi {
    */
   doSync(syncOptions) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       while (_this7.running) {
         var syncToken = _this7.client.store.getSyncToken();
         var data = void 0;
@@ -46585,7 +47133,7 @@ class SyncApi {
   }
   onSyncError(err) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this8.running) {
         _this8.syncOpts.logger.debug("Sync no longer running: exiting");
         if (_this8.connectionReturnedResolvers) {
@@ -46639,7 +47187,7 @@ class SyncApi {
    */
   processSyncResponse(syncEventData, data) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _data$presence, _data$account_data, _this9$syncOpts$crypt, _data$device_unused_f;
       var client = _this9.client;
 
@@ -46773,7 +47321,7 @@ class SyncApi {
 
       // Handle invites
       yield (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.promiseMapSeries)(inviteRooms, /*#__PURE__*/function () {
-        var _ref7 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (inviteObj) {
+        var _ref7 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (inviteObj) {
           var room = inviteObj.room;
           var stateEvents = _this9.mapSyncEventsFormat(inviteObj.invite_state, room);
           yield _this9.injectRoomEvents(room, stateEvents, undefined);
@@ -46796,7 +47344,7 @@ class SyncApi {
 
       // Handle joins
       yield (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.promiseMapSeries)(joinRooms, /*#__PURE__*/function () {
-        var _ref8 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (joinObj) {
+        var _ref8 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (joinObj) {
           var _joinObj$UNREAD_THREA;
           var room = joinObj.room;
           var stateEvents = _this9.mapSyncEventsFormat(joinObj.state, room);
@@ -46999,7 +47547,7 @@ class SyncApi {
 
       // Handle leaves (e.g. kicked rooms)
       yield (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.promiseMapSeries)(leaveRooms, /*#__PURE__*/function () {
-        var _ref9 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (leaveObj) {
+        var _ref9 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (leaveObj) {
           var room = leaveObj.room;
           var {
             timelineEvents,
@@ -47034,7 +47582,7 @@ class SyncApi {
 
       // Handle knocks
       yield (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.promiseMapSeries)(knockRooms, /*#__PURE__*/function () {
-        var _ref0 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (knockObj) {
+        var _ref0 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (knockObj) {
           var room = knockObj.room;
           var stateEvents = _this9.mapSyncEventsFormat(knockObj.knock_state, room);
           yield _this9.injectRoomEvents(room, stateEvents, undefined);
@@ -47261,7 +47809,7 @@ class SyncApi {
   }
   mapAndInjectRoomEvents(wrappedRoom) {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var stateEvents = _this0.mapSyncEventsFormat(wrappedRoom.state, wrappedRoom.room);
       var stateAfterEvents = _this0.mapSyncEventsFormat(wrappedRoom["org.matrix.msc4222.state_after"], wrappedRoom.room);
       var timelineEvents = _this0.mapSyncEventsFormat(wrappedRoom.timeline, wrappedRoom.room);
@@ -47297,7 +47845,7 @@ class SyncApi {
   injectRoomEvents(room, stateEventList, stateAfterEventList, timelineEventList) {
     var _arguments = arguments,
       _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var fromCache = _arguments.length > 4 && _arguments[4] !== undefined ? _arguments[4] : false;
       var eitherStateEventList = stateAfterEventList !== null && stateAfterEventList !== void 0 ? stateAfterEventList : stateEventList;
 
@@ -47542,8 +48090,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TimelineIndex: () => (/* binding */ TimelineIndex),
 /* harmony export */   TimelineWindow: () => (/* binding */ TimelineWindow)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_event_timeline_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/event-timeline.js */ "./node_modules/matrix-js-sdk/lib/models/event-timeline.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _models_room_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./models/room.js */ "./node_modules/matrix-js-sdk/lib/models/room.js");
@@ -47619,14 +48167,14 @@ class TimelineWindow {
     var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     this.client = client;
     this.timelineSet = timelineSet;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "windowLimit", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "windowLimit", void 0);
     // these will be TimelineIndex objects; they delineate the 'start' and
     // 'end' of the window.
     //
     // start.index is inclusive; end.index is exclusive.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "start", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "end", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "eventCount", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "start", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "end", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "eventCount", 0);
     this.windowLimit = opts.windowLimit || 1000;
     (_timelineSet$room = timelineSet.room) === null || _timelineSet$room === void 0 || _timelineSet$room.on(_models_room_js__WEBPACK_IMPORTED_MODULE_4__.RoomEvent.Timeline, this.onTimelineEvent.bind(this));
   }
@@ -47803,7 +48351,7 @@ class TimelineWindow {
   paginate(direction, size) {
     var _arguments = arguments,
       _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var makeRequest = _arguments.length > 2 && _arguments[2] !== undefined ? _arguments[2] : true;
       var requestLimit = _arguments.length > 3 && _arguments[3] !== undefined ? _arguments[3] : DEFAULT_PAGINATE_LOOP_LIMIT;
       // Either wind back the message cap (if there are enough events in the
@@ -47953,7 +48501,7 @@ class TimelineIndex {
   constructor(timeline, index) {
     this.timeline = timeline;
     this.index = index;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pendingPaginate", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pendingPaginate", void 0);
   }
 
   /**
@@ -48098,8 +48646,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringToBase: () => (/* binding */ stringToBase),
 /* harmony export */   unsafeProp: () => (/* binding */ unsafeProp)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var unhomoglyph__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! unhomoglyph */ "./node_modules/unhomoglyph/index.js");
 /* harmony import */ var p_retry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! p-retry */ "./node_modules/p-retry/index.js");
 /* harmony import */ var _types_location_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./@types/location.js */ "./node_modules/matrix-js-sdk/lib/@types/location.js");
@@ -48107,7 +48655,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015, 2016, 2019, 2023 The Matrix.org Foundation C.I.C.
 
@@ -48499,7 +49047,7 @@ function logDuration(_x, _x2, _x3) {
  * @param block - The block to execute.
  */
 function _logDuration() {
-  _logDuration = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (logger, name, block) {
+  _logDuration = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (logger, name, block) {
     var start = Date.now();
     try {
       return yield block();
@@ -48536,7 +49084,7 @@ function promiseMapSeries(_x4, _x5) {
   return _promiseMapSeries.apply(this, arguments);
 }
 function _promiseMapSeries() {
-  _promiseMapSeries = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (promises, fn // if async we don't care about the type as we only await resolution
+  _promiseMapSeries = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (promises, fn // if async we don't care about the type as we only await resolution
   ) {
     for (var o of promises) {
       yield fn(yield o);
@@ -48565,7 +49113,7 @@ function chunkPromises(_x6, _x7) {
  * @returns The promise for the retried operation.
  */
 function _chunkPromises() {
-  _chunkPromises = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (fns, chunkSize) {
+  _chunkPromises = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (fns, chunkSize) {
     var results = [];
     for (var i = 0; i < fns.length; i += chunkSize) {
       results.push(...(yield Promise.all(fns.slice(i, i + chunkSize).map(fn => fn()))));
@@ -48878,7 +49426,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ decryptAESSecretStorageItem)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _base64_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base64.js */ "./node_modules/matrix-js-sdk/lib/base64.js");
 /* harmony import */ var _internal_deriveKeys_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./internal/deriveKeys.js */ "./node_modules/matrix-js-sdk/lib/utils/internal/deriveKeys.js");
 
@@ -48913,7 +49461,7 @@ function decryptAESSecretStorageItem(_x, _x2, _x3) {
   return _decryptAESSecretStorageItem.apply(this, arguments);
 }
 function _decryptAESSecretStorageItem() {
-  _decryptAESSecretStorageItem = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (data, key, name) {
+  _decryptAESSecretStorageItem = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (data, key, name) {
     var [aesKey, hmacKey] = yield (0,_internal_deriveKeys_js__WEBPACK_IMPORTED_MODULE_2__.deriveKeys)(key, name);
     var ciphertext = (0,_base64_js__WEBPACK_IMPORTED_MODULE_1__.decodeBase64)(data.ciphertext);
     if (!(yield globalThis.crypto.subtle.verify({
@@ -48945,7 +49493,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ encryptAESSecretStorageItem)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _base64_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base64.js */ "./node_modules/matrix-js-sdk/lib/base64.js");
 /* harmony import */ var _internal_deriveKeys_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./internal/deriveKeys.js */ "./node_modules/matrix-js-sdk/lib/utils/internal/deriveKeys.js");
 
@@ -48984,7 +49532,7 @@ function encryptAESSecretStorageItem(_x, _x2, _x3, _x4) {
   return _encryptAESSecretStorageItem.apply(this, arguments);
 }
 function _encryptAESSecretStorageItem() {
-  _encryptAESSecretStorageItem = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (data, key, name, ivStr) {
+  _encryptAESSecretStorageItem = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (data, key, name, ivStr) {
     var iv;
     if (ivStr) {
       iv = (0,_base64_js__WEBPACK_IMPORTED_MODULE_1__.decodeBase64)(ivStr);
@@ -49030,7 +49578,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deriveKeys: () => (/* binding */ deriveKeys)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 
 /*
  * Copyright 2024 The Matrix.org Foundation C.I.C.
@@ -49063,7 +49611,7 @@ function deriveKeys(_x, _x2) {
   return _deriveKeys.apply(this, arguments);
 }
 function _deriveKeys() {
-  _deriveKeys = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* (key, name) {
+  _deriveKeys = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key, name) {
     var hkdfkey = yield globalThis.crypto.subtle.importKey("raw", key, {
       name: "HKDF"
     }, false, ["deriveBits"]);
@@ -49281,9 +49829,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   setTracksEnabled: () => (/* binding */ setTracksEnabled),
 /* harmony export */   supportsMatrixCall: () => (/* binding */ supportsMatrixCall)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist-node/v4.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/v4.js");
 /* harmony import */ var sdp_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sdp-transform */ "./node_modules/sdp-transform/lib/index.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./node_modules/matrix-js-sdk/lib/utils.js");
@@ -49297,7 +49845,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2015, 2016 OpenMarket Ltd
 Copyright 2017 New Vector Ltd
@@ -49486,7 +50034,7 @@ class CallError extends Error {
   constructor(code, msg, err) {
     // Still don't think there's any way to have proper nested errors
     super(msg + ": " + err);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "code", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "code", void 0);
     this.code = code;
   }
 }
@@ -49535,79 +50083,79 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
     var _this, _opts$forceTURN;
     super();
     _this = this;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "invitee", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "hangupParty", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "hangupReason", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "direction", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "ourPartyId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "peerConn", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "toDeviceSeq", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "invitee", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "hangupParty", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "hangupReason", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "direction", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "ourPartyId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "peerConn", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "toDeviceSeq", 0);
     // whether this call should have push-to-talk semantics
     // This should be set by the consumer on incoming & outgoing calls.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isPtt", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_state", CallState.Fledgling);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "client", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "forceTURN", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "turnServers", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isPtt", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_state", CallState.Fledgling);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "client", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "forceTURN", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "turnServers", void 0);
     // A queue for candidates waiting to go out.
     // We try to amalgamate candidates into a single candidate message where
     // possible
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "candidateSendQueue", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "candidateSendTries", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "candidatesEnded", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "feeds", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "candidateSendQueue", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "candidateSendTries", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "candidatesEnded", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "feeds", []);
     // our transceivers for each purpose and type of media
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "transceivers", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inviteOrAnswerSent", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "waitForLocalAVStream", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "successor", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentMember", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentVersion", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "transceivers", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inviteOrAnswerSent", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "waitForLocalAVStream", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "successor", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentMember", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentVersion", void 0);
     // The party ID of the other side: undefined if we haven't chosen a partner
     // yet, null if we have but they didn't send a party ID.
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentPartyId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentCaps", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "iceDisconnectedTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "iceReconnectionTimeOut", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "inviteTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "removeTrackListeners", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentPartyId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentCaps", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "iceDisconnectedTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "iceReconnectionTimeOut", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "inviteTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "removeTrackListeners", new Map());
     // The logic of when & if a call is on hold is nontrivial and explained in is*OnHold
     // This flag represents whether we want the other party to be on hold
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "remoteOnHold", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "remoteOnHold", false);
     // the stats for the call at the point it ended. We can't get these after we
     // tear the call down, so we just grab a snapshot before we stop the call.
     // The typescript definitions have this type as 'any' :(
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callStatsAtEnd", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callStatsAtEnd", void 0);
     // Perfect negotiation state: https://www.w3.org/TR/webrtc/#perfect-negotiation-example
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "makingOffer", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "ignoreOffer", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isSettingRemoteAnswerPending", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "responsePromiseChain", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "makingOffer", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "ignoreOffer", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isSettingRemoteAnswerPending", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "responsePromiseChain", void 0);
     // If candidates arrive before we've picked an opponent (which, in particular,
     // will happen if the opponent sends candidates eagerly before the user answers
     // the call) we buffer them up here so we can then add the ones from the party we pick
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "remoteCandidateBuffer", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "remoteAssertedIdentity", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "remoteSDPStreamMetadata", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callLengthInterval", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callStartTime", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentDeviceId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "hasOpponentDeviceInfo", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "opponentSessionId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "groupCallId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "remoteCandidateBuffer", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "remoteAssertedIdentity", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "remoteSDPStreamMetadata", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callLengthInterval", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callStartTime", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentDeviceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "hasOpponentDeviceInfo", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "opponentSessionId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "groupCallId", void 0);
     // Used to keep the timer for the delay before actually stopping our
     // video track after muting (see setLocalVideoMuted)
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "stopVideoTrackTimer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "stopVideoTrackTimer", void 0);
     // Used to allow connection without Video and Audio. To establish a webrtc connection without media a Data channel is
     // needed At the moment this property is true if we allow MatrixClient with isVoipWithNoMediaAllowed = true
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isOnlyDataChannelAllowed", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "stats", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isOnlyDataChannelAllowed", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "stats", void 0);
     /**
      * Internal
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "gotLocalIceCandidate", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "gotLocalIceCandidate", event => {
       if (event.candidate) {
         if (this.candidatesEnded) {
           _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.warn("Call ".concat(this.callId, " gotLocalIceCandidate() got candidate after candidates have ended!"));
@@ -49624,7 +50172,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         }
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onIceGatheringStateChange", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onIceGatheringStateChange", event => {
       var _this$peerConn;
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onIceGatheringStateChange() ice gathering state changed to ").concat(this.peerConn.iceGatheringState));
       if (((_this$peerConn = this.peerConn) === null || _this$peerConn === void 0 ? void 0 : _this$peerConn.iceGatheringState) === "complete") {
@@ -49632,12 +50180,12 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onIceGatheringStateChange() ice gathering state complete, set candidates have ended"));
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getLocalOfferFailed", err => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getLocalOfferFailed", err => {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.error("Call ".concat(this.callId, " getLocalOfferFailed() running"), err);
       this.emit(CallEvent.Error, new CallError(CallErrorCode.LocalOfferFailed, "Failed to get local offer!", err), this);
       this.terminate(CallParty.Local, CallErrorCode.LocalOfferFailed, false);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getUserMediaFailed", err => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getUserMediaFailed", err => {
       if (this.successor) {
         this.successor.getUserMediaFailed(err);
         return;
@@ -49646,7 +50194,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
       this.emit(CallEvent.Error, new CallError(CallErrorCode.NoUserMedia, "Couldn't start capturing media! Is your microphone set up and does this app have permission?", err), this);
       this.terminate(CallParty.Local, CallErrorCode.NoUserMedia, false);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "placeCallFailed", err => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "placeCallFailed", err => {
       if (this.successor) {
         this.successor.placeCallFailed(err);
         return;
@@ -49655,7 +50203,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
       this.emit(CallEvent.Error, new CallError(CallErrorCode.IceFailed, "Couldn't start call! Invalid ICE server configuration.", err), this);
       this.terminate(CallParty.Local, CallErrorCode.IceFailed, false);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onIceConnectionStateChanged", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onIceConnectionStateChanged", () => {
       var _this$peerConn2, _this$peerConn3, _this$peerConn$iceCon, _this$peerConn4, _this$peerConn5, _this$peerConn8;
       if (this.callHasEnded()) {
         return; // because ICE can still complete as we're ending the call
@@ -49720,11 +50268,11 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         }
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onSignallingStateChanged", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onSignallingStateChanged", () => {
       var _this$peerConn10;
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onSignallingStateChanged() running (state=").concat((_this$peerConn10 = this.peerConn) === null || _this$peerConn10 === void 0 ? void 0 : _this$peerConn10.signalingState, ")"));
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onTrack", ev => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onTrack", ev => {
       if (ev.streams.length === 0) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.warn("Call ".concat(this.callId, " onTrack() called with streamless track streamless (kind=").concat(ev.track.kind, ")"));
         return;
@@ -49744,10 +50292,10 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         this.removeTrackListeners.set(stream, onRemoveTrack);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onDataChannel", ev => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onDataChannel", ev => {
       this.emit(CallEvent.DataChannel, ev.channel, this);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onNegotiationNeeded", /*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onNegotiationNeeded", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.info("Call ".concat(_this.callId, " onNegotiationNeeded() negotiation is needed!"));
       if (_this.state !== CallState.CreateOffer && _this.opponentVersion === 0) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.info("Call ".concat(_this.callId, " onNegotiationNeeded() opponent does not support renegotiation: ignoring negotiationneeded event"));
@@ -49755,7 +50303,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
       }
       _this.queueGotLocalOffer();
     }));
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onHangupReceived", msg => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onHangupReceived", msg => {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onHangupReceived() running"));
 
       // party ID must match (our chosen partner hanging up the call) or be undefined (we haven't chosen
@@ -49767,7 +50315,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.info("Call ".concat(this.callId, " onHangupReceived() ignoring message from party ID ").concat(msg.party_id, ": our partner is ").concat(this.opponentPartyId));
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRejectReceived", msg => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRejectReceived", msg => {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onRejectReceived() running"));
 
       // No need to check party_id for reject because if we'd received either
@@ -49786,7 +50334,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onRejectReceived() called in wrong state (state=").concat(this.state, ")"));
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onAnsweredElsewhere", msg => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onAnsweredElsewhere", msg => {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(this.callId, " onAnsweredElsewhere() running"));
       this.terminate(CallParty.Remote, CallErrorCode.AnsweredElsewhere, true);
     });
@@ -49820,7 +50368,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   placeVoiceCall() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this2.placeCall(true, false);
     })();
   }
@@ -49831,7 +50379,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   placeVideoCall() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this3.placeCall(true, true);
     })();
   }
@@ -49962,7 +50510,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   initOpponentCrypto() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this4$getOpponentMem;
       if (!_this4.opponentDeviceId) return;
       if (!_this4.client.getUseE2eForGroupCall()) return;
@@ -50204,7 +50752,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   // The typescript definitions have this type as 'any' :(
   getCurrentCallStats() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this6.callHasEnded()) {
         return _this6.callStatsAtEnd;
       }
@@ -50213,7 +50761,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   collectCallStats() {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // This happens when the call fails before it starts.
       // For example when we fail to get capture sources
       if (!_this7.peerConn) return;
@@ -50232,7 +50780,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   initWithInvite(event) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this8$feeds$find;
       var invite = event.getContent();
       _this8.direction = CallDirection.Inbound;
@@ -50334,7 +50882,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   answer(audio, video) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this9.inviteOrAnswerSent) return;
       // TODO: Figure out how to do this
       if (audio === false && video === false) throw new Error("You CANNOT answer a call without media");
@@ -50453,7 +51001,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   upgradeCall(audio, video) {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We don't do call downgrades
       if (!audio && !video) return;
       if (!_this0.opponentSupportsSDPStreamMetadata()) return;
@@ -50497,7 +51045,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   setScreensharingEnabled(enabled, opts) {
     var _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Skip if there is nothing to do
       if (enabled && _this1.isScreensharing()) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.warn("Call ".concat(_this1.callId, " setScreensharingEnabled() there is already a screensharing stream - there is nothing to do!"));
@@ -50546,7 +51094,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   setScreensharingEnabledWithoutMetadataSupport(enabled, opts) {
     var _this10 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(_this10.callId, " setScreensharingEnabledWithoutMetadataSupport() running (enabled=").concat(enabled, ")"));
       if (enabled) {
         try {
@@ -50581,7 +51129,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   updateLocalUsermediaStream(stream) {
     var _arguments = arguments,
       _this11 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var forceAudio = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : false;
       var forceVideo = _arguments.length > 2 && _arguments[2] !== undefined ? _arguments[2] : false;
       var callFeed = _this11.localUsermediaFeed;
@@ -50646,7 +51194,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   setLocalVideoMuted(muted) {
     var _this12 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this12$localUsermedi2;
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.log("Call ".concat(_this12.callId, " setLocalVideoMuted() running ").concat(muted));
 
@@ -50716,7 +51264,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   setMicrophoneMuted(muted) {
     var _this13 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this13$localUsermedi;
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.log("Call ".concat(_this13.callId, " setMicrophoneMuted() running ").concat(muted));
       if (!(yield _this13.client.getMediaHandler().hasAudioDevice())) {
@@ -50809,7 +51357,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   sendMetadataUpdate() {
     var _this14 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this14.sendVoipEvent(_types_event_js__WEBPACK_IMPORTED_MODULE_5__.EventType.CallSDPStreamMetadataChangedPrefix, {
         [_callEventTypes_js__WEBPACK_IMPORTED_MODULE_7__.SDPStreamMetadataKey]: _this14.getLocalSDPStreamMetadata()
       });
@@ -50839,7 +51387,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   sendAnswer() {
     var _this15 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var answerContent = {
         answer: {
           sdp: _this15.peerConn.localDescription.sdp,
@@ -50936,7 +51484,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   createOffer() {
     var _this16 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var offer = yield _this16.peerConn.createOffer();
       _this16.mungeSdp(offer, getCodecParamMods(_this16.isPtt));
       return offer;
@@ -50944,7 +51492,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   createAnswer() {
     var _this17 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var answer = yield _this17.peerConn.createAnswer();
       _this17.mungeSdp(answer, getCodecParamMods(_this17.isPtt));
       return answer;
@@ -50952,7 +51500,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   gotCallFeedsForAnswer(callFeeds) {
     var _this18 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this18.callHasEnded()) return;
       _this18.waitForLocalAVStream = false;
       for (var feed of callFeeds) {
@@ -50992,7 +51540,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   onRemoteIceCandidatesReceived(ev) {
     var _this19 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this19.callHasEnded()) {
         //debuglog("Ignoring remote ICE candidate because call has ended");
         return;
@@ -51027,7 +51575,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   onAnswerReceived(event) {
     var _this20 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var content = event.getContent();
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(_this20.callId, " onAnswerReceived() running (hangupParty=").concat(content.party_id, ")"));
       if (_this20.callHasEnded()) {
@@ -51077,7 +51625,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   onSelectAnswerReceived(event) {
     var _this21 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this21.direction !== CallDirection.Inbound) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.warn("Call ".concat(_this21.callId, " onSelectAnswerReceived() got select_answer for an outbound call: ignoring"));
         return;
@@ -51096,7 +51644,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   onNegotiateReceived(event) {
     var _this22 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var content = event.getContent();
       var description = content.description;
       if (!description || !description.sdp || !description.type) {
@@ -51177,7 +51725,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   onAssertedIdentityReceived(event) {
     var _this23 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var content = event.getContent();
       if (!content.asserted_identity) return;
       _this23.remoteAssertedIdentity = {
@@ -51203,7 +51751,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   wrappedGotLocalOffer() {
     var _this24 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this24.makingOffer = true;
       try {
         // XXX: in what situations do we believe gotLocalOffer actually throws? It appears
@@ -51223,7 +51771,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   gotLocalOffer() {
     var _this25 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(_this25.callId, " gotLocalOffer() running"));
       if (_this25.callHasEnded()) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(_this25.callId, " gotLocalOffer() ignoring newly created offer because the call has ended\""));
@@ -51361,7 +51909,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   sendVoipEvent(eventType, content) {
     var _this26 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var realContent = _objectSpread(_objectSpread({}, content), {}, {
         version: VOIP_PROTO_VERSION,
         call_id: _this26.callId,
@@ -51474,7 +52022,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   transfer(targetUserId) {
     var _this27 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Fetch the target user's global profile info: their room avatar / displayname
       // could be different in whatever room we share with them.
       var profileInfo = yield _this27.client.getProfileInfo(targetUserId);
@@ -51499,7 +52047,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   transferToCall(transferTargetCall) {
     var _this28 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _transferTargetCall$g, _this28$getOpponentMe;
       var targetUserId = (_transferTargetCall$g = transferTargetCall.getOpponentMember()) === null || _transferTargetCall$g === void 0 ? void 0 : _transferTargetCall$g.userId;
       var targetProfileInfo = targetUserId ? yield _this28.client.getProfileInfo(targetUserId) : undefined;
@@ -51534,7 +52082,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   terminate(hangupParty, hangupReason, shouldEmit) {
     var _this29 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _this29$stats;
       if (_this29.callHasEnded()) return;
       _this29.hangupParty = hangupParty;
@@ -51603,7 +52151,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   sendCandidateQueue() {
     var _this30 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this30.candidateSendQueue.length === 0 || _this30.callHasEnded()) {
         return;
       }
@@ -51660,7 +52208,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
    */
   placeCall(audio, video) {
     var _this31 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!audio) {
         throw new Error("You CANNOT start a call without audio");
       }
@@ -51706,7 +52254,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   placeCallWithCallFeeds(callFeeds) {
     var _arguments2 = arguments,
       _this32 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var requestScreenshareFeed = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : false;
       _this32.checkForErrorListener();
       _this32.direction = CallDirection.Outbound;
@@ -51787,7 +52335,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   addBufferedIceCandidates() {
     var _this33 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var bufferedCandidates = _this33.remoteCandidateBuffer.get(_this33.opponentPartyId);
       if (bufferedCandidates) {
         _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.info("Call ".concat(_this33.callId, " addBufferedIceCandidates() adding ").concat(bufferedCandidates.length, " buffered candidates for opponent ").concat(_this33.opponentPartyId));
@@ -51798,7 +52346,7 @@ class MatrixCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE
   }
   addIceCandidates(candidates) {
     var _this34 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       for (var candidate of candidates) {
         if ((candidate.sdpMid === null || candidate.sdpMid === undefined) && (candidate.sdpMLineIndex === null || candidate.sdpMLineIndex === undefined)) {
           _logger_js__WEBPACK_IMPORTED_MODULE_3__.logger.debug("Call ".concat(_this34.callId, " addIceCandidates() got remote ICE end-of-candidates"));
@@ -51903,8 +52451,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CallEventHandler: () => (/* binding */ CallEventHandler),
 /* harmony export */   CallEventHandlerEvent: () => (/* binding */ CallEventHandlerEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
 /* harmony import */ var _call_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./call.js */ "./node_modules/matrix-js-sdk/lib/webrtc/call.js");
 /* harmony import */ var _types_event_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../@types/event.js */ "./node_modules/matrix-js-sdk/lib/@types/event.js");
@@ -51946,14 +52494,14 @@ var CallEventHandlerEvent = /*#__PURE__*/function (CallEventHandlerEvent) {
 class CallEventHandler {
   constructor(client) {
     // XXX: Most of these are only public because of the tests
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "calls", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callEventBuffer", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "nextSeqByCall", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "toDeviceEventBuffers", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "client", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "candidateEventsByCall", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "eventBufferPromiseChain", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onSync", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "calls", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callEventBuffer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "nextSeqByCall", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "toDeviceEventBuffers", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "client", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "candidateEventsByCall", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "eventBufferPromiseChain", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onSync", () => {
       // Process the current event buffer and start queuing into a new one.
       var currentEventBuffer = this.callEventBuffer;
       this.callEventBuffer = [];
@@ -51965,10 +52513,10 @@ class CallEventHandler {
         this.eventBufferPromiseChain = this.evaluateEventBuffer(currentEventBuffer);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomTimeline", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomTimeline", event => {
       this.callEventBuffer.push(event);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onToDeviceEvent", event => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onToDeviceEvent", event => {
       var content = event.getContent();
       if (!content.call_id) {
         this.callEventBuffer.push(event);
@@ -52031,7 +52579,7 @@ class CallEventHandler {
   }
   evaluateEventBuffer(eventBuffer) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield Promise.all(eventBuffer.map(event => _this.client.decryptEventIfNeeded(event)));
       var callEvents = eventBuffer.filter(event => {
         var eventType = event.getType();
@@ -52066,7 +52614,7 @@ class CallEventHandler {
   }
   handleCallEvent(event) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _getGroupCallById;
       _this2.client.emit(_client_js__WEBPACK_IMPORTED_MODULE_5__.ClientEvent.ReceivedVoipEvent, event);
       var content = event.getContent();
@@ -52299,7 +52847,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CallFeedEvent: () => (/* binding */ CallFeedEvent),
 /* harmony export */   SPEAKING_THRESHOLD: () => (/* binding */ SPEAKING_THRESHOLD)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _callEventTypes_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./callEventTypes.js */ "./node_modules/matrix-js-sdk/lib/webrtc/callEventTypes.js");
 /* harmony import */ var _audioContext_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./audioContext.js */ "./node_modules/matrix-js-sdk/lib/webrtc/audioContext.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -52344,38 +52892,38 @@ var CallFeedEvent = /*#__PURE__*/function (CallFeedEvent) {
 class CallFeed extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_4__.TypedEventEmitter {
   constructor(opts) {
     super();
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "stream", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "sdpMetadataStreamId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "userId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "deviceId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "purpose", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "speakingVolumeSamples", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "client", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "call", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "roomId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "audioMuted", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "videoMuted", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "localVolume", 1);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "measuringVolumeActivity", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "audioContext", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "analyser", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "frequencyBinCount", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "speakingThreshold", SPEAKING_THRESHOLD);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "speaking", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "volumeLooperTimeout", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_disposed", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "_connected", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onAddTrack", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "stream", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "sdpMetadataStreamId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "userId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "deviceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "purpose", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "speakingVolumeSamples", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "client", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "call", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "roomId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "audioMuted", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "videoMuted", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "localVolume", 1);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "measuringVolumeActivity", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "audioContext", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "analyser", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "frequencyBinCount", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "speakingThreshold", SPEAKING_THRESHOLD);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "speaking", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "volumeLooperTimeout", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_disposed", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "_connected", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onAddTrack", () => {
       this.emit(CallFeedEvent.NewStream, this.stream);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "onCallState", state => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "onCallState", state => {
       if (state === _call_js__WEBPACK_IMPORTED_MODULE_5__.CallState.Connected) {
         this.connected = true;
       } else if (state === _call_js__WEBPACK_IMPORTED_MODULE_5__.CallState.Connecting) {
         this.connected = false;
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "volumeLooper", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "volumeLooper", () => {
       if (!this.analyser) return;
       if (!this.measuringVolumeActivity) return;
       this.analyser.getFloatFrequencyData(this.frequencyBinCount);
@@ -52618,8 +53166,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GroupCallUnknownDeviceError: () => (/* binding */ GroupCallUnknownDeviceError),
 /* harmony export */   OtherUserSpeakingError: () => (/* binding */ OtherUserSpeakingError)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _callFeed_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./callFeed.js */ "./node_modules/matrix-js-sdk/lib/webrtc/callFeed.js");
 /* harmony import */ var _call_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./call.js */ "./node_modules/matrix-js-sdk/lib/webrtc/call.js");
@@ -52639,7 +53187,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 
 
 
@@ -52711,10 +53259,10 @@ class GroupCallError extends Error {
     // Still don't think there's any way to have proper nested errors
     if (err) {
       super(msg + ": " + err);
-      _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "code", void 0);
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "code", void 0);
     } else {
       super(msg);
-      _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "code", void 0);
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "code", void 0);
     }
     this.code = code;
   }
@@ -52759,60 +53307,60 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
     this.dataChannelOptions = dataChannelOptions;
     this.useLivekit = useLivekit;
     // Config
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "activeSpeakerInterval", 1000);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryCallInterval", 5000);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "participantTimeout", 1000 * 15);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "pttMaxTransmitTime", 1000 * 20);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "activeSpeaker", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localCallFeed", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localScreenshareFeed", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localDesktopCapturerSourceId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "userMediaFeeds", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "screenshareFeeds", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "groupCallId", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "allowCallWithoutVideoAndAudio", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "calls", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "activeSpeakerInterval", 1000);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryCallInterval", 5000);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "participantTimeout", 1000 * 15);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "pttMaxTransmitTime", 1000 * 20);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "activeSpeaker", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localCallFeed", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localScreenshareFeed", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localDesktopCapturerSourceId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "userMediaFeeds", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "screenshareFeeds", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "groupCallId", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "allowCallWithoutVideoAndAudio", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "calls", new Map());
     // user_id -> device_id -> MatrixCall
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "callHandlers", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "callHandlers", new Map());
     // user_id -> device_id -> ICallHandlers
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "activeSpeakerLoopInterval", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryCallLoopInterval", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "retryCallCounts", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "activeSpeakerLoopInterval", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryCallLoopInterval", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "retryCallCounts", new Map());
     // user_id -> device_id -> count
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "reEmitter", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "transmitTimer", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "participantsExpirationTimer", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "resendMemberStateTimer", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "initWithAudioMuted", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "initWithVideoMuted", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "initCallFeedPromise", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_livekitServiceURL", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "stats", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "reEmitter", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "transmitTimer", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "participantsExpirationTimer", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "resendMemberStateTimer", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "initWithAudioMuted", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "initWithVideoMuted", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "initCallFeedPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_livekitServiceURL", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "stats", void 0);
     /**
      * Configure default webrtc stats collection interval in ms
      * Disable collecting webrtc stats by setting interval to 0
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "statsCollectIntervalTime", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onConnectionStats", report => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "statsCollectIntervalTime", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onConnectionStats", report => {
       // Final emit of the summary event, to be consumed by the client
       this.emit(GroupCallStatsReportEvent.ConnectionStats, {
         report
       });
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onByteSentStats", report => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onByteSentStats", report => {
       // Final emit of the summary event, to be consumed by the client
       this.emit(GroupCallStatsReportEvent.ByteSentStats, {
         report
       });
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onSummaryStats", report => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onSummaryStats", report => {
       _stats_summaryStatsReportGatherer_js__WEBPACK_IMPORTED_MODULE_15__.SummaryStatsReportGatherer.extendSummaryReport(report, this.participants);
       // Final emit of the summary event, to be consumed by the client
       this.emit(GroupCallStatsReportEvent.SummaryStats, {
         report
       });
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onCallFeedReport", report => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onCallFeedReport", report => {
       if (this.localCallFeed) {
         report = _stats_callFeedStatsReporter_js__WEBPACK_IMPORTED_MODULE_16__.CallFeedStatsReporter.expandCallFeedReport(report, [this.localCallFeed], "from-local-feed");
       }
@@ -52827,10 +53375,10 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         report
       });
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_state", GroupCallState.LocalCallFeedUninitialized);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_participants", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_creationTs", null);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "_enteredViaAnotherSession", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_state", GroupCallState.LocalCallFeedUninitialized);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_participants", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_creationTs", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_enteredViaAnotherSession", false);
     /*
      * Call Setup
      *
@@ -52839,7 +53387,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
      * 2. Outgoing calls to the initial members of a room or new members
      *    as they are observed by the RoomState.members event.
      */
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onIncomingCall", newCall => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onIncomingCall", newCall => {
       var _newCall$getOpponentM, _this$calls$get;
       // The incoming calls may be for another room, which we will ignore.
       if (newCall.roomId !== this.room.roomId) {
@@ -52886,7 +53434,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
       newCall.answerWithCallFeeds(feeds);
       this.emit(GroupCallEvent.CallsChanged, this.calls);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRetryCallLoop", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRetryCallLoop", () => {
       var needsRetry = false;
       for (var [{
         userId: _userId
@@ -52909,7 +53457,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
       }
       if (needsRetry) this.placeOutgoingCalls();
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onCallFeedsChanged", call => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onCallFeedsChanged", call => {
       var opponentMemberId = getCallUserId(call);
       var opponentDeviceId = call.getOpponentDeviceId();
       if (!opponentMemberId) {
@@ -52947,7 +53495,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         }
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onCallStateChanged", (call, state, _oldState) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onCallStateChanged", (call, state, _oldState) => {
       var _call$getOpponentMemb2;
       if (state === _call_js__WEBPACK_IMPORTED_MODULE_4__.CallState.Ended) return;
       var audioMuted = this.localCallFeed.isAudioMuted();
@@ -52965,7 +53513,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         if ((retriesMap === null || retriesMap === void 0 ? void 0 : retriesMap.size) === 0) this.retryCallCounts.delete(opponentUserId);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onCallHangup", call => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onCallHangup", call => {
       var _call$getOpponentMemb3, _call$getOpponentMemb4;
       if (call.hangupReason === _call_js__WEBPACK_IMPORTED_MODULE_4__.CallErrorCode.Replaced) return;
       var opponentUserId = (_call$getOpponentMemb3 = (_call$getOpponentMemb4 = call.getOpponentMember()) === null || _call$getOpponentMemb4 === void 0 ? void 0 : _call$getOpponentMemb4.userId) !== null && _call$getOpponentMemb3 !== void 0 ? _call$getOpponentMemb3 : this.room.getMember(call.invitee).userId;
@@ -52979,7 +53527,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         this.emit(GroupCallEvent.CallsChanged, this.calls);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onCallReplaced", (prevCall, newCall) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onCallReplaced", (prevCall, newCall) => {
       var opponentUserId = prevCall.getOpponentMember().userId;
       var deviceMap = this.calls.get(opponentUserId);
       if (deviceMap === undefined) {
@@ -52991,7 +53539,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
       deviceMap.set(prevCall.getOpponentDeviceId(), newCall);
       this.emit(GroupCallEvent.CallsChanged, this.calls);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onActiveSpeakerLoop", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onActiveSpeakerLoop", () => {
       var topAvg = undefined;
       var nextActiveSpeaker = undefined;
       for (var callFeed of this.userMediaFeeds) {
@@ -53008,8 +53556,8 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         this.emit(GroupCallEvent.ActiveSpeakerChanged, this.activeSpeaker);
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomState", () => this.updateParticipants());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onParticipantsChanged", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomState", () => this.updateParticipants());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onParticipantsChanged", () => {
       // Re-run setTracksEnabled on all calls, so that participants that just
       // left get denied access to our media, and participants that just
       // joined get granted access
@@ -53024,14 +53572,14 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
 
       // Update the participants stored in the stats object
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onStateChanged", (newState, oldState) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onStateChanged", (newState, oldState) => {
       if (newState === GroupCallState.Entered || oldState === GroupCallState.Entered || newState === GroupCallState.Ended) {
         // We either entered, left, or ended the call
         this.updateParticipants();
         this.updateMemberState().catch(e => _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.error("GroupCall ".concat(this.groupCallId, " onStateChanged() failed to update member state devices\""), e));
       }
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onLocalFeedsChanged", () => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onLocalFeedsChanged", () => {
       if (this.state === GroupCallState.Entered) {
         this.updateMemberState().catch(e => _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.error("GroupCall ".concat(this.groupCallId, " onLocalFeedsChanged() failed to update member state feeds"), e));
       }
@@ -53049,7 +53597,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   create() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this.creationTs = Date.now();
       _this.client.groupCallEventHandler.groupCalls.set(_this.room.roomId, _this);
       _this.client.emit(_groupCallEventHandler_js__WEBPACK_IMPORTED_MODULE_11__.GroupCallEventHandlerEvent.Outgoing, _this);
@@ -53059,7 +53607,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   sendCallStateEvent() {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var groupCallState = {
         "m.intent": _this2.intent,
         "m.type": _this2.type,
@@ -53167,7 +53715,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   initLocalCallFeed() {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this3.useLivekit) {
         _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.info("Livekit group call: not starting local call feed.");
         return;
@@ -53190,7 +53738,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   initLocalCallFeedInternal() {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.log("GroupCall ".concat(_this4.groupCallId, " initLocalCallFeedInternal() running"));
       var stream;
       try {
@@ -53233,7 +53781,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   updateLocalUsermediaStream(stream) {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this5.localCallFeed) {
         var oldStream = _this5.localCallFeed.stream;
         _this5.localCallFeed.setNewStream(stream);
@@ -53248,7 +53796,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   enter() {
     var _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this6.state === GroupCallState.LocalCallFeedUninitialized) {
         yield _this6.initLocalCallFeed();
       } else if (_this6.state !== GroupCallState.LocalCallFeedInitialized) {
@@ -53311,7 +53859,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   terminate() {
     var _arguments = arguments,
       _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var emitStateEvent = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : true;
       _this7.dispose();
       _this7.room.off(_models_room_state_js__WEBPACK_IMPORTED_MODULE_5__.RoomStateEvent.Update, _this7.onRoomState);
@@ -53351,7 +53899,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
    */
   setMicrophoneMuted(muted) {
     var _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // hasAudioDevice can block indefinitely if the window has lost focus,
       // and it doesn't make much sense to keep a device from being muted, so
       // we always allow muted = true changes to go through
@@ -53377,7 +53925,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         return (_call$localUsermediaF = call.localUsermediaFeed) === null || _call$localUsermediaF === void 0 ? void 0 : _call$localUsermediaF.setAudioVideoMuted(muted, null);
       });
       var sendUpdates = /*#__PURE__*/function () {
-        var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+        var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
           var updates = [];
           _this8.forEachCall(call => updates.push(call.sendMetadataUpdate()));
           yield Promise.all(updates).catch(e => _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.info("GroupCall ".concat(_this8.groupCallId, " setMicrophoneMuted() failed to send some metadata updates"), e));
@@ -53421,7 +53969,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
    */
   checkAudioPermissionIfNecessary(muted) {
     var _this9 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We needed this here to avoid an error in case user join a call without a device.
       try {
         if (!muted && _this9.localCallFeed && !_this9.localCallFeed.hasAudioTrack) {
@@ -53449,7 +53997,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
    */
   setLocalVideoMuted(muted) {
     var _this0 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // hasAudioDevice can block indefinitely if the window has lost focus,
       // and it doesn't make much sense to keep a device from being muted, so
       // we always allow muted = true changes to go through
@@ -53488,7 +54036,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   setScreensharingEnabled(enabled) {
     var _arguments2 = arguments,
       _this1 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var opts = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : {};
       if (enabled === _this1.isScreensharing()) {
         return enabled;
@@ -53842,7 +54390,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   updateDevices(fn) {
     var _arguments3 = arguments,
       _this11 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var _event$getContent;
       var keepAlive = _arguments3.length > 1 && _arguments3[1] !== undefined ? _arguments3[1] : false;
       var now = Date.now();
@@ -53883,7 +54431,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   addDeviceToMemberState() {
     var _this12 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this12.updateDevices(devices => [...devices.filter(d => d.device_id !== _this12.client.getDeviceId()), {
         device_id: _this12.client.getDeviceId(),
         session_id: _this12.client.getSessionId(),
@@ -53897,7 +54445,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
   }
   updateMemberState() {
     var _this13 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Clear the old update interval before proceeding
       if (_this13.resendMemberStateTimer !== null) {
         clearInterval(_this13.resendMemberStateTimer);
@@ -53908,7 +54456,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
         yield _this13.addDeviceToMemberState();
 
         // Resend the state event every so often so it doesn't become stale
-        _this13.resendMemberStateTimer = setInterval(/*#__PURE__*/_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+        _this13.resendMemberStateTimer = setInterval(/*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
           _logger_js__WEBPACK_IMPORTED_MODULE_6__.logger.log("GroupCall ".concat(_this13.groupCallId, " updateMemberState() resending call member state\""));
           try {
             yield _this13.addDeviceToMemberState();
@@ -53929,7 +54477,7 @@ class GroupCall extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_
    */
   cleanMemberState() {
     var _this14 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var {
         devices: myDevices
       } = yield _this14.client.getDevices();
@@ -53985,8 +54533,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GroupCallEventHandler: () => (/* binding */ GroupCallEventHandler),
 /* harmony export */   GroupCallEventHandlerEvent: () => (/* binding */ GroupCallEventHandlerEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _client_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../client.js */ "./node_modules/matrix-js-sdk/lib/client.js");
 /* harmony import */ var _groupCall_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./groupCall.js */ "./node_modules/matrix-js-sdk/lib/webrtc/groupCall.js");
 /* harmony import */ var _models_room_state_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../models/room-state.js */ "./node_modules/matrix-js-sdk/lib/models/room-state.js");
@@ -54027,17 +54575,17 @@ var GroupCallEventHandlerEvent = /*#__PURE__*/function (GroupCallEventHandlerEve
 class GroupCallEventHandler {
   constructor(client) {
     this.client = client;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "groupCalls", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "groupCalls", new Map());
     // roomId -> GroupCall
     // All rooms we know about and whether we've seen a 'Room' event
     // for them. The promise will be fulfilled once we've processed that
     // event which means we're "up to date" on what calls are in a room
     // and get
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "roomDeferreds", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomsChanged", room => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "roomDeferreds", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomsChanged", room => {
       this.createGroupCallForRoom(room);
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "onRoomStateChanged", (event, state) => {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "onRoomStateChanged", (event, state) => {
       var eventType = event.getType();
       if (eventType === _types_event_js__WEBPACK_IMPORTED_MODULE_6__.EventType.GroupCallPrefix) {
         var groupCallId = event.getStateKey();
@@ -54061,7 +54609,7 @@ class GroupCallEventHandler {
   }
   start() {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // We wait until the client has started syncing for real.
       // This is because we only support one call at a time, and want
       // the latest. We therefore want the latest state of the room before
@@ -54186,8 +54734,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MediaHandler: () => (/* binding */ MediaHandler),
 /* harmony export */   MediaHandlerEvent: () => (/* binding */ MediaHandlerEvent)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/typed-event-emitter.js */ "./node_modules/matrix-js-sdk/lib/models/typed-event-emitter.js");
 /* harmony import */ var _webrtc_groupCall_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../webrtc/groupCall.js */ "./node_modules/matrix-js-sdk/lib/webrtc/groupCall.js");
 /* harmony import */ var _logger_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../logger.js */ "./node_modules/matrix-js-sdk/lib/logger.js");
@@ -54223,14 +54771,14 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   constructor(client) {
     super();
     this.client = client;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "audioInput", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "audioSettings", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "videoInput", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "localUserMediaStream", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "userMediaStreams", []);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "screensharingStreams", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "audioInput", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "audioSettings", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "videoInput", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "localUserMediaStream", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "userMediaStreams", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "screensharingStreams", []);
     // Promise chain to serialise calls to getMediaStream
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "getMediaStreamPromise", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "getMediaStreamPromise", void 0);
   }
   restoreMediaSettings(audioInput, videoInput) {
     this.audioInput = audioInput;
@@ -54244,7 +54792,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setAudioInput(deviceId) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger.info("MediaHandler setAudioInput() running (deviceId=".concat(deviceId, ")"));
       if (_this.audioInput === deviceId) return;
       _this.audioInput = deviceId;
@@ -54258,7 +54806,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setAudioSettings(opts) {
     var _this2 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger.info("MediaHandler setAudioSettings() running (opts=".concat(JSON.stringify(opts), ")"));
       _this2.audioSettings = Object.assign({}, opts);
       yield _this2.updateLocalUsermediaStreams();
@@ -54272,7 +54820,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setVideoInput(deviceId) {
     var _this3 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger.info("MediaHandler setVideoInput() running (deviceId=".concat(deviceId, ")"));
       if (_this3.videoInput === deviceId) return;
       _this3.videoInput = deviceId;
@@ -54288,7 +54836,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   setMediaInputs(audioInput, videoInput) {
     var _this4 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _logger_js__WEBPACK_IMPORTED_MODULE_4__.logger.log("MediaHandler setMediaInputs() running (audioInput: ".concat(audioInput, " videoInput: ").concat(videoInput, ")"));
       _this4.audioInput = audioInput;
       _this4.videoInput = videoInput;
@@ -54301,7 +54849,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
    */
   updateLocalUsermediaStreams() {
     var _this5 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this5.userMediaStreams.length === 0) return;
       var callMediaStreamParams = new Map();
       for (var call of _this5.client.callEventHandler.calls.values()) {
@@ -54348,7 +54896,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
     })();
   }
   hasAudioDevice() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         var devices = yield navigator.mediaDevices.enumerateDevices();
         return devices.filter(device => device.kind === "audioinput").length > 0;
@@ -54359,7 +54907,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
     })();
   }
   hasVideoDevice() {
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         var devices = yield navigator.mediaDevices.enumerateDevices();
         return devices.filter(device => device.kind === "videoinput").length > 0;
@@ -54379,7 +54927,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   getUserMediaStream(audio, video) {
     var _arguments = arguments,
       _this6 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var reusable = _arguments.length > 2 && _arguments[2] !== undefined ? _arguments[2] : true;
       // Serialise calls, othertwise we can't sensibly re-use the stream
       if (_this6.getMediaStreamPromise) {
@@ -54394,7 +54942,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   }
   getUserMediaStreamInternal(audio, video, reusable) {
     var _this7 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var shouldRequestAudio = audio && (yield _this7.hasAudioDevice());
       var shouldRequestVideo = video && (yield _this7.hasVideoDevice());
       var stream;
@@ -54501,7 +55049,7 @@ class MediaHandler extends _models_typed_event_emitter_js__WEBPACK_IMPORTED_MODU
   getScreensharingStream() {
     var _arguments2 = arguments,
       _this8 = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var opts = _arguments2.length > 0 && _arguments2[0] !== undefined ? _arguments2[0] : {};
       var reusable = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : true;
       var stream;
@@ -54735,8 +55283,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CallStatsReportGatherer: () => (/* binding */ CallStatsReportGatherer)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _connectionStats_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./connectionStats.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/connectionStats.js");
 /* harmony import */ var _connectionStatsBuilder_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./connectionStatsBuilder.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/connectionStatsBuilder.js");
 /* harmony import */ var _transportStatsBuilder_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./transportStatsBuilder.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/transportStatsBuilder.js");
@@ -54751,7 +55299,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
 
@@ -54787,17 +55335,17 @@ class CallStatsReportGatherer {
     this.pc = pc;
     this.emitter = emitter;
     this.isFocus = isFocus;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "isActive", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "previousStatsReport", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "currentStatsReport", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "connectionStats", new _connectionStats_js__WEBPACK_IMPORTED_MODULE_2__.ConnectionStats());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__(this, "trackStats", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "isActive", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "previousStatsReport", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "currentStatsReport", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "connectionStats", new _connectionStats_js__WEBPACK_IMPORTED_MODULE_2__.ConnectionStats());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "trackStats", void 0);
     pc.addEventListener("signalingstatechange", this.onSignalStateChange.bind(this));
     this.trackStats = new _media_mediaTrackStatsHandler_js__WEBPACK_IMPORTED_MODULE_7__.MediaTrackStatsHandler(new _media_mediaSsrcHandler_js__WEBPACK_IMPORTED_MODULE_5__.MediaSsrcHandler(), new _media_mediaTrackHandler_js__WEBPACK_IMPORTED_MODULE_6__.MediaTrackHandler(pc));
   }
   processStats(groupCallId, localUserId) {
     var _this = this;
-    return _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__(function* () {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       var summary = {
         isFirstCollection: _this.previousStatsReport === undefined,
         receivedMedia: 0,
@@ -54961,7 +55509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ConnectionStats: () => (/* binding */ ConnectionStats)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
@@ -54981,10 +55529,10 @@ limitations under the License.
 
 class ConnectionStats {
   constructor() {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "bandwidth", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "bitrate", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "packetLoss", {});
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "transport", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "bandwidth", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "bitrate", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "packetLoss", {});
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "transport", []);
   }
 }
 //# sourceMappingURL=connectionStats.js.map
@@ -55178,7 +55726,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   GroupCallStats: () => (/* binding */ GroupCallStats)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _callStatsReportGatherer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./callStatsReportGatherer.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/callStatsReportGatherer.js");
 /* harmony import */ var _statsReportEmitter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./statsReportEmitter.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/statsReportEmitter.js");
 /* harmony import */ var _summaryStatsReportGatherer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./summaryStatsReportGatherer.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/summaryStatsReportGatherer.js");
@@ -55209,10 +55757,10 @@ class GroupCallStats {
     this.groupCallId = groupCallId;
     this.userId = userId;
     this.interval = interval;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "timer", void 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "gatherers", new Map());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "reports", new _statsReportEmitter_js__WEBPACK_IMPORTED_MODULE_2__.StatsReportEmitter());
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "summaryStatsReportGatherer", new _summaryStatsReportGatherer_js__WEBPACK_IMPORTED_MODULE_3__.SummaryStatsReportGatherer(this.reports));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "timer", void 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "gatherers", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "reports", new _statsReportEmitter_js__WEBPACK_IMPORTED_MODULE_2__.StatsReportEmitter());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "summaryStatsReportGatherer", new _summaryStatsReportGatherer_js__WEBPACK_IMPORTED_MODULE_3__.SummaryStatsReportGatherer(this.reports));
   }
   start() {
     if (this.timer === undefined && this.interval > 0) {
@@ -55275,7 +55823,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MediaSsrcHandler: () => (/* binding */ MediaSsrcHandler)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var sdp_transform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sdp-transform */ "./node_modules/sdp-transform/lib/index.js");
 
 /*
@@ -55297,7 +55845,7 @@ limitations under the License.
 
 class MediaSsrcHandler {
   constructor() {
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "ssrcToMid", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "ssrcToMid", {
       local: new Map(),
       remote: new Map()
     });
@@ -55420,7 +55968,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MediaTrackStats: () => (/* binding */ MediaTrackStats)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 
 /*
 Copyright 2023 The Matrix.org Foundation C.I.C.
@@ -55443,29 +55991,29 @@ class MediaTrackStats {
     this.trackId = trackId;
     this.type = type;
     this.kind = kind;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "loss", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "loss", {
       packetsTotal: 0,
       packetsLost: 0,
       isDownloadStream: false
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "bitrate", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "bitrate", {
       download: 0,
       upload: 0
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "resolution", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "resolution", {
       width: -1,
       height: -1
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "audioConcealment", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "audioConcealment", {
       concealedAudio: 0,
       totalAudioDuration: 0
     });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "framerate", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "jitter", 0);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "codec", "");
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "isAlive", true);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "isMuted", false);
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "isEnabled", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "framerate", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "jitter", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "codec", "");
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "isAlive", true);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "isMuted", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "isEnabled", true);
   }
   getType() {
     return this.type;
@@ -55577,7 +56125,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MediaTrackStatsHandler: () => (/* binding */ MediaTrackStatsHandler)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _mediaTrackStats_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mediaTrackStats.js */ "./node_modules/matrix-js-sdk/lib/webrtc/stats/media/mediaTrackStats.js");
 
 /*
@@ -55601,7 +56149,7 @@ class MediaTrackStatsHandler {
   constructor(mediaSsrcHandler, mediaTrackHandler) {
     this.mediaSsrcHandler = mediaSsrcHandler;
     this.mediaTrackHandler = mediaTrackHandler;
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__(this, "track2stats", new Map());
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "track2stats", new Map());
   }
 
   /**
@@ -56166,7 +56714,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.ClientWidgetApi = void 0;
-var _events = __webpack_require__(/*! events */ "events");
+var _events = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 var _PostmessageTransport = __webpack_require__(/*! ./transport/PostmessageTransport */ "./node_modules/matrix-widget-api/lib/transport/PostmessageTransport.js");
 var _WidgetApiDirection = __webpack_require__(/*! ./interfaces/WidgetApiDirection */ "./node_modules/matrix-widget-api/lib/interfaces/WidgetApiDirection.js");
 var _WidgetApiAction = __webpack_require__(/*! ./interfaces/WidgetApiAction */ "./node_modules/matrix-widget-api/lib/interfaces/WidgetApiAction.js");
@@ -58042,7 +58590,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.WidgetApiResponseError = exports.WidgetApi = void 0;
-var _events = __webpack_require__(/*! events */ "events");
+var _events = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 var _WidgetApiDirection = __webpack_require__(/*! ./interfaces/WidgetApiDirection */ "./node_modules/matrix-widget-api/lib/interfaces/WidgetApiDirection.js");
 var _ApiVersion = __webpack_require__(/*! ./interfaces/ApiVersion */ "./node_modules/matrix-widget-api/lib/interfaces/ApiVersion.js");
 var _PostmessageTransport = __webpack_require__(/*! ./transport/PostmessageTransport */ "./node_modules/matrix-widget-api/lib/transport/PostmessageTransport.js");
@@ -61062,7 +61610,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.PostmessageTransport = void 0;
-var _events = __webpack_require__(/*! events */ "events");
+var _events = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 var _ = __webpack_require__(/*! .. */ "./node_modules/matrix-widget-api/lib/index.js");
 var _excluded = ["message"];
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -66085,10 +66633,10 @@ module.exports = unhomoglyph;
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/native.js":
-/*!***********************************************!*\
-  !*** ./node_modules/uuid/dist-node/native.js ***!
-  \***********************************************/
+/***/ "./node_modules/uuid/dist/native.js":
+/*!******************************************!*\
+  !*** ./node_modules/uuid/dist/native.js ***!
+  \******************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66096,17 +66644,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ randomUUID: node_crypto__WEBPACK_IMPORTED_MODULE_0__.randomUUID });
+const randomUUID = typeof crypto !== 'undefined' && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ randomUUID });
 
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/regex.js":
-/*!**********************************************!*\
-  !*** ./node_modules/uuid/dist-node/regex.js ***!
-  \**********************************************/
+/***/ "./node_modules/uuid/dist/regex.js":
+/*!*****************************************!*\
+  !*** ./node_modules/uuid/dist/regex.js ***!
+  \*****************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66119,10 +66666,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/rng.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/rng.js ***!
-  \********************************************/
+/***/ "./node_modules/uuid/dist/rng.js":
+/*!***************************************!*\
+  !*** ./node_modules/uuid/dist/rng.js ***!
+  \***************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66130,25 +66677,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ rng)
 /* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-const rnds8Pool = new Uint8Array(256);
-let poolPtr = rnds8Pool.length;
+let getRandomValues;
+const rnds8 = new Uint8Array(16);
 function rng() {
-    if (poolPtr > rnds8Pool.length - 16) {
-        (0,node_crypto__WEBPACK_IMPORTED_MODULE_0__.randomFillSync)(rnds8Pool);
-        poolPtr = 0;
+    if (!getRandomValues) {
+        if (typeof crypto === 'undefined' || !crypto.getRandomValues) {
+            throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
+        }
+        getRandomValues = crypto.getRandomValues.bind(crypto);
     }
-    return rnds8Pool.slice(poolPtr, (poolPtr += 16));
+    return getRandomValues(rnds8);
 }
 
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/stringify.js":
-/*!**************************************************!*\
-  !*** ./node_modules/uuid/dist-node/stringify.js ***!
-  \**************************************************/
+/***/ "./node_modules/uuid/dist/stringify.js":
+/*!*********************************************!*\
+  !*** ./node_modules/uuid/dist/stringify.js ***!
+  \*********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66157,7 +66704,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   unsafeStringify: () => (/* binding */ unsafeStringify)
 /* harmony export */ });
-/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist-node/validate.js");
+/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist/validate.js");
 
 const byteToHex = [];
 for (let i = 0; i < 256; ++i) {
@@ -66197,10 +66744,10 @@ function stringify(arr, offset = 0) {
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/v4.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v4.js ***!
-  \*******************************************/
+/***/ "./node_modules/uuid/dist/v4.js":
+/*!**************************************!*\
+  !*** ./node_modules/uuid/dist/v4.js ***!
+  \**************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66208,9 +66755,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _native_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./native.js */ "./node_modules/uuid/dist-node/native.js");
-/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist-node/rng.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
+/* harmony import */ var _native_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./native.js */ "./node_modules/uuid/dist/native.js");
+/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist/rng.js");
+/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist/stringify.js");
 
 
 
@@ -66245,10 +66792,10 @@ function v4(options, buf, offset) {
 
 /***/ }),
 
-/***/ "./node_modules/uuid/dist-node/validate.js":
-/*!*************************************************!*\
-  !*** ./node_modules/uuid/dist-node/validate.js ***!
-  \*************************************************/
+/***/ "./node_modules/uuid/dist/validate.js":
+/*!********************************************!*\
+  !*** ./node_modules/uuid/dist/validate.js ***!
+  \********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -66256,7 +66803,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./node_modules/uuid/dist-node/regex.js");
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./node_modules/uuid/dist/regex.js");
 
 function validate(uuid) {
     return typeof uuid === 'string' && _regex_js__WEBPACK_IMPORTED_MODULE_0__["default"].test(uuid);
@@ -69641,61 +70188,6 @@ class UIManager {
         }
     }
 }
-
-/***/ }),
-
-/***/ "events":
-/*!*************************!*\
-  !*** external "events" ***!
-  \*************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("events");
-
-/***/ }),
-
-/***/ "node:crypto":
-/*!******************************!*\
-  !*** external "node:crypto" ***!
-  \******************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:crypto");
-
-/***/ }),
-
-/***/ "node:fs":
-/*!**************************!*\
-  !*** external "node:fs" ***!
-  \**************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:fs");
-
-/***/ }),
-
-/***/ "node:fs/promises":
-/*!***********************************!*\
-  !*** external "node:fs/promises" ***!
-  \***********************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:fs/promises");
-
-/***/ }),
-
-/***/ "node:url":
-/*!***************************!*\
-  !*** external "node:url" ***!
-  \***************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:url");
 
 /***/ })
 
