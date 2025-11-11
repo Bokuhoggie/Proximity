@@ -1,6 +1,39 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 10, 2025 - 11:00 PM
+**Last Updated:** November 10, 2025 - 11:30 PM
+
+## 🔴 Critical Issues - Active
+
+### Map Sync Issues (NEW)
+**Status:** 🔴 ACTIVE - In Progress
+**Priority:** Critical
+**Reported:** Nov 10, 2025 11:30 PM
+
+**Problems:**
+1. **Proximity audio only working for one user** - One user can hear spatial audio, the other cannot
+2. **User positions desync on rejoin** - When users leave and rejoin, positions reset/change unexpectedly, making people appear in strange locations
+3. **Map not synced between users** - Maps don't look the same for all users, positions differ
+4. **Background image not uploading** - Custom map background upload feature not working
+
+**Root Causes Identified:**
+- Position sync may only happen on position-update events, not on initial join
+- Map canvas background image applied but not persisting or appearing
+- Proximity audio calculation may differ between clients
+- Server may not be broadcasting positions correctly to all users
+
+**Fix Strategy:**
+1. Ensure server sends current positions to all users when someone joins voice channel
+2. Fix background image upload to properly apply to canvas
+3. Verify position-update events are broadcasting to all connected users
+4. Ensure proximity audio calculations are identical on all clients
+5. Add position validation and bounds checking
+
+**Files to Investigate:**
+- `src/server/signaling-server.js` - Position broadcasting logic
+- `src/renderer/js/app.js` - Background image upload, position handling
+- `src/renderer/js/proximity/ProximityMap.js` - Audio proximity calculations
+
+---
 
 ## ✅ Recently Fixed
 

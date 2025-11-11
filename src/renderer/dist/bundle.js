@@ -70516,10 +70516,10 @@ class ProximityApp {
             // Initialize settings first
             await this.settingsManager.load();
 
-            // Apply saved background image if any
+            // Save reference to background image - will be applied when map opens
             const savedBackground = this.settingsManager.get('backgroundImage');
             if (savedBackground) {
-                this.applyBackgroundImage(savedBackground);
+                this.savedBackgroundImage = savedBackground;
                 const removeBtn = document.getElementById('removeBackgroundBtn');
                 if (removeBtn) {
                     removeBtn.style.display = 'inline-block';
@@ -70747,6 +70747,11 @@ class ProximityApp {
                         console.warn(`⚠️ Could not find participant element for user ${userId}`);
                     }
                 });
+
+                // Apply saved background image if any
+                if (this.savedBackgroundImage) {
+                    this.applyBackgroundImage(this.savedBackgroundImage);
+                }
             }
 
             // Setup modal controls
@@ -71086,6 +71091,7 @@ class ProximityApp {
                     reader.onload = (event) => {
                         const imageData = event.target.result;
                         this.settingsManager.set('backgroundImage', imageData);
+                        this.savedBackgroundImage = imageData;
                         this.applyBackgroundImage(imageData);
                         if (removeBackgroundBtn) {
                             removeBackgroundBtn.style.display = 'inline-block';
@@ -71102,6 +71108,7 @@ class ProximityApp {
         if (removeBackgroundBtn) {
             removeBackgroundBtn.addEventListener('click', () => {
                 this.settingsManager.set('backgroundImage', '');
+                this.savedBackgroundImage = '';
                 this.applyBackgroundImage('');
                 removeBackgroundBtn.style.display = 'none';
                 if (backgroundImageInput) {
@@ -71127,6 +71134,7 @@ class ProximityApp {
             resetSettingsBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to reset all settings to defaults?')) {
                     this.settingsManager.reset();
+                    this.savedBackgroundImage = '';
                     this.applyBackgroundImage('');
                     const removeBtn = document.getElementById('removeBackgroundBtn');
                     if (removeBtn) {
