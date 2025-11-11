@@ -7,8 +7,9 @@ import { SettingsManager } from './settings/SettingsManager.js';
 import { MatrixClient } from './chat/MatrixClient.js';
 
 // Try Railway first, fallback to localhost for development
-const SERVER_URL = 'https://proximityserver-production.up.railway.app';
-const FALLBACK_URL = 'http://localhost:3000';
+// const SERVER_URL = 'https://proximityserver-production.up.railway.app';
+const SERVER_URL = 'http://localhost:3000'; // Using localhost for dev
+const FALLBACK_URL = 'https://proximityserver-production.up.railway.app';
 
 class ProximityApp {
     constructor() {
