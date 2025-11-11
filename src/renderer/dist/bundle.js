@@ -3369,16 +3369,7 @@ class ProximityApp {
             userId: this.myUserId
         };
 
-        // LOCAL MODE: Save message locally instead of sending to server
-        if (!this.globalChatHistory.general) {
-            this.globalChatHistory.general = [];
-        }
-
-        this.globalChatHistory.general.push(messageData);
-        this.saveGlobalChatHistory();
-        this.uiManager.addChatMessage(messageData);
-
-        // If backend is connected, also send to server
+        // Send message to server (Redis-based persistence)
         if (this.connectionManager.socket) {
             this.connectionManager.socket.emit('send-chat-message', messageData);
         }
@@ -3646,12 +3637,35 @@ class ProximityApp {
         });
 
         // Chat events
+        // Listen for chat history from server
+        socket.on('chat-history', ({ channelId, messages }) => {
+            console.log('📜 Chat history received:', messages.length, 'messages');
+
+            // Clear and reload messages
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.innerHTML = `
+                    <div class="welcome-message">
+                        <p>Welcome to general chat!</p>
+                    </div>
+                `;
+
+                messages.forEach(msg => {
+                    const messageData = {
+                        id: msg.id,
+                        username: msg.username,
+                        message: msg.content || msg.message,
+                        timestamp: msg.timestamp,
+                        userId: msg.userId,
+                        userColor: msg.userColor
+                    };
+                    this.uiManager.addChatMessage(messageData);
+                });
+            }
+        });
+
         socket.on('chat-message', (data) => {
             console.log('Chat message received:', data);
-
-            if (!this.globalChatHistory.general) {
-                this.globalChatHistory.general = [];
-            }
 
             const messageData = {
                 id: data.id,
@@ -3662,9 +3676,6 @@ class ProximityApp {
                 userColor: data.userColor
             };
 
-            this.globalChatHistory.general.push(messageData);
-            this.saveGlobalChatHistory();
-
             this.uiManager.addChatMessage(messageData);
         });
 
@@ -3672,11 +3683,7 @@ class ProximityApp {
             console.log('Message deleted:', data);
             const { messageId } = data;
 
-            if (this.globalChatHistory.general) {
-                this.globalChatHistory.general = this.globalChatHistory.general.filter(msg => msg.id !== messageId);
-                this.saveGlobalChatHistory();
-            }
-
+            // Just remove from UI - server handles persistence
             this.uiManager.removeChatMessage(messageId);
         });
 
@@ -3718,6 +3725,9 @@ class ProximityApp {
     }
 
     loadChatForCurrentChannel() {
+        console.log('📜 Requesting chat history from server...');
+
+        // Clear chat first
         const chatMessages = document.getElementById('chatMessages');
         if (chatMessages) {
             chatMessages.innerHTML = `
@@ -3725,12 +3735,11 @@ class ProximityApp {
                     <p>Welcome to general chat!</p>
                 </div>
             `;
+        }
 
-            if (this.globalChatHistory.general) {
-                this.globalChatHistory.general.forEach(msg => {
-                    this.uiManager.addChatMessage(msg);
-                });
-            }
+        // Request chat history from server (Redis-based)
+        if (this.connectionManager.socket) {
+            this.connectionManager.socket.emit('request-chat-history');
         }
     }
 
