@@ -667,6 +667,12 @@ class ProximityApp {
         socket.on('chat-history', (messages) => {
             console.log(`📜 Received ${messages.length} messages from server`);
 
+            // Clear existing chat UI first to prevent duplicates
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.innerHTML = '';
+            }
+
             // Merge with local messages (prioritize server messages)
             const localMessages = this.loadChatMessages();
             const serverMessageIds = new Set(messages.map(m => m.id));
@@ -682,8 +688,8 @@ class ProximityApp {
             // Save merged history to localStorage
             localStorage.setItem('proximity_chat_messages', JSON.stringify(allMessages));
 
-            // Display messages (only the server ones since local were already restored)
-            messages.forEach(messageData => {
+            // Display ALL messages (server + unique local)
+            allMessages.forEach(messageData => {
                 this.uiManager.addChatMessage(messageData);
             });
         });
@@ -718,8 +724,9 @@ class ProximityApp {
 
             this.uiManager.showServerView({ id: 'hub', name: 'Proximity Room' });
 
-            // Restore chat history from localStorage
-            this.restoreChatHistory();
+            // DON'T restore chat here - wait for server to send chat-history
+            // This prevents duplicate messages
+            // this.restoreChatHistory();
 
             this.updateLeaveButtonVisibility();
 
@@ -924,7 +931,8 @@ class ProximityApp {
 
             this.audioManager.disconnectAll();
 
-            this.uiManager.removeVoiceParticipant(this.myUserId, channelId);
+            // Clear ALL voice participants from UI
+            this.uiManager.clearVoiceParticipants(channelId);
 
             // Clear and destroy proximity map
             if (this.proximityMap) {

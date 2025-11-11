@@ -720,28 +720,41 @@ export class AudioManager {
         peerConnection.ontrack = (event) => {
             console.log('📥 Received remote stream from:', from);
             const remoteStream = event.streams[0];
-            
+
             const audioElement = document.createElement('audio');
+            audioElement.id = `audio-${from}`;
+            audioElement.setAttribute('data-user-id', from);
             audioElement.autoplay = true;
             audioElement.srcObject = remoteStream;
-            audioElement.volume = 1;
+            audioElement.volume = 1.0;
             audioElement.style.display = 'none';
-            
+
             // Use locked output device if available
             if (this.isOutputLocked && this.lockedOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.lockedOutputDevice).catch(console.error);
             } else if (this.currentOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.currentOutputDevice).catch(console.error);
             }
-            
+
+            // Always append to body to ensure audio plays
+            document.body.appendChild(audioElement);
+
+            // Also try to attach to participant div for organization
             const participant = document.getElementById(`voice-participant-${from}-${window.proximityApp?.currentVoiceChannel?.replace('-voice', '')}`);
-            if (participant) {
+            if (participant && !document.body.contains(audioElement)) {
                 participant.appendChild(audioElement);
             }
-            
+
+            // Ensure audio plays (some browsers require user interaction)
+            audioElement.play().catch(err => {
+                console.warn('⚠️ Could not autoplay audio for', from, err);
+            });
+
             if (window.proximityApp && window.proximityApp.proximityMap) {
                 window.proximityApp.proximityMap.setUserAudioElement(from, audioElement);
             }
+
+            console.log('🔊 Audio element created and playing for:', from);
         };
 
         peerConnection.onicecandidate = (event) => {
