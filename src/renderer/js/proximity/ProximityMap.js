@@ -160,24 +160,34 @@ export class ProximityMap {
         this.handleMouseMove(mouseEvent);
     }
 
-    addUser(userId, username, isSelf = false, audioElement = null) {
+    addUser(userId, username, isSelf = false, audioElement = null, position = null) {
         // Ensure canvas is properly sized before positioning
         if (this.canvas.width === 0 || this.canvas.height === 0) {
             this.resizeCanvas();
         }
-        
-        // Center spawn position with slight randomization, ensuring bounds
-        const margin = 30; // Keep users away from edges
-        const x = Math.max(margin, Math.min(this.canvas.width - margin, 
-            this.canvas.width / 2 + (Math.random() - 0.5) * 100));
-        const y = Math.max(margin, Math.min(this.canvas.height - margin, 
-            this.canvas.height / 2 + (Math.random() - 0.5) * 100));
-        
+
+        // Use provided position if available, otherwise spawn with randomization
+        let x, y;
+        if (position && position.x !== undefined && position.y !== undefined) {
+            // Use server-provided position
+            x = Math.max(20, Math.min(this.canvas.width - 20, position.x));
+            y = Math.max(20, Math.min(this.canvas.height - 20, position.y));
+            console.log(`📍 Using server position for ${username}: (${x}, ${y})`);
+        } else {
+            // Center spawn position with slight randomization, ensuring bounds
+            const margin = 30; // Keep users away from edges
+            x = Math.max(margin, Math.min(this.canvas.width - margin,
+                this.canvas.width / 2 + (Math.random() - 0.5) * 100));
+            y = Math.max(margin, Math.min(this.canvas.height - margin,
+                this.canvas.height / 2 + (Math.random() - 0.5) * 100));
+            console.log(`📍 Generated random position for ${username}: (${x}, ${y})`);
+        }
+
         let userColor = 'blue';
         if (isSelf && this.app && this.app.settingsManager) {
             userColor = this.app.settingsManager.get('userColor') || 'purple';
         }
-        
+
         this.users.set(userId, {
             x,
             y,
@@ -190,10 +200,15 @@ export class ProximityMap {
 
         if (isSelf) {
             this.myUserId = userId;
+            // Send initial position to server if this is self
+            if (this.app && this.app.sendPositionUpdate) {
+                console.log(`📤 Sending initial position to server: (${x}, ${y})`);
+                this.app.sendPositionUpdate(x, y);
+            }
         }
 
         this.updateAudioProximity();
-        
+
         // FIXED: Sync user addition between maps
         this.syncUserWithOtherMaps(userId, username, isSelf, audioElement, userColor);
     }
