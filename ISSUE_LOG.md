@@ -1,6 +1,37 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 10, 2025 - 8:30 PM
+**Last Updated:** November 10, 2025 - 11:00 PM
+
+## ✅ Recently Fixed
+
+### Chat Message Persistence
+**Status:** ✅ FIXED (Nov 10, 2025 11:00 PM)
+**Priority:** High
+**Reported:** Nov 10, 2025 10:45 PM
+
+**Problem:**
+- Messages disappeared on app restart
+- No message history when rejoining
+- New users saw empty chat
+
+**Solution Implemented:**
+- Dual-layer persistence: localStorage (client) + in-memory array (server)
+- Server stores last 100 messages and sends to users on join
+- Client stores last 100 messages in localStorage
+- Messages merge and deduplicate on connect
+- Messages persist across app restarts
+
+**Fixed In:** Commit eab427c
+**Files Modified:**
+- `src/renderer/js/app.js` - Added localStorage methods and chat-history handler
+- `src/server/signaling-server.js` - Added chatMessages array and /api/messages endpoint
+
+**Next Steps (Planned):**
+- 🎯 Upgrade to unlimited storage with dedicated database (SQLite/PostgreSQL)
+- 🎯 Add file upload/storage support
+- 🎯 Implement proper sync protocol for offline/online state
+
+---
 
 ## 🔴 Critical Issues
 
@@ -314,39 +345,111 @@ function formatMessageTime(timestamp) {
 
 ## 🟢 Enhancement Suggestions
 
+### 8. Unlimited Chat Storage + File Support (PLANNED)
+**Status:** 🆕 NEW - Next Major Feature
+**Priority:** High
+**Reported:** Nov 10, 2025 11:00 PM
+
+**Current State:**
+- ✅ Basic persistence working (localStorage + server memory)
+- ✅ Last 100 messages stored on client and server
+- ❌ No unlimited message history
+- ❌ No file upload/download support
+- ❌ Server memory cleared on restart
+
+**Goal:**
+- Unlimited message history storage
+- File upload/download capability (images, documents, etc.)
+- Persistent storage that survives server restarts
+- Dedicated sync protocol for offline/online states
+
+**Proposed Implementation:**
+
+**Phase 1: Dedicated Database (Next)**
+- Add SQLite database to signaling server
+- Store unlimited messages in DB (with pagination)
+- Add /api/messages?limit=50&offset=0 pagination
+- Sync protocol: client requests messages by timestamp
+- Cost: $0 (SQLite is file-based, included with server)
+
+**Phase 2: File Upload System**
+- Add file upload endpoint: POST /api/files
+- Store files on server filesystem or cloud storage (S3/Cloudflare R2)
+- Add file metadata to messages table
+- Support images, documents, PDFs, etc.
+- Generate thumbnails for images
+- Cost: ~$1-2/month for S3/R2 storage (Railway has limited filesystem)
+
+**Phase 3: Advanced Sync**
+- Track last sync timestamp per client
+- Implement delta sync (only new messages since last sync)
+- Handle offline/online state transitions
+- Conflict resolution for concurrent edits
+
+**Database Schema (SQLite):**
+```sql
+CREATE TABLE messages (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    user_color TEXT,
+    message TEXT,
+    timestamp INTEGER NOT NULL,
+    edited_at INTEGER,
+    deleted BOOLEAN DEFAULT 0,
+    file_id TEXT,
+    FOREIGN KEY (file_id) REFERENCES files(id)
+);
+
+CREATE TABLE files (
+    id TEXT PRIMARY KEY,
+    filename TEXT NOT NULL,
+    mimetype TEXT NOT NULL,
+    size INTEGER NOT NULL,
+    storage_path TEXT NOT NULL,
+    thumbnail_path TEXT,
+    uploaded_by TEXT NOT NULL,
+    uploaded_at INTEGER NOT NULL
+);
+
+CREATE INDEX idx_messages_timestamp ON messages(timestamp DESC);
+CREATE INDEX idx_messages_user ON messages(user_id);
+```
+
+**API Endpoints to Add:**
+```
+GET  /api/messages?limit=50&offset=0&since=1234567890
+POST /api/files (multipart/form-data)
+GET  /api/files/:id
+GET  /api/files/:id/thumbnail
+DELETE /api/files/:id
+```
+
+**Client Changes Needed:**
+- Add file upload button in chat input
+- Add image preview modal
+- Add pagination/infinite scroll to chat
+- Add sync manager for offline support
+- Display file attachments in messages
+
+**Files to Modify:**
+- `src/server/signaling-server.js` - Add database connection and file endpoints
+- `src/renderer/js/app.js` - Add file upload methods
+- `src/renderer/js/ui/UIManager.js` - Add file UI components
+- `src/renderer/index.html` - Add file input and preview modal
+- `package.json` - Add dependencies: `better-sqlite3`, `multer`
+
+**Estimated Time:** 4-6 hours of development
+**Cost Impact:** ~$0-2/month (SQLite free, optional S3 storage)
+
+---
+
 ### 7. More Robust Chat System
-**Status:** Planning
+**Status:** ✅ COMPLETED (Basic version)
 **Priority:** Low
 **Reported:** Nov 10, 2025 10:03 AM
 
-**Current Issues:**
-- Chat state spread across multiple files
-- localStorage used for persistence (limited to ~5MB)
-- No message history limit (could grow unbounded)
-- No pagination or lazy loading
-- Delete/edit system incomplete
-
-**Proposed Solutions:**
-
-**Option A: Keep Current Architecture (Lightweight)**
-- Implement message limit (e.g., last 500 messages)
-- Add proper delete/edit handlers
-- Add message reactions (simple emoji)
-- Keep localStorage for simplicity
-
-**Option B: Upgrade to IndexedDB**
-- More storage capacity (50MB+)
-- Better performance for large message history
-- Can store images/files
-- More complex to implement
-
-**Option C: Server-Side Storage**
-- Messages stored on Railway server
-- User sees full history when joining
-- Requires database (PostgreSQL on Railway)
-- More robust but increases complexity
-
-**Recommendation:** Start with Option A, upgrade to B or C later if needed.
+**Update:** Basic chat persistence now working with localStorage + server memory (last 100 messages). See Enhancement #8 above for next phase (unlimited storage + files).
 
 ---
 
@@ -423,10 +526,15 @@ UIManager.js:378 Toggle voice channel: general-voice Current: null
 ## 📝 Notes for Future AI
 
 - Voice channel rejoin bug FIXED as of Nov 10, 2025 10:00 AM
+- Chat persistence IMPLEMENTED as of Nov 10, 2025 11:00 PM
 - UIManager.currentVoiceChannel now properly syncs via updateVoiceChannelUI()
 - Webpack bundle must be rebuilt after any JS changes: `npm run webpack`
 - Electron caches aggressively - added cache clearing in dev mode
 - Server running on Railway at `proximityserver-production.up.railway.app`
 - All socket events logged with console.log for debugging
-- Chat history stored in localStorage key: `proximity-chat-history`
+- Chat messages stored in localStorage key: `proximity_chat_messages` (last 100)
 - User settings stored in localStorage key: `proximity-settings`
+- Server stores last 100 messages in memory array `chatMessages`
+- Server sends chat history on `join-hub` via `chat-history` event
+- Client merges server + local messages on connect
+- Next major feature: SQLite database for unlimited storage + file support
