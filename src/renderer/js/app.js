@@ -38,6 +38,16 @@ class ProximityApp {
             // Initialize settings first
             await this.settingsManager.load();
 
+            // Apply saved background image if any
+            const savedBackground = this.settingsManager.get('backgroundImage');
+            if (savedBackground) {
+                this.applyBackgroundImage(savedBackground);
+                const removeBtn = document.getElementById('removeBackgroundBtn');
+                if (removeBtn) {
+                    removeBtn.style.display = 'inline-block';
+                }
+            }
+
             // Initialize UI
             this.uiManager.init();
             this.setupEventListeners();
@@ -246,13 +256,17 @@ class ProximityApp {
                 console.log('🗺️ Adding existing voice channel users to map...');
                 const participants = this.audioManager.peerConnections;
                 participants.forEach((peerConnection, userId) => {
-                    // Find user info from UI
+                    // Find user info from UI using data attribute
                     const participantElement = document.querySelector(`[data-user-id="${userId}"]`);
                     if (participantElement) {
-                        const usernameText = participantElement.textContent || 'User';
+                        const username = participantElement.getAttribute('data-username') || 'User';
+                        const userColor = participantElement.getAttribute('data-user-color') || 'blue';
                         const audioElement = document.getElementById(`audio-${userId}`);
-                        console.log(`📍 Adding ${usernameText} (${userId}) to map`);
-                        this.proximityMap.addUser(userId, usernameText, false, audioElement);
+                        console.log(`📍 Adding ${username} (${userId}) with color ${userColor} to map`);
+                        this.proximityMap.addUser(userId, username, false, audioElement);
+                        this.proximityMap.updateUserColor(userId, userColor);
+                    } else {
+                        console.warn(`⚠️ Could not find participant element for user ${userId}`);
                     }
                 });
             }
@@ -577,6 +591,48 @@ class ProximityApp {
             });
         }
 
+        // Background image upload
+        const uploadBackgroundBtn = document.getElementById('uploadBackgroundBtn');
+        const backgroundImageInput = document.getElementById('backgroundImage');
+        const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
+
+        if (uploadBackgroundBtn && backgroundImageInput) {
+            uploadBackgroundBtn.addEventListener('click', () => {
+                backgroundImageInput.click();
+            });
+
+            backgroundImageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const imageData = event.target.result;
+                        this.settingsManager.set('backgroundImage', imageData);
+                        this.applyBackgroundImage(imageData);
+                        if (removeBackgroundBtn) {
+                            removeBackgroundBtn.style.display = 'inline-block';
+                        }
+                        this.uiManager.showNotification('Background image uploaded!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    this.uiManager.showNotification('Please select a valid image file', 'error');
+                }
+            });
+        }
+
+        if (removeBackgroundBtn) {
+            removeBackgroundBtn.addEventListener('click', () => {
+                this.settingsManager.set('backgroundImage', '');
+                this.applyBackgroundImage('');
+                removeBackgroundBtn.style.display = 'none';
+                if (backgroundImageInput) {
+                    backgroundImageInput.value = '';
+                }
+                this.uiManager.showNotification('Background image removed', 'info');
+            });
+        }
+
         // Test buttons
         const testMicrophoneToggle = document.getElementById('testMicrophoneToggle');
         if (testMicrophoneToggle) {
@@ -593,6 +649,15 @@ class ProximityApp {
             resetSettingsBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to reset all settings to defaults?')) {
                     this.settingsManager.reset();
+                    this.applyBackgroundImage('');
+                    const removeBtn = document.getElementById('removeBackgroundBtn');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                    const backgroundInput = document.getElementById('backgroundImage');
+                    if (backgroundInput) {
+                        backgroundInput.value = '';
+                    }
                     this.uiManager.showNotification('Settings reset to defaults', 'success');
                 }
             });
@@ -1168,6 +1233,25 @@ class ProximityApp {
             this.uiManager.showNotification('Playing test sound...', 'info');
         } catch (error) {
             this.uiManager.showNotification('Failed to play test sound', 'error');
+        }
+    }
+
+    applyBackgroundImage(imageData) {
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+            if (imageData) {
+                appContainer.style.backgroundImage = `url(${imageData})`;
+                appContainer.style.backgroundSize = 'cover';
+                appContainer.style.backgroundPosition = 'center';
+                appContainer.style.backgroundRepeat = 'no-repeat';
+                appContainer.style.backgroundAttachment = 'fixed';
+            } else {
+                appContainer.style.backgroundImage = '';
+                appContainer.style.backgroundSize = '';
+                appContainer.style.backgroundPosition = '';
+                appContainer.style.backgroundRepeat = '';
+                appContainer.style.backgroundAttachment = '';
+            }
         }
     }
 

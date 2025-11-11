@@ -12,7 +12,8 @@ export class SettingsManager {
             deafenHotkey: 'Ctrl+D',
             audioInputDevice: '',
             audioOutputDevice: '',
-            muteWhileMoving: false
+            muteWhileMoving: false,
+            backgroundImage: ''
         };
         this.storageKey = 'proximity-settings';
     }
@@ -68,7 +69,8 @@ export class SettingsManager {
             deafenHotkey: 'Ctrl+D',
             audioInputDevice: '',
             audioOutputDevice: '',
-            muteWhileMoving: false
+            muteWhileMoving: false,
+            backgroundImage: ''
         };
         this.save();
         this.applyToUI();

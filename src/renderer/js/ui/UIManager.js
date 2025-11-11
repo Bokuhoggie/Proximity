@@ -451,18 +451,22 @@ export class UIManager {
         const participant = document.createElement('div');
         participant.className = 'voice-participant';
         participant.id = `voice-participant-${userId}-${channelKey}`;
-        
+        // Add data attributes for easier querying
+        participant.setAttribute('data-user-id', userId);
+        participant.setAttribute('data-username', username);
+        participant.setAttribute('data-user-color', userColor);
+
         const micStatus = document.createElement('div');
         micStatus.className = 'mic-status';
-        
+
         const avatar = document.createElement('span');
         avatar.className = 'participant-avatar';
         avatar.textContent = this.getColorEmoji(userColor);
-        
+
         const name = document.createElement('span');
         name.textContent = username;
         name.style.fontWeight = isSelf ? 'bold' : 'normal';
-        
+
         participant.appendChild(micStatus);
         participant.appendChild(avatar);
         participant.appendChild(name);
