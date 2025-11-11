@@ -556,9 +556,9 @@ class ProximityApp {
         }
 
         // Test buttons
-        const testMicrophoneBtn = document.getElementById('testMicrophone');
-        if (testMicrophoneBtn) {
-            testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
+        const testMicrophoneToggle = document.getElementById('testMicrophoneToggle');
+        if (testMicrophoneToggle) {
+            testMicrophoneToggle.addEventListener('click', () => this.toggleMicrophoneTest());
         }
 
         const testOutputButton = document.getElementById('testOutputButton');
@@ -1049,22 +1049,17 @@ class ProximityApp {
         }
     }
 
-    async testMicrophone() {
+    async toggleMicrophoneTest() {
         try {
             if (!this.audioManager.isInitialized()) {
                 await this.audioManager.initialize();
             }
 
-            await this.audioManager.testMicrophone();
-            this.uiManager.showNotification('Microphone test - speak now! 🎤', 'info');
-
-            setTimeout(() => {
-                this.uiManager.showNotification('Microphone test complete!', 'success');
-            }, 10000);
+            await this.audioManager.toggleMicrophoneMonitor();
 
         } catch (error) {
-            console.error('Error testing microphone:', error);
-            this.uiManager.showNotification('Failed to test microphone: ' + error.message, 'error');
+            console.error('Error toggling microphone test:', error);
+            this.uiManager.showNotification('Failed to toggle microphone test: ' + error.message, 'error');
         }
     }
 

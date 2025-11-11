@@ -464,27 +464,27 @@ class AudioManager {
 
     async testOutput() {
         try {
-            console.log('🔊 Testing audio output...');
-            
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 440;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
-            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
-            
-            setTimeout(() => audioContext.close(), 1000);
-            
+            console.log('🔊 Testing audio output on device:', this.currentOutputDevice || 'default');
+
+            // Use audio element instead of AudioContext so we can setSinkId
+            const audio = new Audio();
+
+            // Create a simple beep using data URI
+            const beepDataURI = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug83+2Y44CRlkuezolVMNDFCl4fG5ZR4FNo/V8Mx9LwUjdcTw3Y9BCRNdsujsq1gSDEae3/K+biEGLoPO/tmOOAkZZLns6JVTDQxQpeHxuWUeBTaP1fDMfS8FI3XE8N2PQQkTXbLo7KtYEgxGnt/yvm4hBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug87+2Y44CRlkuezolVMNDFCl4fG5ZR4FNo/V8Mx9LwUjdcTw3Y9BCRNdsujsq1gSDEae3/K+biEGLoPO/tmOOAkZZLns6JVTDQxQpeHxuWUeBTaP1fDMfS8FI3XE8N2PQQkTXbLo7KtYEgxGnt/yvm4hBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug87+2Y44CRlkuezolVMNDFCl4fG5ZR4FNo/V8Mx9LwUjdcTw3Y9BCRNdsujsq1gSDEae3/K+biEGLoPO/tmOOAkZZLns6JVTDQxQpeHxuWUeBTaP1fDMfS8FI3XE8N2PQQkTXbLo7KtYEgxGnt/yvm4hBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug87+2Y44CRlkuezolVMNDFCl4fG5ZR4FNo/V8Mx9LwUjdcTw3Y9BCRNdsujsq1gSDEae3/K+biEGLoPO/tmOOAkZZLns6JVTDQxQpeHxuWUeBTaP1fDMfS8FI3XE8N2PQQkTXbLo7KtYEgxGnt/yvm4hBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug87+2Y44CRlkuezolVMNDFCl4fG5ZR4FNo/V8Mx9LwUjdcTw3Y9BCRNdsujsq1gSDEae3/K+biEGLoPO/tmOOAkZZLns6JVTDQxQpeHxuWUeBTaP1fDMfS8FI3XE8N2PQQkTXbLo7KtYEgxGnt/yvm4hBi6Dzv7ZjjgJGWS57OiVUw0MUKXh8bllHgU2j9XwzH0vBSN1xPDdj0EJE12y6OyrWBIMRp7f8r5uIQYug87+';
+            audio.src = beepDataURI;
+
+            // Set the output device if available
+            if (this.currentOutputDevice && typeof audio.setSinkId === 'function') {
+                console.log('🔊 Setting output to:', this.currentOutputDevice);
+                await audio.setSinkId(this.currentOutputDevice);
+            } else {
+                console.log('🔊 Using default output device');
+            }
+
+            audio.volume = 0.5;
+            await audio.play();
+
+            console.log('✅ Test sound played');
         } catch (error) {
             console.error('❌ Error playing test audio:', error);
             throw error;
@@ -583,6 +583,69 @@ class AudioManager {
             
         } catch (error) {
             console.error('❌ Error testing microphone:', error);
+            throw error;
+        }
+    }
+
+    async toggleMicrophoneMonitor() {
+        try {
+            const toggleBtn = document.getElementById('testMicrophoneToggle');
+            const levelFill = document.getElementById('persistentMicLevelFill');
+            const volumeLevel = document.getElementById('persistentVolumeLevel');
+
+            if (!this.persistentVisualizerActive) {
+                // Start monitoring
+                console.log('🎤 Starting microphone monitor...');
+
+                if (!this.initialized) {
+                    await this.initialize();
+                }
+
+                this.persistentVisualizerActive = true;
+
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Stop Monitoring';
+                    toggleBtn.classList.remove('secondary');
+                    toggleBtn.classList.add('danger');
+                }
+
+                // Create callback for persistent visualizer
+                this.persistentVisualizerCallback = (volume, frequencyData) => {
+                    if (levelFill && volumeLevel) {
+                        levelFill.style.width = `${volume}%`;
+                        volumeLevel.textContent = `${Math.round(volume)}%`;
+                    }
+                };
+
+                this.addVolumeCallback(this.persistentVisualizerCallback);
+
+            } else {
+                // Stop monitoring
+                console.log('🛑 Stopping microphone monitor...');
+
+                this.persistentVisualizerActive = false;
+
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Test Microphone';
+                    toggleBtn.classList.remove('danger');
+                    toggleBtn.classList.add('secondary');
+                }
+
+                if (this.persistentVisualizerCallback) {
+                    this.removeVolumeCallback(this.persistentVisualizerCallback);
+                    this.persistentVisualizerCallback = null;
+                }
+
+                // Reset visualizer
+                if (levelFill && volumeLevel) {
+                    levelFill.style.width = '0%';
+                    volumeLevel.textContent = '0%';
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ Error toggling microphone monitor:', error);
+            this.persistentVisualizerActive = false;
             throw error;
         }
     }
@@ -2376,7 +2439,7 @@ class UIManager {
 
     switchPage(pageName) {
         console.log('Switching to page:', pageName);
-        
+
         // Update navigation
         this.elements.navItems.forEach(item => {
             item.classList.toggle('active', item.dataset.page === pageName);
@@ -2391,6 +2454,9 @@ class UIManager {
         if (pageName === 'hub') {
             document.getElementById('server-view-page').classList.add('active');
         }
+
+        // CRITICAL: Emit page-change event so app.js handlePageChange() is called
+        this.emit('page-change', pageName);
     }
 
     showServerView(server) {
@@ -2718,6 +2784,10 @@ class UIManager {
     }
 
     async populateAudioDevices() {
+        console.log('🔧 populateAudioDevices() called');
+        console.log('🔧 Input select exists:', !!this.elements.audioDeviceSelect);
+        console.log('🔧 Output select exists:', !!this.elements.audioOutputDeviceSelect);
+
         if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) {
             console.error('❌ Audio device select elements not found!');
             return;
@@ -2727,12 +2797,15 @@ class UIManager {
             // Request microphone permission first to get device labels
             let stream = null;
             try {
+                console.log('🎤 Requesting mic permission...');
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log('✅ Got mic permission');
             } catch (permError) {
-                console.warn('⚠️ Microphone permission denied, device labels may not be available');
+                console.warn('⚠️ Microphone permission denied');
             }
 
             // Enumerate devices
+            console.log('📋 Enumerating devices...');
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
@@ -2740,27 +2813,41 @@ class UIManager {
             console.log(`🎙️ Found ${audioInputs.length} input(s) and ${audioOutputs.length} output(s)`);
 
             // Populate inputs
+            console.log('📝 Populating input select...');
             this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
             audioInputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Microphone ${index + 1}`;
                 this.elements.audioDeviceSelect.appendChild(option);
+                console.log(`  Added: ${option.textContent}`);
             });
 
             // Populate outputs
+            console.log('📝 Populating output select...');
             this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
             audioOutputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Speaker ${index + 1}`;
                 this.elements.audioOutputDeviceSelect.appendChild(option);
+                console.log(`  Added: ${option.textContent}`);
             });
 
             // Stop the temporary stream
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
+
+            console.log('🔄 Forcing re-render...');
+            // CRITICAL: Force re-render to make options visible (Electron quirk)
+            this.elements.audioDeviceSelect.style.display = 'none';
+            this.elements.audioOutputDeviceSelect.style.display = 'none';
+            setTimeout(() => {
+                this.elements.audioDeviceSelect.style.display = '';
+                this.elements.audioOutputDeviceSelect.style.display = '';
+                console.log('✅ Re-render complete, devices should be visible');
+            }, 10);
 
             console.log('✅ Audio devices populated');
         } catch (error) {
@@ -3484,9 +3571,9 @@ class ProximityApp {
         }
 
         // Test buttons
-        const testMicrophoneBtn = document.getElementById('testMicrophone');
-        if (testMicrophoneBtn) {
-            testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
+        const testMicrophoneToggle = document.getElementById('testMicrophoneToggle');
+        if (testMicrophoneToggle) {
+            testMicrophoneToggle.addEventListener('click', () => this.toggleMicrophoneTest());
         }
 
         const testOutputButton = document.getElementById('testOutputButton');
@@ -3977,22 +4064,17 @@ class ProximityApp {
         }
     }
 
-    async testMicrophone() {
+    async toggleMicrophoneTest() {
         try {
             if (!this.audioManager.isInitialized()) {
                 await this.audioManager.initialize();
             }
 
-            await this.audioManager.testMicrophone();
-            this.uiManager.showNotification('Microphone test - speak now! 🎤', 'info');
-
-            setTimeout(() => {
-                this.uiManager.showNotification('Microphone test complete!', 'success');
-            }, 10000);
+            await this.audioManager.toggleMicrophoneMonitor();
 
         } catch (error) {
-            console.error('Error testing microphone:', error);
-            this.uiManager.showNotification('Failed to test microphone: ' + error.message, 'error');
+            console.error('Error toggling microphone test:', error);
+            this.uiManager.showNotification('Failed to toggle microphone test: ' + error.message, 'error');
         }
     }
 
