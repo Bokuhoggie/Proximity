@@ -237,7 +237,27 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Chat is now handled by Matrix Protocol - no server-side chat handlers needed
+    // Simple in-memory chat (Matrix integration paused - guest registration disabled)
+    socket.on('send-chat-message', (data) => {
+        const { message } = data;
+        const user = users.get(socket.id);
+
+        if (user && message) {
+            const chatMessage = {
+                id: `${socket.id}-${Date.now()}`,
+                userId: socket.id,
+                username: user.username,
+                userColor: user.userColor,
+                message,
+                timestamp: Date.now()
+            };
+
+            console.log(`💬 ${user.username}: ${message.substring(0, 50)}`);
+
+            // Broadcast to all clients
+            io.emit('chat-message', chatMessage);
+        }
+    });
 
     // Handle user status change
     socket.on('status-change', (data) => {
@@ -324,4 +344,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { server, io, redis };
+module.exports = { server, io };

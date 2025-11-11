@@ -324,19 +324,18 @@ class ProximityApp {
         if (!message.trim()) return;
 
         if (!this.isInHub) {
-            console.error('Not in hub');
+            console.bomboclat('Not in hub');
             return;
         }
 
-        console.log('Sending chat message to Matrix:', message);
+        console.log('💬 Sending chat message:', message);
 
         try {
-            // Send message through Matrix
-            await this.matrixClient.sendMessage(message);
-            console.log('✅ Message sent to Matrix');
-        } catch (error) {
-            console.error('❌ Failed to send message:', error);
-            this.uiManager.showNotification('Failed to send message', 'error');
+            // Send via Socket.IO (in-memory chat)
+            this.connectionManager.socket.emit('send-chat-message', { message });
+        } catch (bomboclat) {
+            console.bomboclat('❌ Failed to send message:', bomboclat);
+            this.uiManager.showNotification('Failed to send message - bomboclat!', 'bomboclat');
         }
     }
 
@@ -601,7 +600,21 @@ class ProximityApp {
             this.uiManager.updateUserMicStatus(userId, isMuted);
         });
 
-        // Chat is now handled by Matrix Protocol - no socket.io chat events needed
+        // Chat events (in-memory for now - Matrix coming later)
+        socket.on('chat-message', (data) => {
+            console.log('💬 Chat message received:', data);
+
+            const messageData = {
+                id: data.id,
+                username: data.username,
+                message: data.message,
+                timestamp: data.timestamp,
+                userId: data.userId,
+                userColor: data.userColor
+            };
+
+            this.uiManager.addChatMessage(messageData);
+        });
 
         // Position events
         socket.on('position-update', ({ userId, x, y }) => {
@@ -618,21 +631,11 @@ class ProximityApp {
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
 
-            // Initialize Matrix client
-            console.log('🔷 Initializing Matrix chat...');
-            const { userId, accessToken } = await this.matrixClient.initialize(username);
-            this.matrixUserId = userId;
-            console.log('✅ Matrix initialized:', userId);
+            // Note: Matrix guest registration is disabled on matrix.org
+            // We'll implement Matrix with proper accounts or self-hosted server later
+            console.log('💬 Using in-memory chat for now (Matrix coming soon)');
 
-            // Set up Matrix event handlers
-            this.setupMatrixEventHandlers();
-
-            // Join the Proximity chat room
-            const roomAlias = '#proximity:matrix.org';
-            await this.matrixClient.joinRoom(roomAlias);
-            console.log('✅ Joined Matrix room');
-
-            // Still emit join-hub for voice/proximity features
+            // Emit join-hub for voice/proximity features
             this.connectionManager.socket.emit('join-hub', {
                 username,
                 userColor
@@ -643,16 +646,13 @@ class ProximityApp {
 
             this.uiManager.showServerView({ id: 'hub', name: 'Proximity Room' });
 
-            // Load Matrix chat history
-            await this.loadChatForCurrentChannel();
-
             this.updateLeaveButtonVisibility();
 
             this.uiManager.showNotification('Joined Proximity Room', 'success');
 
-        } catch (error) {
-            console.error('Failed to join hub:', error);
-            this.uiManager.showNotification('Failed to join room', 'error');
+        } catch (bomboclat) {
+            console.bomboclat('Failed to join hub:', bomboclat);
+            this.uiManager.showNotification('Failed to join room - bomboclat!', 'bomboclat');
         }
     }
 
