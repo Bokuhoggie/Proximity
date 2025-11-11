@@ -1,3 +1,8 @@
+/* ============================================================================
+   DISPLAYMEISTER - Universal Layout & Theme System
+   Rules all pages with consistent display, theming, and typography
+   ============================================================================ */
+
 /* Modern Purple-Dark Grey Theme */
 * {
     margin: 0;
@@ -6,6 +11,8 @@
 }
 
 :root {
+    /* ===== DISPLAYMEISTER THEME PALETTE ===== */
+
     /* Purple-Dark Grey Palette */
     --primary-purple: #8B5CF6;
     --secondary-purple: #A78BFA;
@@ -44,15 +51,56 @@
     --accent-pink: #EC4899;
     --accent-indigo: #6366F1;
     --accent-cyan: #06B6D4;
+
+    /* ===== DISPLAYMEISTER TYPOGRAPHY ===== */
+    --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;     /* 18px */
+    --font-size-xl: 1.25rem;      /* 20px */
+    --font-size-2xl: 1.5rem;      /* 24px */
+    --font-size-3xl: 1.875rem;    /* 30px */
+    --font-size-4xl: 2.25rem;     /* 36px */
+
+    /* ===== DISPLAYMEISTER SPACING ===== */
+    --spacing-xs: 0.25rem;   /* 4px */
+    --spacing-sm: 0.5rem;    /* 8px */
+    --spacing-md: 1rem;      /* 16px */
+    --spacing-lg: 1.5rem;    /* 24px */
+    --spacing-xl: 2rem;      /* 32px */
+    --spacing-2xl: 3rem;     /* 48px */
+    --spacing-3xl: 4rem;     /* 64px */
+
+    /* ===== DISPLAYMEISTER LAYOUT ===== */
+    --sidebar-width: 280px;
+    --header-height: auto;
+    --content-max-width: none; /* Full width by default */
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+}
+
+/* ===== DISPLAYMEISTER BASE LAYOUT ===== */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: var(--font-display);
     background: var(--bg-darkest);
     color: var(--text-primary);
-    height: 100vh;
-    overflow: hidden;
+    font-size: var(--font-size-base);
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .app-container {
@@ -179,11 +227,14 @@ body {
     overflow: hidden;
 }
 
+/* DISPLAYMEISTER PAGE SYSTEM - All pages fill viewport */
 .page {
     display: none;
     flex: 1;
     flex-direction: column;
+    width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 .page.active {
@@ -727,11 +778,12 @@ body {
     gap: 0.5rem;
 }
 
-/* Map Page */
+/* DISPLAYMEISTER PAGE HEADER - Consistent across all pages */
 .page-header {
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
     border-bottom: 1px solid var(--border-dark);
     background: var(--bg-darker);
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .page-header h2 {
@@ -904,12 +956,17 @@ body {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* Settings Page */
+/* Settings Page - DISPLAYMEISTER COMPLIANT */
 .settings-section {
     flex: 1;
-    padding: 2rem;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-xl);
     overflow-y: auto;
-    max-width: 800px;
+    /* Removed max-width to allow full-width display */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
 }
 
 .setting-group {

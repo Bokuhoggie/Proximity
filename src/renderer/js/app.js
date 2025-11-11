@@ -535,9 +535,9 @@ class ProximityApp {
         }
 
         // Test buttons
-        const testMicrophoneBtn = document.getElementById('testMicrophone');
-        if (testMicrophoneBtn) {
-            testMicrophoneBtn.addEventListener('click', () => this.testMicrophone());
+        const testMicrophoneToggle = document.getElementById('testMicrophoneToggle');
+        if (testMicrophoneToggle) {
+            testMicrophoneToggle.addEventListener('click', () => this.toggleMicrophoneTest());
         }
 
         const testOutputButton = document.getElementById('testOutputButton');
@@ -1028,22 +1028,17 @@ class ProximityApp {
         }
     }
 
-    async testMicrophone() {
+    async toggleMicrophoneTest() {
         try {
             if (!this.audioManager.isInitialized()) {
                 await this.audioManager.initialize();
             }
 
-            await this.audioManager.testMicrophone();
-            this.uiManager.showNotification('Microphone test - speak now! 🎤', 'info');
-
-            setTimeout(() => {
-                this.uiManager.showNotification('Microphone test complete!', 'success');
-            }, 10000);
+            await this.audioManager.toggleMicrophoneMonitor();
 
         } catch (error) {
-            console.error('Error testing microphone:', error);
-            this.uiManager.showNotification('Failed to test microphone: ' + error.message, 'error');
+            console.error('Error toggling microphone test:', error);
+            this.uiManager.showNotification('Failed to toggle microphone test: ' + error.message, 'error');
         }
     }
 
@@ -1075,34 +1070,22 @@ class ProximityApp {
         }
     }
 
-    // Settings Modal
+    // Settings - Navigate to settings page instead of modal
     setupSettingsModal() {
         const settingsButton = document.getElementById('settingsButton');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const backFromSettings = document.getElementById('backFromSettings');
 
         if (settingsButton) {
             settingsButton.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'flex';
-                }
+                // Navigate to settings page instead of opening modal
+                this.uiManager.switchPage('settings');
             });
         }
 
-        if (closeSettingsBtn) {
-            closeSettingsBtn.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
-            });
-        }
-
-        // Close on backdrop click
-        if (settingsModal) {
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
+        if (backFromSettings) {
+            backFromSettings.addEventListener('click', () => {
+                // Go back to server view
+                this.uiManager.switchPage('server-view');
             });
         }
     }

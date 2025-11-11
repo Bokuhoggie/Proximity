@@ -1,6 +1,6 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 10, 2025 - 10:15 AM
+**Last Updated:** November 10, 2025 - 8:30 PM
 
 ## 🔴 Critical Issues
 
@@ -26,35 +26,38 @@
 ---
 
 ### 1. Audio Device Selection Not Working
-**Status:** Open
+**Status:** 🔍 DIAGNOSED - Ready to Fix
 **Priority:** High
 **Reported:** Nov 10, 2025 10:03 AM
+**Diagnosed:** Nov 10, 2025 8:30 PM
 
 **Problem:**
-- Audio device dropdowns are not populated with devices
-- Cannot see microphone or speaker options
-- Settings page shows "Select Audio Device" but no actual devices listed
+- Users cannot change their audio input/output devices
+- Device selection dropdowns exist and are populated by UIManager
+- But changing devices doesn't actually work in practice
 
-**Expected Behavior:**
-- Dropdown should list all available audio input devices
-- Dropdown should list all available audio output devices
-- User can select and switch devices
+**Root Cause Identified:**
+1. ✅ **Device enumeration is working** - `UIManager.populateAudioDevices()` correctly calls `navigator.mediaDevices.enumerateDevices()` and populates both dropdowns (line 647-698)
+2. ✅ **HTML elements exist** - Both `#audioDevice` (input) and `#audioOutputDevice` (output) exist in settings modal
+3. ❌ **Event listeners are incomplete** - `app.js` has event listener for input device change (line 474-481) but implementation needs verification
+4. ❌ **No output device change handler** - Missing event listener for `#audioOutputDevice` in app.js
+5. ⚠️ **AudioManager methods exist** but may need testing:
+   - `changeInputDevice(deviceId)` - Lines 328-382 in AudioManager.js
+   - `changeOutputDevice(deviceId)` - Lines 384-410 in AudioManager.js
 
 **Affected Files:**
-- `src/renderer/js/settings/SettingsManager.js` - Settings UI management
-- `src/renderer/js/audio/AudioManager.js` - Audio device enumeration
-- `src/renderer/index.html:186-197` - Audio device select elements
-- `src/main/main.js:62-70` - IPC handlers for device management (TODO stubs)
+- `src/renderer/js/ui/UIManager.js:647-698` - Device enumeration (WORKING)
+- `src/renderer/js/app.js:474-481` - Input device change listener (EXISTS)
+- `src/renderer/js/app.js` - Missing output device change listener (NEEDED)
+- `src/renderer/js/audio/AudioManager.js:328-410` - Change device methods (NEED TESTING)
+- `src/renderer/index.html:186-196` - Device select dropdowns (EXIST)
 
-**Root Cause:**
-- `AudioManager.js` likely not enumerating devices properly
-- Devices not being passed to Settings UI
-- IPC handlers in main.js are TODO stubs, not implemented
-
-**Debug Steps:**
-1. Check if `navigator.mediaDevices.enumerateDevices()` is being called
-2. Check browser console for permissions errors
-3. Verify IPC communication between renderer and main process
+**Fix Required:**
+1. Add event listener for output device selection in app.js
+2. Verify that input device selection properly calls AudioManager.changeInputDevice()
+3. Ensure settings are saved when devices change
+4. Test that device changes work during active voice chat
+5. Verify device lock functionality doesn't interfere
 
 ---
 
@@ -146,6 +149,60 @@ socket.on('message-deleted', (data) => {
 - Check if server has 'delete-message' handler implemented
 - Verify messageId format matches between client and server
 - Check if 'message-deleted' event is being emitted by server
+
+---
+
+---
+
+### 7. Screen Sharing Feature Missing
+**Status:** 🆕 NEW - Feature Request
+**Priority:** Medium
+**Reported:** Nov 10, 2025 8:30 PM
+
+**Problem:**
+- No screen sharing capability in the app
+- Users want to share their screens during voice chat sessions
+
+**Expected Behavior:**
+- Button to start/stop screen sharing
+- Screen share visible to other users in voice channel
+- Proximity-based volume still applies to voice while sharing screen
+- Ability to select which screen/window to share
+
+**Implementation Requirements:**
+1. **WebRTC Screen Capture:**
+   - Use `navigator.mediaDevices.getDisplayMedia()` for screen capture
+   - Create separate video track for screen sharing
+   - Send screen track via WebRTC peer connections
+
+2. **UI Components Needed:**
+   - Screen share button in voice channel controls
+   - Visual indicator when someone is screen sharing
+   - Screen viewing modal/panel to display shared screen
+   - "Stop sharing" button when actively sharing
+
+3. **Backend Considerations:**
+   - Socket events: `screen-share-started`, `screen-share-stopped`
+   - Signaling for screen share offers/answers
+   - Multiple simultaneous screen shares support?
+
+4. **UX Decisions:**
+   - Should screen share be visible in proximity map?
+   - Picture-in-picture mode for screen share?
+   - Record screen sharing?
+   - Quality/resolution settings?
+
+**Affected Files (New):**
+- `src/renderer/js/audio/AudioManager.js` - Add screen share methods
+- `src/renderer/js/app.js` - Add screen share event handlers
+- `src/renderer/js/ui/UIManager.js` - Add screen share UI
+- `src/renderer/index.html` - Add screen share buttons and modal
+- `src/server/signaling-server.js` - Add screen share socket events
+- `src/renderer/styles.css` - Style screen share components
+
+**References:**
+- [MDN getDisplayMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)
+- WebRTC screen sharing similar to audio peer connections
 
 ---
 

@@ -303,7 +303,7 @@ export class UIManager {
 
     switchPage(pageName) {
         console.log('Switching to page:', pageName);
-        
+
         // Update navigation
         this.elements.navItems.forEach(item => {
             item.classList.toggle('active', item.dataset.page === pageName);
@@ -318,6 +318,9 @@ export class UIManager {
         if (pageName === 'hub') {
             document.getElementById('server-view-page').classList.add('active');
         }
+
+        // CRITICAL: Emit page-change event so app.js handlePageChange() is called
+        this.emit('page-change', pageName);
     }
 
     showServerView(server) {
@@ -645,8 +648,12 @@ export class UIManager {
     }
 
     async populateAudioDevices() {
+        console.log('🔧 populateAudioDevices() called');
+        console.log('🔧 Input select exists:', !!this.elements.audioDeviceSelect);
+        console.log('🔧 Output select exists:', !!this.elements.audioOutputDeviceSelect);
+
         if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) {
-            console.warn('Audio device select elements not found');
+            console.error('❌ Audio device select elements not found!');
             return;
         }
 
@@ -654,44 +661,59 @@ export class UIManager {
             // Request microphone permission first to get device labels
             let stream = null;
             try {
+                console.log('🎤 Requesting mic permission...');
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                console.log('✅ Microphone permission granted for device enumeration');
+                console.log('✅ Got mic permission');
             } catch (permError) {
-                console.warn('⚠️ Microphone permission denied, device labels may not be available:', permError);
+                console.warn('⚠️ Microphone permission denied');
             }
 
-            // Now enumerate devices (labels will be available if permission was granted)
+            // Enumerate devices
+            console.log('📋 Enumerating devices...');
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
 
-            console.log(`Found ${audioInputs.length} audio inputs and ${audioOutputs.length} audio outputs`);
+            console.log(`🎙️ Found ${audioInputs.length} input(s) and ${audioOutputs.length} output(s)`);
 
+            // Populate inputs
+            console.log('📝 Populating input select...');
             this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
-            this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
-
             audioInputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Microphone ${index + 1}`;
                 this.elements.audioDeviceSelect.appendChild(option);
-                console.log(`  Input: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
+                console.log(`  Added: ${option.textContent}`);
             });
 
+            // Populate outputs
+            console.log('📝 Populating output select...');
+            this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
             audioOutputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Speaker ${index + 1}`;
                 this.elements.audioOutputDeviceSelect.appendChild(option);
-                console.log(`  Output: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
+                console.log(`  Added: ${option.textContent}`);
             });
 
-            // Stop the temporary stream used for permission
+            // Stop the temporary stream
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
 
-            console.log('✅ Audio devices populated successfully');
+            console.log('🔄 Forcing re-render...');
+            // CRITICAL: Force re-render to make options visible (Electron quirk)
+            this.elements.audioDeviceSelect.style.display = 'none';
+            this.elements.audioOutputDeviceSelect.style.display = 'none';
+            setTimeout(() => {
+                this.elements.audioDeviceSelect.style.display = '';
+                this.elements.audioOutputDeviceSelect.style.display = '';
+                console.log('✅ Re-render complete, devices should be visible');
+            }, 10);
+
+            console.log('✅ Audio devices populated');
         } catch (error) {
             console.error('❌ Error populating audio devices:', error);
         }
