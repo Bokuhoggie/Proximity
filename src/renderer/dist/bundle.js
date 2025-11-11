@@ -70713,6 +70713,20 @@ class ProximityApp {
                 const userColor = this.settingsManager.get('userColor') || 'purple';
                 this.proximityMap.addUser(this.myUserId, username, true);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
+
+                // Add all existing users in voice channel to the map
+                console.log('🗺️ Adding existing voice channel users to map...');
+                const participants = this.audioManager.peerConnections;
+                participants.forEach((peerConnection, userId) => {
+                    // Find user info from UI
+                    const participantElement = document.querySelector(`[data-user-id="${userId}"]`);
+                    if (participantElement) {
+                        const usernameText = participantElement.textContent || 'User';
+                        const audioElement = document.getElementById(`audio-${userId}`);
+                        console.log(`📍 Adding ${usernameText} (${userId}) to map`);
+                        this.proximityMap.addUser(userId, usernameText, false, audioElement);
+                    }
+                });
             }
 
             // Setup modal controls
