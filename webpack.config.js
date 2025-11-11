@@ -33,6 +33,7 @@ module.exports = {
       "stream": false,
       "buffer": require.resolve('buffer/'),
       "process": require.resolve('process/browser'),
+      "events": require.resolve('events/'),
       "path": false,
       "fs": false,
       "os": false,
