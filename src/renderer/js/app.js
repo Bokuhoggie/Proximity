@@ -601,56 +601,7 @@ class ProximityApp {
             this.uiManager.updateUserMicStatus(userId, isMuted);
         });
 
-        // Chat events
-        // Listen for chat history from server
-        socket.on('chat-history', ({ channelId, messages }) => {
-            console.log('📜 Chat history received:', messages.length, 'messages');
-
-            // Clear and reload messages
-            const chatMessages = document.getElementById('chatMessages');
-            if (chatMessages) {
-                chatMessages.innerHTML = `
-                    <div class="welcome-message">
-                        <p>Welcome to general chat!</p>
-                    </div>
-                `;
-
-                messages.forEach(msg => {
-                    const messageData = {
-                        id: msg.id,
-                        username: msg.username,
-                        message: msg.content || msg.message,
-                        timestamp: msg.timestamp,
-                        userId: msg.userId,
-                        userColor: msg.userColor
-                    };
-                    this.uiManager.addChatMessage(messageData);
-                });
-            }
-        });
-
-        socket.on('chat-message', (data) => {
-            console.log('Chat message received:', data);
-
-            const messageData = {
-                id: data.id,
-                username: data.username,
-                message: data.content || data.message, // Support both formats
-                timestamp: data.timestamp,
-                userId: data.userId,
-                userColor: data.userColor
-            };
-
-            this.uiManager.addChatMessage(messageData);
-        });
-
-        socket.on('message-deleted', (data) => {
-            console.log('Message deleted:', data);
-            const { messageId } = data;
-
-            // Just remove from UI - server handles persistence
-            this.uiManager.removeChatMessage(messageId);
-        });
+        // Chat is now handled by Matrix Protocol - no socket.io chat events needed
 
         // Position events
         socket.on('position-update', ({ userId, x, y }) => {

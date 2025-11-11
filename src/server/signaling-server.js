@@ -2,8 +2,6 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 
-const Redis = require('ioredis');
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -16,12 +14,6 @@ const io = socketIO(server, {
 
 const PORT = process.env.PORT || 3000;
 
-// Connect to Redis
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
-redis.on('connect', () => console.log('✅ Connected to Redis'));
-redis.on('error', (err) => console.error('❌ Redis Connection Error', err));
-
-
 // Store connected users and their states
 const users = new Map();
 const hubUsers = new Set();
@@ -31,13 +23,10 @@ const voiceChannels = new Map(); // channelId -> Set of userIds
 const VOICE_CHANNEL = 'voice';
 voiceChannels.set(VOICE_CHANNEL, new Set());
 
-// Chat channel
-const CHAT_CHANNEL = 'general';
-
 console.log('🚀 Proximity Signaling Server starting...');
 console.log(`📡 Port: ${PORT}`);
 console.log(`🔊 Voice Channel: ${VOICE_CHANNEL}`);
-console.log(`💬 Text Channel: ${CHAT_CHANNEL}`);
+console.log(`💬 Chat: Matrix Protocol`);
 
 io.on('connection', (socket) => {
     console.log(`✅ User connected: ${socket.id}`);
@@ -248,74 +237,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle chat messages
-    socket.on('send-chat-message', async (data) => {
-        const { content } = data;
-        const user = users.get(socket.id);
-
-        if (user && content) {
-            const message = {
-                id: `${socket.id}-${Date.now()}`,
-                userId: socket.id,
-                username: user.username,
-                userColor: user.userColor,
-                content,
-                timestamp: Date.now(),
-                channelId: CHAT_CHANNEL
-            };
-
-            // Store message in Redis
-            await redis.lpush(`chat:${CHAT_CHANNEL}`, JSON.stringify(message));
-
-            console.log(`💬 ${user.username}: ${content.substring(0, 50)}`);
-
-            // Broadcast message to all connected clients
-            io.emit('chat-message', message);
-        }
-    });
-
-    // Handle message deletion
-    socket.on('delete-message', async (data) => {
-        const { messageId } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            // Find the message to be deleted
-            const messages = await redis.lrange(`chat:${CHAT_CHANNEL}`, 0, -1);
-            let messageToDelete = null;
-            let messageIndex = -1;
-
-            const parsedMessages = messages.map(m => JSON.parse(m));
-
-            for (let i = 0; i < parsedMessages.length; i++) {
-                if (parsedMessages[i].id === messageId) {
-                    messageToDelete = parsedMessages[i];
-                    messageIndex = i;
-                    break;
-                }
-            }
-
-            if (messageToDelete && messageToDelete.userId === user.id) {
-                // To "delete" a message from a list, we set a temporary value and then remove it.
-                const placeholder = `__DELETED__${Date.now()}`;
-                await redis.lset(`chat:${CHAT_CHANNEL}`, messageIndex, placeholder);
-                await redis.lrem(`chat:${CHAT_CHANNEL}`, 1, placeholder);
-
-
-                console.log(`🗑️ Message deleted: ${messageId}`);
-
-                // Notify all clients
-                io.emit('message-deleted', { messageId, channelId: CHAT_CHANNEL });
-            }
-        }
-    });
-
-    // Handle requesting chat history
-    socket.on('request-chat-history', async () => {
-        const messagesJSON = await redis.lrange(`chat:${CHAT_CHANNEL}`, 0, -1);
-        const messages = messagesJSON.map(m => JSON.parse(m)).reverse(); // reverse to show oldest first
-        socket.emit('chat-history', { channelId: CHAT_CHANNEL, messages: messages });
-    });
+    // Chat is now handled by Matrix Protocol - no server-side chat handlers needed
 
     // Handle user status change
     socket.on('status-change', (data) => {
