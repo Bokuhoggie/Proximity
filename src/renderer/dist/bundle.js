@@ -2718,15 +2718,8 @@ class UIManager {
     }
 
     async populateAudioDevices() {
-        console.log('🔍 populateAudioDevices called');
-        console.log('🔍 audioDeviceSelect element:', this.elements.audioDeviceSelect);
-        console.log('🔍 audioOutputDeviceSelect element:', this.elements.audioOutputDeviceSelect);
-
         if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) {
             console.error('❌ Audio device select elements not found!');
-            console.log('Checking if elements exist in DOM:');
-            console.log('  audioDevice:', document.getElementById('audioDevice'));
-            console.log('  audioOutputDevice:', document.getElementById('audioOutputDevice'));
             return;
         }
 
@@ -2734,63 +2727,42 @@ class UIManager {
             // Request microphone permission first to get device labels
             let stream = null;
             try {
-                console.log('🎤 Requesting microphone permission for device enumeration...');
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                console.log('✅ Microphone permission granted for device enumeration');
             } catch (permError) {
-                console.warn('⚠️ Microphone permission denied, device labels may not be available:', permError);
+                console.warn('⚠️ Microphone permission denied, device labels may not be available');
             }
 
-            // Now enumerate devices (labels will be available if permission was granted)
-            console.log('📋 Enumerating devices...');
+            // Enumerate devices
             const devices = await navigator.mediaDevices.enumerateDevices();
-            console.log('📋 All devices:', devices);
-
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
 
-            console.log(`✅ Found ${audioInputs.length} audio inputs and ${audioOutputs.length} audio outputs`);
+            console.log(`🎙️ Found ${audioInputs.length} input(s) and ${audioOutputs.length} output(s)`);
 
+            // Populate inputs
             this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
-            this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
-
             audioInputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Microphone ${index + 1}`;
                 this.elements.audioDeviceSelect.appendChild(option);
-                console.log(`  ✅ Added Input: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
 
+            // Populate outputs
+            this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
             audioOutputs.forEach((device, index) => {
                 const option = document.createElement('option');
                 option.value = device.deviceId;
                 option.textContent = device.label || `Speaker ${index + 1}`;
                 this.elements.audioOutputDeviceSelect.appendChild(option);
-                console.log(`  ✅ Added Output: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
 
-            // Stop the temporary stream used for permission
+            // Stop the temporary stream
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
 
-            console.log('✅ Audio devices populated successfully');
-            console.log('📊 Final input select options count:', this.elements.audioDeviceSelect.options.length);
-            console.log('📊 Final output select options count:', this.elements.audioOutputDeviceSelect.options.length);
-
-            // DEBUG: Let's see the actual HTML
-            console.log('📋 Input select HTML:', this.elements.audioDeviceSelect.innerHTML.substring(0, 200));
-            console.log('📋 Output select HTML:', this.elements.audioOutputDeviceSelect.innerHTML.substring(0, 200));
-
-            // Force a re-render by toggling a property
-            this.elements.audioDeviceSelect.style.display = 'none';
-            this.elements.audioOutputDeviceSelect.style.display = 'none';
-            setTimeout(() => {
-                this.elements.audioDeviceSelect.style.display = '';
-                this.elements.audioOutputDeviceSelect.style.display = '';
-                console.log('🔄 Forced re-render of select elements');
-            }, 10);
+            console.log('✅ Audio devices populated');
         } catch (error) {
             console.error('❌ Error populating audio devices:', error);
         }
