@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
         userColor: null,
         isMuted: false,
         position: { x: 400, y: 300 }, // Default center position
+        proximityRange: 100, // Default proximity range
         voiceChannel: null,
         status: 'online'
     });
@@ -132,12 +133,17 @@ io.on('connection', (socket) => {
                         username: u.username,
                         userColor: u.userColor,
                         position: u.position,
+                        proximityRange: u.proximityRange,
                         isMuted: u.isMuted
                     };
                 });
 
-            // Send list of users in channel to the joining user
-            socket.emit('voice-channel-users', usersInChannel);
+            // Send list of users in channel to the joining user, along with their own stored state
+            socket.emit('voice-channel-users', {
+                users: usersInChannel,
+                myPosition: user.position,
+                myProximityRange: user.proximityRange
+            });
 
             // Notify others in the channel about the new user
             socket.to(channelId).emit('user-joined-voice', {
@@ -145,6 +151,7 @@ io.on('connection', (socket) => {
                 username: user.username,
                 userColor: user.userColor,
                 position: user.position,
+                proximityRange: user.proximityRange,
                 isMuted: user.isMuted
             });
 
@@ -237,6 +244,25 @@ io.on('connection', (socket) => {
                     userId: socket.id,
                     x,
                     y
+                });
+            }
+        }
+    });
+
+    // Handle proximity range updates
+    socket.on('proximity-range-update', (data) => {
+        const { range } = data;
+        const user = users.get(socket.id);
+
+        if (user) {
+            user.proximityRange = range;
+            console.log(`📏 ${user.username} updated proximity range to ${range}px`);
+
+            // Broadcast proximity range to users in the same voice channel
+            if (user.voiceChannel) {
+                socket.to(user.voiceChannel).emit('proximity-range-update', {
+                    userId: socket.id,
+                    range
                 });
             }
         }

@@ -240,40 +240,11 @@ class ProximityApp {
         if (modal) {
             modal.style.display = 'flex';
 
-            const canvas = document.getElementById('modalProximityMap');
-            if (canvas && !this.proximityMap) {
-                // Create proximity map if it doesn't exist
-                this.proximityMap = new ProximityMap(canvas, this);
-                this.proximityMap.resizeCanvas();
-
-                // Add current user to map
-                const username = this.settingsManager.get('username') || 'Anonymous';
-                const userColor = this.settingsManager.get('userColor') || 'purple';
-                this.proximityMap.addUser(this.myUserId, username, true);
-                this.proximityMap.updateUserColor(this.myUserId, userColor);
-
-                // Add all existing users in voice channel to the map
-                console.log('🗺️ Adding existing voice channel users to map...');
-                const participants = this.audioManager.peerConnections;
-                participants.forEach((peerConnection, userId) => {
-                    // Find user info from UI using data attribute
-                    const participantElement = document.querySelector(`[data-user-id="${userId}"]`);
-                    if (participantElement) {
-                        const username = participantElement.getAttribute('data-username') || 'User';
-                        const userColor = participantElement.getAttribute('data-user-color') || 'blue';
-                        const audioElement = document.getElementById(`audio-${userId}`);
-                        console.log(`📍 Adding ${username} (${userId}) with color ${userColor} to map`);
-                        this.proximityMap.addUser(userId, username, false, audioElement);
-                        this.proximityMap.updateUserColor(userId, userColor);
-                    } else {
-                        console.warn(`⚠️ Could not find participant element for user ${userId}`);
-                    }
-                });
-
-                // Apply saved background image if any
-                if (this.savedBackgroundImage) {
-                    this.applyBackgroundImage(this.savedBackgroundImage);
-                }
+            // Map should already exist (created in joinVoiceChannel), just show it
+            if (this.proximityMap) {
+                console.log('🗺️ Showing existing proximity map');
+            } else {
+                console.warn('⚠️ Proximity map does not exist yet - this should not happen');
             }
 
             // Setup modal controls
@@ -322,6 +293,10 @@ class ProximityApp {
                 proximityRange.textContent = `${range}px`;
                 if (this.proximityMap) {
                     this.proximityMap.setProximityRange(range);
+                }
+                // Emit range update to server
+                if (this.connectionManager.socket && this.currentVoiceChannel) {
+                    this.connectionManager.socket.emit('proximity-range-update', { range });
                 }
             });
         }
@@ -706,9 +681,14 @@ class ProximityApp {
         });
 
         // Voice channel events
-        socket.on('voice-channel-users', (users) => {
-            console.log('Voice channel users:', users);
-            this.handleVoiceChannelUsers(users);
+        socket.on('voice-channel-users', (data) => {
+            console.log('Voice channel users data:', data);
+            // Handle new format: { users: [], myPosition: {x, y}, myProximityRange: number }
+            const users = data.users || data; // Backward compatibility
+            const myPosition = data.myPosition;
+            const myProximityRange = data.myProximityRange;
+
+            this.handleVoiceChannelUsers(users, myPosition, myProximityRange);
         });
 
         socket.on('user-joined-voice', (user) => {
@@ -786,6 +766,12 @@ class ProximityApp {
             if (this.proximityMap) {
                 this.proximityMap.updateUserPosition(userId, x, y);
             }
+        });
+
+        socket.on('proximity-range-update', ({ userId, range }) => {
+            console.log(`📏 User ${userId} updated proximity range to ${range}px`);
+            // Note: We don't change other users' ranges, but we could visualize it
+            // For now, each user maintains their own range
         });
     }
 
@@ -931,9 +917,29 @@ class ProximityApp {
 
             this.uiManager.addVoiceParticipant(this.myUserId, username, userColor, channelId, true);
 
+            // Create proximity map immediately (even if modal not open yet) for hot sync
+            const canvas = document.getElementById('modalProximityMap');
+            if (canvas && !this.proximityMap) {
+                console.log('🗺️ Creating proximity map (hot mode)...');
+                this.proximityMap = new ProximityMap(canvas, this);
+                this.proximityMap.resizeCanvas();
+
+                // Apply saved background image if any
+                if (this.savedBackgroundImage) {
+                    this.applyBackgroundImage(this.savedBackgroundImage);
+                }
+            }
+
+            // Add current user to map (use saved position if available)
             if (this.proximityMap) {
-                this.proximityMap.addUser(this.myUserId, username, true);
+                const initialPosition = this.savedPosition || undefined;
+                this.proximityMap.addUser(this.myUserId, username, true, null, initialPosition);
                 this.proximityMap.updateUserColor(this.myUserId, userColor);
+
+                // Apply saved proximity range if available
+                if (this.savedProximityRange) {
+                    this.proximityMap.setProximityRange(this.savedProximityRange);
+                }
             }
 
             // Other users will be added via 'voice-channel-users' socket event
@@ -951,8 +957,42 @@ class ProximityApp {
         }
     }
 
-    handleVoiceChannelUsers(users) {
+    handleVoiceChannelUsers(users, myPosition, myProximityRange) {
         console.log('Handling voice channel users:', users);
+        console.log('My stored position:', myPosition);
+        console.log('My stored proximity range:', myProximityRange);
+
+        // Store our saved state to restore after map is created
+        if (myPosition) {
+            this.savedPosition = myPosition;
+        }
+        if (myProximityRange) {
+            this.savedProximityRange = myProximityRange;
+        }
+
+        // Restore our position and range if we already have a map
+        if (this.proximityMap && myPosition) {
+            const myUser = this.proximityMap.users.get(this.myUserId);
+            if (myUser) {
+                console.log(`Restoring my position to:`, myPosition);
+                this.proximityMap.updateUserPosition(this.myUserId, myPosition.x, myPosition.y);
+            }
+        }
+
+        // Restore proximity range in UI
+        if (myProximityRange) {
+            const slider = document.getElementById('modalProximitySlider');
+            const rangeDisplay = document.getElementById('modalProximityRange');
+            if (slider) {
+                slider.value = myProximityRange;
+            }
+            if (rangeDisplay) {
+                rangeDisplay.textContent = `${myProximityRange}px`;
+            }
+            if (this.proximityMap) {
+                this.proximityMap.setProximityRange(myProximityRange);
+            }
+        }
 
         users.forEach(user => {
             // Add user to proximity map with their position

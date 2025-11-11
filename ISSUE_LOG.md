@@ -1,37 +1,38 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 10, 2025 - 11:30 PM
+**Last Updated:** November 11, 2025 - 12:15 AM
 
 ## 🔴 Critical Issues - Active
 
-### Map Sync Issues (NEW)
-**Status:** 🔴 ACTIVE - In Progress
+### Proximity Audio Asymmetry (Testing Required)
+**Status:** 🔍 TESTING - Need User Verification
 **Priority:** Critical
 **Reported:** Nov 10, 2025 11:30 PM
+**Updated:** Nov 11, 2025 12:15 AM
 
-**Problems:**
-1. **Proximity audio only working for one user** - One user can hear spatial audio, the other cannot
-2. **User positions desync on rejoin** - When users leave and rejoin, positions reset/change unexpectedly, making people appear in strange locations
-3. **Map not synced between users** - Maps don't look the same for all users, positions differ
-4. **Background image not uploading** - Custom map background upload feature not working
+**Problem:**
+- Proximity audio only working for one user - one user can hear spatial audio, the other cannot
+- This issue may be related to map sync or audio calculation differences
 
-**Root Causes Identified:**
-- Position sync may only happen on position-update events, not on initial join
-- Map canvas background image applied but not persisting or appearing
-- Proximity audio calculation may differ between clients
-- Server may not be broadcasting positions correctly to all users
+**Recent Fixes Implemented:**
+1. ✅ **Position Persistence** - Server now stores and restores user positions when rejoining
+2. ✅ **Proximity Range Persistence** - Server stores and restores proximity range when rejoining
+3. ✅ **Map Always Active ("Hot Mode")** - Map canvas created immediately when joining voice, processes position updates in background
+4. ✅ **Background Image Upload** - Fixed to apply only to map canvas, not entire app
 
-**Fix Strategy:**
-1. Ensure server sends current positions to all users when someone joins voice channel
-2. Fix background image upload to properly apply to canvas
-3. Verify position-update events are broadcasting to all connected users
-4. Ensure proximity audio calculations are identical on all clients
-5. Add position validation and bounds checking
+**What Changed:**
+- Server now sends `myPosition` and `myProximityRange` to rejoining users
+- Client restores saved position and proximity range from server data
+- Map positions should now be identical for all users
+- Background images persist and apply when map is opened
 
-**Files to Investigate:**
-- `src/server/signaling-server.js` - Position broadcasting logic
-- `src/renderer/js/app.js` - Background image upload, position handling
-- `src/renderer/js/proximity/ProximityMap.js` - Audio proximity calculations
+**Next Step:**
+- User needs to test with buddy to verify proximity audio now works for both users
+- If issue persists, need console logs from both users to diagnose
+
+**Files Modified:**
+- `src/server/signaling-server.js` - Added position/range persistence and broadcast
+- `src/renderer/js/app.js` - Added restoration logic for position and range
 
 ---
 
