@@ -4,6 +4,7 @@ import { UIManager } from './ui/UIManager.js';
 import { AudioManager } from './audio/AudioManager.js';
 import { ProximityMap } from './proximity/ProximityMap.js';
 import { SettingsManager } from './settings/SettingsManager.js';
+import { MatrixClient } from './chat/MatrixClient.js';
 
 // Try Railway first, fallback to localhost for development
 const SERVER_URL = 'https://proximityserver-production.up.railway.app';
@@ -18,12 +19,14 @@ class ProximityApp {
         this.uiManager = new UIManager();
         this.audioManager = new AudioManager();
         this.settingsManager = new SettingsManager();
+        this.matrixClient = new MatrixClient();
         this.proximityMap = null;
 
         // State - simplified to single channel
         this.currentTextChannel = 'general';
         this.currentVoiceChannel = null;
         this.myUserId = null;
+        this.matrixUserId = null;
         this.isInHub = false;
         this.hubUsers = [];
 
@@ -317,7 +320,7 @@ class ProximityApp {
         }
     }
 
-    sendChatMessage(message) {
+    async sendChatMessage(message) {
         if (!message.trim()) return;
 
         if (!this.isInHub) {
@@ -325,23 +328,15 @@ class ProximityApp {
             return;
         }
 
-        const username = this.settingsManager.get('username') || 'Anonymous';
+        console.log('Sending chat message to Matrix:', message);
 
-        console.log('Sending chat message:', message);
-
-        const messageData = {
-            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-            roomId: 'hub',
-            message: message,
-            username: username,
-            channel: 'general',
-            timestamp: Date.now(),
-            userId: this.myUserId
-        };
-
-        // Send message to server (Redis-based persistence)
-        if (this.connectionManager.socket) {
-            this.connectionManager.socket.emit('send-chat-message', messageData);
+        try {
+            // Send message through Matrix
+            await this.matrixClient.sendMessage(message);
+            console.log('✅ Message sent to Matrix');
+        } catch (error) {
+            console.error('❌ Failed to send message:', error);
+            this.uiManager.showNotification('Failed to send message', 'error');
         }
     }
 
@@ -672,6 +667,21 @@ class ProximityApp {
             const username = this.settingsManager.get('username') || 'Anonymous';
             const userColor = this.settingsManager.get('userColor') || 'purple';
 
+            // Initialize Matrix client
+            console.log('🔷 Initializing Matrix chat...');
+            const { userId, accessToken } = await this.matrixClient.initialize(username);
+            this.matrixUserId = userId;
+            console.log('✅ Matrix initialized:', userId);
+
+            // Set up Matrix event handlers
+            this.setupMatrixEventHandlers();
+
+            // Join the Proximity chat room
+            const roomAlias = '#proximity:matrix.org';
+            await this.matrixClient.joinRoom(roomAlias);
+            console.log('✅ Joined Matrix room');
+
+            // Still emit join-hub for voice/proximity features
             this.connectionManager.socket.emit('join-hub', {
                 username,
                 userColor
@@ -682,7 +692,8 @@ class ProximityApp {
 
             this.uiManager.showServerView({ id: 'hub', name: 'Proximity Room' });
 
-            this.loadChatForCurrentChannel();
+            // Load Matrix chat history
+            await this.loadChatForCurrentChannel();
 
             this.updateLeaveButtonVisibility();
 
@@ -694,23 +705,73 @@ class ProximityApp {
         }
     }
 
-    loadChatForCurrentChannel() {
-        console.log('📜 Requesting chat history from server...');
+    async loadChatForCurrentChannel() {
+        console.log('📜 Loading chat history from Matrix...');
 
         // Clear chat first
         const chatMessages = document.getElementById('chatMessages');
         if (chatMessages) {
             chatMessages.innerHTML = `
                 <div class="welcome-message">
-                    <p>Welcome to general chat!</p>
+                    <p>Welcome to Proximity Chat! 🔷 Powered by Matrix</p>
                 </div>
             `;
         }
 
-        // Request chat history from server (Redis-based)
-        if (this.connectionManager.socket) {
-            this.connectionManager.socket.emit('request-chat-history');
+        // Load Matrix chat history
+        try {
+            const messages = await this.matrixClient.getRoomHistory(50);
+            console.log(`📜 Loaded ${messages.length} messages from Matrix`);
+
+            messages.forEach(msg => {
+                this.displayMatrixMessage(msg);
+            });
+        } catch (error) {
+            console.error('Failed to load chat history:', error);
         }
+    }
+
+    setupMatrixEventHandlers() {
+        // Handle new messages
+        this.matrixClient.on('message', (msg) => {
+            console.log('📨 New Matrix message:', msg);
+            this.displayMatrixMessage(msg);
+        });
+
+        // Handle user joined
+        this.matrixClient.on('user-joined', (data) => {
+            console.log('👋 User joined Matrix room:', data.displayName);
+        });
+
+        // Handle user left
+        this.matrixClient.on('user-left', (data) => {
+            console.log('👋 User left Matrix room:', data.userId);
+        });
+
+        // Handle Matrix ready
+        this.matrixClient.on('ready', () => {
+            console.log('✅ Matrix client ready');
+        });
+    }
+
+    displayMatrixMessage(msg) {
+        const messageData = {
+            id: msg.id,
+            username: this.getDisplayNameFromUserId(msg.sender),
+            message: msg.content,
+            timestamp: msg.timestamp,
+            userId: msg.sender,
+            userColor: 'purple' // Default color for now
+        };
+
+        this.uiManager.addChatMessage(messageData);
+    }
+
+    getDisplayNameFromUserId(userId) {
+        // Extract display name from Matrix user ID
+        // Format: @username:homeserver.com -> username
+        const match = userId.match(/@(.+?):/);
+        return match ? match[1] : userId;
     }
 
     async joinVoiceChannel(channelId) {
