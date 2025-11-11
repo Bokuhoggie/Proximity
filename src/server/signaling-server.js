@@ -26,7 +26,7 @@ voiceChannels.set(VOICE_CHANNEL, new Set());
 console.log('🚀 Proximity Signaling Server starting...');
 console.log(`📡 Port: ${PORT}`);
 console.log(`🔊 Voice Channel: ${VOICE_CHANNEL}`);
-console.log(`💬 Chat: Matrix Protocol`);
+console.log(`💬 Chat: Socket.IO (in-memory)`);
 
 io.on('connection', (socket) => {
     console.log(`✅ User connected: ${socket.id}`);
