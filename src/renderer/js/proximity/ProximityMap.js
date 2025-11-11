@@ -33,8 +33,14 @@ export class ProximityMap {
 
     resizeCanvas() {
         const rect = this.canvas.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        // Don't resize if canvas is hidden (0x0) - keep existing dimensions
+        if (rect.width > 0 && rect.height > 0) {
+            this.canvas.width = rect.width;
+            this.canvas.height = rect.height;
+            console.log(`📐 Canvas resized to ${rect.width}x${rect.height}`);
+        } else {
+            console.log(`⚠️ Skipping resize - canvas is hidden (${rect.width}x${rect.height})`);
+        }
     }
 
     setupEventListeners() {
