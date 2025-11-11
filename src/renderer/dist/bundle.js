@@ -70466,8 +70466,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Try Railway first, fallback to localhost for development
-// const SERVER_URL = 'https://proximityserver-production.up.railway.app';
-const SERVER_URL = 'http://localhost:3000'; // Using localhost for dev
+const SERVER_URL = 'https://proximityserver-production.up.railway.app';
 const FALLBACK_URL = 'https://proximityserver-production.up.railway.app';
 
 class ProximityApp {
@@ -70813,6 +70812,50 @@ class ProximityApp {
         });
     }
 
+    // Chat persistence with localStorage
+    saveChatMessage(messageData) {
+        try {
+            const messages = this.loadChatMessages();
+            messages.push(messageData);
+
+            // Keep only last 100 messages to avoid localStorage bloat
+            const recentMessages = messages.slice(-100);
+
+            localStorage.setItem('proximity_chat_messages', JSON.stringify(recentMessages));
+            console.log('💾 Saved message to localStorage');
+        } catch (bomboclat) {
+            console.bomboclat('Failed to save message to localStorage:', bomboclat);
+        }
+    }
+
+    loadChatMessages() {
+        try {
+            const stored = localStorage.getItem('proximity_chat_messages');
+            return stored ? JSON.parse(stored) : [];
+        } catch (bomboclat) {
+            console.bomboclat('Failed to load messages from localStorage:', bomboclat);
+            return [];
+        }
+    }
+
+    clearChatMessages() {
+        try {
+            localStorage.removeItem('proximity_chat_messages');
+            console.log('🗑️ Cleared chat messages from localStorage');
+        } catch (bomboclat) {
+            console.bomboclat('Failed to clear messages:', bomboclat);
+        }
+    }
+
+    restoreChatHistory() {
+        const messages = this.loadChatMessages();
+        console.log(`📜 Restoring ${messages.length} messages from localStorage`);
+
+        messages.forEach(messageData => {
+            this.uiManager.addChatMessage(messageData);
+        });
+    }
+
     setupMapControls() {
         // Proximity slider
         const proximitySlider = document.getElementById('proximitySlider');
@@ -71073,7 +71116,35 @@ class ProximityApp {
                 userColor: data.userColor
             };
 
+            // Save to localStorage for persistence
+            this.saveChatMessage(messageData);
+
             this.uiManager.addChatMessage(messageData);
+        });
+
+        // Receive chat history from server
+        socket.on('chat-history', (messages) => {
+            console.log(`📜 Received ${messages.length} messages from server`);
+
+            // Merge with local messages (prioritize server messages)
+            const localMessages = this.loadChatMessages();
+            const serverMessageIds = new Set(messages.map(m => m.id));
+
+            // Keep local messages that aren't on server
+            const uniqueLocalMessages = localMessages.filter(m => !serverMessageIds.has(m.id));
+
+            // Combine and sort by timestamp
+            const allMessages = [...messages, ...uniqueLocalMessages]
+                .sort((a, b) => a.timestamp - b.timestamp)
+                .slice(-100); // Keep last 100
+
+            // Save merged history to localStorage
+            localStorage.setItem('proximity_chat_messages', JSON.stringify(allMessages));
+
+            // Display messages (only the server ones since local were already restored)
+            messages.forEach(messageData => {
+                this.uiManager.addChatMessage(messageData);
+            });
         });
 
         // Position events
@@ -71105,6 +71176,9 @@ class ProximityApp {
             this.currentTextChannel = 'general';
 
             this.uiManager.showServerView({ id: 'hub', name: 'Proximity Room' });
+
+            // Restore chat history from localStorage
+            this.restoreChatHistory();
 
             this.updateLeaveButtonVisibility();
 
