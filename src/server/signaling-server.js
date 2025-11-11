@@ -2,6 +2,8 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 
+const Redis = require('ioredis');
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -14,6 +16,12 @@ const io = socketIO(server, {
 
 const PORT = process.env.PORT || 3000;
 
+// Connect to Redis
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+redis.on('connect', () => console.log('✅ Connected to Redis'));
+redis.on('error', (err) => console.error('❌ Redis Connection Error', err));
+
+
 // Store connected users and their states
 const users = new Map();
 const hubUsers = new Set();
@@ -23,8 +31,7 @@ const voiceChannels = new Map(); // channelId -> Set of userIds
 const VOICE_CHANNEL = 'voice';
 voiceChannels.set(VOICE_CHANNEL, new Set());
 
-// Store chat messages for single channel
-const chatMessages = [];
+// Chat channel
 const CHAT_CHANNEL = 'general';
 
 console.log('🚀 Proximity Signaling Server starting...');
@@ -242,7 +249,7 @@ io.on('connection', (socket) => {
     });
 
     // Handle chat messages
-    socket.on('send-chat-message', (data) => {
+    socket.on('send-chat-message', async (data) => {
         const { content } = data;
         const user = users.get(socket.id);
 
@@ -257,13 +264,8 @@ io.on('connection', (socket) => {
                 channelId: CHAT_CHANNEL
             };
 
-            // Store message
-            chatMessages.push(message);
-
-            // Keep only last 100 messages
-            if (chatMessages.length > 100) {
-                chatMessages.shift();
-            }
+            // Store message in Redis
+            await redis.lpush(`chat:${CHAT_CHANNEL}`, JSON.stringify(message));
 
             console.log(`💬 ${user.username}: ${content.substring(0, 50)}`);
 
@@ -273,17 +275,32 @@ io.on('connection', (socket) => {
     });
 
     // Handle message deletion
-    socket.on('delete-message', (data) => {
+    socket.on('delete-message', async (data) => {
         const { messageId } = data;
+        const user = users.get(socket.id);
 
-        const messageIndex = chatMessages.findIndex(m => m.id === messageId);
+        if (user) {
+            // Find the message to be deleted
+            const messages = await redis.lrange(`chat:${CHAT_CHANNEL}`, 0, -1);
+            let messageToDelete = null;
+            let messageIndex = -1;
 
-        if (messageIndex !== -1) {
-            const message = chatMessages[messageIndex];
+            const parsedMessages = messages.map(m => JSON.parse(m));
 
-            // Only allow user to delete their own messages
-            if (message.userId === socket.id) {
-                chatMessages.splice(messageIndex, 1);
+            for (let i = 0; i < parsedMessages.length; i++) {
+                if (parsedMessages[i].id === messageId) {
+                    messageToDelete = parsedMessages[i];
+                    messageIndex = i;
+                    break;
+                }
+            }
+
+            if (messageToDelete && messageToDelete.userId === user.id) {
+                // To "delete" a message from a list, we set a temporary value and then remove it.
+                const placeholder = `__DELETED__${Date.now()}`;
+                await redis.lset(`chat:${CHAT_CHANNEL}`, messageIndex, placeholder);
+                await redis.lrem(`chat:${CHAT_CHANNEL}`, 1, placeholder);
+
 
                 console.log(`🗑️ Message deleted: ${messageId}`);
 
@@ -294,8 +311,10 @@ io.on('connection', (socket) => {
     });
 
     // Handle requesting chat history
-    socket.on('request-chat-history', () => {
-        socket.emit('chat-history', { channelId: CHAT_CHANNEL, messages: chatMessages });
+    socket.on('request-chat-history', async () => {
+        const messagesJSON = await redis.lrange(`chat:${CHAT_CHANNEL}`, 0, -1);
+        const messages = messagesJSON.map(m => JSON.parse(m)).reverse(); // reverse to show oldest first
+        socket.emit('chat-history', { channelId: CHAT_CHANNEL, messages: messages });
     });
 
     // Handle user status change
@@ -343,8 +362,9 @@ io.on('connection', (socket) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
     const voiceChannel = voiceChannels.get(VOICE_CHANNEL);
+    const messageCount = await redis.llen(`chat:${CHAT_CHANNEL}`);
     res.json({
         status: 'ok',
         users: users.size,
@@ -354,7 +374,7 @@ app.get('/health', (req, res) => {
             userCount: voiceChannel ? voiceChannel.size : 0
         },
         chatChannel: CHAT_CHANNEL,
-        messageCount: chatMessages.length,
+        messageCount,
         uptime: process.uptime()
     });
 });
@@ -364,17 +384,22 @@ app.get('/', (req, res) => {
     res.send('Proximity Signaling Server is running!');
 });
 
-server.listen(PORT, () => {
-    console.log(`\n✨ Proximity Signaling Server is running on port ${PORT}`);
-    console.log(`📍 Health check: http://localhost:${PORT}/health`);
-    console.log(`🎧 Ready for connections!\n`);
-});
-
 // Graceful shutdown
 process.on('SIGTERM', () => {
     console.log('\n👋 Shutting down gracefully...');
+    redis.quit();
     server.close(() => {
         console.log('✅ Server closed');
         process.exit(0);
     });
 });
+
+if (require.main === module) {
+    server.listen(PORT, () => {
+        console.log(`\n✨ Proximity Signaling Server is running on port ${PORT}`);
+        console.log(`📍 Health check: http://localhost:${PORT}/health`);
+        console.log(`🎧 Ready for connections!\n`);
+    });
+}
+
+module.exports = { server, io, redis };

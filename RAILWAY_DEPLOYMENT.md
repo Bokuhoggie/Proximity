@@ -26,7 +26,16 @@ git push origin main
 4. Select your Proximity repository
 5. Railway will auto-detect it's a Node.js project
 
-## Step 3: Configure Railway
+## Step 3: Provision a Redis Database
+
+To store chat history, you need to add a Redis database to your project.
+
+1. In your Railway project, click "+ New"
+2. Select "Database"
+3. Choose "Add Redis"
+4. Railway will provision a Redis instance and automatically add a `REDIS_URL` environment variable to your project. The server is already configured to use this!
+
+## Step 4: Configure Railway
 
 ### Set Start Command
 
@@ -40,14 +49,13 @@ Railway should auto-detect the start command, but verify:
 
 ### Configure Environment (if needed)
 
-Railway automatically provides a `PORT` environment variable, which the server already uses:
+Railway automatically provides a `PORT` environment variable, which the server already uses. With Redis added, you don't need to do anything else.
 ```javascript
 const PORT = process.env.PORT || 3000;
+const redis = new Redis(process.env.REDIS_URL); // Automatically used
 ```
 
-No additional configuration needed!
-
-## Step 4: Deploy
+## Step 5: Deploy
 
 1. Railway will automatically deploy when you push to your main branch
 2. Wait for deployment to complete (1-2 minutes)
