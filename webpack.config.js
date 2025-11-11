@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -7,8 +8,15 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'src/renderer/dist'),
-    clean: true
+    clean: true,
+    globalObject: 'window'
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser'
+    })
+  ],
   module: {
     rules: [
       {
@@ -23,8 +31,8 @@ module.exports = {
       "util": false,
       "crypto": false,
       "stream": false,
-      "buffer": false,
-      "process": false,
+      "buffer": require.resolve('buffer/'),
+      "process": require.resolve('process/browser'),
       "path": false,
       "fs": false,
       "os": false,

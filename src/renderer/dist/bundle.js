@@ -69945,7 +69945,7 @@ module.exports = require("node:url");
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = global["webpackChunkproximity"] = global["webpackChunkproximity"] || [];
+/******/ 		var chunkLoadingGlobal = window["webpackChunkproximity"] = window["webpackChunkproximity"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();

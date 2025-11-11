@@ -280,6 +280,12 @@
         </div>
     </div>
 
+    <!-- Polyfills for Matrix SDK -->
+    <script>
+        // Provide global object for Matrix SDK
+        window.global = window;
+    </script>
+
     <!-- Load Socket.IO from CDN first -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 
