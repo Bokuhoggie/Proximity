@@ -4,7 +4,7 @@
     <title>Proximity - Voice Chat</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com https://matrix.org https://*.matrix.org wss://matrix.org wss://*.matrix.org; media-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com https://matrix.org https://*.matrix.org wss://matrix.org wss://*.matrix.org; media-src 'self' data:;">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -253,7 +253,32 @@
                                 <button type="button" id="uploadBackgroundBtn" class="btn secondary" style="margin-right: 10px;">📷 Upload Image</button>
                                 <button type="button" id="removeBackgroundBtn" class="btn danger" style="display: none;">✖ Remove</button>
                             </div>
-                            <p class="setting-description">Upload a custom background image for the app.</p>
+                            <p class="setting-description">Upload a custom background image for the proximity map. Recommended size: 800x600px</p>
+
+                            <!-- Image Preview -->
+                            <div id="backgroundImagePreview" style="display: none; margin-top: 10px; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; max-width: 400px;">
+                                <img id="backgroundImagePreviewImg" src="" alt="Background preview" style="width: 100%; height: auto; display: block;">
+                                <div style="padding: 8px; background: var(--dark-bg); color: var(--text-secondary); font-size: 0.85rem; text-align: center;">
+                                    <span id="backgroundImageDimensions"></span>
+                                </div>
+                            </div>
+
+                            <!-- Image Adjustment Controls -->
+                            <div id="backgroundImageControls" style="display: none; margin-top: 10px; padding: 12px; background: var(--dark-bg); border: 1px solid var(--border); border-radius: 8px;">
+                                <div style="margin-bottom: 12px;">
+                                    <label for="backgroundOpacity" style="display: block; margin-bottom: 4px; color: var(--text-secondary); font-size: 0.9rem;">Opacity: <span id="backgroundOpacityValue">50%</span></label>
+                                    <input type="range" id="backgroundOpacity" min="10" max="100" value="50" style="width: 100%;">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 4px; color: var(--text-secondary); font-size: 0.9rem;">Background Size</label>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn secondary small bg-size-btn" data-size="cover">Cover</button>
+                                        <button type="button" class="btn secondary small bg-size-btn" data-size="contain">Contain</button>
+                                        <button type="button" class="btn secondary small bg-size-btn active" data-size="100% 100%">Stretch</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

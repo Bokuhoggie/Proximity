@@ -467,9 +467,8 @@ export class ProximityMap {
     }
 
     render() {
-        // Clear canvas
-        this.ctx.fillStyle = '#0f0f23';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear canvas (transparent to show background image)
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw grid
         this.drawGrid();

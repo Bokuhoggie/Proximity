@@ -42,10 +42,34 @@ class ProximityApp {
             const savedBackground = this.settingsManager.get('backgroundImage');
             if (savedBackground) {
                 this.savedBackgroundImage = savedBackground;
-                const removeBtn = document.getElementById('removeBackgroundBtn');
-                if (removeBtn) {
-                    removeBtn.style.display = 'inline-block';
-                }
+
+                // Show remove button and preview
+                setTimeout(() => {
+                    const removeBtn = document.getElementById('removeBackgroundBtn');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'inline-block';
+                    }
+
+                    // Show saved image preview with dimensions
+                    const img = new Image();
+                    img.onload = () => {
+                        const preview = document.getElementById('backgroundImagePreview');
+                        const previewImg = document.getElementById('backgroundImagePreviewImg');
+                        const dimensionsSpan = document.getElementById('backgroundImageDimensions');
+                        const controls = document.getElementById('backgroundImageControls');
+
+                        if (preview && previewImg && dimensionsSpan) {
+                            previewImg.src = savedBackground;
+                            dimensionsSpan.textContent = `${img.width} × ${img.height} pixels`;
+                            preview.style.display = 'block';
+                        }
+
+                        if (controls) {
+                            controls.style.display = 'block';
+                        }
+                    };
+                    img.src = savedBackground;
+                }, 100);
             }
 
             // Initialize UI
@@ -246,6 +270,12 @@ class ProximityApp {
 
                 // Resize canvas now that modal is visible (in case it was 0x0 when created)
                 this.proximityMap.resizeCanvas();
+
+                // Apply background image if one is saved
+                if (this.savedBackgroundImage) {
+                    console.log('🖼️ Applying saved background image to map');
+                    this.applyBackgroundImage(this.savedBackgroundImage);
+                }
 
                 // Force a render to display the map
                 this.proximityMap.render();
@@ -590,16 +620,48 @@ class ProximityApp {
             backgroundImageInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file && file.type.startsWith('image/')) {
+                    console.log('📸 Processing image file:', file.name, 'Type:', file.type, 'Size:', file.size);
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         const imageData = event.target.result;
-                        this.settingsManager.set('backgroundImage', imageData);
-                        this.savedBackgroundImage = imageData;
-                        this.applyBackgroundImage(imageData);
-                        if (removeBackgroundBtn) {
-                            removeBackgroundBtn.style.display = 'inline-block';
-                        }
-                        this.uiManager.showNotification('Background image uploaded!', 'success');
+                        console.log('📸 Image converted to data URL, length:', imageData.length);
+                        console.log('📸 Data URL preview:', imageData.substring(0, 100) + '...');
+
+                        // Create image object to get dimensions
+                        const img = new Image();
+                        img.onload = () => {
+                            console.log('📸 Image dimensions:', img.width, 'x', img.height);
+
+                            // Show preview
+                            const preview = document.getElementById('backgroundImagePreview');
+                            const previewImg = document.getElementById('backgroundImagePreviewImg');
+                            const dimensionsSpan = document.getElementById('backgroundImageDimensions');
+
+                            if (preview && previewImg && dimensionsSpan) {
+                                previewImg.src = imageData;
+                                dimensionsSpan.textContent = `${img.width} × ${img.height} pixels`;
+                                preview.style.display = 'block';
+                            }
+
+                            // Show image adjustment controls
+                            const controls = document.getElementById('backgroundImageControls');
+                            if (controls) {
+                                controls.style.display = 'block';
+                            }
+
+                            this.settingsManager.set('backgroundImage', imageData);
+                            this.savedBackgroundImage = imageData;
+                            this.applyBackgroundImage(imageData);
+                            if (removeBackgroundBtn) {
+                                removeBackgroundBtn.style.display = 'inline-block';
+                            }
+                            this.uiManager.showNotification('Background image uploaded!', 'success');
+                        };
+                        img.src = imageData;
+                    };
+                    reader.onerror = (error) => {
+                        console.error('❌ Error reading image file:', error);
+                        this.uiManager.showNotification('Error reading image file', 'error');
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -614,12 +676,55 @@ class ProximityApp {
                 this.savedBackgroundImage = '';
                 this.applyBackgroundImage('');
                 removeBackgroundBtn.style.display = 'none';
+
+                // Hide preview and controls
+                const preview = document.getElementById('backgroundImagePreview');
+                const controls = document.getElementById('backgroundImageControls');
+                if (preview) {
+                    preview.style.display = 'none';
+                }
+                if (controls) {
+                    controls.style.display = 'none';
+                }
+
                 if (backgroundImageInput) {
                     backgroundImageInput.value = '';
                 }
                 this.uiManager.showNotification('Background image removed', 'info');
             });
         }
+
+        // Background image adjustment controls
+        const opacitySlider = document.getElementById('backgroundOpacity');
+        const opacityValue = document.getElementById('backgroundOpacityValue');
+        if (opacitySlider && opacityValue) {
+            // Load saved opacity
+            const savedOpacity = this.settingsManager.get('backgroundOpacity') || 50;
+            opacitySlider.value = savedOpacity;
+            opacityValue.textContent = `${savedOpacity}%`;
+
+            opacitySlider.addEventListener('input', (e) => {
+                const value = e.target.value;
+                opacityValue.textContent = `${value}%`;
+                this.settingsManager.set('backgroundOpacity', value);
+                this.applyBackgroundImage(this.savedBackgroundImage);
+            });
+        }
+
+        // Background size buttons
+        const bgSizeButtons = document.querySelectorAll('.bg-size-btn');
+        const savedBgSize = this.settingsManager.get('backgroundSize') || '100% 100%';
+        bgSizeButtons.forEach(btn => {
+            if (btn.dataset.size === savedBgSize) {
+                btn.classList.add('active');
+            }
+            btn.addEventListener('click', () => {
+                bgSizeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.settingsManager.set('backgroundSize', btn.dataset.size);
+                this.applyBackgroundImage(this.savedBackgroundImage);
+            });
+        });
 
         // Test buttons
         const testMicrophoneToggle = document.getElementById('testMicrophoneToggle');
@@ -1292,18 +1397,38 @@ class ProximityApp {
 
     applyBackgroundImage(imageData) {
         const mapCanvas = document.getElementById('modalProximityMap');
+        console.log('🖼️ applyBackgroundImage called, canvas exists:', !!mapCanvas, 'hasImage:', !!imageData);
+
         if (mapCanvas) {
             if (imageData) {
-                mapCanvas.style.backgroundImage = `url(${imageData})`;
-                mapCanvas.style.backgroundSize = 'cover';
-                mapCanvas.style.backgroundPosition = 'center';
-                mapCanvas.style.backgroundRepeat = 'no-repeat';
+                // Get saved settings
+                const opacity = this.settingsManager.get('backgroundOpacity') || 50;
+                const bgSize = this.settingsManager.get('backgroundSize') || '100% 100%';
+                const opacityDecimal = opacity / 100;
+
+                console.log('🎨 Settings - Opacity:', opacity, '%, Size:', bgSize);
+
+                // Create a layered background: solid color overlay + image
+                // This allows us to control image opacity without affecting canvas content
+                const bgColor = `rgba(15, 15, 35, ${1 - opacityDecimal})`; // Dark background with inverse opacity
+
+                // Properly quote the URL to handle special characters and spaces
+                mapCanvas.style.backgroundImage = `linear-gradient(${bgColor}, ${bgColor}), url("${imageData}")`;
+                mapCanvas.style.backgroundSize = `cover, ${bgSize}`;
+                mapCanvas.style.backgroundPosition = 'center, center';
+                mapCanvas.style.backgroundRepeat = 'no-repeat, no-repeat';
+
+                console.log(`✅ Applied background image (opacity: ${opacity}%, size: ${bgSize})`);
+                console.log('🎨 Background style:', mapCanvas.style.backgroundImage.substring(0, 100) + '...');
             } else {
                 mapCanvas.style.backgroundImage = '';
                 mapCanvas.style.backgroundSize = '';
                 mapCanvas.style.backgroundPosition = '';
                 mapCanvas.style.backgroundRepeat = '';
+                console.log('✅ Removed background image from map canvas');
             }
+        } else {
+            console.warn('⚠️ Map canvas not found - background will be applied when map opens');
         }
     }
 
