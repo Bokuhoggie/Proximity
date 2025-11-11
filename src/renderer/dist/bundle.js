@@ -3057,28 +3057,7 @@ class ProximityApp {
         this.isInHub = false;
         this.hubUsers = [];
 
-        // Chat message storage (persistent across sessions)
-        this.globalChatHistory = this.loadGlobalChatHistory();
-
         this.init();
-    }
-
-    loadGlobalChatHistory() {
-        try {
-            const saved = localStorage.getItem('proximity-chat-history');
-            return saved ? JSON.parse(saved) : { general: [] };
-        } catch (error) {
-            console.error('Failed to load chat history:', error);
-            return { general: [] };
-        }
-    }
-
-    saveGlobalChatHistory() {
-        try {
-            localStorage.setItem('proximity-chat-history', JSON.stringify(this.globalChatHistory));
-        } catch (error) {
-            console.error('Failed to save chat history:', error);
-        }
     }
 
     async init() {
