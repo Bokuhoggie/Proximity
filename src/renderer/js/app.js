@@ -1237,20 +1237,18 @@ class ProximityApp {
     }
 
     applyBackgroundImage(imageData) {
-        const appContainer = document.getElementById('app');
-        if (appContainer) {
+        const mapCanvas = document.getElementById('modalProximityMap');
+        if (mapCanvas) {
             if (imageData) {
-                appContainer.style.backgroundImage = `url(${imageData})`;
-                appContainer.style.backgroundSize = 'cover';
-                appContainer.style.backgroundPosition = 'center';
-                appContainer.style.backgroundRepeat = 'no-repeat';
-                appContainer.style.backgroundAttachment = 'fixed';
+                mapCanvas.style.backgroundImage = `url(${imageData})`;
+                mapCanvas.style.backgroundSize = 'cover';
+                mapCanvas.style.backgroundPosition = 'center';
+                mapCanvas.style.backgroundRepeat = 'no-repeat';
             } else {
-                appContainer.style.backgroundImage = '';
-                appContainer.style.backgroundSize = '';
-                appContainer.style.backgroundPosition = '';
-                appContainer.style.backgroundRepeat = '';
-                appContainer.style.backgroundAttachment = '';
+                mapCanvas.style.backgroundImage = '';
+                mapCanvas.style.backgroundSize = '';
+                mapCanvas.style.backgroundPosition = '';
+                mapCanvas.style.backgroundRepeat = '';
             }
         }
     }
