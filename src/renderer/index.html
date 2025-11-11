@@ -256,65 +256,6 @@
         </main>
     </div>
 
-    <!-- Settings Modal (NO STARTUP MODAL) -->
-    <div id="settingsModal" class="setup-modal" style="display: none;">
-        <div class="setup-modal-content settings-modal-content">
-            <div class="setup-header">
-                <h2>Settings</h2>
-                <button id="closeSettingsBtn" class="close-btn">×</button>
-            </div>
-
-            <div class="setup-body settings-body">
-                <div class="setting-group">
-                    <h3>Audio Settings</h3>
-
-                    <div class="setting-item">
-                        <label for="modalAudioDevice">Microphone Device</label>
-                        <select id="modalAudioDevice" class="setting-select">
-                            <option value="">Select Audio Device</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-item">
-                        <label for="modalAudioOutputDevice">Output Device</label>
-                        <select id="modalAudioOutputDevice" class="setting-select">
-                            <option value="">Select Output Device</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="setting-group">
-                    <h3>Profile Settings</h3>
-
-                    <div class="setting-item">
-                        <label for="modalUsername">Display Name</label>
-                        <input type="text" id="modalUsername" placeholder="Enter your name" class="setting-input">
-                    </div>
-
-                    <div class="setting-item">
-                        <label>User Color</label>
-                        <div class="user-color-picker" id="modalColorPicker">
-                            <button type="button" class="color-option color-blue" data-color="blue" aria-label="Blue"></button>
-                            <button type="button" class="color-option color-green" data-color="green" aria-label="Green"></button>
-                            <button type="button" class="color-option color-purple selected" data-color="purple" aria-label="Purple"></button>
-                            <button type="button" class="color-option color-red" data-color="red" aria-label="Red"></button>
-                            <button type="button" class="color-option color-orange" data-color="orange" aria-label="Orange"></button>
-                            <button type="button" class="color-option color-pink" data-color="pink" aria-label="Pink"></button>
-                            <button type="button" class="color-option color-indigo" data-color="indigo" aria-label="Indigo"></button>
-                            <button type="button" class="color-option color-cyan" data-color="cyan" aria-label="Cyan"></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="settings-actions">
-                    <button id="modalTestMicrophone" class="btn secondary">Test Microphone</button>
-                    <button id="modalTestOutput" class="btn secondary">Test Output</button>
-                    <button id="modalResetSettings" class="btn danger">Reset to Defaults</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Proximity Map Modal -->
     <div id="mapModal" class="map-modal" style="display: none;">
         <div class="map-modal-content">
