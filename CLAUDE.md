@@ -83,21 +83,29 @@ src/
 - No authentication required to use the app
 - Users identified by Socket.IO session ID during voice chat
 
-## Current Status - Production Ready! ✅
+## Current Status - In Development
 
-All major features implemented:
+**Working Features:**
 - ✅ Single voice channel and text channel
 - ✅ Socket.IO signaling server created and deployed
 - ✅ Voice channel join/leave/rejoin working
 - ✅ Connection overlay with Railway priority
 - ✅ Join hub screen on startup
 - ✅ Persistent chat messages (localStorage)
-- ✅ Modal map system
+- ✅ Modal map system - NOW RENDERING PROPERLY!
+- ✅ Position persistence - restores position on rejoin
+- ✅ Proximity range persistence - restores range on rejoin
+- ✅ Map "hot mode" - always active in background
 - ✅ Mute while moving toggle
 - ✅ Test suite created (15/16 tests passing)
 - ✅ Simplified UI (removed 800+ lines of code)
 - ✅ Railway deployment configured
 - ✅ Production build optimization (webpack)
+
+**Known Issues:**
+- 🔴 **CRITICAL**: Audio not working between users - WebRTC connections may not be establishing
+- Users cannot hear each other despite being in voice channel
+- Need to investigate WebRTC peer connection establishment
 
 ## Development Commands
 

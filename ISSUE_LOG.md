@@ -1,42 +1,119 @@
 # Proximity - Issue Log
 
-**Last Updated:** November 11, 2025 - 12:15 AM
+**Last Updated:** November 11, 2025 - 1:45 AM
 
 ## 🔴 Critical Issues - Active
 
-### Proximity Audio Asymmetry (Testing Required)
-**Status:** 🔍 TESTING - Need User Verification
+### Audio Not Working Between Users
+**Status:** 🔴 ACTIVE - Critical
 **Priority:** Critical
-**Reported:** Nov 10, 2025 11:30 PM
-**Updated:** Nov 11, 2025 12:15 AM
+**Reported:** Nov 11, 2025 1:45 AM
 
 **Problem:**
-- Proximity audio only working for one user - one user can hear spatial audio, the other cannot
-- This issue may be related to map sync or audio calculation differences
+- Users cannot hear each other in voice channel
+- WebRTC connections may not be establishing properly
+- Audio streams not being received/played
 
-**Recent Fixes Implemented:**
-1. ✅ **Position Persistence** - Server now stores and restores user positions when rejoining
-2. ✅ **Proximity Range Persistence** - Server stores and restores proximity range when rejoining
-3. ✅ **Map Always Active ("Hot Mode")** - Map canvas created immediately when joining voice, processes position updates in background
-4. ✅ **Background Image Upload** - Fixed to apply only to map canvas, not entire app
+**Context:**
+- Map rendering is now working (canvas displays properly)
+- Position persistence is working (positions restore on rejoin)
+- Map sync appears to be working (both users see same positions)
+- But audio is completely broken - no one can hear anyone
 
-**What Changed:**
-- Server now sends `myPosition` and `myProximityRange` to rejoining users
-- Client restores saved position and proximity range from server data
-- Map positions should now be identical for all users
-- Background images persist and apply when map is opened
+**Possible Causes:**
+1. WebRTC peer connections not establishing
+2. Audio streams not being captured/sent
+3. ICE candidates not being exchanged properly
+4. Audio elements not being created/attached
+5. Recent changes may have broken audio flow
 
-**Next Step:**
-- User needs to test with buddy to verify proximity audio now works for both users
-- If issue persists, need console logs from both users to diagnose
+**Next Steps:**
+- Check browser console for WebRTC errors
+- Verify microphone permissions are granted
+- Check if peer connections are being created
+- Verify ICE candidates are being exchanged
+- Check if audio elements are being created in DOM
+- Review AudioManager to ensure connections are working
 
-**Files Modified:**
-- `src/server/signaling-server.js` - Added position/range persistence and broadcast
-- `src/renderer/js/app.js` - Added restoration logic for position and range
+**Files to Investigate:**
+- `src/renderer/js/audio/AudioManager.js` - WebRTC connection logic
+- `src/server/signaling-server.js` - Signaling for WebRTC
+- `src/renderer/js/app.js` - Audio manager integration
 
 ---
 
 ## ✅ Recently Fixed
+
+### Map Canvas Not Rendering (Empty Black Screen)
+**Status:** ✅ FIXED (Nov 11, 2025 1:40 AM)
+**Priority:** Critical
+**Reported:** Nov 11, 2025 1:30 AM
+
+**Problem:**
+- Map modal opened but canvas was completely empty/black
+- No users visible on map
+- Canvas had 0x0 dimensions
+
+**Root Cause:**
+- ProximityMap created in "hot mode" while modal was hidden
+- `resizeCanvas()` called `getBoundingClientRect()` on hidden element
+- Hidden elements return 0x0, overwriting canvas's hardcoded 800x600
+- Canvas ended up with 0x0 dimensions, nothing could render
+
+**Solution Implemented:**
+- Modified `resizeCanvas()` to skip resizing if dimensions are 0
+- Preserves HTML's hardcoded 800x600 until modal is visible
+- Canvas now maintains proper dimensions throughout lifecycle
+
+**Fixed In:** Commit 90f846f
+**Files Modified:**
+- `src/renderer/js/proximity/ProximityMap.js` - Added dimension check in resizeCanvas()
+
+---
+
+### Position and Range Not Persisting on Rejoin
+**Status:** ✅ FIXED (Nov 11, 2025 12:30 AM)
+**Priority:** High
+**Reported:** Nov 10, 2025 11:30 PM
+
+**Problem:**
+- User positions reset when leaving/rejoining voice channel
+- Proximity range slider reset to default
+- Map appeared different for each user (desync)
+
+**Solution Implemented:**
+- Server stores position and proximityRange for each user
+- Server sends back stored values when user rejoins
+- Client restores position and range from server data
+- Map now syncs properly between all users
+
+**Fixed In:** Commit 9843f57
+**Files Modified:**
+- `src/server/signaling-server.js` - Store and send position/range
+- `src/renderer/js/app.js` - Restore saved position/range
+
+---
+
+### disconnectUser TypeError
+**Status:** ✅ FIXED (Nov 11, 2025 1:30 AM)
+**Priority:** Medium
+**Reported:** Nov 11, 2025 1:20 AM
+
+**Problem:**
+- Error when user left voice channel: `this.audioManager.disconnectUser is not a function`
+- Caused crash when users disconnected
+
+**Root Cause:**
+- Method name was wrong - AudioManager has `disconnectFromUser()` not `disconnectUser()`
+
+**Solution:**
+- Changed method call to correct name: `disconnectFromUser(userId)`
+
+**Fixed In:** Commit 97b6efa
+**Files Modified:**
+- `src/renderer/js/app.js:1041` - Fixed method name
+
+---
 
 ### Chat Message Persistence
 **Status:** ✅ FIXED (Nov 10, 2025 11:00 PM)
