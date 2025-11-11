@@ -304,9 +304,8 @@ io.on('connection', (socket) => {
 });
 
 // Health check endpoint
-app.get('/health', async (req, res) => {
+app.get('/health', (req, res) => {
     const voiceChannel = voiceChannels.get(VOICE_CHANNEL);
-    const messageCount = await redis.llen(`chat:${CHAT_CHANNEL}`);
     res.json({
         status: 'ok',
         users: users.size,
@@ -315,8 +314,6 @@ app.get('/health', async (req, res) => {
             id: VOICE_CHANNEL,
             userCount: voiceChannel ? voiceChannel.size : 0
         },
-        chatChannel: CHAT_CHANNEL,
-        messageCount,
         uptime: process.uptime()
     });
 });
@@ -329,7 +326,6 @@ app.get('/', (req, res) => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
     console.log('\n👋 Shutting down gracefully...');
-    redis.quit();
     server.close(() => {
         console.log('✅ Server closed');
         process.exit(0);
