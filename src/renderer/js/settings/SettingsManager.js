@@ -10,6 +10,7 @@ export class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
+            audioInputDevice: '',
             audioOutputDevice: '',
             muteWhileMoving: false
         };
@@ -65,6 +66,7 @@ export class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
+            audioInputDevice: '',
             audioOutputDevice: '',
             muteWhileMoving: false
         };
@@ -118,6 +120,12 @@ export class SettingsManager {
                 option.classList.add('selected');
             }
         });
+
+        // Audio input device
+        const audioInputDeviceSelect = document.getElementById('audioDevice');
+        if (audioInputDeviceSelect) {
+            audioInputDeviceSelect.value = this.settings.audioInputDevice || '';
+        }
 
         // Audio output device
         const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');

@@ -1096,34 +1096,22 @@ class ProximityApp {
         }
     }
 
-    // Settings Modal
+    // Settings - Navigate to settings page instead of modal
     setupSettingsModal() {
         const settingsButton = document.getElementById('settingsButton');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const backFromSettings = document.getElementById('backFromSettings');
 
         if (settingsButton) {
             settingsButton.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'flex';
-                }
+                // Navigate to settings page instead of opening modal
+                this.uiManager.switchPage('settings');
             });
         }
 
-        if (closeSettingsBtn) {
-            closeSettingsBtn.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
-            });
-        }
-
-        // Close on backdrop click
-        if (settingsModal) {
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
+        if (backFromSettings) {
+            backFromSettings.addEventListener('click', () => {
+                // Go back to server view
+                this.uiManager.switchPage('server-view');
             });
         }
     }

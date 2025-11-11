@@ -1929,6 +1929,7 @@ class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
+            audioInputDevice: '',
             audioOutputDevice: '',
             muteWhileMoving: false
         };
@@ -1984,6 +1985,7 @@ class SettingsManager {
             autoJoin: false,
             muteHotkey: 'Ctrl+M',
             deafenHotkey: 'Ctrl+D',
+            audioInputDevice: '',
             audioOutputDevice: '',
             muteWhileMoving: false
         };
@@ -2037,6 +2039,12 @@ class SettingsManager {
                 option.classList.add('selected');
             }
         });
+
+        // Audio input device
+        const audioInputDeviceSelect = document.getElementById('audioDevice');
+        if (audioInputDeviceSelect) {
+            audioInputDeviceSelect.value = this.settings.audioInputDevice || '';
+        }
 
         // Audio output device
         const audioOutputDeviceSelect = document.getElementById('audioOutputDevice');
@@ -2710,8 +2718,15 @@ class UIManager {
     }
 
     async populateAudioDevices() {
+        console.log('🔍 populateAudioDevices called');
+        console.log('🔍 audioDeviceSelect element:', this.elements.audioDeviceSelect);
+        console.log('🔍 audioOutputDeviceSelect element:', this.elements.audioOutputDeviceSelect);
+
         if (!this.elements.audioDeviceSelect || !this.elements.audioOutputDeviceSelect) {
-            console.warn('Audio device select elements not found');
+            console.error('❌ Audio device select elements not found!');
+            console.log('Checking if elements exist in DOM:');
+            console.log('  audioDevice:', document.getElementById('audioDevice'));
+            console.log('  audioOutputDevice:', document.getElementById('audioOutputDevice'));
             return;
         }
 
@@ -2719,6 +2734,7 @@ class UIManager {
             // Request microphone permission first to get device labels
             let stream = null;
             try {
+                console.log('🎤 Requesting microphone permission for device enumeration...');
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 console.log('✅ Microphone permission granted for device enumeration');
             } catch (permError) {
@@ -2726,11 +2742,14 @@ class UIManager {
             }
 
             // Now enumerate devices (labels will be available if permission was granted)
+            console.log('📋 Enumerating devices...');
             const devices = await navigator.mediaDevices.enumerateDevices();
+            console.log('📋 All devices:', devices);
+
             const audioInputs = devices.filter(device => device.kind === 'audioinput');
             const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
 
-            console.log(`Found ${audioInputs.length} audio inputs and ${audioOutputs.length} audio outputs`);
+            console.log(`✅ Found ${audioInputs.length} audio inputs and ${audioOutputs.length} audio outputs`);
 
             this.elements.audioDeviceSelect.innerHTML = '<option value="">Select Audio Device</option>';
             this.elements.audioOutputDeviceSelect.innerHTML = '<option value="">Select Output Device</option>';
@@ -2740,7 +2759,7 @@ class UIManager {
                 option.value = device.deviceId;
                 option.textContent = device.label || `Microphone ${index + 1}`;
                 this.elements.audioDeviceSelect.appendChild(option);
-                console.log(`  Input: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
+                console.log(`  ✅ Added Input: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
 
             audioOutputs.forEach((device, index) => {
@@ -2748,7 +2767,7 @@ class UIManager {
                 option.value = device.deviceId;
                 option.textContent = device.label || `Speaker ${index + 1}`;
                 this.elements.audioOutputDeviceSelect.appendChild(option);
-                console.log(`  Output: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
+                console.log(`  ✅ Added Output: ${option.textContent} (${device.deviceId.substring(0, 20)}...)`);
             });
 
             // Stop the temporary stream used for permission
@@ -2757,6 +2776,21 @@ class UIManager {
             }
 
             console.log('✅ Audio devices populated successfully');
+            console.log('📊 Final input select options count:', this.elements.audioDeviceSelect.options.length);
+            console.log('📊 Final output select options count:', this.elements.audioOutputDeviceSelect.options.length);
+
+            // DEBUG: Let's see the actual HTML
+            console.log('📋 Input select HTML:', this.elements.audioDeviceSelect.innerHTML.substring(0, 200));
+            console.log('📋 Output select HTML:', this.elements.audioOutputDeviceSelect.innerHTML.substring(0, 200));
+
+            // Force a re-render by toggling a property
+            this.elements.audioDeviceSelect.style.display = 'none';
+            this.elements.audioOutputDeviceSelect.style.display = 'none';
+            setTimeout(() => {
+                this.elements.audioDeviceSelect.style.display = '';
+                this.elements.audioOutputDeviceSelect.style.display = '';
+                console.log('🔄 Forced re-render of select elements');
+            }, 10);
         } catch (error) {
             console.error('❌ Error populating audio devices:', error);
         }
@@ -4018,34 +4052,22 @@ class ProximityApp {
         }
     }
 
-    // Settings Modal
+    // Settings - Navigate to settings page instead of modal
     setupSettingsModal() {
         const settingsButton = document.getElementById('settingsButton');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const backFromSettings = document.getElementById('backFromSettings');
 
         if (settingsButton) {
             settingsButton.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'flex';
-                }
+                // Navigate to settings page instead of opening modal
+                this.uiManager.switchPage('settings');
             });
         }
 
-        if (closeSettingsBtn) {
-            closeSettingsBtn.addEventListener('click', () => {
-                if (settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
-            });
-        }
-
-        // Close on backdrop click
-        if (settingsModal) {
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
+        if (backFromSettings) {
+            backFromSettings.addEventListener('click', () => {
+                // Go back to server view
+                this.uiManager.switchPage('server-view');
             });
         }
     }
