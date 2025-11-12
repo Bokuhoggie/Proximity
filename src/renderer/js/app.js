@@ -234,6 +234,12 @@ class ProximityApp {
 
         // Settings
         this.uiManager.on('settings-change', (settings) => this.settingsManager.update(settings));
+
+        // Create text channel button
+        const createChannelBtn = document.getElementById('createTextChannelBtn');
+        if (createChannelBtn) {
+            createChannelBtn.addEventListener('click', () => this.createTextChannel());
+        }
     }
 
 
@@ -368,18 +374,21 @@ class ProximityApp {
         if (!message.trim()) return;
 
         if (!this.isInHub) {
-            console.bomboclat('Not in hub');
+            console.error('Not in hub');
             return;
         }
 
-        console.log('💬 Sending chat message:', message);
+        console.log('💬 Sending chat message to channel:', this.currentTextChannel, message);
 
         try {
-            // Send via Socket.IO (in-memory chat)
-            this.connectionManager.socket.emit('send-chat-message', { message });
-        } catch (bomboclat) {
-            console.bomboclat('❌ Failed to send message:', bomboclat);
-            this.uiManager.showNotification('Failed to send message - bomboclat!', 'bomboclat');
+            // Send via Socket.IO (in-memory chat) with channel ID
+            this.connectionManager.socket.emit('send-chat-message', {
+                message,
+                channelId: this.currentTextChannel
+            });
+        } catch (error) {
+            console.error('❌ Failed to send message:', error);
+            this.uiManager.showNotification('Failed to send message!', 'error');
         }
     }
 
@@ -395,6 +404,67 @@ class ProximityApp {
             messageId: messageId,
             userId: this.myUserId
         });
+    }
+
+    createTextChannel() {
+        const channelName = prompt('Enter channel name:');
+
+        if (!channelName || !channelName.trim()) {
+            return;
+        }
+
+        // Sanitize channel name
+        const sanitizedName = channelName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+        if (!this.connectionManager.socket) {
+            this.uiManager.showNotification('Not connected to server', 'error');
+            return;
+        }
+
+        console.log('📝 Creating text channel:', sanitizedName);
+        this.connectionManager.socket.emit('create-text-channel', { channelName: sanitizedName });
+    }
+
+    addTextChannelToUI(channelId, channelName) {
+        const channelsList = document.getElementById('textChannelsList');
+        if (!channelsList) return;
+
+        // Check if channel already exists
+        const existing = channelsList.querySelector(`[data-channel-id="${channelId}"]`);
+        if (existing) return;
+
+        const channelItem = document.createElement('div');
+        channelItem.className = 'channel-item';
+        channelItem.dataset.channelType = 'text';
+        channelItem.dataset.channelId = channelId;
+        channelItem.innerHTML = `
+            <span class="channel-icon">#</span>
+            <span class="channel-name">${channelName}</span>
+        `;
+
+        // Add click handler to switch channels
+        channelItem.addEventListener('click', () => {
+            this.switchTextChannel(channelId);
+        });
+
+        channelsList.appendChild(channelItem);
+        console.log(`✅ Added text channel to UI: ${channelName}`);
+    }
+
+    switchTextChannel(channelId) {
+        // Update active state
+        const channelItems = document.querySelectorAll('.channel-item[data-channel-type="text"]');
+        channelItems.forEach(item => {
+            item.classList.toggle('active', item.dataset.channelId === channelId);
+        });
+
+        this.currentTextChannel = channelId;
+        console.log(`📝 Switched to text channel: ${channelId}`);
+
+        // Request messages for this channel
+        if (this.connectionManager.socket) {
+            this.connectionManager.socket.emit('request-channel-messages', { channelId });
+        }
     }
 
     // Chat persistence with localStorage
@@ -832,13 +902,17 @@ class ProximityApp {
                 message: data.message,
                 timestamp: data.timestamp,
                 userId: data.userId,
-                userColor: data.userColor
+                userColor: data.userColor,
+                channelId: data.channelId || 'general'
             };
 
-            // Save to localStorage for persistence
-            this.saveChatMessage(messageData);
+            // Only display message if it's for the current channel
+            if (messageData.channelId === this.currentTextChannel) {
+                // Save to localStorage for persistence
+                this.saveChatMessage(messageData);
 
-            this.uiManager.addChatMessage(messageData);
+                this.uiManager.addChatMessage(messageData);
+            }
         });
 
         // Receive chat history from server
@@ -883,6 +957,39 @@ class ProximityApp {
             console.log(`📏 User ${userId} updated proximity range to ${range}px`);
             // Note: We don't change other users' ranges, but we could visualize it
             // For now, each user maintains their own range
+        });
+
+        // Text channel events
+        socket.on('text-channel-created', ({ channelId, channelName, createdBy }) => {
+            console.log(`📝 Text channel created: ${channelName} (${channelId})`);
+            this.addTextChannelToUI(channelId, channelName);
+            if (createdBy === socket.id) {
+                this.uiManager.showNotification(`Channel #${channelName} created!`, 'success');
+                this.switchTextChannel(channelId);
+            }
+        });
+
+        socket.on('text-channels-list', (channels) => {
+            console.log('📝 Received text channels list:', channels);
+            channels.forEach(channel => {
+                this.addTextChannelToUI(channel.id, channel.name);
+            });
+        });
+
+        socket.on('channel-messages', ({ channelId, messages }) => {
+            if (channelId === this.currentTextChannel) {
+                // Clear existing messages and load new ones
+                const chatMessages = document.getElementById('chatMessages');
+                if (chatMessages) {
+                    chatMessages.innerHTML = '';
+                }
+
+                messages.forEach(msg => {
+                    this.uiManager.addChatMessage(msg);
+                });
+
+                console.log(`📜 Loaded ${messages.length} messages for #${channelId}`);
+            }
         });
     }
 

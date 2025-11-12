@@ -18,12 +18,18 @@ const PORT = process.env.PORT || 3000;
 const users = new Map();
 const hubUsers = new Set();
 const voiceChannels = new Map(); // channelId -> Set of userIds
-const chatMessages = []; // Store last 100 messages in memory
+const textChannels = new Map(); // channelId -> { name, messages[] }
 const MAX_MESSAGES = 100;
 
-// Initialize single voice channel
+// Initialize default channels
 const VOICE_CHANNEL = 'voice';
 voiceChannels.set(VOICE_CHANNEL, new Set());
+
+// Initialize default text channel
+textChannels.set('general', {
+    name: 'general',
+    messages: []
+});
 
 console.log('🚀 Proximity Signaling Server starting...');
 console.log(`📡 Port: ${PORT}`);
@@ -74,8 +80,18 @@ io.on('connection', (socket) => {
 
             socket.emit('hub-users', currentUsers);
 
-            // Send chat message history
-            socket.emit('chat-history', chatMessages);
+            // Send text channels list
+            const channelsList = Array.from(textChannels.entries()).map(([id, channel]) => ({
+                id,
+                name: channel.name
+            }));
+            socket.emit('text-channels-list', channelsList);
+
+            // Send chat message history for general channel
+            const generalChannel = textChannels.get('general');
+            if (generalChannel) {
+                socket.emit('chat-history', generalChannel.messages);
+            }
 
             // Notify others about the new user
             socket.broadcast.emit('user-joined-hub', {
@@ -270,7 +286,7 @@ io.on('connection', (socket) => {
 
     // Simple in-memory chat (Matrix integration paused - guest registration disabled)
     socket.on('send-chat-message', (data) => {
-        const { message } = data;
+        const { message, channelId = 'general' } = data;
         const user = users.get(socket.id);
 
         if (user && message) {
@@ -280,19 +296,65 @@ io.on('connection', (socket) => {
                 username: user.username,
                 userColor: user.userColor,
                 message,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                channelId
             };
 
-            console.log(`💬 ${user.username}: ${message.substring(0, 50)}`);
+            console.log(`💬 [#${channelId}] ${user.username}: ${message.substring(0, 50)}`);
 
-            // Save to in-memory history
-            chatMessages.push(chatMessage);
-            if (chatMessages.length > MAX_MESSAGES) {
-                chatMessages.shift(); // Remove oldest message
+            // Save to channel's message history
+            const channel = textChannels.get(channelId);
+            if (channel) {
+                channel.messages.push(chatMessage);
+                if (channel.messages.length > MAX_MESSAGES) {
+                    channel.messages.shift(); // Remove oldest message
+                }
+
+                // Broadcast to all clients
+                io.emit('chat-message', chatMessage);
             }
+        }
+    });
 
-            // Broadcast to all clients
-            io.emit('chat-message', chatMessage);
+    // Create text channel
+    socket.on('create-text-channel', (data) => {
+        const { channelName } = data;
+        const user = users.get(socket.id);
+
+        if (!user || !channelName) return;
+
+        // Check if channel already exists
+        if (textChannels.has(channelName)) {
+            socket.emit('error', { message: 'Channel already exists' });
+            return;
+        }
+
+        // Create new channel
+        textChannels.set(channelName, {
+            name: channelName,
+            messages: []
+        });
+
+        console.log(`📝 ${user.username} created channel: #${channelName}`);
+
+        // Broadcast to all users
+        io.emit('text-channel-created', {
+            channelId: channelName,
+            channelName,
+            createdBy: socket.id
+        });
+    });
+
+    // Request messages for a specific channel
+    socket.on('request-channel-messages', (data) => {
+        const { channelId } = data;
+        const channel = textChannels.get(channelId);
+
+        if (channel) {
+            socket.emit('channel-messages', {
+                channelId,
+                messages: channel.messages
+            });
         }
     });
 
