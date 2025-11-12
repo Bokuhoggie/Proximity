@@ -240,6 +240,21 @@ class ProximityApp {
         if (createChannelBtn) {
             createChannelBtn.addEventListener('click', () => this.createTextChannel());
         }
+
+        // Setup click handlers for existing text channels (like general)
+        this.setupTextChannelClickHandlers();
+    }
+
+    setupTextChannelClickHandlers() {
+        const channelItems = document.querySelectorAll('.channel-item[data-channel-type="text"]');
+        channelItems.forEach(item => {
+            const channelId = item.dataset.channelId;
+            if (channelId) {
+                item.addEventListener('click', () => {
+                    this.switchTextChannel(channelId);
+                });
+            }
+        });
     }
 
 
