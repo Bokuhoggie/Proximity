@@ -419,23 +419,85 @@ class ProximityApp {
             return;
         }
 
-        const channelName = prompt('Enter channel name:\n(Letters, numbers, and hyphens only)');
+        // Show modal
+        this.showCreateChannelModal();
+    }
 
-        if (!channelName || !channelName.trim()) {
-            console.log('📝 Channel creation cancelled - no name provided');
-            return;
+    showCreateChannelModal() {
+        const modal = document.getElementById('createChannelModal');
+        const input = document.getElementById('channelNameInput');
+        const preview = document.getElementById('channelNamePreview');
+        const previewText = document.getElementById('channelNamePreviewText');
+        const confirmBtn = document.getElementById('confirmCreateChannel');
+        const cancelBtn = document.getElementById('cancelCreateChannel');
+        const closeBtn = document.getElementById('closeCreateChannelModal');
+
+        if (!modal) return;
+
+        // Reset modal
+        input.value = '';
+        preview.style.display = 'none';
+        confirmBtn.disabled = true;
+
+        // Show modal
+        modal.style.display = 'flex';
+        setTimeout(() => input.focus(), 100);
+
+        // Input handler
+        const handleInput = () => {
+            const value = input.value.trim();
+            const sanitized = value.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+            if (sanitized.length > 0) {
+                preview.style.display = 'flex';
+                previewText.textContent = sanitized;
+                confirmBtn.disabled = false;
+            } else {
+                preview.style.display = 'none';
+                confirmBtn.disabled = true;
+            }
+        };
+
+        // Confirm handler
+        const handleConfirm = () => {
+            const channelName = input.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+            if (channelName.length > 0) {
+                console.log('📝 Creating text channel:', channelName);
+                this.connectionManager.socket.emit('create-text-channel', { channelName });
+                this.closeCreateChannelModal();
+            }
+        };
+
+        // Close handler
+        const closeModal = () => {
+            this.closeCreateChannelModal();
+        };
+
+        // Add event listeners
+        input.addEventListener('input', handleInput);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !confirmBtn.disabled) {
+                handleConfirm();
+            }
+        });
+        confirmBtn.addEventListener('click', handleConfirm, { once: true });
+        cancelBtn.addEventListener('click', closeModal, { once: true });
+        closeBtn.addEventListener('click', closeModal, { once: true });
+
+        // Click outside to close
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        }, { once: true });
+    }
+
+    closeCreateChannelModal() {
+        const modal = document.getElementById('createChannelModal');
+        if (modal) {
+            modal.style.display = 'none';
         }
-
-        // Sanitize channel name
-        const sanitizedName = channelName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
-
-        if (sanitizedName.length === 0) {
-            this.uiManager.showNotification('Invalid channel name', 'error');
-            return;
-        }
-
-        console.log('📝 Creating text channel:', sanitizedName);
-        this.connectionManager.socket.emit('create-text-channel', { channelName: sanitizedName });
     }
 
     addTextChannelToUI(channelId, channelName) {

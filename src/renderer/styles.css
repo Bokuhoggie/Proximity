@@ -1769,3 +1769,103 @@ input[type="checkbox"] {
         opacity: 1;
     }
 }
+
+/* Create Channel Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal .modal-content {
+    background: var(--bg-dark);
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+}
+
+.modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.modal .modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.modal .modal-body {
+    padding: 2rem;
+}
+
+.modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--border-dark);
+}
+
+.modal .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.modal .form-group input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-darkest);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.modal .form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+}
+
+.modal .help-text {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.modal .channel-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-darkest);
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.modal .channel-preview .channel-icon {
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.modal .channel-preview span {
+    color: var(--text-primary);
+}

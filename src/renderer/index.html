@@ -294,6 +294,31 @@
         </main>
     </div>
 
+    <!-- Create Channel Modal -->
+    <div id="createChannelModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Create Text Channel</h3>
+                <button id="closeCreateChannelModal" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="channelNameInput">Channel Name</label>
+                    <input type="text" id="channelNameInput" placeholder="e.g., memes, gaming, general" maxlength="30" autocomplete="off">
+                    <p class="help-text">Letters, numbers, and hyphens only. Will be converted to lowercase.</p>
+                </div>
+                <div id="channelNamePreview" class="channel-preview" style="display: none;">
+                    <span class="channel-icon">#</span>
+                    <span id="channelNamePreviewText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelCreateChannel" class="btn secondary">Cancel</button>
+                <button id="confirmCreateChannel" class="btn primary" disabled>Create Channel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Proximity Map Modal -->
     <div id="mapModal" class="map-modal" style="display: none;">
         <div class="map-modal-content">
