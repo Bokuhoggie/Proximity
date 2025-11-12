@@ -579,39 +579,57 @@ class ProximityApp {
                 console.log('🔄 Migrating old chat messages to new per-channel format...');
                 const messages = JSON.parse(oldMessages);
 
-                // Move to general channel
-                const newKey = 'proximity_chat_messages_general';
-                const existingGeneral = localStorage.getItem(newKey);
-
-                if (!existingGeneral) {
-                    // No general messages yet, move all old messages there
-                    localStorage.setItem(newKey, oldMessages);
-                    console.log(`✅ Migrated ${messages.length} messages to #general`);
-                } else {
-                    // Merge with existing general messages
-                    const generalMessages = JSON.parse(existingGeneral);
-                    const allMessages = [...generalMessages, ...messages];
-
-                    // Remove duplicates by ID
-                    const uniqueMessages = Array.from(
-                        new Map(allMessages.map(m => [m.id, m])).values()
-                    );
-
-                    // Sort by timestamp and keep last 100
-                    const sortedMessages = uniqueMessages
-                        .sort((a, b) => a.timestamp - b.timestamp)
-                        .slice(-100);
-
-                    localStorage.setItem(newKey, JSON.stringify(sortedMessages));
-                    console.log(`✅ Merged ${messages.length} old messages with ${generalMessages.length} existing messages in #general`);
+                if (messages.length === 0) {
+                    console.log('ℹ️ No messages to migrate');
+                    localStorage.removeItem(oldKey);
+                    return;
                 }
+
+                // Group messages by channel
+                const messagesByChannel = {};
+                messages.forEach(msg => {
+                    const channelId = msg.channelId || 'general';
+                    if (!messagesByChannel[channelId]) {
+                        messagesByChannel[channelId] = [];
+                    }
+                    messagesByChannel[channelId].push(msg);
+                });
+
+                // Migrate each channel
+                Object.entries(messagesByChannel).forEach(([channelId, channelMessages]) => {
+                    const newKey = `proximity_chat_messages_${channelId}`;
+                    const existingMessages = localStorage.getItem(newKey);
+
+                    if (!existingMessages) {
+                        // No existing messages, just save
+                        localStorage.setItem(newKey, JSON.stringify(channelMessages.slice(-100)));
+                        console.log(`✅ Migrated ${channelMessages.length} messages to #${channelId}`);
+                    } else {
+                        // Merge with existing
+                        const existing = JSON.parse(existingMessages);
+                        const allMessages = [...existing, ...channelMessages];
+
+                        // Remove duplicates by ID
+                        const uniqueMessages = Array.from(
+                            new Map(allMessages.map(m => [m.id, m])).values()
+                        );
+
+                        // Sort by timestamp and keep last 100
+                        const sortedMessages = uniqueMessages
+                            .sort((a, b) => a.timestamp - b.timestamp)
+                            .slice(-100);
+
+                        localStorage.setItem(newKey, JSON.stringify(sortedMessages));
+                        console.log(`✅ Merged ${channelMessages.length} old messages with ${existing.length} existing in #${channelId}`);
+                    }
+                });
 
                 // Remove old key
                 localStorage.removeItem(oldKey);
-                console.log('✅ Migration complete - old messages removed');
+                console.log('✅ Migration complete - old key removed');
             }
         } catch (error) {
-            console.error('Failed to migrate chat messages:', error);
+            console.error('❌ Failed to migrate chat messages:', error);
         }
     }
 
@@ -1082,20 +1100,26 @@ class ProximityApp {
                 chatMessages.innerHTML = '';
             }
 
-            // Merge with local messages (prioritize server messages)
-            const localMessages = this.loadChatMessages();
-            const serverMessageIds = new Set(messages.map(m => m.id));
+            // Add channelId to messages if not present (for backward compatibility)
+            const messagesWithChannel = messages.map(m => ({
+                ...m,
+                channelId: m.channelId || 'general'
+            }));
+
+            // Merge with local messages for general channel (prioritize server messages)
+            const localMessages = this.loadChatMessages('general');
+            const serverMessageIds = new Set(messagesWithChannel.map(m => m.id));
 
             // Keep local messages that aren't on server
             const uniqueLocalMessages = localMessages.filter(m => !serverMessageIds.has(m.id));
 
             // Combine and sort by timestamp
-            const allMessages = [...messages, ...uniqueLocalMessages]
+            const allMessages = [...messagesWithChannel, ...uniqueLocalMessages]
                 .sort((a, b) => a.timestamp - b.timestamp)
                 .slice(-100); // Keep last 100
 
-            // Save merged history to localStorage
-            localStorage.setItem('proximity_chat_messages', JSON.stringify(allMessages));
+            // Save merged history to localStorage for general channel
+            localStorage.setItem('proximity_chat_messages_general', JSON.stringify(allMessages));
 
             // Display ALL messages (server + unique local)
             allMessages.forEach(messageData => {
