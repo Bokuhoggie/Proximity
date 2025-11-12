@@ -407,17 +407,30 @@ class ProximityApp {
     }
 
     createTextChannel() {
-        const channelName = prompt('Enter channel name:');
+        console.log('📝 Create text channel clicked');
+
+        if (!this.isInHub) {
+            this.uiManager.showNotification('Join the hub first to create channels', 'warning');
+            return;
+        }
+
+        if (!this.connectionManager.socket) {
+            this.uiManager.showNotification('Not connected to server', 'error');
+            return;
+        }
+
+        const channelName = prompt('Enter channel name:\n(Letters, numbers, and hyphens only)');
 
         if (!channelName || !channelName.trim()) {
+            console.log('📝 Channel creation cancelled - no name provided');
             return;
         }
 
         // Sanitize channel name
         const sanitizedName = channelName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
-        if (!this.connectionManager.socket) {
-            this.uiManager.showNotification('Not connected to server', 'error');
+        if (sanitizedName.length === 0) {
+            this.uiManager.showNotification('Invalid channel name', 'error');
             return;
         }
 
@@ -461,7 +474,16 @@ class ProximityApp {
         this.currentTextChannel = channelId;
         console.log(`📝 Switched to text channel: ${channelId}`);
 
-        // Request messages for this channel
+        // Clear current messages
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+        }
+
+        // Restore local messages for this channel first
+        this.restoreChatHistory(channelId);
+
+        // Request messages from server for this channel
         if (this.connectionManager.socket) {
             this.connectionManager.socket.emit('request-channel-messages', { channelId });
         }
@@ -470,41 +492,42 @@ class ProximityApp {
     // Chat persistence with localStorage
     saveChatMessage(messageData) {
         try {
-            const messages = this.loadChatMessages();
+            const channelId = messageData.channelId || 'general';
+            const messages = this.loadChatMessages(channelId);
             messages.push(messageData);
 
             // Keep only last 100 messages to avoid localStorage bloat
             const recentMessages = messages.slice(-100);
 
-            localStorage.setItem('proximity_chat_messages', JSON.stringify(recentMessages));
-            console.log('💾 Saved message to localStorage');
-        } catch (bomboclat) {
-            console.bomboclat('Failed to save message to localStorage:', bomboclat);
+            localStorage.setItem(`proximity_chat_messages_${channelId}`, JSON.stringify(recentMessages));
+            console.log(`💾 Saved message to localStorage for #${channelId}`);
+        } catch (error) {
+            console.error('Failed to save message to localStorage:', error);
         }
     }
 
-    loadChatMessages() {
+    loadChatMessages(channelId = 'general') {
         try {
-            const stored = localStorage.getItem('proximity_chat_messages');
+            const stored = localStorage.getItem(`proximity_chat_messages_${channelId}`);
             return stored ? JSON.parse(stored) : [];
-        } catch (bomboclat) {
-            console.bomboclat('Failed to load messages from localStorage:', bomboclat);
+        } catch (error) {
+            console.error('Failed to load messages from localStorage:', error);
             return [];
         }
     }
 
-    clearChatMessages() {
+    clearChatMessages(channelId = 'general') {
         try {
-            localStorage.removeItem('proximity_chat_messages');
-            console.log('🗑️ Cleared chat messages from localStorage');
-        } catch (bomboclat) {
-            console.bomboclat('Failed to clear messages:', bomboclat);
+            localStorage.removeItem(`proximity_chat_messages_${channelId}`);
+            console.log(`🗑️ Cleared chat messages from localStorage for #${channelId}`);
+        } catch (error) {
+            console.error('Failed to clear messages:', error);
         }
     }
 
-    restoreChatHistory() {
-        const messages = this.loadChatMessages();
-        console.log(`📜 Restoring ${messages.length} messages from localStorage`);
+    restoreChatHistory(channelId = 'general') {
+        const messages = this.loadChatMessages(channelId);
+        console.log(`📜 Restoring ${messages.length} messages from localStorage for #${channelId}`);
 
         messages.forEach(messageData => {
             this.uiManager.addChatMessage(messageData);
@@ -986,17 +1009,28 @@ class ProximityApp {
 
         socket.on('channel-messages', ({ channelId, messages }) => {
             if (channelId === this.currentTextChannel) {
-                // Clear existing messages and load new ones
+                // Merge server messages with local messages
+                const localMessages = this.loadChatMessages(channelId);
+                const serverMessageIds = new Set(messages.map(m => m.id));
+
+                // Keep local messages that aren't on server
+                const uniqueLocalMessages = localMessages.filter(m => !serverMessageIds.has(m.id));
+
+                // Combine and sort by timestamp
+                const allMessages = [...messages, ...uniqueLocalMessages]
+                    .sort((a, b) => a.timestamp - b.timestamp);
+
+                // Clear and display all messages
                 const chatMessages = document.getElementById('chatMessages');
                 if (chatMessages) {
                     chatMessages.innerHTML = '';
                 }
 
-                messages.forEach(msg => {
+                allMessages.forEach(msg => {
                     this.uiManager.addChatMessage(msg);
                 });
 
-                console.log(`📜 Loaded ${messages.length} messages for #${channelId}`);
+                console.log(`📜 Loaded ${messages.length} server + ${uniqueLocalMessages.length} local messages for #${channelId}`);
             }
         });
 
