@@ -725,6 +725,10 @@ class ProximityApp {
                             if (removeBackgroundBtn) {
                                 removeBackgroundBtn.style.display = 'inline-block';
                             }
+
+                            // Broadcast background to other users in voice channel
+                            this.broadcastBackground(imageData);
+
                             this.uiManager.showNotification('Background image uploaded!', 'success');
                         };
                         img.src = imageData;
@@ -760,6 +764,10 @@ class ProximityApp {
                 if (backgroundImageInput) {
                     backgroundImageInput.value = '';
                 }
+
+                // Broadcast removal to other users
+                this.broadcastBackground('');
+
                 this.uiManager.showNotification('Background image removed', 'info');
             });
         }
@@ -990,6 +998,48 @@ class ProximityApp {
 
                 console.log(`📜 Loaded ${messages.length} messages for #${channelId}`);
             }
+        });
+
+        // Background image events
+        socket.on('user-background-updated', ({ userId, username, hasBackground }) => {
+            console.log(`🖼️ ${username} ${hasBackground ? 'added' : 'removed'} background`);
+            this.updateUserBackgroundIndicator(userId, hasBackground);
+        });
+
+        socket.on('user-background-data', ({ userId, username, backgroundImage }) => {
+            console.log(`🖼️ Received background from ${username}`);
+
+            // Apply the background
+            this.savedBackgroundImage = backgroundImage;
+            this.settingsManager.set('backgroundImage', backgroundImage);
+            this.applyBackgroundImage(backgroundImage);
+
+            // Update preview
+            const img = new Image();
+            img.onload = () => {
+                const preview = document.getElementById('backgroundImagePreview');
+                const previewImg = document.getElementById('backgroundImagePreviewImg');
+                const dimensionsSpan = document.getElementById('backgroundImageDimensions');
+                const controls = document.getElementById('backgroundImageControls');
+                const removeBtn = document.getElementById('removeBackgroundBtn');
+
+                if (preview && previewImg && dimensionsSpan) {
+                    previewImg.src = backgroundImage;
+                    dimensionsSpan.textContent = `${img.width} × ${img.height} pixels`;
+                    preview.style.display = 'block';
+                }
+
+                if (controls) {
+                    controls.style.display = 'block';
+                }
+
+                if (removeBtn) {
+                    removeBtn.style.display = 'inline-block';
+                }
+            };
+            img.src = backgroundImage;
+
+            this.uiManager.showNotification(`📸 Copied background from ${username}!`, 'success');
         });
     }
 
@@ -1555,6 +1605,71 @@ class ProximityApp {
                 roomId: this.currentVoiceChannel,
                 isMuted
             });
+        }
+    }
+
+    broadcastBackground(backgroundImage) {
+        if (this.connectionManager.socket && this.isInHub) {
+            console.log('🖼️ Broadcasting background to other users');
+            this.connectionManager.socket.emit('update-background', {
+                backgroundImage
+            });
+        }
+    }
+
+    requestUserBackground(userId) {
+        if (this.connectionManager.socket) {
+            console.log(`🖼️ Requesting background from user ${userId}`);
+            this.connectionManager.socket.emit('request-user-background', { userId });
+        }
+    }
+
+    copyUserBackground(userId, username) {
+        console.log(`🖼️ Copying background from ${username}`);
+        this.requestUserBackground(userId);
+    }
+
+    updateUserBackgroundIndicator(userId, hasBackground) {
+        if (!this.currentVoiceChannel) return;
+
+        const channelKey = this.currentVoiceChannel.replace('-voice', '');
+        const participant = document.getElementById(`voice-participant-${userId}-${channelKey}`);
+
+        if (participant) {
+            // Check if indicator already exists
+            let indicator = participant.querySelector('.background-indicator');
+            let copyBtn = participant.querySelector('.copy-background-btn');
+
+            if (hasBackground) {
+                // Add indicator if it doesn't exist
+                if (!indicator) {
+                    indicator = document.createElement('span');
+                    indicator.className = 'background-indicator';
+                    indicator.textContent = '🖼️';
+                    indicator.title = 'Has custom background';
+                    indicator.style.cssText = 'margin-left: auto; margin-right: 4px; font-size: 0.9rem;';
+                    participant.appendChild(indicator);
+                }
+
+                // Add copy button if it doesn't exist
+                if (!copyBtn) {
+                    copyBtn = document.createElement('button');
+                    copyBtn.className = 'copy-background-btn btn-icon';
+                    copyBtn.textContent = '📋';
+                    copyBtn.title = 'Copy background';
+                    copyBtn.style.cssText = 'padding: 2px 6px; font-size: 0.85rem; margin-left: 4px;';
+                    copyBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const username = participant.querySelector('span:last-child')?.textContent || 'User';
+                        this.copyUserBackground(userId, username);
+                    });
+                    participant.appendChild(copyBtn);
+                }
+            } else {
+                // Remove indicator and button if they exist
+                if (indicator) indicator.remove();
+                if (copyBtn) copyBtn.remove();
+            }
         }
     }
 

@@ -48,7 +48,8 @@ io.on('connection', (socket) => {
         position: { x: 400, y: 300 }, // Default center position
         proximityRange: 100, // Default proximity range
         voiceChannel: null,
-        status: 'online'
+        status: 'online',
+        backgroundImage: null // Store background image data URL
     });
 
     // Handle user joining hub
@@ -370,6 +371,45 @@ io.on('connection', (socket) => {
             io.emit('user-status-changed', {
                 userId: socket.id,
                 status
+            });
+        }
+    });
+
+    // Handle background image update
+    socket.on('update-background', (data) => {
+        const { backgroundImage } = data;
+        const user = users.get(socket.id);
+
+        if (user) {
+            // Store background image (could be large base64 string)
+            user.backgroundImage = backgroundImage;
+
+            console.log(`🖼️ ${user.username} updated background image (${backgroundImage ? 'set' : 'removed'})`);
+
+            // Broadcast to users in the same voice channel
+            if (user.voiceChannel) {
+                socket.to(user.voiceChannel).emit('user-background-updated', {
+                    userId: socket.id,
+                    username: user.username,
+                    hasBackground: !!backgroundImage
+                });
+            }
+        }
+    });
+
+    // Handle request for another user's background
+    socket.on('request-user-background', (data) => {
+        const { userId } = data;
+        const targetUser = users.get(userId);
+        const requestingUser = users.get(socket.id);
+
+        if (targetUser && requestingUser && targetUser.backgroundImage) {
+            console.log(`🖼️ ${requestingUser.username} requested ${targetUser.username}'s background`);
+
+            socket.emit('user-background-data', {
+                userId: targetUser.id,
+                username: targetUser.username,
+                backgroundImage: targetUser.backgroundImage
             });
         }
     });
