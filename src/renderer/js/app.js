@@ -35,6 +35,9 @@ class ProximityApp {
 
     async init() {
         try {
+            // Migrate old chat messages to new per-channel format
+            this.migrateChatMessages();
+
             // Initialize settings first
             await this.settingsManager.load();
 
@@ -563,6 +566,52 @@ class ProximityApp {
         // Request messages from server for this channel
         if (this.connectionManager.socket) {
             this.connectionManager.socket.emit('request-channel-messages', { channelId });
+        }
+    }
+
+    // Migrate old chat messages to new per-channel format
+    migrateChatMessages() {
+        try {
+            const oldKey = 'proximity_chat_messages';
+            const oldMessages = localStorage.getItem(oldKey);
+
+            if (oldMessages) {
+                console.log('🔄 Migrating old chat messages to new per-channel format...');
+                const messages = JSON.parse(oldMessages);
+
+                // Move to general channel
+                const newKey = 'proximity_chat_messages_general';
+                const existingGeneral = localStorage.getItem(newKey);
+
+                if (!existingGeneral) {
+                    // No general messages yet, move all old messages there
+                    localStorage.setItem(newKey, oldMessages);
+                    console.log(`✅ Migrated ${messages.length} messages to #general`);
+                } else {
+                    // Merge with existing general messages
+                    const generalMessages = JSON.parse(existingGeneral);
+                    const allMessages = [...generalMessages, ...messages];
+
+                    // Remove duplicates by ID
+                    const uniqueMessages = Array.from(
+                        new Map(allMessages.map(m => [m.id, m])).values()
+                    );
+
+                    // Sort by timestamp and keep last 100
+                    const sortedMessages = uniqueMessages
+                        .sort((a, b) => a.timestamp - b.timestamp)
+                        .slice(-100);
+
+                    localStorage.setItem(newKey, JSON.stringify(sortedMessages));
+                    console.log(`✅ Merged ${messages.length} old messages with ${generalMessages.length} existing messages in #general`);
+                }
+
+                // Remove old key
+                localStorage.removeItem(oldKey);
+                console.log('✅ Migration complete - old messages removed');
+            }
+        } catch (error) {
+            console.error('Failed to migrate chat messages:', error);
         }
     }
 
