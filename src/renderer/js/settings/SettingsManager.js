@@ -115,7 +115,7 @@ export class SettingsManager {
         }
 
         // Color picker
-        const colorOptions = document.querySelectorAll('.color-option');
+        const colorOptions = document.querySelectorAll('.color-swatch');
         colorOptions.forEach(option => {
             option.classList.remove('selected');
             if (option.dataset.color === this.settings.userColor) {
