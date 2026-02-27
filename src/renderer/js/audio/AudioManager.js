@@ -827,25 +827,26 @@ export class AudioManager {
         peerConnection.ontrack = (event) => {
             console.log('📥 Received remote stream from:', userId);
             const remoteStream = event.streams[0];
-            
+
             const audioElement = document.createElement('audio');
+            audioElement.id = `audio-${userId}`;
+            audioElement.setAttribute('data-user-id', userId);
             audioElement.autoplay = true;
             audioElement.srcObject = remoteStream;
             audioElement.volume = 1;
             audioElement.style.display = 'none';
-            
+
             // Use locked output device if available
             if (this.isOutputLocked && this.lockedOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.lockedOutputDevice).catch(console.error);
             } else if (this.currentOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.currentOutputDevice).catch(console.error);
             }
-            
-            const participant = document.getElementById(`voice-participant-${userId}-${window.proximityApp?.currentVoiceChannel?.replace('-voice', '')}`);
-            if (participant) {
-                participant.appendChild(audioElement);
-            }
-            
+
+            // Always append to body so audio plays regardless of DOM state
+            document.body.appendChild(audioElement);
+            audioElement.play().catch(err => console.warn('⚠️ Autoplay blocked for', userId, err));
+
             if (window.proximityApp && window.proximityApp.proximityMap) {
                 window.proximityApp.proximityMap.setUserAudioElement(userId, audioElement);
             }

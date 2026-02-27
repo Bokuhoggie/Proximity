@@ -22,8 +22,7 @@ export class UIManager {
         this.elements.pages = document.querySelectorAll('.page');
         
         // Connection status
-        this.elements.connectionIndicator = document.getElementById('connectionIndicator');
-        this.elements.connectionText = document.getElementById('connectionText');
+        this.elements.connectionDot = document.getElementById('connectionDot');
         
         // Server view
         this.elements.currentServerName = document.getElementById('currentServerName');
@@ -304,19 +303,17 @@ export class UIManager {
     switchPage(pageName) {
         console.log('Switching to page:', pageName);
 
-        // Update navigation
-        this.elements.navItems.forEach(item => {
-            item.classList.toggle('active', item.dataset.page === pageName);
-        });
+        // Map legacy page names to view IDs used in the new HTML
+        const pageToViewMap = {
+            'settings': 'settings-view',
+            'server-view': 'text-chat-view',
+            'hub': 'text-chat-view',
+            'voice': 'voice-channel-view',
+        };
 
-        // Update pages
-        this.elements.pages.forEach(page => {
-            page.classList.toggle('active', page.id === `${pageName}-page`);
-        });
-
-        // Special hub handling
-        if (pageName === 'hub') {
-            document.getElementById('server-view-page').classList.add('active');
+        const viewId = pageToViewMap[pageName];
+        if (viewId) {
+            this.switchToContentView(viewId);
         }
 
         // CRITICAL: Emit page-change event so app.js handlePageChange() is called
@@ -457,7 +454,7 @@ export class UIManager {
         participant.setAttribute('data-user-color', userColor);
 
         const micStatus = document.createElement('div');
-        micStatus.className = 'mic-status';
+        micStatus.className = 'participant-dot';
 
         const avatar = document.createElement('span');
         avatar.className = 'participant-avatar';
@@ -540,7 +537,7 @@ export class UIManager {
         // Update mic status in voice participants
         const myParticipants = document.querySelectorAll(`[id*="voice-participant-${this.getUserId()}-"]`);
         myParticipants.forEach(participant => {
-            const micStatus = participant.querySelector('.mic-status');
+            const micStatus = participant.querySelector('.participant-dot');
             if (micStatus) {
                 micStatus.classList.toggle('muted', isMuted);
             }
@@ -551,7 +548,7 @@ export class UIManager {
         // Update mic status for a specific user in voice participants
         const userParticipants = document.querySelectorAll(`[id*="voice-participant-${userId}-"]`);
         userParticipants.forEach(participant => {
-            const micStatus = participant.querySelector('.mic-status');
+            const micStatus = participant.querySelector('.participant-dot');
             if (micStatus) {
                 micStatus.classList.toggle('muted', isMuted);
             }
@@ -559,10 +556,10 @@ export class UIManager {
     }
 
     updateConnectionStatus(status, text) {
-        if (this.elements.connectionIndicator && this.elements.connectionText) {
-            this.elements.connectionIndicator.classList.remove('online', 'offline', 'connecting');
-            this.elements.connectionIndicator.classList.add(status);
-            this.elements.connectionText.textContent = text;
+        if (this.elements.connectionDot) {
+            this.elements.connectionDot.classList.remove('online', 'offline', 'connecting');
+            this.elements.connectionDot.classList.add(status);
+            this.elements.connectionDot.title = text;
         }
     }
 
@@ -583,55 +580,59 @@ export class UIManager {
         if (!this.elements.chatMessages) return;
 
         const messageElement = document.createElement('div');
-        messageElement.className = 'message';
+        messageElement.className = 'chat-message';
         messageElement.id = `message-${messageData.id}`;
 
-        const messageHeader = document.createElement('div');
-        messageHeader.className = 'message-header';
+        // Avatar
+        const avatar = document.createElement('div');
+        avatar.className = 'msg-avatar';
+        avatar.textContent = this.getColorEmoji(messageData.userColor || 'purple');
+
+        // Body
+        const body = document.createElement('div');
+        body.className = 'msg-body';
+
+        const meta = document.createElement('div');
+        meta.className = 'msg-meta';
 
         const author = document.createElement('span');
-        author.className = 'message-author';
+        author.className = 'msg-username';
         author.textContent = messageData.username;
 
         const time = document.createElement('span');
-        time.className = 'message-timestamp';
+        time.className = 'msg-time';
         time.textContent = new Date(messageData.timestamp).toLocaleTimeString();
 
-        messageHeader.appendChild(author);
-        messageHeader.appendChild(time);
+        meta.appendChild(author);
+        meta.appendChild(time);
 
         const content = document.createElement('div');
-        content.className = 'message-content';
+        content.className = 'msg-text';
         content.textContent = messageData.message;
+
+        body.appendChild(meta);
+        body.appendChild(content);
 
         // Add delete button for own messages
         const isOwnMessage = messageData.userId === this.getUserId();
         if (isOwnMessage) {
             const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'message-delete-btn';
-            deleteBtn.innerHTML = '🗑️';
+            deleteBtn.className = 'msg-delete';
+            deleteBtn.innerHTML = '🗑';
             deleteBtn.title = 'Delete message';
-            deleteBtn.style.display = 'none'; // Hidden by default
-            
+
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.showDeleteConfirmation(messageData.id);
             });
-            
-            messageElement.appendChild(deleteBtn);
-            
-            // Show delete button on hover
-            messageElement.addEventListener('mouseenter', () => {
-                deleteBtn.style.display = 'block';
-            });
-            
-            messageElement.addEventListener('mouseleave', () => {
-                deleteBtn.style.display = 'none';
-            });
-        }
 
-        messageElement.appendChild(messageHeader);
-        messageElement.appendChild(content);
+            messageElement.appendChild(avatar);
+            messageElement.appendChild(body);
+            messageElement.appendChild(deleteBtn);
+        } else {
+            messageElement.appendChild(avatar);
+            messageElement.appendChild(body);
+        }
 
         this.elements.chatMessages.appendChild(messageElement);
         this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;

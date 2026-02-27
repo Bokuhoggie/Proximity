@@ -1,368 +1,302 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Proximity - Voice Chat</title>
+    <title>Proximity</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com https://matrix.org https://*.matrix.org wss://matrix.org wss://*.matrix.org; media-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com; media-src 'self' data:;">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Connection Status Overlay -->
-    <div id="connectionOverlay" class="connection-overlay" style="display: none;">
-        <div class="connection-content">
-            <h1>🌐 Proximity</h1>
-            <div class="connection-status">
-                <div class="spinner"></div>
-                <h2 id="connectionStatusText">Connecting to Railway server...</h2>
-                <p id="connectionStatusDetail">Attempting to connect to https://proximityserver-production.up.railway.app</p>
-                <div class="connection-actions" id="connectionActions" style="display: none;">
-                    <button id="retryConnectionBtn" class="btn primary">Retry Connection</button>
-                    <button id="useLocalServerBtn" class="btn secondary">Use Local Server</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Join Hub Screen -->
-    <div id="joinHubScreen" class="join-hub-screen">
-        <div class="join-hub-content">
-            <h1>🌐 Proximity</h1>
-            <p class="tagline">Voice chat with spatial audio</p>
+    <!-- ================================================================
+         JOIN SCREEN
+    ================================================================ -->
+    <div id="joinScreen" class="join-screen">
+        <div class="join-card">
+            <div class="join-logo">
+                <div class="join-logo-icon">⬡</div>
+                <h1>Proximity</h1>
+                <p>Spatial voice chat</p>
+            </div>
             <div class="join-form">
-                <input type="text" id="joinHubUsername" placeholder="Enter your username" maxlength="20" />
-                <button id="joinHubButton" class="btn primary large">Join Hub</button>
+                <input
+                    type="text"
+                    id="joinHubUsername"
+                    class="join-input"
+                    placeholder="Username"
+                    maxlength="20"
+                    autocomplete="off"
+                    spellcheck="false"
+                />
+                <button id="joinHubButton" class="join-btn">Enter</button>
             </div>
         </div>
     </div>
 
-    <div class="app-container" style="display: none;" id="mainApp">
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Server View Page -->
-            <div class="page active" id="server-view-page">
-                <div class="server-layout">
-                    <!-- Server Sidebar -->
-                    <div class="server-sidebar">
-                        <div class="server-info">
-                            <h1 class="logo">PROXIMITY</h1>
-                        </div>
+    <!-- ================================================================
+         CONNECTION OVERLAY
+    ================================================================ -->
+    <div id="connectionOverlay" class="overlay" style="display:none;">
+        <div class="overlay-card">
+            <div class="spinner"></div>
+            <h2 id="connectionStatusText">Connecting…</h2>
+            <p id="connectionStatusDetail"></p>
+            <div id="connectionActions" class="overlay-actions" style="display:none;">
+                <button id="retryConnectionBtn" class="btn primary">Retry</button>
+                <button id="useLocalServerBtn" class="btn ghost">Use Local Server</button>
+            </div>
+        </div>
+    </div>
 
-                        <div class="channels-section">
-                            <div class="channel-category">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h4>💬 Chat</h4>
-                                    <button id="createTextChannelBtn" class="btn-icon" title="Create text channel" style="font-size: 1.2rem; padding: 2px 8px;">+</button>
-                                </div>
-                                <div class="channel-list" id="textChannelsList">
-                                    <div class="channel-item active" data-channel-type="text" data-channel-id="general">
-                                        <span class="channel-icon">#</span>
-                                        <span class="channel-name">general</span>
-                                    </div>
-                                </div>
-                            </div>
+    <!-- ================================================================
+         MAIN APP
+    ================================================================ -->
+    <div id="mainApp" class="app" style="display:none;">
 
-                            <div class="channel-category">
-                                <h4>🔊 Voice</h4>
-                                <div class="channel-list" id="voiceChannelsList">
-                                    <div class="voice-channel" data-channel-type="voice" data-channel-id="general-voice">
-                                        <div class="voice-channel-header">
-                                            <div class="voice-channel-info">
-                                                <span class="channel-icon">🔊</span>
-                                                <span class="channel-name">Voice Chat</span>
-                                            </div>
-                                            <button class="map-button" data-voice-channel="general-voice" title="Open in Map">🗺️</button>
-                                        </div>
-                                        <div class="voice-participants" id="voiceParticipants-general"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="user-controls">
-                            <button id="muteButton" class="control-button">
-                                <span class="icon">🎤</span>
-                                <span class="text">Mute</span>
-                            </button>
-                            <button id="leaveChannelBtn" class="btn danger" style="display: none;">Leave Channel</button>
-
-                            <!-- Settings Button -->
-                            <button id="settingsButton" class="control-button settings-btn">
-                                <span class="icon">⚙️</span>
-                                <span class="text">Settings</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Main Content Area -->
-                    <div class="server-main-content">
-                        <!-- Text Chat View -->
-                        <div class="content-view active" id="text-chat-view">
-                            <div class="chat-header">
-                                <h3 id="currentChannelName"># general</h3>
-                                <p id="currentChannelDescription">Welcome to the Proximity Room</p>
-                            </div>
-                            <div class="chat-messages" id="chatMessages">
-                                <div class="welcome-message">
-                                    <p>Welcome! This is where everyone gathers to chat and connect.</p>
-                                </div>
-                            </div>
-                            <div class="chat-input-container">
-                                <input type="text" id="messageInput" placeholder="Message #general" class="chat-input">
-                                <button id="sendMessageBtn" class="send-btn">Send</button>
-                            </div>
-                        </div>
-
-                        <!-- Voice Channel View -->
-                        <div class="content-view" id="voice-channel-view">
-                            <div class="voice-header">
-                                <h3 id="currentVoiceChannelName">🔊 Voice Chat</h3>
-                                <p>Connected to voice channel</p>
-                            </div>
-                            <div class="voice-content">
-                                <div class="participants-section">
-                                    <h4>Participants</h4>
-                                    <div id="participantsList" class="participants-list"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Left Rail: server/channel list -->
+        <aside class="rail">
+            <div class="rail-header">
+                <span class="rail-logo">⬡</span>
+                <span class="rail-title">Proximity</span>
+                <span id="connectionDot" class="conn-dot offline" title="Disconnected"></span>
             </div>
 
-            <!-- Map Page -->
-            <div class="page" id="map-page">
-                <header class="page-header">
-                    <h2>Proximity Map</h2>
-                    <p>Move around to experience spatial audio</p>
-
-                    <div class="map-instructions">
-                        <ul>
-                            <li>Drag your user to move around the map</li>
-                            <li>Get closer to others to hear them louder</li>
-                            <li>Adjust proximity range with the slider below</li>
-                            <li>Add a test bot to experiment with proximity audio</li>
-                        </ul>
+            <nav class="rail-nav">
+                <!-- Text channels -->
+                <div class="rail-section">
+                    <div class="rail-section-header">
+                        <span>Text</span>
+                        <button id="createTextChannelBtn" class="rail-add-btn" title="New channel">+</button>
                     </div>
+                    <div id="textChannelsList" class="rail-channel-list">
+                        <button class="channel-btn active" data-channel-type="text" data-channel-id="general">
+                            <span class="channel-hash">#</span>general
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Voice channels -->
+                <div class="rail-section">
+                    <div class="rail-section-header">
+                        <span>Voice</span>
+                    </div>
+                    <div id="voiceChannelsList" class="rail-channel-list">
+                        <div class="voice-channel-entry" data-channel-id="general-voice">
+                            <button class="channel-btn voice-btn" data-channel-type="voice" data-channel-id="general-voice">
+                                <span class="channel-voice-icon">♦</span>Voice Chat
+                            </button>
+                            <button class="map-btn" data-voice-channel="general-voice" title="Open map">⊞</button>
+                        </div>
+                        <div id="voiceParticipants-general" class="voice-participant-list"></div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Bottom user strip -->
+            <div class="rail-footer">
+                <button id="muteButton" class="footer-btn" title="Mute / Unmute">
+                    <span id="muteIcon">🎤</span>
+                </button>
+                <button id="leaveChannelBtn" class="footer-btn danger" style="display:none;" title="Leave voice">✕</button>
+                <button id="settingsButton" class="footer-btn" title="Settings">⚙</button>
+            </div>
+        </aside>
+
+        <!-- Main panel -->
+        <main class="panel">
+
+            <!-- TEXT CHAT VIEW -->
+            <div id="text-chat-view" class="view active">
+                <header class="view-header">
+                    <span class="view-header-hash">#</span>
+                    <h2 id="currentChannelName">general</h2>
+                    <p id="currentChannelDescription" class="view-header-desc">Welcome to Proximity</p>
                 </header>
 
-                <div class="map-section">
-                    <div class="map-container">
-                        <canvas id="proximityMap" width="800" height="600"></canvas>
+                <div id="chatMessages" class="messages">
+                    <div class="messages-empty">Say hello 👋</div>
+                </div>
 
-                        <div class="map-controls">
-                            <div class="proximity-info">
-                                <span>Range: <span id="proximityRange">100px</span></span>
-                                <input type="range" id="proximitySlider" min="50" max="300" value="100" class="proximity-slider">
-                            </div>
-
-                            <div class="map-actions">
-                                <button id="centerMapBtn" class="btn secondary">
-                                    <span class="icon">🎯</span>
-                                    <span class="text">Center</span>
-                                </button>
-                                <button id="toggleTestBot" class="btn secondary">
-                                    <span class="icon">🤖</span>
-                                    <span class="text">Add Test Bot</span>
-                                </button>
-                                <button id="mapLeaveChannelBtn" class="btn danger" style="display: none;">
-                                    <span class="icon">🚪</span>
-                                    <span class="text">Leave Channel</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="composer">
+                    <input
+                        id="messageInput"
+                        type="text"
+                        class="composer-input"
+                        placeholder="Message #general"
+                        autocomplete="off"
+                        spellcheck="false"
+                    />
+                    <button id="sendMessageBtn" class="composer-send">↑</button>
                 </div>
             </div>
 
-            <!-- Settings Page -->
-            <div class="page" id="settings-page">
-                <header class="page-header">
-                    <button id="backFromSettings" class="btn secondary" style="margin-bottom: 1rem;">
-                        <span class="icon">←</span>
-                        <span class="text">Back</span>
-                    </button>
+            <!-- VOICE VIEW (shown when in voice channel, no map open) -->
+            <div id="voice-channel-view" class="view">
+                <header class="view-header">
+                    <span class="view-header-hash">♦</span>
+                    <h2 id="currentVoiceChannelName">Voice Chat</h2>
+                    <p class="view-header-desc">Connected</p>
+                </header>
+                <div class="voice-idle">
+                    <p>You're in voice. Open the map to move around.</p>
+                    <button class="btn primary open-map-btn" data-voice-channel="general-voice">Open Map</button>
+                </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div id="settings-view" class="view">
+                <header class="view-header">
+                    <button id="backFromSettings" class="back-btn">←</button>
                     <h2>Settings</h2>
                 </header>
 
-                <div class="settings-section">
-                    <div class="setting-group">
-                        <h3>Audio Settings</h3>
+                <div class="settings-body">
 
-                        <div class="setting-item">
-                            <label for="audioDevice">Microphone Device</label>
-                            <select id="audioDevice" class="setting-select" style="min-height: 50px;">
-                                <option value="">Select Audio Device</option>
-                            </select>
+                    <section class="settings-section">
+                        <h3>Profile</h3>
+
+                        <label class="field-label">Display Name</label>
+                        <input id="username" type="text" class="field-input" placeholder="Your name" maxlength="20" />
+
+                        <label class="field-label" style="margin-top:1.25rem;">Color</label>
+                        <div class="color-picker">
+                            <button class="color-swatch color-blue"   data-color="blue"   aria-label="Blue"></button>
+                            <button class="color-swatch color-green"  data-color="green"  aria-label="Green"></button>
+                            <button class="color-swatch color-purple selected" data-color="purple" aria-label="Purple"></button>
+                            <button class="color-swatch color-red"    data-color="red"    aria-label="Red"></button>
+                            <button class="color-swatch color-orange" data-color="orange" aria-label="Orange"></button>
+                            <button class="color-swatch color-pink"   data-color="pink"   aria-label="Pink"></button>
+                            <button class="color-swatch color-indigo" data-color="indigo" aria-label="Indigo"></button>
+                            <button class="color-swatch color-cyan"   data-color="cyan"   aria-label="Cyan"></button>
+                        </div>
+                    </section>
+
+                    <section class="settings-section">
+                        <h3>Audio</h3>
+
+                        <label class="field-label">Microphone</label>
+                        <select id="audioDevice" class="field-select">
+                            <option value="">Default</option>
+                        </select>
+
+                        <label class="field-label" style="margin-top:1rem;">Output Device</label>
+                        <select id="audioOutputDevice" class="field-select">
+                            <option value="">Default</option>
+                        </select>
+
+                        <div class="audio-test-row">
+                            <button id="testMicrophoneToggle" class="btn ghost">Test Mic</button>
+                            <button id="testOutputButton" class="btn ghost">Test Output</button>
                         </div>
 
-                        <div class="setting-item">
-                            <label for="audioOutputDevice">Output Device</label>
-                            <select id="audioOutputDevice" class="setting-select" style="min-height: 50px;">
-                                <option value="">Select Output Device</option>
-                            </select>
+                        <div class="mic-meter">
+                            <div id="persistentMicLevelFill" class="mic-meter-fill"></div>
+                            <span id="persistentVolumeLevel" class="mic-meter-label">0%</span>
                         </div>
 
-                        <div class="setting-item" style="display: flex; gap: 1rem; margin-top: 1rem;">
-                            <button id="testMicrophoneToggle" class="btn secondary" style="flex: 1;">Test Microphone</button>
-                            <button id="testOutputButton" class="btn secondary" style="flex: 1;">Test Output</button>
+                        <label class="toggle-row">
+                            <input type="checkbox" id="muteWhileMoving" />
+                            <span class="toggle-label">MoveMute — mute others while they're moving</span>
+                        </label>
+                    </section>
+
+                    <section class="settings-section">
+                        <h3>Map Background</h3>
+
+                        <div class="bg-upload-row">
+                            <input type="file" id="backgroundImage" accept="image/*" style="display:none;" />
+                            <button id="uploadBackgroundBtn" class="btn ghost">Upload Image</button>
+                            <button id="removeBackgroundBtn" class="btn danger-ghost" style="display:none;">Remove</button>
                         </div>
 
-                        <div class="setting-item">
-                            <label>Microphone Monitor</label>
-                            <div id="persistentVisualizerContainer" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--border-dark);">
-                                <div style="width: 100%; height: 20px; background: var(--bg-darkest); border-radius: 10px; overflow: hidden; position: relative;">
-                                    <div id="persistentMicLevelFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--success) 0%, var(--warning) 70%, var(--danger) 100%); transition: width 0.1s ease; border-radius: 10px;"></div>
-                                    <span id="persistentVolumeLevel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: bold; color: var(--text-primary); text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">0%</span>
-                                </div>
-                            </div>
+                        <div id="backgroundImagePreview" style="display:none;" class="bg-preview">
+                            <img id="backgroundImagePreviewImg" src="" alt="Preview" />
+                            <span id="backgroundImageDimensions" class="bg-dims"></span>
                         </div>
 
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="muteWhileMoving" class="setting-checkbox">
-                                MoveMute
+                        <div id="backgroundImageControls" style="display:none;" class="bg-controls">
+                            <label class="field-label">
+                                Opacity: <span id="backgroundOpacityValue">50%</span>
                             </label>
-                            <p class="setting-description">Mutes other users while they move on the map. Sound returns after 0.5s of being stationary.</p>
+                            <input type="range" id="backgroundOpacity" min="10" max="100" value="50" class="slider" />
+
+                            <label class="field-label" style="margin-top:0.75rem;">Size</label>
+                            <div class="bg-size-row">
+                                <button class="btn ghost bg-size-btn" data-size="cover">Cover</button>
+                                <button class="btn ghost bg-size-btn" data-size="contain">Contain</button>
+                                <button class="btn ghost bg-size-btn active" data-size="100% 100%">Stretch</button>
+                            </div>
                         </div>
+                    </section>
+
+                    <div class="settings-footer">
+                        <button id="resetSettings" class="btn danger-ghost">Reset to Defaults</button>
                     </div>
 
-                    <div class="setting-group">
-                        <h3>General Settings</h3>
-
-                        <div class="setting-item">
-                            <label for="username">Display Name</label>
-                            <input type="text" id="username" placeholder="Enter your name" class="setting-input">
-                        </div>
-
-                        <div class="setting-item">
-                            <label>User Color</label>
-                            <div class="user-color-picker">
-                                <button type="button" class="color-option color-blue" data-color="blue" aria-label="Blue"></button>
-                                <button type="button" class="color-option color-green" data-color="green" aria-label="Green"></button>
-                                <button type="button" class="color-option color-purple selected" data-color="purple" aria-label="Purple"></button>
-                                <button type="button" class="color-option color-red" data-color="red" aria-label="Red"></button>
-                                <button type="button" class="color-option color-orange" data-color="orange" aria-label="Orange"></button>
-                                <button type="button" class="color-option color-pink" data-color="pink" aria-label="Pink"></button>
-                                <button type="button" class="color-option color-indigo" data-color="indigo" aria-label="Indigo"></button>
-                                <button type="button" class="color-option color-cyan" data-color="cyan" aria-label="Cyan"></button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <label for="backgroundImage">Custom Background</label>
-                            <div class="background-upload-container">
-                                <input type="file" id="backgroundImage" accept="image/*" class="setting-file-input" style="display: none;">
-                                <button type="button" id="uploadBackgroundBtn" class="btn secondary" style="margin-right: 10px;">📷 Upload Image</button>
-                                <button type="button" id="removeBackgroundBtn" class="btn danger" style="display: none;">✖ Remove</button>
-                            </div>
-                            <p class="setting-description">Upload a custom background image for the proximity map. Recommended size: 800x600px</p>
-
-                            <!-- Image Preview -->
-                            <div id="backgroundImagePreview" style="display: none; margin-top: 10px; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; max-width: 400px;">
-                                <img id="backgroundImagePreviewImg" src="" alt="Background preview" style="width: 100%; height: auto; display: block;">
-                                <div style="padding: 8px; background: var(--dark-bg); color: var(--text-secondary); font-size: 0.85rem; text-align: center;">
-                                    <span id="backgroundImageDimensions"></span>
-                                </div>
-                            </div>
-
-                            <!-- Image Adjustment Controls -->
-                            <div id="backgroundImageControls" style="display: none; margin-top: 10px; padding: 12px; background: var(--dark-bg); border: 1px solid var(--border); border-radius: 8px;">
-                                <div style="margin-bottom: 12px;">
-                                    <label for="backgroundOpacity" style="display: block; margin-bottom: 4px; color: var(--text-secondary); font-size: 0.9rem;">Opacity: <span id="backgroundOpacityValue">50%</span></label>
-                                    <input type="range" id="backgroundOpacity" min="10" max="100" value="50" style="width: 100%;">
-                                </div>
-
-                                <div>
-                                    <label style="display: block; margin-bottom: 4px; color: var(--text-secondary); font-size: 0.9rem;">Background Size</label>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button type="button" class="btn secondary small bg-size-btn" data-size="cover">Cover</button>
-                                        <button type="button" class="btn secondary small bg-size-btn" data-size="contain">Contain</button>
-                                        <button type="button" class="btn secondary small bg-size-btn active" data-size="100% 100%">Stretch</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="settings-actions">
-                        <button id="resetSettings" class="btn danger">Reset to Defaults</button>
-                    </div>
                 </div>
             </div>
+
         </main>
     </div>
 
-    <!-- Create Channel Modal -->
-    <div id="createChannelModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3>Create Text Channel</h3>
-                <button id="closeCreateChannelModal" class="close-btn">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="channelNameInput">Channel Name</label>
-                    <input type="text" id="channelNameInput" placeholder="e.g., memes, gaming, general" maxlength="30" autocomplete="off">
-                    <p class="help-text">Letters, numbers, and hyphens only. Will be converted to lowercase.</p>
-                </div>
-                <div id="channelNamePreview" class="channel-preview" style="display: none;">
-                    <span class="channel-icon">#</span>
-                    <span id="channelNamePreviewText"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelCreateChannel" class="btn secondary">Cancel</button>
-                <button id="confirmCreateChannel" class="btn primary" disabled>Create Channel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Proximity Map Modal -->
-    <div id="mapModal" class="map-modal" style="display: none;">
-        <div class="map-modal-content">
+    <!-- ================================================================
+         PROXIMITY MAP MODAL
+    ================================================================ -->
+    <div id="mapModal" class="modal-backdrop" style="display:none;">
+        <div class="map-modal">
             <div class="map-modal-header">
-                <h3>🗺️ Proximity Map</h3>
-                <button id="closeMapModal" class="close-btn">×</button>
+                <span class="map-modal-title">⬡ Proximity Map</span>
+                <div class="map-modal-controls">
+                    <label class="range-label">
+                        Range: <span id="modalProximityRange">100px</span>
+                        <input type="range" id="modalProximitySlider" min="50" max="300" value="100" class="slider" />
+                    </label>
+                    <button id="modalCenterBtn" class="map-ctrl-btn" title="Center">⊕</button>
+                    <button id="modalToggleTestBot" class="map-ctrl-btn" title="Toggle test bot">⬡</button>
+                    <button id="closeMapModal" class="map-ctrl-btn close" title="Close">✕</button>
+                </div>
             </div>
             <div class="map-modal-body">
-                <canvas id="modalProximityMap" width="800" height="600"></canvas>
-                <div class="map-controls">
-                    <div class="proximity-info">
-                        <label>Proximity Range: <span id="modalProximityRange">100px</span></label>
-                        <input type="range" id="modalProximitySlider" min="50" max="300" value="100" class="proximity-slider">
-                    </div>
-                    <button id="modalCenterBtn" class="btn secondary">📍 Center</button>
-                    <button id="modalToggleTestBot" class="btn secondary">
-                        <span class="icon">🤖</span>
-                        <span class="text">Add Test Bot</span>
-                    </button>
-                </div>
+                <canvas id="modalProximityMap" width="800" height="500"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Polyfills for Matrix SDK -->
-    <script>
-        // Provide global object for Matrix SDK
-        window.global = window;
-    </script>
+    <!-- ================================================================
+         CREATE CHANNEL MODAL
+    ================================================================ -->
+    <div id="createChannelModal" class="modal-backdrop" style="display:none;">
+        <div class="dialog">
+            <div class="dialog-header">
+                <h3>New Text Channel</h3>
+                <button id="closeCreateChannelModal" class="dialog-close">✕</button>
+            </div>
+            <div class="dialog-body">
+                <label class="field-label">Channel name</label>
+                <input id="channelNameInput" type="text" class="field-input" placeholder="e.g. gaming" maxlength="30" autocomplete="off" />
+                <p class="field-hint">Lowercase letters, numbers, hyphens.</p>
+                <div id="channelNamePreview" class="channel-preview" style="display:none;">
+                    <span>#</span><span id="channelNamePreviewText"></span>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button id="cancelCreateChannel" class="btn ghost">Cancel</button>
+                <button id="confirmCreateChannel" class="btn primary" disabled>Create</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Load Socket.IO from CDN first -->
+    <!-- Socket.IO from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
-
-    <!-- Load our main application -->
+    <!-- Bundled app -->
     <script src="dist/bundle.js"></script>
-
-    <!-- Fallback check -->
     <script>
         setTimeout(() => {
             if (!window.proximityApp) {
-                console.error('Main app failed to load');
-                alert('App failed to load. Please check the console for errors.');
+                console.error('App failed to initialise — check dist/bundle.js');
             }
-        }, 2000);
+        }, 3000);
     </script>
 </body>
 </html>

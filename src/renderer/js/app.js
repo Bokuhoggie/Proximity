@@ -4,11 +4,9 @@ import { UIManager } from './ui/UIManager.js';
 import { AudioManager } from './audio/AudioManager.js';
 import { ProximityMap } from './proximity/ProximityMap.js';
 import { SettingsManager } from './settings/SettingsManager.js';
-import { MatrixClient } from './chat/MatrixClient.js';
-
 // Try Railway first, fallback to localhost for development
 const SERVER_URL = 'https://proximityserver-production.up.railway.app';
-const FALLBACK_URL = 'https://proximityserver-production.up.railway.app';
+const FALLBACK_URL = 'http://localhost:3001';
 
 class ProximityApp {
     constructor() {
@@ -19,14 +17,12 @@ class ProximityApp {
         this.uiManager = new UIManager();
         this.audioManager = new AudioManager();
         this.settingsManager = new SettingsManager();
-        this.matrixClient = new MatrixClient();
         this.proximityMap = null;
 
         // State - simplified to single channel
         this.currentTextChannel = 'general';
         this.currentVoiceChannel = null;
         this.myUserId = null;
-        this.matrixUserId = null;
         this.isInHub = false;
         this.hubUsers = [];
 
@@ -164,7 +160,7 @@ class ProximityApp {
     setupJoinHubScreen() {
         const joinHubButton = document.getElementById('joinHubButton');
         const joinHubUsername = document.getElementById('joinHubUsername');
-        const joinHubScreen = document.getElementById('joinHubScreen');
+        const joinHubScreen = document.getElementById('joinScreen');
         const mainApp = document.getElementById('mainApp');
 
         // Load saved username
@@ -798,7 +794,7 @@ class ProximityApp {
         }
 
         // Color picker
-        const colorOptions = document.querySelectorAll('.color-option');
+        const colorOptions = document.querySelectorAll('.color-swatch');
         colorOptions.forEach(option => {
             option.addEventListener('click', (e) => {
                 const selectedColor = e.target.dataset.color;
@@ -1257,80 +1253,21 @@ class ProximityApp {
 
             this.uiManager.showNotification('Joined Proximity Room', 'success');
 
-        } catch (bomboclat) {
-            console.bomboclat('Failed to join hub:', bomboclat);
-            this.uiManager.showNotification('Failed to join room - bomboclat!', 'bomboclat');
+        } catch (error) {
+            console.error('Failed to join hub:', error);
+            this.uiManager.showNotification('Failed to join room', 'error');
         }
     }
+
+    // ---- Dead Matrix methods removed (2026-02-25 audit) ----
 
     async loadChatForCurrentChannel() {
-        console.log('📜 Loading chat history from Matrix...');
-
-        // Clear chat first
-        const chatMessages = document.getElementById('chatMessages');
-        if (chatMessages) {
-            chatMessages.innerHTML = `
-                <div class="welcome-message">
-                    <p>Welcome to Proximity Chat! 🔷 Powered by Matrix</p>
-                </div>
-            `;
-        }
-
-        // Load Matrix chat history
-        try {
-            const messages = await this.matrixClient.getRoomHistory(50);
-            console.log(`📜 Loaded ${messages.length} messages from Matrix`);
-
-            messages.forEach(msg => {
-                this.displayMatrixMessage(msg);
-            });
-        } catch (error) {
-            console.error('Failed to load chat history:', error);
-        }
+        // Matrix integration removed. Chat is handled via Socket.IO.
+        // Matrix removed — chat history comes from Socket.IO 'chat-history' event
     }
 
-    setupMatrixEventHandlers() {
-        // Handle new messages
-        this.matrixClient.on('message', (msg) => {
-            console.log('📨 New Matrix message:', msg);
-            this.displayMatrixMessage(msg);
-        });
-
-        // Handle user joined
-        this.matrixClient.on('user-joined', (data) => {
-            console.log('👋 User joined Matrix room:', data.displayName);
-        });
-
-        // Handle user left
-        this.matrixClient.on('user-left', (data) => {
-            console.log('👋 User left Matrix room:', data.userId);
-        });
-
-        // Handle Matrix ready
-        this.matrixClient.on('ready', () => {
-            console.log('✅ Matrix client ready');
-        });
-    }
-
-    displayMatrixMessage(msg) {
-        const messageData = {
-            id: msg.id,
-            username: this.getDisplayNameFromUserId(msg.sender),
-            message: msg.content,
-            timestamp: msg.timestamp,
-            userId: msg.sender,
-            userColor: 'purple' // Default color for now
-        };
-
-        this.uiManager.addChatMessage(messageData);
-    }
-
-    getDisplayNameFromUserId(userId) {
-        // Extract display name from Matrix user ID
-        // Format: @username:homeserver.com -> username
-        const match = userId.match(/@(.+?):/);
-        return match ? match[1] : userId;
-    }
+    // setupMatrixEventHandlers, displayMatrixMessage, getDisplayNameFromUserId
+    // removed in 2026-02-25 audit (Matrix integration was unused dead code)
 
     async joinVoiceChannel(channelId) {
         if (this.currentVoiceChannel === channelId) {

@@ -85,16 +85,11 @@ export class ConnectionManager {
             window.proximityApp.uiManager.updateConnectionStatus(status, text);
         } else {
             // Fallback: update directly if UI manager not available yet
-            const connectionIndicator = document.getElementById('connectionIndicator');
-            const connectionText = document.getElementById('connectionText');
-            
-            if (connectionIndicator && connectionText) {
-                // Clear all existing classes
-                connectionIndicator.classList.remove('online', 'offline', 'connecting');
-                
-                // Add the new status class
-                connectionIndicator.classList.add(status);
-                connectionText.textContent = text;
+            const connectionDot = document.getElementById('connectionDot');
+            if (connectionDot) {
+                connectionDot.classList.remove('online', 'offline', 'connecting');
+                connectionDot.classList.add(status);
+                connectionDot.title = text;
             }
         }
         
