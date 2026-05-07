@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/node_modules\" \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/package-lock.json\" \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/dist\" && ls \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\")",
+      "Bash(npm install *)"
+    ]
+  }
+}
