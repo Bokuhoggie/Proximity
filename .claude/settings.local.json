@@ -11,7 +11,14 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" merge claude/inspiring-germain-b76a94 --no-ff -m \"Merge claude/inspiring-germain-b76a94: strip to bare bones\")",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" worktree list)",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" branch)",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" branch --merged main)",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" log --oneline main..chat-dev)",
+      "Bash(git -C \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" log --oneline main..map-dev)",
+      "Bash(ls \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\" && echo \"---size of node_modules---\" && du -sh \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/node_modules\" 2>/dev/null)"
     ],
     "deny": []
   }

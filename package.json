@@ -32,19 +32,16 @@
     "files": [
       "src/main/**/*",
       "src/renderer/**/*",
-      "node_modules/**/*",
-      "assets/**/*"
+      "node_modules/**/*"
     ],
     "win": {
-      "icon": "assets/icon.ico",
+      "icon": "src/renderer/assets/icon.ico",
       "target": [{ "target": "nsis", "arch": ["x64"] }]
     },
     "mac": {
-      "icon": "assets/icon.icns",
       "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }]
     },
     "linux": {
-      "icon": "assets/icon.png",
       "target": [{ "target": "AppImage", "arch": ["x64"] }]
     }
   }
