@@ -52,7 +52,30 @@ npm run build:win     # package Windows installer
 ## Build / deploy
 
 - **Server:** Railway runs `npm start`. No env vars needed except `PORT` (Railway provides).
-- **Client:** `npm run build:win` produces an installer in `dist-electron/`.
+- **Client:** `npm run build:win` produces an installer in `dist-electron/` (no auto-publish).
+
+### Releasing a new version (auto-update)
+
+Friends install once and get updates automatically via GitHub Releases.
+
+1. Bump `version` in `package.json` (e.g. `0.2.0` → `0.2.1`).
+2. Set the GitHub token in your shell: `setx GH_TOKEN "ghp_…"` (Windows) or `export GH_TOKEN=…` (bash). PowerShell session: `$env:GH_TOKEN = "ghp_…"`.
+3. `npm run release` — builds the Windows installer and uploads it to a draft GitHub Release on `Bokuhoggie/Proximity`.
+4. Open the draft release on GitHub, write notes, click **Publish**.
+5. Already-installed apps will pick up the update on next launch (downloads in background, prompts to install).
+
+The token only needs:
+- **Repository access:** `Bokuhoggie/Proximity` only
+- **Permissions → Repository → Contents: Read and write** (lets electron-builder create the release and upload `Proximity-Setup-X.Y.Z.exe`)
+- **Metadata: Read** (auto-required)
+
+Nothing else. Don't grant `workflows`, `actions`, `packages`, etc.
+
+### Auto-update behavior
+
+- Only runs in the packaged build (skipped when `npm run dev`).
+- Polls GitHub on launch. If a higher version exists, downloads in the background and prompts the user with "Install now / Later". "Later" defers install until app quit.
+- Errors are logged to the user's console with the `bomboclat` marker so they can grep.
 
 ## Status
 
