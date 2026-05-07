@@ -1,19 +1,30 @@
 # Proximity
 
-A project by Bokuhoggie.
+Voice + text chat for a small group of friends. Electron client, Node signaling server, WebRTC for audio. See [CLAUDE.md](CLAUDE.md) for architecture and conventions.
 
-## Description
+## Quick start
 
-This repository contains the Proximity project.
+```
+npm install
+npm run dev:all
+```
 
-## Getting Started
+That spins up the local signaling server on `:3000` and launches Electron. The client tries the local server first when running under Electron; otherwise it falls back to the Railway deployment.
 
-Instructions for setting up and running the project will be added here.
+## Run only the server
 
-## Contributing
+```
+npm run server
+```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Health check: `http://localhost:3000/health`
 
-## License
+## Build the desktop app
 
-This project is open source and available under the MIT License. 
+```
+npm run build:win    # also: build:mac, build:linux
+```
+
+## Status
+
+In active rebuild. See CLAUDE.md for what's working today.
