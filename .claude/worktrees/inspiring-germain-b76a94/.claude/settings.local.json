@@ -10,7 +10,8 @@
       "Bash(node src/server/signaling-server.js)",
       "Bash(cp /tmp/test-flow.js \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/test-flow.js\")",
       "Bash(node test-flow.js)",
-      "Bash(rm test-flow.js)"
+      "Bash(rm test-flow.js)",
+      "Bash(curl -s http://localhost:3000/health)"
     ]
   }
 }

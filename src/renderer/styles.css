@@ -82,14 +82,78 @@ input, button { color: inherit; }
     gap: 18px;
     padding: 18px 14px;
     overflow-y: auto;
+    flex-shrink: 0;
 }
-.sidebar-section { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-section { display: flex; flex-direction: column; gap: 6px; }
+.sidebar-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 .sidebar-title {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-dim);
 }
+.sidebar-section .btn.icon { padding: 2px 8px; font-size: 14px; line-height: 1; }
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.my-identity {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Channel row in sidebar (text + voice) */
+.channel-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+    padding: 5px 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+}
+.channel-row:hover { background: var(--bg-elev-2); }
+.channel-row.active {
+    background: var(--bg-elev-2);
+    border-color: var(--accent);
+}
+.channel-hash { color: var(--text-dim); }
+.channel-icon { font-size: 12px; }
+.channel-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Voice channel members nested under a voice row */
+.channel-members {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 2px 0 6px 22px;
+}
+.channel-member {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+}
+.channel-member:hover { background: var(--bg-elev-2); }
 
 .list { display: flex; flex-direction: column; gap: 4px; }
 

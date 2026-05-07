@@ -12,9 +12,11 @@ const state = {
     socket: null,
     serverUrl: null,
     me: null,                      // { id, username, color, avatarUrl }
-    profiles: new Map(),           // uuid -> { id, username, color, avatarUrl }
-    inVoice: false,
-    voicePeers: new Set(),         // uuids in voice
+    profiles: new Map(),           // uuid -> profile
+    textChannels: new Map(),       // id -> { id, name, messages[] }
+    voiceChannels: new Map(),      // id -> { id, name, members: Set<uuid> }
+    activeTextChannelId: null,     // currently displayed text channel
+    activeVoiceChannelId: null,    // voice channel I'm in, or null
     peerStates: new Map(),         // uuid -> RTCPeerConnection state
     audio: null
 };
@@ -59,10 +61,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const profile = loadOrCreateProfile();
     state.me = profile;
     setupChatComposer();
-    setupVoiceControls();
+    setupVoiceLeaveAndMute();
+    setupChannelCreation();
     setupSettings();
-    renderUserList();
-    renderVoiceList();
+    renderTextChannels();
+    renderVoiceChannels();
+    renderMyIdentity();
     connectAndJoin(profile);
 });
 
@@ -136,16 +140,32 @@ async function connectAndJoin(me) {
         toast(`Server error (${event}): ${message}`);
     });
 
-    socket.on('hello', ({ you, profiles, voiceUsers, messages }) => {
+    socket.on('hello', ({ you, profiles, textChannels, voiceChannels }) => {
         state.me = { ...state.me, ...you };
         saveProfile();
+        renderMyIdentity();
+
         state.profiles.clear();
         for (const p of profiles) state.profiles.set(p.id, p);
-        state.voicePeers = new Set(voiceUsers);
-        renderUserList();
-        renderVoiceList();
-        $('#messages').innerHTML = '';
-        for (const m of messages) appendMessage(m);
+
+        state.textChannels.clear();
+        for (const c of textChannels) {
+            state.textChannels.set(c.id, { id: c.id, name: c.name, messages: c.messages || [] });
+        }
+        state.voiceChannels.clear();
+        for (const c of voiceChannels) {
+            state.voiceChannels.set(c.id, { id: c.id, name: c.name, members: new Set(c.members || []) });
+        }
+
+        // Pick first text channel as active if none selected.
+        if (!state.activeTextChannelId || !state.textChannels.has(state.activeTextChannelId)) {
+            const first = state.textChannels.values().next().value;
+            state.activeTextChannelId = first ? first.id : null;
+        }
+
+        renderTextChannels();
+        renderVoiceChannels();
+        renderMessages();
         showStatus('');
     });
 
@@ -154,39 +174,65 @@ async function connectAndJoin(me) {
         if (profile.id === state.me.id) {
             state.me = { ...state.me, ...profile };
             saveProfile();
+            renderMyIdentity();
         }
-        renderUserList();
-        renderVoiceList();
+        renderVoiceChannels();
         rerenderMessageProfiles(profile.id);
     });
 
     socket.on('user-disconnected', (uuid) => {
-        // Profile stays around (so old messages still render with their name);
-        // we only drop voice presence + connection state.
-        state.voicePeers.delete(uuid);
+        // Profile stays cached so old messages still render with their name;
+        // we just remove them from any voice channel they were in.
+        for (const c of state.voiceChannels.values()) c.members.delete(uuid);
         state.peerStates.delete(uuid);
-        renderUserList();
-        renderVoiceList();
+        renderVoiceChannels();
     });
 
-    socket.on('chat', appendMessage);
+    socket.on('text-channel-created', (channel) => {
+        state.textChannels.set(channel.id, { id: channel.id, name: channel.name, messages: channel.messages || [] });
+        renderTextChannels();
+        // If we created it, switch to it.
+        if (channel.createdBy === state.me.id) switchTextChannel(channel.id);
+    });
 
-    socket.on('voice-peers', (peers) => {
-        for (const id of peers) state.voicePeers.add(id);
-        renderVoiceList();
+    socket.on('voice-channel-created', (channel) => {
+        state.voiceChannels.set(channel.id, { id: channel.id, name: channel.name, members: new Set(channel.members || []) });
+        renderVoiceChannels();
+    });
+
+    socket.on('chat', (msg) => {
+        const channel = state.textChannels.get(msg.channelId);
+        if (!channel) return;
+        channel.messages.push(msg);
+        if (channel.messages.length > 200) channel.messages.shift();
+        if (msg.channelId === state.activeTextChannelId) appendMessageNode(msg);
+    });
+
+    socket.on('voice-peers', ({ channelId, peers }) => {
+        const channel = state.voiceChannels.get(channelId);
+        if (!channel) return;
+        for (const id of peers) channel.members.add(id);
+        channel.members.add(state.me.id);
+        renderVoiceChannels();
         if (state.audio) {
             for (const id of peers) state.audio.offerTo(id);
         }
     });
-    socket.on('voice-user-joined', (id) => {
-        state.voicePeers.add(id);
-        renderVoiceList();
+    socket.on('voice-channel-member-joined', ({ channelId, userId }) => {
+        const channel = state.voiceChannels.get(channelId);
+        if (!channel) return;
+        channel.members.add(userId);
+        renderVoiceChannels();
     });
-    socket.on('voice-user-left', (id) => {
-        state.voicePeers.delete(id);
-        state.peerStates.delete(id);
-        renderVoiceList();
-        if (state.audio) state.audio.dropPeer(id);
+    socket.on('voice-channel-member-left', ({ channelId, userId }) => {
+        const channel = state.voiceChannels.get(channelId);
+        if (channel) channel.members.delete(userId);
+        // If they were a peer of mine in voice, drop the connection.
+        if (state.audio && userId !== state.me.id && channelId === state.activeVoiceChannelId) {
+            state.audio.dropPeer(userId);
+        }
+        state.peerStates.delete(userId);
+        renderVoiceChannels();
     });
 
     socket.on('rtc-offer', ({ from, offer }) => state.audio?.handleOffer(from, offer));
@@ -246,43 +292,82 @@ function showStatus(text) {
 
 // ---------- Render ----------
 
-function renderUserList() {
-    const host = $('#userList');
+function renderMyIdentity() {
+    const host = $('#myIdentity');
+    if (!host || !state.me) return;
     host.innerHTML = '';
-    for (const p of state.profiles.values()) {
-        const dot = el('span', { className: 'user-dot' });
-        dot.style.background = p.color;
-        const name = el('span', { className: 'user-name' }, p.username);
-        host.append(el('div', { className: 'user-row' }, dot, name));
+    const dot = el('span', { className: 'user-dot' });
+    dot.style.background = state.me.color;
+    host.append(dot, el('span', { className: 'user-name' }, state.me.username));
+}
+
+function renderTextChannels() {
+    const host = $('#textChannelList');
+    host.innerHTML = '';
+    for (const c of state.textChannels.values()) {
+        const row = el('button', {
+            type: 'button',
+            className: 'channel-row' + (c.id === state.activeTextChannelId ? ' active' : '')
+        }, el('span', { className: 'channel-hash' }, '#'), el('span', { className: 'channel-name' }, c.name));
+        row.addEventListener('click', () => switchTextChannel(c.id));
+        host.append(row);
     }
 }
 
-function renderVoiceList() {
-    const host = $('#voiceList');
+function renderVoiceChannels() {
+    const host = $('#voiceChannelList');
     host.innerHTML = '';
-    if (state.voicePeers.size === 0) {
-        host.append(el('div', { className: 'voice-empty' }, 'No one in voice'));
-        return;
+    for (const c of state.voiceChannels.values()) {
+        const isActive = c.id === state.activeVoiceChannelId;
+        const header = el('button', {
+            type: 'button',
+            className: 'channel-row' + (isActive ? ' active' : '')
+        }, el('span', { className: 'channel-icon' }, '🔊'), el('span', { className: 'channel-name' }, c.name));
+        header.addEventListener('click', () => joinVoiceChannel(c.id));
+        host.append(header);
+
+        if (c.members.size > 0) {
+            const sub = el('div', { className: 'channel-members' });
+            for (const id of c.members) {
+                const p = profileOf(id);
+                const dot = el('span', { className: 'user-dot' });
+                dot.style.background = p.color;
+                const stateClass = id === state.me?.id ? 'self' : (state.peerStates.get(id) || 'pending');
+                const stateDot = el('span', { className: `peer-state ${stateClass}`, title: stateClass });
+                sub.append(el('div', {
+                    className: 'channel-member',
+                    dataset: { voiceUser: id }
+                }, dot, el('span', { className: 'user-name' }, p.username), stateDot));
+            }
+            host.append(sub);
+        }
     }
-    for (const id of state.voicePeers) {
-        const p = profileOf(id);
-        const dot = el('span', { className: 'user-dot' });
-        dot.style.background = p.color;
-        const stateClass = state.peerStates.get(id) || (id === state.me?.id ? 'self' : 'pending');
-        const stateDot = el('span', { className: `peer-state ${stateClass}`, title: stateClass });
-        host.append(el('div', {
-            className: 'user-row',
-            dataset: { voiceUser: id }
-        }, dot, el('span', { className: 'user-name' }, p.username), stateDot, el('span', { className: 'mic-icon' }, '🎤')));
-    }
+    updateVoiceButtons();
 }
 
-function appendMessage(m) {
+function renderMessages() {
+    const host = $('#messages');
+    host.innerHTML = '';
+    const channel = state.textChannels.get(state.activeTextChannelId);
+    if (!channel) return;
+    $('#chatChannelTitle').textContent = '# ' + channel.name;
+    $('#chatInput').placeholder = `Message #${channel.name} — paste images too`;
+    for (const m of channel.messages) host.append(renderMessageNode(m));
+    host.scrollTop = host.scrollHeight;
+}
+
+function appendMessageNode(m) {
     const host = $('#messages');
     const stickToBottom = host.scrollHeight - host.scrollTop - host.clientHeight < 50;
-    const node = renderMessageNode(m);
-    host.append(node);
+    host.append(renderMessageNode(m));
     if (stickToBottom) host.scrollTop = host.scrollHeight;
+}
+
+function switchTextChannel(id) {
+    if (!state.textChannels.has(id)) return;
+    state.activeTextChannelId = id;
+    renderTextChannels();
+    renderMessages();
 }
 
 function renderMessageNode(m) {
@@ -334,7 +419,11 @@ function setupChatComposer() {
         e.preventDefault();
         const text = input.value.trim();
         if (!text) return;
-        state.socket.emit('chat', { text });
+        if (!state.activeTextChannelId) {
+            notify('No channel selected');
+            return;
+        }
+        state.socket.emit('chat', { channelId: state.activeTextChannelId, text });
         input.value = '';
     });
 
@@ -382,7 +471,11 @@ async function uploadAndSend(file) {
             return;
         }
         const { url } = await r.json();
-        state.socket.emit('chat', { imageUrl: url });
+        if (!state.activeTextChannelId) {
+            notify('No channel selected');
+            return;
+        }
+        state.socket.emit('chat', { channelId: state.activeTextChannelId, imageUrl: url });
     } catch (err) {
         notify('Upload error: ' + err.message);
     }
@@ -390,64 +483,87 @@ async function uploadAndSend(file) {
 
 // ---------- Voice controls ----------
 
-function setupVoiceControls() {
-    const joinBtn = $('#voiceJoinBtn');
-    const leaveBtn = $('#voiceLeaveBtn');
-    const muteBtn = $('#voiceMuteBtn');
-
-    joinBtn.addEventListener('click', joinVoice);
-    leaveBtn.addEventListener('click', leaveVoice);
-    muteBtn.addEventListener('click', () => {
+function setupVoiceLeaveAndMute() {
+    $('#voiceLeaveBtn').addEventListener('click', leaveVoiceChannel);
+    $('#voiceMuteBtn').addEventListener('click', () => {
         if (!state.audio) return;
         const next = !state.audio.muted;
         state.audio.setMuted(next);
-        muteBtn.textContent = next ? 'Unmute' : 'Mute';
-        muteBtn.classList.toggle('muted', next);
+        $('#voiceMuteBtn').textContent = next ? 'Unmute' : 'Mute';
+        $('#voiceMuteBtn').classList.toggle('muted', next);
         state.socket.emit('mic-status', { muted: next });
     });
+}
 
+async function joinVoiceChannel(channelId) {
+    if (!state.voiceChannels.has(channelId)) return;
+    if (state.activeVoiceChannelId === channelId) return;
+
+    // If currently in another voice channel, drop peers + mic first.
+    if (state.activeVoiceChannelId) {
+        state.audio?.dropAll();
+        state.peerStates.clear();
+    } else {
+        // Cold start: spin up the mic.
+        try {
+            const devices = loadAudioDevices();
+            state.audio = new AudioManager({
+                signal: (event, data) => state.socket.emit(event, data),
+                inputDeviceId: devices.input,
+                outputDeviceId: devices.output,
+                onPeerStateChange: (uuid, connectionState) => {
+                    state.peerStates.set(uuid, connectionState);
+                    renderVoiceChannels();
+                }
+            });
+            await state.audio.startMic();
+        } catch (err) {
+            notify('Mic error: ' + err.message);
+            state.audio = null;
+            return;
+        }
+    }
+
+    state.activeVoiceChannelId = channelId;
+    state.socket.emit('voice-join', { channelId });
+    renderVoiceChannels();
     updateVoiceButtons();
 }
 
-async function joinVoice() {
-    if (state.inVoice) return;
-    try {
-        const devices = loadAudioDevices();
-        state.audio = new AudioManager({
-            signal: (event, data) => state.socket.emit(event, data),
-            inputDeviceId: devices.input,
-            outputDeviceId: devices.output,
-            onPeerStateChange: (uuid, connectionState) => {
-                state.peerStates.set(uuid, connectionState);
-                renderVoiceList();
-            }
-        });
-        await state.audio.startMic();
-        state.socket.emit('voice-join');
-        state.inVoice = true;
-        updateVoiceButtons();
-    } catch (err) {
-        notify('Mic error: ' + err.message);
-        state.audio = null;
-    }
-}
-
-function leaveVoice() {
-    if (!state.inVoice) return;
+function leaveVoiceChannel() {
+    if (!state.activeVoiceChannelId) return;
     state.socket.emit('voice-leave');
     state.audio?.dropAll();
     state.audio?.stopMic();
     state.audio = null;
-    state.inVoice = false;
-    state.voicePeers.delete(state.me.id);
+    state.peerStates.clear();
+    // Remove ourselves from local channel state immediately for snappy UI.
+    const channel = state.voiceChannels.get(state.activeVoiceChannelId);
+    if (channel) channel.members.delete(state.me.id);
+    state.activeVoiceChannelId = null;
     updateVoiceButtons();
-    renderVoiceList();
+    renderVoiceChannels();
 }
 
 function updateVoiceButtons() {
-    $('#voiceJoinBtn').style.display = state.inVoice ? 'none' : '';
-    $('#voiceLeaveBtn').style.display = state.inVoice ? '' : 'none';
-    $('#voiceMuteBtn').style.display = state.inVoice ? '' : 'none';
+    const inVoice = !!state.activeVoiceChannelId;
+    $('#voiceLeaveBtn').style.display = inVoice ? '' : 'none';
+    $('#voiceMuteBtn').style.display = inVoice ? '' : 'none';
+}
+
+// ---------- Channel creation ----------
+
+function setupChannelCreation() {
+    $('#addTextChannelBtn').addEventListener('click', () => {
+        const name = window.prompt('New text channel name (max 32 chars):');
+        if (!name?.trim()) return;
+        state.socket.emit('create-text-channel', { name: name.trim() });
+    });
+    $('#addVoiceChannelBtn').addEventListener('click', () => {
+        const name = window.prompt('New voice channel name (max 32 chars):');
+        if (!name?.trim()) return;
+        state.socket.emit('create-voice-channel', { name: name.trim() });
+    });
 }
 
 // ---------- Settings ----------

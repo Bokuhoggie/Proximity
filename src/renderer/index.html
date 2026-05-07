@@ -26,32 +26,41 @@
 
     <aside class="sidebar">
         <div class="sidebar-section">
-            <div class="sidebar-title">Voice</div>
-            <div id="voiceList" class="list"></div>
+            <div class="sidebar-title-row">
+                <span class="sidebar-title">Text channels</span>
+                <button id="addTextChannelBtn" class="btn ghost icon" title="New text channel">+</button>
+            </div>
+            <div id="textChannelList" class="list"></div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title-row">
+                <span class="sidebar-title">Voice channels</span>
+                <button id="addVoiceChannelBtn" class="btn ghost icon" title="New voice channel">+</button>
+            </div>
+            <div id="voiceChannelList" class="list"></div>
             <div class="voice-controls">
-                <button id="voiceJoinBtn" class="btn primary">Join voice</button>
-                <button id="voiceLeaveBtn" class="btn danger" style="display:none;">Leave</button>
+                <button id="voiceLeaveBtn" class="btn danger" style="display:none;">Leave voice</button>
                 <button id="voiceMuteBtn" class="btn ghost" style="display:none;">Mute</button>
             </div>
         </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-title">Online</div>
-            <div id="userList" class="list"></div>
+        <div class="sidebar-footer">
+            <button id="settingsBtn" class="btn ghost icon" title="Settings">⚙</button>
+            <span id="myIdentity" class="my-identity"></span>
         </div>
     </aside>
 
     <main class="chat">
         <header class="chat-header">
-            <span># general</span>
-            <button id="settingsBtn" class="btn ghost icon" title="Settings">⚙</button>
+            <span id="chatChannelTitle"># general</span>
         </header>
 
         <div id="messages" class="messages"></div>
 
         <form id="chatForm" class="composer">
             <button type="button" id="chatAttachBtn" class="btn ghost icon" title="Attach image">📎</button>
-            <input id="chatInput" class="composer-input" type="text" placeholder="Message #general — paste images too" autocomplete="off">
+            <input id="chatInput" class="composer-input" type="text" placeholder="Message — paste images too" autocomplete="off">
             <button type="submit" class="btn primary">Send</button>
             <input id="chatFileInput" type="file" accept="image/*" hidden>
         </form>

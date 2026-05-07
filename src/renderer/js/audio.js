@@ -260,30 +260,45 @@ export class AudioManager {
 
 // Simple input-level meter for the settings panel. Returns a stop() function.
 // onLevel receives a number 0..1 every animation frame.
+//
+// Disables AGC/noise-suppression/echo-cancellation so the user sees the
+// raw mic level — the in-voice path keeps those processing on.
+//
+// We use RMS (averaged energy) rather than peak, then apply a gain so
+// normal speech reads in the 30-80% range instead of barely registering.
 export async function startMicLevel(deviceId, onLevel) {
     const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: deviceId ? { exact: deviceId } : undefined },
+        audio: {
+            deviceId: deviceId ? { exact: deviceId } : undefined,
+            autoGainControl: false,
+            noiseSuppression: false,
+            echoCancellation: false
+        },
         video: false
     });
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const source = ctx.createMediaStreamSource(stream);
     const analyser = ctx.createAnalyser();
-    analyser.fftSize = 256;
+    analyser.fftSize = 1024;
     source.connect(analyser);
-    const buf = new Uint8Array(analyser.fftSize);
+    const buf = new Float32Array(analyser.fftSize);
     let raf = 0;
     let stopped = false;
+    let smoothed = 0;
 
     const tick = () => {
         if (stopped) return;
-        analyser.getByteTimeDomainData(buf);
-        // Peak deviation from 128 (silence) → 0..1.
-        let peak = 0;
-        for (let i = 0; i < buf.length; i++) {
-            const d = Math.abs(buf[i] - 128);
-            if (d > peak) peak = d;
-        }
-        onLevel(Math.min(1, peak / 128));
+        analyser.getFloatTimeDomainData(buf);
+        // RMS over the buffer.
+        let sumSq = 0;
+        for (let i = 0; i < buf.length; i++) sumSq += buf[i] * buf[i];
+        const rms = Math.sqrt(sumSq / buf.length);
+        // Apply a gain so a normal speaking voice (~ -25 dBFS rms ≈ 0.05)
+        // reads about 50%, then clamp.
+        const target = Math.min(1, rms * 8);
+        // Fast attack, slow release for a natural-feeling needle.
+        smoothed = target > smoothed ? target : smoothed * 0.85 + target * 0.15;
+        onLevel(smoothed);
         raf = requestAnimationFrame(tick);
     };
     tick();

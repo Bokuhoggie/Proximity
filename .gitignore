@@ -5,3 +5,4 @@ src/server/uploads/*
 .DS_Store
 *.log
 .env
+src/server/data/
