@@ -15,19 +15,14 @@
 </head>
 <body>
 
-<div id="joinScreen" class="join-screen">
-    <form id="joinForm" class="join-card">
-        <h1>Proximity</h1>
-        <p class="join-sub">Voice & chat for friends</p>
-        <input id="joinUsername" class="join-input" type="text" placeholder="Username" maxlength="32" autocomplete="off" required>
-        <input id="joinColor" type="hidden" value="#7aa2f7">
-        <div id="joinColorSwatches" class="color-swatches"></div>
-        <button type="submit" class="btn primary">Enter</button>
-        <div id="statusBanner" class="status-banner" style="display:none;"></div>
-    </form>
+<div id="statusOverlay" class="status-overlay" style="display:none;">
+    <div class="status-card">
+        <div class="status-spinner"></div>
+        <div id="statusBanner" class="status-text">Connecting…</div>
+    </div>
 </div>
 
-<div id="app" class="app" style="display:none;">
+<div id="app" class="app">
 
     <aside class="sidebar">
         <div class="sidebar-section">

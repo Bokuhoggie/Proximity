@@ -34,66 +34,41 @@ function notify(msg) {
     console.log('[app]', msg);
 }
 
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
 // ---------- Boot ----------
 
 window.addEventListener('DOMContentLoaded', () => {
-    const saved = loadProfile();
-    if (saved.username) {
-        $('#joinUsername').value = saved.username;
-        $('#joinColor').value = saved.color;
-    }
-    paintColorPicker(saved.color);
-
-    $('#joinForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = $('#joinUsername').value.trim().slice(0, 32);
-        const color = $('#joinColor').value;
-        if (!username) return;
-        saveProfile({ username, color });
-        connectAndJoin(username, color);
-    });
-
-    $('#joinColor').addEventListener('input', (e) => paintColorPicker(e.target.value));
+    const profile = loadOrCreateProfile();
+    setupChatComposer();
+    setupVoiceControls();
+    renderUserList();
+    renderVoiceList();
+    connectAndJoin(profile.username, profile.color);
 });
 
-function paintColorPicker(value) {
-    const swatchHost = $('#joinColorSwatches');
-    swatchHost.innerHTML = '';
-    for (const c of COLORS) {
-        const s = el('button', {
-            type: 'button',
-            className: 'swatch' + (c === value ? ' active' : ''),
-            title: c
-        });
-        s.style.background = c;
-        s.addEventListener('click', () => {
-            $('#joinColor').value = c;
-            paintColorPicker(c);
-        });
-        swatchHost.append(s);
-    }
-}
-
-function loadProfile() {
+function loadOrCreateProfile() {
     try {
-        return JSON.parse(localStorage.getItem('proximity-profile') || '{}');
-    } catch {
-        return { username: '', color: COLORS[0] };
-    }
-}
-
-function saveProfile(p) {
-    localStorage.setItem('proximity-profile', JSON.stringify(p));
+        const saved = JSON.parse(localStorage.getItem('proximity-profile') || '{}');
+        if (saved.username && saved.color) return saved;
+    } catch {}
+    const profile = {
+        username: 'friend-' + Math.random().toString(36).slice(2, 6),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+    };
+    localStorage.setItem('proximity-profile', JSON.stringify(profile));
+    return profile;
 }
 
 // ---------- Connection ----------
 
 async function connectAndJoin(username, color) {
     showStatus('Connecting…');
-    const url = await pickServer();
-    if (!url) {
-        showStatus('Could not reach server. Check your connection.');
-        return;
+    let url = await pickServer();
+    while (!url) {
+        showStatus('Server unreachable. Retrying in 5s…\n(Run "npm run server" in another terminal if you\'re local.)');
+        await sleep(5000);
+        url = await pickServer();
     }
     state.serverUrl = url;
 
@@ -109,8 +84,11 @@ async function connectAndJoin(username, color) {
         state.users.clear();
         for (const u of users) state.users.set(u.id, u);
         state.voicePeers = new Set(voiceUsers);
-        renderApp();
+        renderUserList();
+        renderVoiceList();
+        $('#messages').innerHTML = '';
         for (const m of messages) appendMessage(m);
+        showStatus('');
     });
 
     socket.on('user-joined', (u) => {
@@ -188,22 +166,13 @@ async function ping(url) {
 }
 
 function showStatus(text) {
+    const overlay = $('#statusOverlay');
     const banner = $('#statusBanner');
     banner.textContent = text;
-    banner.style.display = text ? 'block' : 'none';
+    overlay.style.display = text ? 'flex' : 'none';
 }
 
 // ---------- Render ----------
-
-function renderApp() {
-    $('#joinScreen').style.display = 'none';
-    $('#app').style.display = 'flex';
-    showStatus('');
-    renderUserList();
-    renderVoiceList();
-    setupChatComposer();
-    setupVoiceControls();
-}
 
 function renderUserList() {
     const host = $('#userList');
