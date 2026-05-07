@@ -16,25 +16,27 @@ const ICE_SERVERS = [
 ];
 
 export class AudioManager {
-    constructor({ signal, onPeerStateChange }) {
+    constructor({ signal, onPeerStateChange, inputDeviceId, outputDeviceId }) {
         this.signal = signal;                       // (event, data) => void
         this.onPeerStateChange = onPeerStateChange; // optional UI callback
         this.localStream = null;
         this.muted = false;
         this.peers = new Map();   // userId -> { pc, audioEl, pendingIce: [] }
+        this.inputDeviceId = inputDeviceId || null;
+        this.outputDeviceId = outputDeviceId || null;
     }
 
     async startMic() {
         if (this.localStream) return this.localStream;
         this.localStream = await navigator.mediaDevices.getUserMedia({
             audio: {
+                deviceId: this.inputDeviceId ? { exact: this.inputDeviceId } : undefined,
                 echoCancellation: true,
                 noiseSuppression: true,
                 autoGainControl: true
             },
             video: false
         });
-        // Apply current mute state to the new track.
         this.applyMute();
         return this.localStream;
     }
@@ -43,6 +45,51 @@ export class AudioManager {
         if (this.localStream) {
             this.localStream.getTracks().forEach(t => t.stop());
             this.localStream = null;
+        }
+    }
+
+    // Swap to a new microphone deviceId. If we're already in voice, replace
+    // the outgoing track on every peer connection so remotes hear the new mic
+    // without needing to renegotiate.
+    async setInputDevice(deviceId) {
+        this.inputDeviceId = deviceId || null;
+        if (!this.localStream) return;
+        const newStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                deviceId: deviceId ? { exact: deviceId } : undefined,
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            },
+            video: false
+        });
+        const newTrack = newStream.getAudioTracks()[0];
+        // Replace track on every active peer connection.
+        for (const { pc } of this.peers.values()) {
+            const sender = pc.getSenders().find(s => s.track && s.track.kind === 'audio');
+            if (sender) await sender.replaceTrack(newTrack);
+        }
+        // Stop the old tracks and adopt the new stream.
+        this.localStream.getTracks().forEach(t => t.stop());
+        this.localStream = newStream;
+        this.applyMute();
+    }
+
+    // Apply a new output sink to every remote-audio element.
+    async setOutputDevice(deviceId) {
+        this.outputDeviceId = deviceId || null;
+        for (const peer of this.peers.values()) {
+            await this.applySink(peer.audioEl);
+        }
+    }
+
+    async applySink(audioEl) {
+        if (!audioEl || !this.outputDeviceId) return;
+        if (typeof audioEl.setSinkId !== 'function') return;
+        try {
+            await audioEl.setSinkId(this.outputDeviceId);
+        } catch (err) {
+            console.warn('[audio] setSinkId failed', err);
         }
     }
 
@@ -154,6 +201,7 @@ export class AudioManager {
                 peer.audioEl = el;
             }
             el.srcObject = stream;
+            this.applySink(el);
             el.play().catch(err => console.warn('[audio] autoplay blocked', err));
         };
 
@@ -181,4 +229,42 @@ export class AudioManager {
     dropAll() {
         for (const id of Array.from(this.peers.keys())) this.dropPeer(id);
     }
+}
+
+// Simple input-level meter for the settings panel. Returns a stop() function.
+// onLevel receives a number 0..1 every animation frame.
+export async function startMicLevel(deviceId, onLevel) {
+    const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: deviceId ? { exact: deviceId } : undefined },
+        video: false
+    });
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    const buf = new Uint8Array(analyser.fftSize);
+    let raf = 0;
+    let stopped = false;
+
+    const tick = () => {
+        if (stopped) return;
+        analyser.getByteTimeDomainData(buf);
+        // Peak deviation from 128 (silence) → 0..1.
+        let peak = 0;
+        for (let i = 0; i < buf.length; i++) {
+            const d = Math.abs(buf[i] - 128);
+            if (d > peak) peak = d;
+        }
+        onLevel(Math.min(1, peak / 128));
+        raf = requestAnimationFrame(tick);
+    };
+    tick();
+
+    return () => {
+        stopped = true;
+        cancelAnimationFrame(raf);
+        stream.getTracks().forEach(t => t.stop());
+        ctx.close();
+    };
 }

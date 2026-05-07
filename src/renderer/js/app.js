@@ -1,7 +1,7 @@
 // Proximity client controller.
 // Handles: connect → join → text chat → voice channel → image upload.
 
-import { AudioManager } from './audio.js';
+import { AudioManager, startMicLevel } from './audio.js';
 
 const RAILWAY_URL = 'https://proximityserver-production.up.railway.app';
 const LOCAL_URL = 'http://localhost:3000';
@@ -54,6 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const profile = loadOrCreateProfile();
     setupChatComposer();
     setupVoiceControls();
+    setupSettings();
     renderUserList();
     renderVoiceList();
     connectAndJoin(profile.username, profile.color);
@@ -349,8 +350,11 @@ function setupVoiceControls() {
 async function joinVoice() {
     if (state.inVoice) return;
     try {
+        const devices = loadAudioDevices();
         state.audio = new AudioManager({
-            signal: (event, data) => state.socket.emit(event, data)
+            signal: (event, data) => state.socket.emit(event, data),
+            inputDeviceId: devices.input,
+            outputDeviceId: devices.output
         });
         await state.audio.startMic();
         state.socket.emit('voice-join');
@@ -378,4 +382,157 @@ function updateVoiceButtons() {
     $('#voiceJoinBtn').style.display = state.inVoice ? 'none' : '';
     $('#voiceLeaveBtn').style.display = state.inVoice ? '' : 'none';
     $('#voiceMuteBtn').style.display = state.inVoice ? '' : 'none';
+}
+
+// ---------- Settings ----------
+
+function loadAudioDevices() {
+    try {
+        return JSON.parse(localStorage.getItem('proximity-audio') || '{}');
+    } catch {
+        return {};
+    }
+}
+
+function saveAudioDevices(d) {
+    localStorage.setItem('proximity-audio', JSON.stringify(d));
+}
+
+function setupSettings() {
+    const modal = $('#settingsModal');
+    const inputSel = $('#inputDeviceSelect');
+    const outputSel = $('#outputDeviceSelect');
+    const meterFill = $('#micMeterFill');
+    const testBtn = $('#micTestBtn');
+    let micTestStop = null;
+
+    $('#settingsBtn').addEventListener('click', () => openSettings());
+    $('#settingsCloseBtn').addEventListener('click', closeSettings);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeSettings();
+    });
+
+    inputSel.addEventListener('change', async () => {
+        const d = loadAudioDevices();
+        d.input = inputSel.value;
+        saveAudioDevices(d);
+        if (state.audio) {
+            try {
+                await state.audio.setInputDevice(d.input);
+            } catch (err) {
+                notify('Could not switch mic: ' + err.message);
+            }
+        }
+        // If a mic test is running, restart it on the new device.
+        if (micTestStop) {
+            await stopMicTest();
+            await startMicTest();
+        }
+    });
+
+    outputSel.addEventListener('change', async () => {
+        const d = loadAudioDevices();
+        d.output = outputSel.value;
+        saveAudioDevices(d);
+        if (state.audio) {
+            try {
+                await state.audio.setOutputDevice(d.output);
+            } catch (err) {
+                notify('Could not switch output: ' + err.message);
+            }
+        }
+    });
+
+    testBtn.addEventListener('click', async () => {
+        if (micTestStop) await stopMicTest();
+        else await startMicTest();
+    });
+
+    $('#resetIdentityBtn').addEventListener('click', () => {
+        localStorage.removeItem('proximity-profile');
+        notify('Identity will reset on next launch');
+    });
+
+    async function startMicTest() {
+        try {
+            const d = loadAudioDevices();
+            micTestStop = await startMicLevel(d.input, (level) => {
+                meterFill.style.width = (level * 100).toFixed(0) + '%';
+            });
+            testBtn.textContent = 'Stop test';
+            testBtn.classList.add('muted');
+        } catch (err) {
+            notify('Mic test failed: ' + err.message);
+        }
+    }
+    async function stopMicTest() {
+        if (micTestStop) micTestStop();
+        micTestStop = null;
+        meterFill.style.width = '0%';
+        testBtn.textContent = 'Test mic';
+        testBtn.classList.remove('muted');
+    }
+
+    // When the modal closes, always stop the mic test.
+    function closeSettings() {
+        modal.style.display = 'none';
+        stopMicTest();
+    }
+
+    async function openSettings() {
+        modal.style.display = 'flex';
+        renderIdentity();
+        // Browsers won't surface device labels until the user has granted
+        // microphone permission at least once. Trigger a quick getUserMedia
+        // so the labels become visible.
+        try {
+            const tmp = await navigator.mediaDevices.getUserMedia({ audio: true });
+            tmp.getTracks().forEach(t => t.stop());
+        } catch {
+            // Permission denied — we'll still list devices, just without labels.
+        }
+        await refreshDeviceLists();
+    }
+
+    async function refreshDeviceLists() {
+        const all = await navigator.mediaDevices.enumerateDevices();
+        const inputs = all.filter(d => d.kind === 'audioinput');
+        const outputs = all.filter(d => d.kind === 'audiooutput');
+        const saved = loadAudioDevices();
+
+        fillSelect(inputSel, inputs, 'Microphone', saved.input);
+        fillSelect(outputSel, outputs, 'Output', saved.output);
+    }
+
+    function fillSelect(sel, devices, fallbackLabel, currentId) {
+        sel.innerHTML = '';
+        if (devices.length === 0) {
+            sel.append(el('option', { value: '', textContent: '(none available)' }));
+            sel.disabled = true;
+            return;
+        }
+        sel.disabled = false;
+        for (const d of devices) {
+            const opt = el('option', {
+                value: d.deviceId,
+                textContent: d.label || `${fallbackLabel} (${d.deviceId.slice(0, 8)}…)`
+            });
+            if (d.deviceId === currentId) opt.selected = true;
+            sel.append(opt);
+        }
+    }
+
+    function renderIdentity() {
+        const host = $('#identityRow');
+        host.innerHTML = '';
+        if (!state.me) return;
+        const dot = el('span', { className: 'user-dot' });
+        dot.style.background = state.me.color;
+        host.append(dot, el('span', { className: 'user-name' }, state.me.username));
+    }
+
+    // React to devices being plugged/unplugged while the modal is open.
+    navigator.mediaDevices.addEventListener('devicechange', () => {
+        if (modal.style.display === 'flex') refreshDeviceLists();
+    });
 }

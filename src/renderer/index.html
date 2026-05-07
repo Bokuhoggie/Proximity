@@ -42,7 +42,10 @@
     </aside>
 
     <main class="chat">
-        <header class="chat-header"># general</header>
+        <header class="chat-header">
+            <span># general</span>
+            <button id="settingsBtn" class="btn ghost icon" title="Settings">⚙</button>
+        </header>
 
         <div id="messages" class="messages"></div>
 
@@ -54,6 +57,37 @@
         </form>
     </main>
 
+</div>
+
+<div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Settings</h2>
+            <button id="settingsCloseBtn" class="btn ghost icon" title="Close">✕</button>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label" for="inputDeviceSelect">Microphone</label>
+            <select id="inputDeviceSelect" class="select"></select>
+            <div class="mic-test">
+                <button id="micTestBtn" type="button" class="btn ghost">Test mic</button>
+                <div class="mic-meter"><div id="micMeterFill" class="mic-meter-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label" for="outputDeviceSelect">Output device</label>
+            <select id="outputDeviceSelect" class="select"></select>
+            <div class="field-hint">Output selection requires Chromium ≥ 64. If your device doesn't appear, check Windows sound settings.</div>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label">Identity</label>
+            <div id="identityRow" class="identity-row"></div>
+            <button id="resetIdentityBtn" type="button" class="btn ghost small">Reset identity</button>
+            <div class="field-hint">Generates a new random username and color on next launch.</div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
