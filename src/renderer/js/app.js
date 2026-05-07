@@ -32,6 +32,18 @@ const el = (tag, props = {}, ...children) => {
 
 function notify(msg) {
     console.log('[app]', msg);
+    toast(msg);
+}
+
+function toast(msg, ttlMs = 4500) {
+    let host = $('#toastHost');
+    if (!host) {
+        host = el('div', { id: 'toastHost', className: 'toast-host' });
+        document.body.append(host);
+    }
+    const t = el('div', { className: 'toast' }, String(msg));
+    host.append(t);
+    setTimeout(() => t.remove(), ttlMs);
 }
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -76,7 +88,18 @@ async function connectAndJoin(username, color) {
     state.socket = socket;
 
     socket.on('connect', () => {
+        console.log('[socket] connected', socket.id, '→', url);
         socket.emit('join', { username, color });
+    });
+
+    socket.on('connect_error', (err) => {
+        console.error('[socket] connect_error bomboclat', err.message, err.description || '');
+        toast('Connect error: ' + err.message);
+    });
+
+    socket.on('server-error', ({ event, message }) => {
+        console.error('[socket] server-error bomboclat', event, message);
+        toast(`Server error (${event}): ${message}`);
     });
 
     socket.on('hello', ({ you, users, voiceUsers, messages }) => {
@@ -133,8 +156,15 @@ async function connectAndJoin(username, color) {
         if (node) node.textContent = muted ? '🔇' : '🎤';
     });
 
-    socket.on('disconnect', () => {
-        showStatus('Disconnected. Reload to reconnect.');
+    socket.on('disconnect', (reason) => {
+        console.warn('[socket] disconnected:', reason);
+        showStatus('Disconnected (' + reason + '). Will retry…');
+    });
+
+    socket.on('reconnect', (n) => {
+        console.log('[socket] reconnected after', n, 'attempts');
+        showStatus('');
+        socket.emit('join', { username, color });
     });
 }
 

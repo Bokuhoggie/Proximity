@@ -21,6 +21,31 @@ const MAX_MESSAGES = 200;
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
+// ---------- Logging helpers ----------
+// Every error log line includes the "bomboclat" marker so you can grep
+// Railway logs for it: `railway logs | grep bomboclat`.
+
+const ERR_MARKER = 'bomboclat';
+
+function ts() {
+    return new Date().toISOString();
+}
+function log(...args) {
+    console.log(ts(), ...args);
+}
+function logError(label, err, extra = {}) {
+    const detail = err && err.stack ? err.stack : String(err);
+    console.error(
+        ts(),
+        `ERROR ${ERR_MARKER} [${label}]`,
+        JSON.stringify(extra),
+        '\n' + detail
+    );
+}
+
+process.on('uncaughtException', (err) => logError('uncaughtException', err));
+process.on('unhandledRejection', (err) => logError('unhandledRejection', err));
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -30,6 +55,19 @@ const io = socketIO(server, {
 });
 
 // ---------- HTTP ----------
+
+// Per-request log line: status, method, path, latency, size, IP.
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const ms = Date.now() - start;
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        const len = res.getHeader('content-length') || '-';
+        const tag = res.statusCode >= 500 ? `${ERR_MARKER} 5xx` : '';
+        log(`HTTP ${res.statusCode} ${tag} ${req.method} ${req.url} ${ms}ms ${len}b ${ip}`);
+    });
+    next();
+});
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -51,46 +89,63 @@ app.get('/health', (_req, res) => {
     });
 });
 
-app.get('/uploads/:id', (req, res) => {
-    const safe = path.basename(req.params.id);
-    const p = path.join(UPLOAD_DIR, safe);
-    if (!fs.existsSync(p)) return res.sendStatus(404);
-    res.sendFile(p);
+app.get('/uploads/:id', (req, res, next) => {
+    try {
+        const safe = path.basename(req.params.id);
+        const p = path.join(UPLOAD_DIR, safe);
+        if (!fs.existsSync(p)) return res.status(404).json({ error: 'Not found' });
+        res.sendFile(p);
+    } catch (err) {
+        next(err);
+    }
 });
 
-app.post('/upload', (req, res) => {
-    const mime = (req.headers['content-type'] || '').split(';')[0].trim();
-    if (!ALLOWED_MIME.has(mime)) {
-        return res.status(415).json({ error: 'Unsupported file type' });
-    }
-    const filenameHeader = req.headers['x-filename'] || 'upload';
-    const ext = path.extname(filenameHeader).toLowerCase().slice(0, 8) ||
-        ('.' + mime.split('/')[1]);
-
-    const chunks = [];
-    let total = 0;
-    let aborted = false;
-
-    req.on('data', (chunk) => {
-        total += chunk.length;
-        if (total > MAX_UPLOAD_BYTES) {
-            aborted = true;
-            res.status(413).json({ error: 'File too large' });
-            req.destroy();
-            return;
+app.post('/upload', (req, res, next) => {
+    try {
+        const mime = (req.headers['content-type'] || '').split(';')[0].trim();
+        if (!ALLOWED_MIME.has(mime)) {
+            return res.status(415).json({ error: `Unsupported type: ${mime || 'missing'}` });
         }
-        chunks.push(chunk);
-    });
-    req.on('end', () => {
-        if (aborted) return;
-        const id = crypto.randomBytes(12).toString('hex') + ext;
-        const filePath = path.join(UPLOAD_DIR, id);
-        fs.writeFile(filePath, Buffer.concat(chunks), (err) => {
-            if (err) return res.status(500).json({ error: 'Write failed' });
-            res.json({ id, url: `/uploads/${id}`, size: total, mime });
+        const filenameHeader = req.headers['x-filename'] || 'upload';
+        const ext = path.extname(filenameHeader).toLowerCase().slice(0, 8) ||
+            ('.' + mime.split('/')[1]);
+
+        const chunks = [];
+        let total = 0;
+        let aborted = false;
+
+        req.on('data', (chunk) => {
+            total += chunk.length;
+            if (total > MAX_UPLOAD_BYTES) {
+                aborted = true;
+                res.status(413).json({ error: 'File too large (max 10 MB)' });
+                req.destroy();
+            } else {
+                chunks.push(chunk);
+            }
         });
-    });
-    req.on('error', () => { if (!aborted) res.sendStatus(500); });
+        req.on('end', () => {
+            if (aborted) return;
+            const id = crypto.randomBytes(12).toString('hex') + ext;
+            const filePath = path.join(UPLOAD_DIR, id);
+            fs.writeFile(filePath, Buffer.concat(chunks), (err) => {
+                if (err) {
+                    logError('upload-write', err, { mime, total, filePath });
+                    return res.status(500).json({ error: 'Write failed: ' + err.code });
+                }
+                log(`UPLOAD ok ${id} ${total}b ${mime}`);
+                res.json({ id, url: `/uploads/${id}`, size: total, mime });
+            });
+        });
+        req.on('error', (err) => {
+            if (!aborted) {
+                logError('upload-stream', err, { mime, total });
+                res.status(500).json({ error: 'Stream error: ' + err.message });
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
 });
 
 // ---------- State ----------
@@ -103,13 +158,43 @@ function publicUser(u) {
     return { id: u.id, username: u.username, color: u.color };
 }
 
+// ---------- HTTP error handler (must be after all routes) ----------
+
+app.use((req, res) => {
+    res.status(404).json({ error: 'Not found' });
+});
+app.use((err, req, res, _next) => {
+    logError('http', err, { method: req.method, url: req.url });
+    if (res.headersSent) return;
+    res.status(500).json({ error: err.message || 'Internal error' });
+});
+
 // ---------- Socket.IO ----------
 
-io.on('connection', (socket) => {
-    console.log(`[+] ${socket.id} connected`);
+// Wrap a socket event handler so any thrown error is logged with the
+// event name and surfaced back to that client as a server-error event,
+// instead of disconnecting them with no explanation.
+function safe(socket, event, fn) {
+    socket.on(event, async (...args) => {
+        try {
+            await fn(...args);
+        } catch (err) {
+            logError('socket-' + event, err, { socketId: socket.id });
+            socket.emit('server-error', {
+                event,
+                message: err.message || 'Server error'
+            });
+        }
+    });
+}
 
-    socket.on('join', ({ username, color }) => {
-        if (!username || typeof username !== 'string') return;
+io.on('connection', (socket) => {
+    log(`[+] socket ${socket.id} connected`);
+
+    safe(socket, 'join', ({ username, color }) => {
+        if (!username || typeof username !== 'string') {
+            throw new Error('join: username required');
+        }
         const user = {
             id: socket.id,
             username: username.slice(0, 32),
@@ -117,7 +202,6 @@ io.on('connection', (socket) => {
         };
         users.set(socket.id, user);
 
-        // Tell the new user about everyone else + chat history
         socket.emit('hello', {
             you: publicUser(user),
             users: Array.from(users.values()).map(publicUser),
@@ -125,14 +209,13 @@ io.on('connection', (socket) => {
             messages: messages.slice(-MAX_MESSAGES)
         });
 
-        // Tell everyone else about the new user
         socket.broadcast.emit('user-joined', publicUser(user));
-        console.log(`    ${user.username} joined`);
+        log(`    ${user.username} joined (${users.size} online)`);
     });
 
-    socket.on('chat', ({ text, imageUrl }) => {
+    safe(socket, 'chat', ({ text, imageUrl }) => {
         const user = users.get(socket.id);
-        if (!user) return;
+        if (!user) throw new Error('chat: not joined yet');
         const cleanText = (typeof text === 'string') ? text.slice(0, 2000) : '';
         const cleanImage = (typeof imageUrl === 'string' && imageUrl.startsWith('/uploads/'))
             ? imageUrl : null;
@@ -152,53 +235,60 @@ io.on('connection', (socket) => {
         io.emit('chat', msg);
     });
 
-    // ---- Voice channel ----
-
-    socket.on('voice-join', () => {
-        if (!users.get(socket.id) || voiceChannel.has(socket.id)) return;
+    safe(socket, 'voice-join', () => {
+        if (!users.get(socket.id)) throw new Error('voice-join: not joined yet');
+        if (voiceChannel.has(socket.id)) return;
         voiceChannel.add(socket.id);
 
-        // Tell the joiner who's already there. The joiner will offer to each.
         const others = Array.from(voiceChannel).filter(id => id !== socket.id);
         socket.emit('voice-peers', others);
-
-        // Tell the existing peers someone joined (they should NOT offer).
         socket.broadcast.emit('voice-user-joined', socket.id);
-        console.log(`    ${socket.id} joined voice (${voiceChannel.size} total)`);
+        log(`    voice-join ${socket.id} (${voiceChannel.size} in voice)`);
     });
 
-    socket.on('voice-leave', () => {
+    safe(socket, 'voice-leave', () => {
         if (!voiceChannel.delete(socket.id)) return;
         socket.broadcast.emit('voice-user-left', socket.id);
-        console.log(`    ${socket.id} left voice`);
+        log(`    voice-leave ${socket.id}`);
     });
 
-    // WebRTC signaling — pure relay
-    socket.on('rtc-offer', ({ to, offer }) => {
+    safe(socket, 'rtc-offer', ({ to, offer }) => {
         io.to(to).emit('rtc-offer', { from: socket.id, offer });
     });
-    socket.on('rtc-answer', ({ to, answer }) => {
+    safe(socket, 'rtc-answer', ({ to, answer }) => {
         io.to(to).emit('rtc-answer', { from: socket.id, answer });
     });
-    socket.on('rtc-ice', ({ to, candidate }) => {
+    safe(socket, 'rtc-ice', ({ to, candidate }) => {
         io.to(to).emit('rtc-ice', { from: socket.id, candidate });
     });
 
-    socket.on('mic-status', ({ muted }) => {
+    safe(socket, 'mic-status', ({ muted }) => {
         if (!users.get(socket.id)) return;
         socket.broadcast.emit('mic-status', { userId: socket.id, muted: !!muted });
     });
 
-    socket.on('disconnect', () => {
+    socket.on('error', (err) => {
+        logError('socket-error', err, { socketId: socket.id });
+    });
+
+    socket.on('disconnect', (reason) => {
         const user = users.get(socket.id);
         if (voiceChannel.delete(socket.id)) {
             socket.broadcast.emit('voice-user-left', socket.id);
         }
         if (user) {
             socket.broadcast.emit('user-left', socket.id);
-            console.log(`[-] ${user.username} disconnected`);
+            log(`[-] ${user.username} disconnected (${reason})`);
+        } else {
+            log(`[-] socket ${socket.id} disconnected (${reason})`);
         }
         users.delete(socket.id);
+    });
+});
+
+io.engine.on('connection_error', (err) => {
+    logError('engine.connection_error', err, {
+        code: err.code, message: err.message, context: err.context
     });
 });
 
@@ -206,8 +296,8 @@ io.on('connection', (socket) => {
 
 if (require.main === module) {
     server.listen(PORT, () => {
-        console.log(`Proximity server listening on :${PORT}`);
-        console.log(`  health: http://localhost:${PORT}/health`);
+        log(`Proximity server listening on :${PORT}`);
+        log(`  health: http://localhost:${PORT}/health`);
     });
 }
 
