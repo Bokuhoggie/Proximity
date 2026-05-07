@@ -1,494 +1,214 @@
-const express = require('express');
+// Proximity signaling server
+// Responsibilities:
+//   - relay socket.io events between peers (chat, presence, WebRTC SDP/ICE)
+//   - serve uploaded images over HTTP
+//   - keep a small in-memory ring buffer of recent chat messages
+//
+// Designed for ~10 friends. No DB, no auth.
+
+const path = require('path');
+const fs = require('fs');
 const http = require('http');
+const crypto = require('crypto');
+const express = require('express');
 const socketIO = require('socket.io');
+
+const PORT = process.env.PORT || 3000;
+const UPLOAD_DIR = path.join(__dirname, 'uploads');
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10 MB
+const ALLOWED_MIME = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+const MAX_MESSAGES = 200;
+
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    },
-    transports: ['websocket', 'polling']
+    cors: { origin: '*', methods: ['GET', 'POST'] },
+    transports: ['websocket', 'polling'],
+    maxHttpBufferSize: 1e6
 });
 
-const PORT = process.env.PORT || 3000;
+// ---------- HTTP ----------
 
-// Store connected users and their states
-const users = new Map();
-const hubUsers = new Set();
-const voiceChannels = new Map(); // channelId -> Set of userIds
-const textChannels = new Map(); // channelId -> { name, messages[] }
-const MAX_MESSAGES = 100;
-
-// Initialize default channels
-const VOICE_CHANNEL = 'voice';
-voiceChannels.set(VOICE_CHANNEL, new Set());
-
-// Initialize default text channel
-textChannels.set('general', {
-    name: 'general',
-    messages: []
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Filename');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
 });
 
-console.log('🚀 Proximity Signaling Server starting...');
-console.log(`📡 Port: ${PORT}`);
-console.log(`🔊 Voice Channel: ${VOICE_CHANNEL}`);
-console.log(`💬 Chat: Socket.IO (in-memory)`);
+app.get('/', (_req, res) => res.send('Proximity signaling server'));
 
-io.on('connection', (socket) => {
-    console.log(`✅ User connected: ${socket.id}`);
-
-    // Initialize user data
-    users.set(socket.id, {
-        id: socket.id,
-        username: null,
-        userColor: null,
-        isMuted: false,
-        position: { x: 400, y: 300 }, // Default center position
-        proximityRange: 100, // Default proximity range
-        voiceChannel: null,
-        status: 'online',
-        backgroundImage: null // Store background image data URL
-    });
-
-    // Handle user joining hub
-    socket.on('join-hub', (data) => {
-        const { username, userColor, status } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            user.username = username;
-            user.userColor = userColor;
-            user.status = status || 'online';
-            hubUsers.add(socket.id);
-
-            console.log(`👤 ${username} joined hub (${socket.id})`);
-
-            // Send current hub users to the new user
-            const currentUsers = Array.from(hubUsers).map(id => {
-                const u = users.get(id);
-                return {
-                    id: u.id,
-                    username: u.username,
-                    userColor: u.userColor,
-                    position: u.position,
-                    isMuted: u.isMuted,
-                    voiceChannel: u.voiceChannel,
-                    status: u.status
-                };
-            });
-
-            socket.emit('hub-users', currentUsers);
-
-            // Send text channels list
-            const channelsList = Array.from(textChannels.entries()).map(([id, channel]) => ({
-                id,
-                name: channel.name
-            }));
-            socket.emit('text-channels-list', channelsList);
-
-            // Send chat message history for general channel
-            const generalChannel = textChannels.get('general');
-            if (generalChannel) {
-                socket.emit('chat-history', generalChannel.messages);
-            }
-
-            // Notify others about the new user
-            socket.broadcast.emit('user-joined-hub', {
-                id: socket.id,
-                username: user.username,
-                userColor: user.userColor,
-                position: user.position,
-                status: user.status
-            });
-        }
-    });
-
-    // Handle user leaving hub
-    socket.on('leave-hub', () => {
-        const user = users.get(socket.id);
-        if (user) {
-            console.log(`👋 ${user.username} left hub`);
-            hubUsers.delete(socket.id);
-            socket.broadcast.emit('user-left-hub', socket.id);
-        }
-    });
-
-    // Handle joining voice channel
-    socket.on('join-voice-channel', (data) => {
-        const { channelId } = data;
-        const user = users.get(socket.id);
-
-        if (user && channelId) {
-            // Leave previous channel if in one
-            if (user.voiceChannel) {
-                const prevChannel = voiceChannels.get(user.voiceChannel);
-                if (prevChannel) {
-                    prevChannel.delete(socket.id);
-                }
-            }
-
-            // Join new channel
-            if (!voiceChannels.has(channelId)) {
-                voiceChannels.set(channelId, new Set());
-            }
-
-            const channel = voiceChannels.get(channelId);
-            channel.add(socket.id);
-            user.voiceChannel = channelId;
-
-            console.log(`🔊 ${user.username} joined voice channel: ${channelId}`);
-
-            // Get other users in the channel
-            const usersInChannel = Array.from(channel)
-                .filter(id => id !== socket.id)
-                .map(id => {
-                    const u = users.get(id);
-                    return {
-                        id: u.id,
-                        username: u.username,
-                        userColor: u.userColor,
-                        position: u.position,
-                        proximityRange: u.proximityRange,
-                        isMuted: u.isMuted
-                    };
-                });
-
-            // Send list of users in channel to the joining user, along with their own stored state
-            socket.emit('voice-channel-users', {
-                users: usersInChannel,
-                myPosition: user.position,
-                myProximityRange: user.proximityRange
-            });
-
-            // Notify others in the channel about the new user
-            socket.to(channelId).emit('user-joined-voice', {
-                id: socket.id,
-                username: user.username,
-                userColor: user.userColor,
-                position: user.position,
-                proximityRange: user.proximityRange,
-                isMuted: user.isMuted
-            });
-
-            // Join socket.io room for this channel
-            socket.join(channelId);
-        }
-    });
-
-    // Handle leaving voice channel
-    socket.on('leave-voice-channel', () => {
-        const user = users.get(socket.id);
-
-        if (user && user.voiceChannel) {
-            const channelId = user.voiceChannel;
-            const channel = voiceChannels.get(channelId);
-
-            if (channel) {
-                channel.delete(socket.id);
-                console.log(`🔇 ${user.username} left voice channel: ${channelId}`);
-
-                // Notify others in the channel
-                socket.to(channelId).emit('user-left-voice', socket.id);
-
-                // Leave socket.io room
-                socket.leave(channelId);
-
-                user.voiceChannel = null;
-            }
-        }
-    });
-
-    // WebRTC Signaling - Offer
-    socket.on('offer', (data) => {
-        const { target, offer } = data;
-        console.log(`📞 Relaying offer from ${socket.id} to ${target}`);
-        io.to(target).emit('offer', {
-            offer,
-            from: socket.id
-        });
-    });
-
-    // WebRTC Signaling - Answer
-    socket.on('answer', (data) => {
-        const { target, answer } = data;
-        console.log(`📞 Relaying answer from ${socket.id} to ${target}`);
-        io.to(target).emit('answer', {
-            answer,
-            from: socket.id
-        });
-    });
-
-    // WebRTC Signaling - ICE Candidate
-    socket.on('ice-candidate', (data) => {
-        const { target, candidate } = data;
-        io.to(target).emit('ice-candidate', {
-            candidate,
-            from: socket.id
-        });
-    });
-
-    // Handle microphone mute status
-    socket.on('mic-status', (data) => {
-        const { isMuted } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            user.isMuted = isMuted;
-
-            // Broadcast to users in the same voice channel
-            if (user.voiceChannel) {
-                socket.to(user.voiceChannel).emit('user-mic-status', {
-                    userId: socket.id,
-                    isMuted
-                });
-            }
-        }
-    });
-
-    // Handle position updates (for proximity map)
-    socket.on('position-update', (data) => {
-        const { x, y } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            user.position = { x, y };
-
-            // Broadcast position to users in the same voice channel
-            if (user.voiceChannel) {
-                socket.to(user.voiceChannel).emit('position-update', {
-                    userId: socket.id,
-                    x,
-                    y
-                });
-            }
-        }
-    });
-
-    // Handle proximity range updates
-    socket.on('proximity-range-update', (data) => {
-        const { range } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            user.proximityRange = range;
-            console.log(`📏 ${user.username} updated proximity range to ${range}px`);
-
-            // Broadcast proximity range to users in the same voice channel
-            if (user.voiceChannel) {
-                socket.to(user.voiceChannel).emit('proximity-range-update', {
-                    userId: socket.id,
-                    range
-                });
-            }
-        }
-    });
-
-    // Simple in-memory chat (Matrix integration paused - guest registration disabled)
-    socket.on('send-chat-message', (data) => {
-        const { message, channelId = 'general' } = data;
-        const user = users.get(socket.id);
-
-        if (user && message) {
-            const chatMessage = {
-                id: `${socket.id}-${Date.now()}`,
-                userId: socket.id,
-                username: user.username,
-                userColor: user.userColor,
-                message,
-                timestamp: Date.now(),
-                channelId
-            };
-
-            console.log(`💬 [#${channelId}] ${user.username}: ${message.substring(0, 50)}`);
-
-            // Save to channel's message history
-            const channel = textChannels.get(channelId);
-            if (channel) {
-                channel.messages.push(chatMessage);
-                if (channel.messages.length > MAX_MESSAGES) {
-                    channel.messages.shift(); // Remove oldest message
-                }
-
-                // Broadcast to all clients
-                io.emit('chat-message', chatMessage);
-            }
-        }
-    });
-
-    // Create text channel
-    socket.on('create-text-channel', (data) => {
-        const { channelName } = data;
-        const user = users.get(socket.id);
-
-        if (!user || !channelName) return;
-
-        // Check if channel already exists
-        if (textChannels.has(channelName)) {
-            socket.emit('error', { message: 'Channel already exists' });
-            return;
-        }
-
-        // Create new channel
-        textChannels.set(channelName, {
-            name: channelName,
-            messages: []
-        });
-
-        console.log(`📝 ${user.username} created channel: #${channelName}`);
-
-        // Broadcast to all users
-        io.emit('text-channel-created', {
-            channelId: channelName,
-            channelName,
-            createdBy: socket.id
-        });
-    });
-
-    // Request messages for a specific channel
-    socket.on('request-channel-messages', (data) => {
-        const { channelId } = data;
-        const channel = textChannels.get(channelId);
-
-        if (channel) {
-            socket.emit('channel-messages', {
-                channelId,
-                messages: channel.messages
-            });
-        }
-    });
-
-    // Handle user status change
-    socket.on('status-change', (data) => {
-        const { status } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            user.status = status;
-
-            // Broadcast status change to all users
-            io.emit('user-status-changed', {
-                userId: socket.id,
-                status
-            });
-        }
-    });
-
-    // Handle background image update
-    socket.on('update-background', (data) => {
-        const { backgroundImage } = data;
-        const user = users.get(socket.id);
-
-        if (user) {
-            // Store background image (could be large base64 string)
-            user.backgroundImage = backgroundImage;
-
-            console.log(`🖼️ ${user.username} updated background image (${backgroundImage ? 'set' : 'removed'})`);
-
-            // Broadcast to users in the same voice channel
-            if (user.voiceChannel) {
-                socket.to(user.voiceChannel).emit('user-background-updated', {
-                    userId: socket.id,
-                    username: user.username,
-                    hasBackground: !!backgroundImage
-                });
-            }
-        }
-    });
-
-    // Handle request for another user's background
-    socket.on('request-user-background', (data) => {
-        const { userId } = data;
-        const targetUser = users.get(userId);
-        const requestingUser = users.get(socket.id);
-
-        if (targetUser && requestingUser && targetUser.backgroundImage) {
-            console.log(`🖼️ ${requestingUser.username} requested ${targetUser.username}'s background`);
-
-            socket.emit('user-background-data', {
-                userId: targetUser.id,
-                username: targetUser.username,
-                backgroundImage: targetUser.backgroundImage
-            });
-        }
-    });
-
-    // Handle disconnect
-    socket.on('disconnect', () => {
-        const user = users.get(socket.id);
-
-        if (user) {
-            console.log(`❌ User disconnected: ${user.username || socket.id}`);
-
-            // Remove from hub
-            hubUsers.delete(socket.id);
-
-            // Remove from voice channel
-            if (user.voiceChannel) {
-                const channel = voiceChannels.get(user.voiceChannel);
-                if (channel) {
-                    channel.delete(socket.id);
-                    socket.to(user.voiceChannel).emit('user-left-voice', socket.id);
-                }
-            }
-
-            // Notify others
-            socket.broadcast.emit('user-left-hub', socket.id);
-        }
-
-        // Clean up user data
-        users.delete(socket.id);
-    });
-});
-
-// Chat messages endpoint
-app.get('/api/messages', (req, res) => {
-    const limit = parseInt(req.query.limit) || 50;
-    const recentMessages = chatMessages.slice(-limit);
-    res.json({
-        messages: recentMessages,
-        count: recentMessages.length,
-        total: chatMessages.length
-    });
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-    const voiceChannel = voiceChannels.get(VOICE_CHANNEL);
+app.get('/health', (_req, res) => {
     res.json({
         status: 'ok',
         users: users.size,
-        hubUsers: hubUsers.size,
-        voiceChannel: {
-            id: VOICE_CHANNEL,
-            userCount: voiceChannel ? voiceChannel.size : 0
-        },
-        messageCount: chatMessages.length,
+        voiceUsers: voiceChannel.size,
+        messages: messages.length,
         uptime: process.uptime()
     });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.send('Proximity Signaling Server is running!');
+app.get('/uploads/:id', (req, res) => {
+    const safe = path.basename(req.params.id);
+    const p = path.join(UPLOAD_DIR, safe);
+    if (!fs.existsSync(p)) return res.sendStatus(404);
+    res.sendFile(p);
 });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('\n👋 Shutting down gracefully...');
-    server.close(() => {
-        console.log('✅ Server closed');
-        process.exit(0);
+app.post('/upload', (req, res) => {
+    const mime = (req.headers['content-type'] || '').split(';')[0].trim();
+    if (!ALLOWED_MIME.has(mime)) {
+        return res.status(415).json({ error: 'Unsupported file type' });
+    }
+    const filenameHeader = req.headers['x-filename'] || 'upload';
+    const ext = path.extname(filenameHeader).toLowerCase().slice(0, 8) ||
+        ('.' + mime.split('/')[1]);
+
+    const chunks = [];
+    let total = 0;
+    let aborted = false;
+
+    req.on('data', (chunk) => {
+        total += chunk.length;
+        if (total > MAX_UPLOAD_BYTES) {
+            aborted = true;
+            res.status(413).json({ error: 'File too large' });
+            req.destroy();
+            return;
+        }
+        chunks.push(chunk);
+    });
+    req.on('end', () => {
+        if (aborted) return;
+        const id = crypto.randomBytes(12).toString('hex') + ext;
+        const filePath = path.join(UPLOAD_DIR, id);
+        fs.writeFile(filePath, Buffer.concat(chunks), (err) => {
+            if (err) return res.status(500).json({ error: 'Write failed' });
+            res.json({ id, url: `/uploads/${id}`, size: total, mime });
+        });
+    });
+    req.on('error', () => { if (!aborted) res.sendStatus(500); });
+});
+
+// ---------- State ----------
+
+const users = new Map();           // socketId -> { id, username, color }
+const voiceChannel = new Set();    // socketIds currently in voice
+const messages = [];               // ring buffer of recent chat messages
+
+function publicUser(u) {
+    return { id: u.id, username: u.username, color: u.color };
+}
+
+// ---------- Socket.IO ----------
+
+io.on('connection', (socket) => {
+    console.log(`[+] ${socket.id} connected`);
+
+    socket.on('join', ({ username, color }) => {
+        if (!username || typeof username !== 'string') return;
+        const user = {
+            id: socket.id,
+            username: username.slice(0, 32),
+            color: color || '#7aa2f7'
+        };
+        users.set(socket.id, user);
+
+        // Tell the new user about everyone else + chat history
+        socket.emit('hello', {
+            you: publicUser(user),
+            users: Array.from(users.values()).map(publicUser),
+            voiceUsers: Array.from(voiceChannel),
+            messages: messages.slice(-MAX_MESSAGES)
+        });
+
+        // Tell everyone else about the new user
+        socket.broadcast.emit('user-joined', publicUser(user));
+        console.log(`    ${user.username} joined`);
+    });
+
+    socket.on('chat', ({ text, imageUrl }) => {
+        const user = users.get(socket.id);
+        if (!user) return;
+        const cleanText = (typeof text === 'string') ? text.slice(0, 2000) : '';
+        const cleanImage = (typeof imageUrl === 'string' && imageUrl.startsWith('/uploads/'))
+            ? imageUrl : null;
+        if (!cleanText && !cleanImage) return;
+
+        const msg = {
+            id: `${socket.id}-${Date.now()}`,
+            userId: socket.id,
+            username: user.username,
+            color: user.color,
+            text: cleanText,
+            imageUrl: cleanImage,
+            ts: Date.now()
+        };
+        messages.push(msg);
+        if (messages.length > MAX_MESSAGES) messages.shift();
+        io.emit('chat', msg);
+    });
+
+    // ---- Voice channel ----
+
+    socket.on('voice-join', () => {
+        if (!users.get(socket.id) || voiceChannel.has(socket.id)) return;
+        voiceChannel.add(socket.id);
+
+        // Tell the joiner who's already there. The joiner will offer to each.
+        const others = Array.from(voiceChannel).filter(id => id !== socket.id);
+        socket.emit('voice-peers', others);
+
+        // Tell the existing peers someone joined (they should NOT offer).
+        socket.broadcast.emit('voice-user-joined', socket.id);
+        console.log(`    ${socket.id} joined voice (${voiceChannel.size} total)`);
+    });
+
+    socket.on('voice-leave', () => {
+        if (!voiceChannel.delete(socket.id)) return;
+        socket.broadcast.emit('voice-user-left', socket.id);
+        console.log(`    ${socket.id} left voice`);
+    });
+
+    // WebRTC signaling — pure relay
+    socket.on('rtc-offer', ({ to, offer }) => {
+        io.to(to).emit('rtc-offer', { from: socket.id, offer });
+    });
+    socket.on('rtc-answer', ({ to, answer }) => {
+        io.to(to).emit('rtc-answer', { from: socket.id, answer });
+    });
+    socket.on('rtc-ice', ({ to, candidate }) => {
+        io.to(to).emit('rtc-ice', { from: socket.id, candidate });
+    });
+
+    socket.on('mic-status', ({ muted }) => {
+        if (!users.get(socket.id)) return;
+        socket.broadcast.emit('mic-status', { userId: socket.id, muted: !!muted });
+    });
+
+    socket.on('disconnect', () => {
+        const user = users.get(socket.id);
+        if (voiceChannel.delete(socket.id)) {
+            socket.broadcast.emit('voice-user-left', socket.id);
+        }
+        if (user) {
+            socket.broadcast.emit('user-left', socket.id);
+            console.log(`[-] ${user.username} disconnected`);
+        }
+        users.delete(socket.id);
     });
 });
+
+// ---------- Boot ----------
 
 if (require.main === module) {
     server.listen(PORT, () => {
-        console.log(`\n✨ Proximity Signaling Server is running on port ${PORT}`);
-        console.log(`📍 Health check: http://localhost:${PORT}/health`);
-        console.log(`🎧 Ready for connections!\n`);
+        console.log(`Proximity server listening on :${PORT}`);
+        console.log(`  health: http://localhost:${PORT}/health`);
     });
 }
 
-module.exports = { server, io };
+module.exports = { app, server, io };
