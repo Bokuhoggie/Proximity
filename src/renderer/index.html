@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Proximity</title>
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob: http://localhost:* https://*.railway.app;
+    connect-src 'self' http://localhost:* ws://localhost:* https://*.railway.app wss://*.railway.app https://cdnjs.cloudflare.com;
+    media-src 'self' blob:;
+">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="statusOverlay" class="status-overlay" style="display:none;">
+    <div class="status-card">
+        <div class="status-spinner"></div>
+        <div id="statusBanner" class="status-text">Connecting…</div>
+    </div>
+</div>
+
+<div id="app" class="app">
+
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title-row">
+                <span class="sidebar-title">Text channels</span>
+                <button id="addTextChannelBtn" class="btn ghost icon" title="New text channel">+</button>
+            </div>
+            <div id="textChannelList" class="list"></div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title-row">
+                <span class="sidebar-title">Voice channels</span>
+                <button id="addVoiceChannelBtn" class="btn ghost icon" title="New voice channel">+</button>
+            </div>
+            <div id="voiceChannelList" class="list"></div>
+        </div>
+
+        <div id="voiceDock" class="voice-dock" style="display:none;">
+            <div class="voice-dock-info">
+                <span class="voice-dock-icon">🔊</span>
+                <div class="voice-dock-meta">
+                    <div id="voiceDockChannel" class="voice-dock-channel"></div>
+                    <div id="voiceDockStatus" class="voice-dock-status">Connecting…</div>
+                </div>
+            </div>
+            <div class="voice-dock-actions">
+                <button id="voiceMuteBtn" class="btn ghost icon" title="Toggle mute">🎤</button>
+                <button id="voiceLeaveBtn" class="btn danger icon" title="Leave voice">✕</button>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button id="settingsBtn" class="btn ghost icon" title="Settings">⚙</button>
+            <span id="myIdentity" class="my-identity"></span>
+        </div>
+    </aside>
+
+    <main class="chat">
+        <header class="chat-header">
+            <span id="chatChannelTitle"># general</span>
+        </header>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="chatForm" class="composer">
+            <button type="button" id="chatAttachBtn" class="btn ghost icon" title="Attach image">📎</button>
+            <input id="chatInput" class="composer-input" type="text" placeholder="Message — paste images too" autocomplete="off">
+            <button type="submit" class="btn primary">Send</button>
+            <input id="chatFileInput" type="file" accept="image/*" hidden>
+        </form>
+    </main>
+
+</div>
+
+<div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Settings</h2>
+            <button id="settingsCloseBtn" class="btn ghost icon" title="Close">✕</button>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label" for="inputDeviceSelect">Microphone</label>
+            <select id="inputDeviceSelect" class="select"></select>
+            <div class="mic-test">
+                <button id="micTestBtn" type="button" class="btn ghost">Test mic</button>
+                <div class="mic-meter"><div id="micMeterFill" class="mic-meter-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label" for="outputDeviceSelect">Output device</label>
+            <select id="outputDeviceSelect" class="select"></select>
+            <button id="testSoundBtn" type="button" class="btn ghost small">Play test sound</button>
+            <div class="field-hint">Output selection requires Chromium ≥ 64. If your device doesn't appear, check Windows sound settings.</div>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label" for="displayNameInput">Display name</label>
+            <div class="name-row">
+                <input id="displayNameInput" class="join-input" type="text" maxlength="32" placeholder="Your name">
+                <button id="saveNameBtn" type="button" class="btn primary small">Save</button>
+            </div>
+            <div class="color-swatches" id="colorSwatches"></div>
+            <div class="field-hint">Changes apply to all your past messages too.</div>
+        </div>
+
+        <div class="modal-section">
+            <label class="field-label">Updates</label>
+            <div class="updates-row">
+                <div class="updates-meta">
+                    <div class="updates-version">Proximity <span id="updatesVersion">…</span></div>
+                    <div id="updatesStatus" class="updates-status">Checking…</div>
+                    <div class="mic-meter" id="updatesProgress" style="display:none;">
+                        <div id="updatesProgressFill" class="mic-meter-fill"></div>
+                    </div>
+                </div>
+                <div class="updates-actions">
+                    <button id="updatesCheckBtn" type="button" class="btn ghost small">Check now</button>
+                    <button id="updatesInstallBtn" type="button" class="btn primary small" style="display:none;">Install &amp; restart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

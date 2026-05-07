@@ -1,0 +1,78 @@
+{
+  "name": "proximity",
+  "version": "0.3.1",
+  "description": "Voice and chat for friends",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "node src/server/signaling-server.js",
+    "server": "node src/server/signaling-server.js",
+    "electron": "electron .",
+    "dev": "electron . --dev",
+    "dev:all": "concurrently --kill-others --names server,app -c green,cyan \"npm run server\" \"npm run dev\"",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "release": "electron-builder --win --publish always"
+  },
+  "author": "Bokuhoggie",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  },
+  "build": {
+    "appId": "com.bokuhoggie.proximity",
+    "productName": "Proximity",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "src/main/**/*",
+      "src/renderer/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Bokuhoggie",
+      "repo": "Proximity"
+    }
+  }
+}

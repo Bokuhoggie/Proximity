@@ -1,0 +1,10 @@
+node_modules/
+dist-electron/
+src/server/uploads/*
+!src/server/uploads/.gitkeep
+.DS_Store
+*.log
+.env
+src/server/data/
+.claude/settings.local.json
+.claude/worktrees/

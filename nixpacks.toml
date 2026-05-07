@@ -1,0 +1,18 @@
+# Server-only Railway deploy.
+#
+# Without this, nixpacks auto-detects the package.json "build" script and
+# runs `electron-builder`, which is meant for packaging the desktop client
+# locally — not for running our Node signaling server on a Linux dyno.
+# That build pulls a 100MB Electron binary and tries to publish to GitHub
+# Releases (because Railway sets CI=true), then fails on missing GH_TOKEN.
+#
+# We override: install prod deps only, skip build, start the server.
+
+[phases.install]
+cmds = ['npm ci --omit=dev --ignore-scripts']
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = 'node src/server/signaling-server.js'
