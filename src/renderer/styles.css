@@ -301,3 +301,30 @@ input, button { color: inherit; }
 .updates-version { font-weight: 600; font-size: 13px; }
 .updates-status { font-size: 12px; color: var(--text-dim); word-break: break-word; }
 .updates-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+.name-row {
+    display: flex;
+    gap: 8px;
+}
+.name-row .join-input { flex: 1; }
+
+/* Peer connection state dot in voice list:
+   pending = connecting, connected = good, failed = red.
+   self has no dot. */
+.peer-state {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--text-dim);
+    margin-left: auto;
+}
+.peer-state.new, .peer-state.connecting, .peer-state.pending { background: var(--accent); animation: pulse 1.4s infinite; }
+.peer-state.connected { background: var(--success, #9ece6a); animation: none; }
+.peer-state.failed, .peer-state.disconnected, .peer-state.closed { background: var(--danger); animation: none; }
+.peer-state.self { display: none; }
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}

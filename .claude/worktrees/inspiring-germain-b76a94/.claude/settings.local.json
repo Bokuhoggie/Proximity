@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(rm -rf \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/node_modules\" \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/package-lock.json\" \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/dist\" && ls \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(cp \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/resources/TestNoise.mp3\" \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/src/renderer/assets/test-sound.mp3\" && ls \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/src/renderer/assets/\")",
+      "Bash(node --check src/server/signaling-server.js)",
+      "Bash(node --check src/renderer/js/app.js)",
+      "Bash(node --check src/renderer/js/audio.js)",
+      "Bash(node src/server/signaling-server.js)",
+      "Bash(cp /tmp/test-flow.js \"C:/Users/clone/FuckOneDrive/Desktop/Coding/Github/Proximity/test-flow.js\")",
+      "Bash(node test-flow.js)",
+      "Bash(rm test-flow.js)"
     ]
   }
 }

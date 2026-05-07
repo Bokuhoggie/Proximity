@@ -78,14 +78,18 @@
         <div class="modal-section">
             <label class="field-label" for="outputDeviceSelect">Output device</label>
             <select id="outputDeviceSelect" class="select"></select>
+            <button id="testSoundBtn" type="button" class="btn ghost small">Play test sound</button>
             <div class="field-hint">Output selection requires Chromium ≥ 64. If your device doesn't appear, check Windows sound settings.</div>
         </div>
 
         <div class="modal-section">
-            <label class="field-label">Identity</label>
-            <div id="identityRow" class="identity-row"></div>
-            <button id="resetIdentityBtn" type="button" class="btn ghost small">Reset identity</button>
-            <div class="field-hint">Generates a new random username and color on next launch.</div>
+            <label class="field-label" for="displayNameInput">Display name</label>
+            <div class="name-row">
+                <input id="displayNameInput" class="join-input" type="text" maxlength="32" placeholder="Your name">
+                <button id="saveNameBtn" type="button" class="btn primary small">Save</button>
+            </div>
+            <div class="color-swatches" id="colorSwatches"></div>
+            <div class="field-hint">Changes apply to all your past messages too.</div>
         </div>
 
         <div class="modal-section">

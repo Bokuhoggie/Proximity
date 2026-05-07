@@ -1,6 +1,6 @@
 {
   "name": "proximity",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Voice and chat for friends",
   "main": "src/main/main.js",
   "scripts": {
@@ -39,7 +39,6 @@
       "node_modules/**/*"
     ],
     "win": {
-      "icon": "src/renderer/assets/icon.ico",
       "target": [
         {
           "target": "nsis",

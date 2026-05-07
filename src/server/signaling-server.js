@@ -82,7 +82,8 @@ app.get('/', (_req, res) => res.send('Proximity signaling server'));
 app.get('/health', (_req, res) => {
     res.json({
         status: 'ok',
-        users: users.size,
+        users: uuidToSocket.size,
+        profiles: profiles.size,
         voiceUsers: voiceChannel.size,
         messages: messages.length,
         uptime: process.uptime()
@@ -149,14 +150,30 @@ app.post('/upload', (req, res, next) => {
 });
 
 // ---------- State ----------
+//
+// Identity model: every user has a stable UUID generated on the client
+// and persisted to localStorage. The UUID is the *only* identifier used
+// in messages, voice membership, and on the wire from the client's POV.
+// socket.id is connection-scoped — it changes on reconnect — so we keep
+// translation tables to route socket.io events without leaking it to
+// clients.
+//
+// profiles is the source of truth for display info (name, color, avatar).
+// Messages reference userId (= UUID) only; clients render by looking up
+// the current profile, so renames retroactively update old messages.
 
-const users = new Map();           // socketId -> { id, username, color }
-const voiceChannel = new Set();    // socketIds currently in voice
-const messages = [];               // ring buffer of recent chat messages
+const profiles = new Map();        // uuid -> { id, username, color, avatarUrl }
+const socketToUuid = new Map();    // socket.id -> uuid (current connection)
+const uuidToSocket = new Map();    // uuid -> socket.id (current connection)
+const voiceChannel = new Set();    // uuids currently in voice
+const messages = [];               // ring buffer { id, userId, text, imageUrl, ts }
 
-function publicUser(u) {
-    return { id: u.id, username: u.username, color: u.color };
+function publicProfile(p) {
+    return p ? { id: p.id, username: p.username, color: p.color, avatarUrl: p.avatarUrl || null } : null;
 }
+
+function uuidOf(socketId) { return socketToUuid.get(socketId); }
+function socketOf(uuid) { return uuidToSocket.get(uuid); }
 
 // ---------- HTTP error handler (must be after all routes) ----------
 
@@ -191,41 +208,73 @@ function safe(socket, event, fn) {
 io.on('connection', (socket) => {
     log(`[+] socket ${socket.id} connected`);
 
-    safe(socket, 'join', ({ username, color }) => {
+    safe(socket, 'join', ({ id, username, color, avatarUrl }) => {
+        if (!id || typeof id !== 'string') throw new Error('join: id (uuid) required');
         if (!username || typeof username !== 'string') {
             throw new Error('join: username required');
         }
-        const user = {
-            id: socket.id,
+
+        // If this UUID was already connected on a different socket, kick
+        // the old connection cleanly. Prevents a "ghost" peer in voice if
+        // the client reconnects before the old socket times out.
+        const oldSocketId = uuidToSocket.get(id);
+        if (oldSocketId && oldSocketId !== socket.id) {
+            const oldSocket = io.sockets.sockets.get(oldSocketId);
+            if (oldSocket) oldSocket.disconnect(true);
+            socketToUuid.delete(oldSocketId);
+        }
+
+        const profile = {
+            id,
             username: username.slice(0, 32),
-            color: color || '#7aa2f7'
+            color: color || '#7aa2f7',
+            avatarUrl: typeof avatarUrl === 'string' ? avatarUrl : null
         };
-        users.set(socket.id, user);
+        profiles.set(id, profile);
+        socketToUuid.set(socket.id, id);
+        uuidToSocket.set(id, socket.id);
 
         socket.emit('hello', {
-            you: publicUser(user),
-            users: Array.from(users.values()).map(publicUser),
+            you: publicProfile(profile),
+            profiles: Array.from(profiles.values()).map(publicProfile),
             voiceUsers: Array.from(voiceChannel),
             messages: messages.slice(-MAX_MESSAGES)
         });
 
-        socket.broadcast.emit('user-joined', publicUser(user));
-        log(`    ${user.username} joined (${users.size} online)`);
+        // Tell others about the (possibly updated) profile.
+        socket.broadcast.emit('profile-updated', publicProfile(profile));
+        log(`    ${profile.username} joined (${profiles.size} profiles, ${uuidToSocket.size} online)`);
+    });
+
+    safe(socket, 'update-profile', ({ username, color, avatarUrl }) => {
+        const uuid = uuidOf(socket.id);
+        if (!uuid) throw new Error('update-profile: not joined yet');
+        const profile = profiles.get(uuid);
+        if (!profile) throw new Error('update-profile: profile missing');
+
+        if (typeof username === 'string' && username.trim()) {
+            profile.username = username.trim().slice(0, 32);
+        }
+        if (typeof color === 'string') profile.color = color;
+        if (typeof avatarUrl === 'string' || avatarUrl === null) {
+            profile.avatarUrl = avatarUrl || null;
+        }
+
+        io.emit('profile-updated', publicProfile(profile));
+        log(`    profile updated: ${profile.username} (${uuid.slice(0, 8)}…)`);
     });
 
     safe(socket, 'chat', ({ text, imageUrl }) => {
-        const user = users.get(socket.id);
-        if (!user) throw new Error('chat: not joined yet');
+        const uuid = uuidOf(socket.id);
+        if (!uuid) throw new Error('chat: not joined yet');
         const cleanText = (typeof text === 'string') ? text.slice(0, 2000) : '';
         const cleanImage = (typeof imageUrl === 'string' && imageUrl.startsWith('/uploads/'))
             ? imageUrl : null;
         if (!cleanText && !cleanImage) return;
 
         const msg = {
-            id: `${socket.id}-${Date.now()}`,
-            userId: socket.id,
-            username: user.username,
-            color: user.color,
+            id: `${uuid}-${Date.now()}`,
+            userId: uuid,
             text: cleanText,
             imageUrl: cleanImage,
             ts: Date.now()
@@ -236,35 +285,48 @@ io.on('connection', (socket) => {
     });
 
     safe(socket, 'voice-join', () => {
-        if (!users.get(socket.id)) throw new Error('voice-join: not joined yet');
-        if (voiceChannel.has(socket.id)) return;
-        voiceChannel.add(socket.id);
+        const uuid = uuidOf(socket.id);
+        if (!uuid) throw new Error('voice-join: not joined yet');
+        if (voiceChannel.has(uuid)) return;
+        voiceChannel.add(uuid);
 
-        const others = Array.from(voiceChannel).filter(id => id !== socket.id);
+        const others = Array.from(voiceChannel).filter(id => id !== uuid);
         socket.emit('voice-peers', others);
-        socket.broadcast.emit('voice-user-joined', socket.id);
-        log(`    voice-join ${socket.id} (${voiceChannel.size} in voice)`);
+        socket.broadcast.emit('voice-user-joined', uuid);
+        log(`    voice-join ${uuid.slice(0, 8)}… (${voiceChannel.size} in voice)`);
     });
 
     safe(socket, 'voice-leave', () => {
-        if (!voiceChannel.delete(socket.id)) return;
-        socket.broadcast.emit('voice-user-left', socket.id);
-        log(`    voice-leave ${socket.id}`);
+        const uuid = uuidOf(socket.id);
+        if (!uuid || !voiceChannel.delete(uuid)) return;
+        socket.broadcast.emit('voice-user-left', uuid);
+        log(`    voice-leave ${uuid.slice(0, 8)}…`);
     });
 
+    // WebRTC signaling — `to` is a UUID, server resolves to socket.id.
     safe(socket, 'rtc-offer', ({ to, offer }) => {
-        io.to(to).emit('rtc-offer', { from: socket.id, offer });
+        const fromUuid = uuidOf(socket.id);
+        const targetSocket = socketOf(to);
+        if (!fromUuid || !targetSocket) return;
+        io.to(targetSocket).emit('rtc-offer', { from: fromUuid, offer });
     });
     safe(socket, 'rtc-answer', ({ to, answer }) => {
-        io.to(to).emit('rtc-answer', { from: socket.id, answer });
+        const fromUuid = uuidOf(socket.id);
+        const targetSocket = socketOf(to);
+        if (!fromUuid || !targetSocket) return;
+        io.to(targetSocket).emit('rtc-answer', { from: fromUuid, answer });
     });
     safe(socket, 'rtc-ice', ({ to, candidate }) => {
-        io.to(to).emit('rtc-ice', { from: socket.id, candidate });
+        const fromUuid = uuidOf(socket.id);
+        const targetSocket = socketOf(to);
+        if (!fromUuid || !targetSocket) return;
+        io.to(targetSocket).emit('rtc-ice', { from: fromUuid, candidate });
     });
 
     safe(socket, 'mic-status', ({ muted }) => {
-        if (!users.get(socket.id)) return;
-        socket.broadcast.emit('mic-status', { userId: socket.id, muted: !!muted });
+        const uuid = uuidOf(socket.id);
+        if (!uuid) return;
+        socket.broadcast.emit('mic-status', { userId: uuid, muted: !!muted });
     });
 
     socket.on('error', (err) => {
@@ -272,17 +334,24 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', (reason) => {
-        const user = users.get(socket.id);
-        if (voiceChannel.delete(socket.id)) {
-            socket.broadcast.emit('voice-user-left', socket.id);
-        }
-        if (user) {
-            socket.broadcast.emit('user-left', socket.id);
-            log(`[-] ${user.username} disconnected (${reason})`);
+        const uuid = uuidOf(socket.id);
+        socketToUuid.delete(socket.id);
+        if (uuid) {
+            // Only clear the uuid→socket mapping if this socket is still
+            // the one registered for it (a fresh login on a new socket
+            // will have already overwritten it).
+            if (uuidToSocket.get(uuid) === socket.id) {
+                uuidToSocket.delete(uuid);
+                if (voiceChannel.delete(uuid)) {
+                    socket.broadcast.emit('voice-user-left', uuid);
+                }
+                socket.broadcast.emit('user-disconnected', uuid);
+            }
+            const profile = profiles.get(uuid);
+            log(`[-] ${profile?.username || uuid.slice(0, 8)}… disconnected (${reason})`);
         } else {
             log(`[-] socket ${socket.id} disconnected (${reason})`);
         }
-        users.delete(socket.id);
     });
 });
 

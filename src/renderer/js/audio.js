@@ -10,9 +10,29 @@
 // The owner (app.js) wires this up by passing a `signal` callback that emits
 // the right socket.io event.
 
+// STUN handles ~70% of cases; TURN is the fallback when both peers are
+// behind symmetric NATs that won't allow direct connections. The Open
+// Relay Project provides a free public TURN server for testing — fine
+// for friends-only use. If reliability matters later, swap in a paid
+// service (Twilio/Xirsys) or run our own coturn.
 const ICE_SERVERS = [
     { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' }
+    { urls: 'stun:stun1.l.google.com:19302' },
+    {
+        urls: 'turn:openrelay.metered.ca:80',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+    },
+    {
+        urls: 'turn:openrelay.metered.ca:443',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+    },
+    {
+        urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+    }
 ];
 
 export class AudioManager {
@@ -206,10 +226,17 @@ export class AudioManager {
         };
 
         pc.onconnectionstatechange = () => {
+            console.log(`[audio] peer ${userId} → ${pc.connectionState}`);
             if (this.onPeerStateChange) this.onPeerStateChange(userId, pc.connectionState);
             if (pc.connectionState === 'failed' || pc.connectionState === 'closed') {
                 this.dropPeer(userId);
             }
+        };
+        pc.oniceconnectionstatechange = () => {
+            console.log(`[audio] peer ${userId} ICE → ${pc.iceConnectionState}`);
+        };
+        pc.onicegatheringstatechange = () => {
+            console.log(`[audio] peer ${userId} gathering → ${pc.iceGatheringState}`);
         };
 
         return peer;

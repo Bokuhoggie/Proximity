@@ -11,12 +11,17 @@ const COLORS = ['#7aa2f7', '#9ece6a', '#f7768e', '#e0af68', '#bb9af7', '#7dcfff'
 const state = {
     socket: null,
     serverUrl: null,
-    me: null,            // { id, username, color }
-    users: new Map(),    // userId -> { id, username, color }
+    me: null,                      // { id, username, color, avatarUrl }
+    profiles: new Map(),           // uuid -> { id, username, color, avatarUrl }
     inVoice: false,
-    voicePeers: new Set(),
+    voicePeers: new Set(),         // uuids in voice
+    peerStates: new Map(),         // uuid -> RTCPeerConnection state
     audio: null
 };
+
+function profileOf(uuid) {
+    return state.profiles.get(uuid) || { id: uuid, username: 'unknown', color: '#888', avatarUrl: null };
+}
 
 // ---------- DOM helpers ----------
 
@@ -52,30 +57,54 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 window.addEventListener('DOMContentLoaded', () => {
     const profile = loadOrCreateProfile();
+    state.me = profile;
     setupChatComposer();
     setupVoiceControls();
     setupSettings();
     renderUserList();
     renderVoiceList();
-    connectAndJoin(profile.username, profile.color);
+    connectAndJoin(profile);
 });
 
 function loadOrCreateProfile() {
     try {
         const saved = JSON.parse(localStorage.getItem('proximity-profile') || '{}');
-        if (saved.username && saved.color) return saved;
+        if (saved.id && saved.username && saved.color) {
+            return { id: saved.id, username: saved.username, color: saved.color, avatarUrl: saved.avatarUrl || null };
+        }
+        // Migrate old format (had username + color only) to UUID-based.
+        if (saved.username && saved.color) {
+            const migrated = { id: makeUuid(), username: saved.username, color: saved.color, avatarUrl: null };
+            localStorage.setItem('proximity-profile', JSON.stringify(migrated));
+            return migrated;
+        }
     } catch {}
     const profile = {
+        id: makeUuid(),
         username: 'friend-' + Math.random().toString(36).slice(2, 6),
-        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        avatarUrl: null
     };
     localStorage.setItem('proximity-profile', JSON.stringify(profile));
     return profile;
 }
 
+function saveProfile() {
+    localStorage.setItem('proximity-profile', JSON.stringify(state.me));
+}
+
+function makeUuid() {
+    if (crypto?.randomUUID) return crypto.randomUUID();
+    // Fallback for older runtimes (Electron 28 ships with randomUUID, so this is just in case).
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
+
 // ---------- Connection ----------
 
-async function connectAndJoin(username, color) {
+async function connectAndJoin(me) {
     showStatus('Connecting…');
     let url = await pickServer();
     while (!url) {
@@ -88,9 +117,13 @@ async function connectAndJoin(username, color) {
     const socket = io(url, { transports: ['websocket', 'polling'], timeout: 8000 });
     state.socket = socket;
 
+    function emitJoin() {
+        socket.emit('join', { id: me.id, username: me.username, color: me.color, avatarUrl: me.avatarUrl });
+    }
+
     socket.on('connect', () => {
         console.log('[socket] connected', socket.id, '→', url);
-        socket.emit('join', { username, color });
+        emitJoin();
     });
 
     socket.on('connect_error', (err) => {
@@ -103,10 +136,11 @@ async function connectAndJoin(username, color) {
         toast(`Server error (${event}): ${message}`);
     });
 
-    socket.on('hello', ({ you, users, voiceUsers, messages }) => {
-        state.me = you;
-        state.users.clear();
-        for (const u of users) state.users.set(u.id, u);
+    socket.on('hello', ({ you, profiles, voiceUsers, messages }) => {
+        state.me = { ...state.me, ...you };
+        saveProfile();
+        state.profiles.clear();
+        for (const p of profiles) state.profiles.set(p.id, p);
         state.voicePeers = new Set(voiceUsers);
         renderUserList();
         renderVoiceList();
@@ -115,24 +149,31 @@ async function connectAndJoin(username, color) {
         showStatus('');
     });
 
-    socket.on('user-joined', (u) => {
-        state.users.set(u.id, u);
+    socket.on('profile-updated', (profile) => {
+        state.profiles.set(profile.id, profile);
+        if (profile.id === state.me.id) {
+            state.me = { ...state.me, ...profile };
+            saveProfile();
+        }
         renderUserList();
+        renderVoiceList();
+        rerenderMessageProfiles(profile.id);
     });
-    socket.on('user-left', (id) => {
-        state.users.delete(id);
-        state.voicePeers.delete(id);
+
+    socket.on('user-disconnected', (uuid) => {
+        // Profile stays around (so old messages still render with their name);
+        // we only drop voice presence + connection state.
+        state.voicePeers.delete(uuid);
+        state.peerStates.delete(uuid);
         renderUserList();
         renderVoiceList();
     });
 
     socket.on('chat', appendMessage);
 
-    // Voice room presence
     socket.on('voice-peers', (peers) => {
         for (const id of peers) state.voicePeers.add(id);
         renderVoiceList();
-        // Newcomer offers to each existing peer.
         if (state.audio) {
             for (const id of peers) state.audio.offerTo(id);
         }
@@ -143,11 +184,11 @@ async function connectAndJoin(username, color) {
     });
     socket.on('voice-user-left', (id) => {
         state.voicePeers.delete(id);
+        state.peerStates.delete(id);
         renderVoiceList();
         if (state.audio) state.audio.dropPeer(id);
     });
 
-    // WebRTC signaling
     socket.on('rtc-offer', ({ from, offer }) => state.audio?.handleOffer(from, offer));
     socket.on('rtc-answer', ({ from, answer }) => state.audio?.handleAnswer(from, answer));
     socket.on('rtc-ice', ({ from, candidate }) => state.audio?.handleIce(from, candidate));
@@ -165,7 +206,7 @@ async function connectAndJoin(username, color) {
     socket.on('reconnect', (n) => {
         console.log('[socket] reconnected after', n, 'attempts');
         showStatus('');
-        socket.emit('join', { username, color });
+        emitJoin();
     });
 }
 
@@ -208,10 +249,10 @@ function showStatus(text) {
 function renderUserList() {
     const host = $('#userList');
     host.innerHTML = '';
-    for (const u of state.users.values()) {
+    for (const p of state.profiles.values()) {
         const dot = el('span', { className: 'user-dot' });
-        dot.style.background = u.color;
-        const name = el('span', { className: 'user-name' }, u.username);
+        dot.style.background = p.color;
+        const name = el('span', { className: 'user-name' }, p.username);
         host.append(el('div', { className: 'user-row' }, dot, name));
     }
 }
@@ -224,25 +265,31 @@ function renderVoiceList() {
         return;
     }
     for (const id of state.voicePeers) {
-        const u = state.users.get(id);
-        if (!u) continue;
+        const p = profileOf(id);
         const dot = el('span', { className: 'user-dot' });
-        dot.style.background = u.color;
+        dot.style.background = p.color;
+        const stateClass = state.peerStates.get(id) || (id === state.me?.id ? 'self' : 'pending');
+        const stateDot = el('span', { className: `peer-state ${stateClass}`, title: stateClass });
         host.append(el('div', {
             className: 'user-row',
             dataset: { voiceUser: id }
-        }, dot, el('span', { className: 'user-name' }, u.username), el('span', { className: 'mic-icon' }, '🎤')));
+        }, dot, el('span', { className: 'user-name' }, p.username), stateDot, el('span', { className: 'mic-icon' }, '🎤')));
     }
 }
 
 function appendMessage(m) {
     const host = $('#messages');
     const stickToBottom = host.scrollHeight - host.scrollTop - host.clientHeight < 50;
+    const node = renderMessageNode(m);
+    host.append(node);
+    if (stickToBottom) host.scrollTop = host.scrollHeight;
+}
 
-    const author = el('span', { className: 'msg-author' }, m.username);
-    author.style.color = m.color;
+function renderMessageNode(m) {
+    const p = profileOf(m.userId);
+    const author = el('span', { className: 'msg-author' }, p.username);
+    author.style.color = p.color;
     const time = el('span', { className: 'msg-time' }, formatTime(m.ts));
-
     const head = el('div', { className: 'msg-head' }, author, time);
     const body = el('div', { className: 'msg-body' });
     if (m.text) body.append(el('div', { className: 'msg-text' }, m.text));
@@ -252,9 +299,24 @@ function appendMessage(m) {
         img.addEventListener('click', () => window.open(fullUrl, '_blank'));
         body.append(img);
     }
+    const node = el('div', { className: 'msg' }, head, body);
+    node.dataset.userId = m.userId;
+    node.dataset.msgId = m.id;
+    return node;
+}
 
-    host.append(el('div', { className: 'msg' }, head, body));
-    if (stickToBottom) host.scrollTop = host.scrollHeight;
+// When a profile changes, walk every visible message authored by that user
+// and re-render its head (name + color). Cheap: O(messages-on-screen).
+function rerenderMessageProfiles(uuid) {
+    const p = profileOf(uuid);
+    document.querySelectorAll(`.msg[data-user-id="${cssEscape(uuid)}"] .msg-author`).forEach(authorEl => {
+        authorEl.textContent = p.username;
+        authorEl.style.color = p.color;
+    });
+}
+
+function cssEscape(s) {
+    return (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/[^a-zA-Z0-9_-]/g, '\\$&');
 }
 
 function formatTime(ts) {
@@ -354,7 +416,11 @@ async function joinVoice() {
         state.audio = new AudioManager({
             signal: (event, data) => state.socket.emit(event, data),
             inputDeviceId: devices.input,
-            outputDeviceId: devices.output
+            outputDeviceId: devices.output,
+            onPeerStateChange: (uuid, connectionState) => {
+                state.peerStates.set(uuid, connectionState);
+                renderVoiceList();
+            }
         });
         await state.audio.startMic();
         state.socket.emit('voice-join');
@@ -450,10 +516,8 @@ function setupSettings() {
         else await startMicTest();
     });
 
-    $('#resetIdentityBtn').addEventListener('click', () => {
-        localStorage.removeItem('proximity-profile');
-        notify('Identity will reset on next launch');
-    });
+    setupIdentityEditor();
+    setupTestSoundButton();
 
     async function startMicTest() {
         try {
@@ -525,12 +589,73 @@ function setupSettings() {
     }
 
     function renderIdentity() {
-        const host = $('#identityRow');
+        // Refresh the input + selected swatch each time the modal opens.
+        $('#displayNameInput').value = state.me?.username || '';
+        renderColorSwatches();
+    }
+
+    function renderColorSwatches() {
+        const host = $('#colorSwatches');
         host.innerHTML = '';
-        if (!state.me) return;
-        const dot = el('span', { className: 'user-dot' });
-        dot.style.background = state.me.color;
-        host.append(dot, el('span', { className: 'user-name' }, state.me.username));
+        for (const c of COLORS) {
+            const s = el('button', {
+                type: 'button',
+                className: 'swatch' + (c === state.me?.color ? ' active' : ''),
+                title: c
+            });
+            s.style.background = c;
+            s.addEventListener('click', () => {
+                if (!state.me) return;
+                state.me.color = c;
+                saveProfile();
+                renderColorSwatches();
+                state.socket?.emit('update-profile', { color: c });
+            });
+            host.append(s);
+        }
+    }
+
+    function setupIdentityEditor() {
+        $('#saveNameBtn').addEventListener('click', () => {
+            const name = $('#displayNameInput').value.trim();
+            if (!name || !state.me) return;
+            if (name === state.me.username) return;
+            state.me.username = name.slice(0, 32);
+            saveProfile();
+            state.socket?.emit('update-profile', { username: state.me.username });
+        });
+    }
+
+    function setupTestSoundButton() {
+        const btn = $('#testSoundBtn');
+        let audio = null;
+        btn.addEventListener('click', async () => {
+            if (audio) {
+                audio.pause();
+                audio = null;
+                btn.textContent = 'Play test sound';
+                btn.classList.remove('muted');
+                return;
+            }
+            audio = new Audio('assets/test-sound.mp3');
+            const out = loadAudioDevices().output;
+            if (out && typeof audio.setSinkId === 'function') {
+                audio.setSinkId(out).catch(() => {});
+            }
+            btn.textContent = 'Stop';
+            btn.classList.add('muted');
+            audio.addEventListener('ended', () => {
+                audio = null;
+                btn.textContent = 'Play test sound';
+                btn.classList.remove('muted');
+            });
+            audio.play().catch((err) => {
+                notify('Test sound failed: ' + err.message);
+                audio = null;
+                btn.textContent = 'Play test sound';
+                btn.classList.remove('muted');
+            });
+        });
     }
 
     // React to devices being plugged/unplugged while the modal is open.
