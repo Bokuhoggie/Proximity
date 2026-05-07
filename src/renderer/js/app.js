@@ -406,6 +406,8 @@ function setupSettings() {
     const testBtn = $('#micTestBtn');
     let micTestStop = null;
 
+    setupUpdatesSection();
+
     $('#settingsBtn').addEventListener('click', () => openSettings());
     $('#settingsCloseBtn').addEventListener('click', closeSettings);
     modal.addEventListener('click', (e) => {
@@ -535,4 +537,87 @@ function setupSettings() {
     navigator.mediaDevices.addEventListener('devicechange', () => {
         if (modal.style.display === 'flex') refreshDeviceLists();
     });
+}
+
+// ---------- Updates section ----------
+
+function setupUpdatesSection() {
+    const versionEl = $('#updatesVersion');
+    const statusEl = $('#updatesStatus');
+    const progress = $('#updatesProgress');
+    const progressFill = $('#updatesProgressFill');
+    const checkBtn = $('#updatesCheckBtn');
+    const installBtn = $('#updatesInstallBtn');
+
+    // window.proximity is exposed by preload.js. If it's missing we're
+    // running in a plain browser context (shouldn't happen for users, but
+    // safe-guard so the rest of settings still works).
+    const api = window.proximity?.updater;
+    if (!api) {
+        versionEl.textContent = '?';
+        statusEl.textContent = 'Updater not available in this context';
+        checkBtn.disabled = true;
+        return;
+    }
+
+    window.proximity.appVersion().then((v) => { versionEl.textContent = v; });
+
+    function applyEvent(ev) {
+        progress.style.display = 'none';
+        installBtn.style.display = 'none';
+        checkBtn.disabled = false;
+
+        switch (ev.type) {
+            case 'idle':
+                statusEl.textContent = 'Idle';
+                break;
+            case 'disabled':
+                statusEl.textContent = 'Disabled (running in dev mode)';
+                checkBtn.disabled = true;
+                break;
+            case 'checking':
+                statusEl.textContent = 'Checking for updates…';
+                checkBtn.disabled = true;
+                break;
+            case 'up-to-date':
+                statusEl.textContent = `Up to date (${ev.version})`;
+                break;
+            case 'available':
+                statusEl.textContent = `Update available: ${ev.version}. Downloading…`;
+                checkBtn.disabled = true;
+                break;
+            case 'downloading':
+                statusEl.textContent = `Downloading… ${ev.percent.toFixed(0)}%`;
+                progress.style.display = 'block';
+                progressFill.style.width = ev.percent.toFixed(0) + '%';
+                checkBtn.disabled = true;
+                break;
+            case 'downloaded':
+                statusEl.textContent = `Update ${ev.version} ready to install`;
+                installBtn.style.display = '';
+                break;
+            case 'error':
+                statusEl.textContent = 'Error: ' + ev.message;
+                break;
+            default:
+                statusEl.textContent = ev.type;
+        }
+    }
+
+    api.getState().then(({ last }) => applyEvent(last || { type: 'idle' }));
+    api.onEvent(applyEvent);
+
+    checkBtn.addEventListener('click', async () => {
+        statusEl.textContent = 'Checking…';
+        checkBtn.disabled = true;
+        const r = await api.check();
+        if (!r.ok) {
+            statusEl.textContent = r.reason === 'disabled-in-dev'
+                ? 'Disabled (running in dev mode)'
+                : 'Error: ' + r.reason;
+            checkBtn.disabled = r.reason === 'disabled-in-dev';
+        }
+    });
+
+    installBtn.addEventListener('click', () => api.installNow());
 }

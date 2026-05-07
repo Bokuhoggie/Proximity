@@ -287,3 +287,17 @@ input, button { color: inherit; }
     border: 1px solid var(--border);
     border-radius: 6px;
 }
+
+.updates-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+.updates-meta { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.updates-version { font-weight: 600; font-size: 13px; }
+.updates-status { font-size: 12px; color: var(--text-dim); word-break: break-word; }
+.updates-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }

@@ -87,6 +87,23 @@
             <button id="resetIdentityBtn" type="button" class="btn ghost small">Reset identity</button>
             <div class="field-hint">Generates a new random username and color on next launch.</div>
         </div>
+
+        <div class="modal-section">
+            <label class="field-label">Updates</label>
+            <div class="updates-row">
+                <div class="updates-meta">
+                    <div class="updates-version">Proximity <span id="updatesVersion">…</span></div>
+                    <div id="updatesStatus" class="updates-status">Checking…</div>
+                    <div class="mic-meter" id="updatesProgress" style="display:none;">
+                        <div id="updatesProgressFill" class="mic-meter-fill"></div>
+                    </div>
+                </div>
+                <div class="updates-actions">
+                    <button id="updatesCheckBtn" type="button" class="btn ghost small">Check now</button>
+                    <button id="updatesInstallBtn" type="button" class="btn primary small" style="display:none;">Install &amp; restart</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
