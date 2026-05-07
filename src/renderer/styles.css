@@ -99,13 +99,61 @@ input, button { color: inherit; }
 .sidebar-section .btn.icon { padding: 2px 8px; font-size: 14px; line-height: 1; }
 
 .sidebar-footer {
-    margin-top: auto;
     padding-top: 12px;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 8px;
 }
+
+/* Pushes the dock + footer to the bottom of the sidebar. The dock is
+   hidden when not in voice, so the footer ends up flush at the bottom. */
+.voice-dock {
+    margin-top: auto;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+/* When the dock is hidden, the footer needs its own auto top-margin
+   so it still pins to the bottom. */
+.voice-dock[style*="display:none"] + .sidebar-footer,
+.voice-dock[style*="display: none"] + .sidebar-footer {
+    margin-top: auto;
+}
+.voice-dock-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+.voice-dock-icon { font-size: 16px; flex-shrink: 0; }
+.voice-dock-meta { min-width: 0; flex: 1; }
+.voice-dock-channel {
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.voice-dock-status {
+    font-size: 11px;
+    color: var(--success, #9ece6a);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.voice-dock-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.voice-dock-actions .btn { padding: 4px 8px; font-size: 13px; line-height: 1; }
 .my-identity {
     display: flex;
     align-items: center;

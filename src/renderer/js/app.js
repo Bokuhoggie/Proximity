@@ -489,8 +489,9 @@ function setupVoiceLeaveAndMute() {
         if (!state.audio) return;
         const next = !state.audio.muted;
         state.audio.setMuted(next);
-        $('#voiceMuteBtn').textContent = next ? 'Unmute' : 'Mute';
+        $('#voiceMuteBtn').textContent = next ? '🔇' : '🎤';
         $('#voiceMuteBtn').classList.toggle('muted', next);
+        $('#voiceMuteBtn').title = next ? 'Unmute' : 'Mute';
         state.socket.emit('mic-status', { muted: next });
     });
 }
@@ -547,8 +548,22 @@ function leaveVoiceChannel() {
 
 function updateVoiceButtons() {
     const inVoice = !!state.activeVoiceChannelId;
-    $('#voiceLeaveBtn').style.display = inVoice ? '' : 'none';
-    $('#voiceMuteBtn').style.display = inVoice ? '' : 'none';
+    const dock = $('#voiceDock');
+    dock.style.display = inVoice ? '' : 'none';
+    if (!inVoice) return;
+
+    const channel = state.voiceChannels.get(state.activeVoiceChannelId);
+    $('#voiceDockChannel').textContent = channel?.name || 'Voice';
+
+    // Aggregate peer state for the dock subtitle.
+    const peerStates = Array.from(state.peerStates.values());
+    const others = peerStates.filter(s => s !== 'self');
+    let label;
+    if (others.length === 0) label = 'Connected (alone)';
+    else if (others.every(s => s === 'connected')) label = 'Connected';
+    else if (others.some(s => s === 'failed' || s === 'closed' || s === 'disconnected')) label = 'Connection issue';
+    else label = 'Connecting…';
+    $('#voiceDockStatus').textContent = label;
 }
 
 // ---------- Channel creation ----------

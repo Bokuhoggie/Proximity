@@ -39,9 +39,19 @@
                 <button id="addVoiceChannelBtn" class="btn ghost icon" title="New voice channel">+</button>
             </div>
             <div id="voiceChannelList" class="list"></div>
-            <div class="voice-controls">
-                <button id="voiceLeaveBtn" class="btn danger" style="display:none;">Leave voice</button>
-                <button id="voiceMuteBtn" class="btn ghost" style="display:none;">Mute</button>
+        </div>
+
+        <div id="voiceDock" class="voice-dock" style="display:none;">
+            <div class="voice-dock-info">
+                <span class="voice-dock-icon">🔊</span>
+                <div class="voice-dock-meta">
+                    <div id="voiceDockChannel" class="voice-dock-channel"></div>
+                    <div id="voiceDockStatus" class="voice-dock-status">Connecting…</div>
+                </div>
+            </div>
+            <div class="voice-dock-actions">
+                <button id="voiceMuteBtn" class="btn ghost icon" title="Toggle mute">🎤</button>
+                <button id="voiceLeaveBtn" class="btn danger icon" title="Leave voice">✕</button>
             </div>
         </div>
 
