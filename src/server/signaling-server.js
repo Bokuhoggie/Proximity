@@ -445,17 +445,20 @@ io.on('connection', (socket) => {
 // Chat messages endpoint
 app.get('/api/messages', (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
-    const recentMessages = chatMessages.slice(-limit);
+    const generalChannel = textChannels.get('general');
+    const messages = generalChannel ? generalChannel.messages : [];
+    const recentMessages = messages.slice(-limit);
     res.json({
         messages: recentMessages,
         count: recentMessages.length,
-        total: chatMessages.length
+        total: messages.length
     });
 });
 
 // Health check endpoint
 app.get('/health', (req, res) => {
     const voiceChannel = voiceChannels.get(VOICE_CHANNEL);
+    const generalChannel = textChannels.get('general');
     res.json({
         status: 'ok',
         users: users.size,
@@ -464,7 +467,7 @@ app.get('/health', (req, res) => {
             id: VOICE_CHANNEL,
             userCount: voiceChannel ? voiceChannel.size : 0
         },
-        messageCount: chatMessages.length,
+        messageCount: generalChannel ? generalChannel.messages.length : 0,
         uptime: process.uptime()
     });
 });

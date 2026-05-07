@@ -8,7 +8,7 @@ import { MatrixClient } from './chat/MatrixClient.js';
 
 // Try Railway first, fallback to localhost for development
 const SERVER_URL = 'https://proximityserver-production.up.railway.app';
-const FALLBACK_URL = 'https://proximityserver-production.up.railway.app';
+const FALLBACK_URL = 'http://localhost:3000';
 
 class ProximityApp {
     constructor() {
@@ -1030,10 +1030,13 @@ class ProximityApp {
             this.handleUserJoined(user);
         });
 
-        socket.on('user-left-hub', (user) => {
-            console.log('User left hub:', user);
-            this.uiManager.showNotification(`${user.username} left the hub`, 'info');
-            this.handleUserLeft(user);
+        socket.on('user-left-hub', (userId) => {
+            console.log('User left hub:', userId);
+            // Server sends just the socket ID string
+            const user = this.hubUsers.find(u => u.id === userId || u.userId === userId);
+            const username = user?.username || 'Someone';
+            this.uiManager.showNotification(`${username} left the hub`, 'info');
+            this.handleUserLeft({ userId: userId, username });
         });
 
         // Voice channel events
@@ -1257,9 +1260,9 @@ class ProximityApp {
 
             this.uiManager.showNotification('Joined Proximity Room', 'success');
 
-        } catch (bomboclat) {
-            console.bomboclat('Failed to join hub:', bomboclat);
-            this.uiManager.showNotification('Failed to join room - bomboclat!', 'bomboclat');
+        } catch (error) {
+            console.error('Failed to join hub:', error);
+            this.uiManager.showNotification('Failed to join room', 'error');
         }
     }
 

@@ -18,6 +18,7 @@ export class AudioManager {
         this.isInputLocked = false;
         this.isOutputLocked = false;
         
+        this.pendingIceCandidates = new Map();
         this.iceServers = [
             { urls: 'stun:stun.l.google.com:19302' },
             { urls: 'stun:stun1.l.google.com:19302' },
@@ -705,11 +706,25 @@ export class AudioManager {
         testMicContainer.appendChild(visualizerContainer);
     }
 
+    setupConnectionStateMonitoring(peerConnection, peerId) {
+        peerConnection.onconnectionstatechange = () => {
+            console.log(`🔗 Connection state with ${peerId}: ${peerConnection.connectionState}`);
+            if (peerConnection.connectionState === 'failed') {
+                console.error(`❌ WebRTC connection failed with ${peerId}`);
+                this.disconnectFromUser(peerId);
+            }
+        };
+        peerConnection.oniceconnectionstatechange = () => {
+            console.log(`🧊 ICE state with ${peerId}: ${peerConnection.iceConnectionState}`);
+        };
+    }
+
     async handleOffer(offer, from) {
         console.log('📥 Handling offer from:', from);
-        
+
         const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
         this.peerConnections.set(from, peerConnection);
+        this.setupConnectionStateMonitoring(peerConnection, from);
 
         if (this.localStream) {
             this.localStream.getTracks().forEach(track => {
@@ -768,9 +783,10 @@ export class AudioManager {
 
         try {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            await this.flushIceCandidates(from);
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
-            
+
             if (window.proximityApp) {
                 window.proximityApp.connectionManager.emit('answer', {
                     target: from,
@@ -790,6 +806,7 @@ export class AudioManager {
         try {
             if (peerConnection.signalingState === 'have-local-offer') {
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                await this.flushIceCandidates(from);
             }
         } catch (error) {
             console.error('❌ Error handling answer:', error);
@@ -804,19 +821,45 @@ export class AudioManager {
         try {
             if (peerConnection.remoteDescription) {
                 await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+                // Queue candidates until remote description is set
+                if (!this.pendingIceCandidates.has(from)) {
+                    this.pendingIceCandidates.set(from, []);
+                }
+                this.pendingIceCandidates.get(from).push(candidate);
+                console.log(`🧊 Queued ICE candidate for ${from} (${this.pendingIceCandidates.get(from).length} pending)`);
             }
         } catch (error) {
             console.error('❌ Error handling ICE candidate:', error);
         }
     }
 
+    async flushIceCandidates(from) {
+        const candidates = this.pendingIceCandidates.get(from);
+        if (!candidates || candidates.length === 0) return;
+
+        const peerConnection = this.peerConnections.get(from);
+        if (!peerConnection || !peerConnection.remoteDescription) return;
+
+        console.log(`🧊 Flushing ${candidates.length} queued ICE candidates for ${from}`);
+        for (const candidate of candidates) {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            } catch (error) {
+                console.error('❌ Error adding queued ICE candidate:', error);
+            }
+        }
+        this.pendingIceCandidates.delete(from);
+    }
+
     async connectToUser(userId, username, userColor) {
         if (this.peerConnections.has(userId)) return;
 
         console.log('🤝 Connecting to user:', userId);
-        
+
         const peerConnection = new RTCPeerConnection({ iceServers: this.iceServers });
         this.peerConnections.set(userId, peerConnection);
+        this.setupConnectionStateMonitoring(peerConnection, userId);
 
         if (this.localStream) {
             this.localStream.getTracks().forEach(track => {
@@ -827,28 +870,35 @@ export class AudioManager {
         peerConnection.ontrack = (event) => {
             console.log('📥 Received remote stream from:', userId);
             const remoteStream = event.streams[0];
-            
+
             const audioElement = document.createElement('audio');
+            audioElement.id = `audio-${userId}`;
+            audioElement.setAttribute('data-user-id', userId);
             audioElement.autoplay = true;
             audioElement.srcObject = remoteStream;
             audioElement.volume = 1;
             audioElement.style.display = 'none';
-            
+
             // Use locked output device if available
             if (this.isOutputLocked && this.lockedOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.lockedOutputDevice).catch(console.error);
             } else if (this.currentOutputDevice && typeof audioElement.setSinkId === 'function') {
                 audioElement.setSinkId(this.currentOutputDevice).catch(console.error);
             }
-            
-            const participant = document.getElementById(`voice-participant-${userId}-${window.proximityApp?.currentVoiceChannel?.replace('-voice', '')}`);
-            if (participant) {
-                participant.appendChild(audioElement);
-            }
-            
+
+            // Always append to body to ensure audio plays
+            document.body.appendChild(audioElement);
+
+            // Ensure audio plays
+            audioElement.play().catch(err => {
+                console.warn('⚠️ Could not autoplay audio for', userId, err);
+            });
+
             if (window.proximityApp && window.proximityApp.proximityMap) {
                 window.proximityApp.proximityMap.setUserAudioElement(userId, audioElement);
             }
+
+            console.log('🔊 Audio element created and playing for:', userId);
         };
 
         peerConnection.onicecandidate = (event) => {
@@ -882,6 +932,15 @@ export class AudioManager {
             peerConnection.close();
             this.peerConnections.delete(userId);
         }
+        this.pendingIceCandidates.delete(userId);
+
+        // Remove audio element from DOM
+        const audioEl = document.getElementById(`audio-${userId}`);
+        if (audioEl) {
+            audioEl.pause();
+            audioEl.srcObject = null;
+            audioEl.remove();
+        }
     }
 
     disconnectAll() {
@@ -890,6 +949,7 @@ export class AudioManager {
         // Close all peer connections
         this.peerConnections.forEach(pc => pc.close());
         this.peerConnections.clear();
+        this.pendingIceCandidates.clear();
 
         // Stop and remove all remote audio elements
         document.querySelectorAll('audio[data-user-id]').forEach(audio => {
