@@ -14,7 +14,8 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "release": "node scripts/release.js"
+    "release": "node scripts/release.js",
+    "check-token": "node scripts/check-token.js"
   },
   "author": "Bokuhoggie",
   "license": "MIT",
