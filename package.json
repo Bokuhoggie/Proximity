@@ -9,6 +9,7 @@
     "electron": "electron .",
     "dev": "electron . --dev",
     "dev:all": "concurrently --kill-others --names server,app -c green,cyan \"npm run server\" \"npm run dev\"",
+    "backup": "node scripts/backup.js",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",

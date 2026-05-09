@@ -112,6 +112,17 @@
         </div>
 
         <div class="modal-section">
+            <label class="field-label">End-to-end encryption</label>
+            <div id="e2eStatus" class="e2e-status">Loading…</div>
+            <div class="name-row">
+                <input id="e2ePassphrase" class="join-input" type="password" placeholder="Shared passphrase">
+                <button id="e2eSaveBtn" type="button" class="btn primary small">Set</button>
+            </div>
+            <button id="e2eClearBtn" type="button" class="btn ghost small">Disable encryption</button>
+            <div class="field-hint">All friends must set the same passphrase. Encrypts text and image bytes before they leave your device — Railway can never read them. Voice is already E2E (DTLS-SRTP).</div>
+        </div>
+
+        <div class="modal-section">
             <label class="field-label">Updates</label>
             <div class="updates-row">
                 <div class="updates-meta">

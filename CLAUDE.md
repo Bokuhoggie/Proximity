@@ -45,6 +45,23 @@ npm run dev           # electron only
 npm run build:win     # package Windows installer
 ```
 
+## Backups
+
+The server exposes `GET /export` returning full state JSON (profiles + channels + messages) gated by `Authorization: Bearer <BACKUP_TOKEN>`. Without the env var set, the endpoint is disabled (403).
+
+To run periodic backups on TIMONE (or any local machine):
+
+1. Set `BACKUP_TOKEN` in Railway → Variables to a random string.
+2. Locally, create `.env` (gitignored) with:
+   ```
+   BACKUP_SERVER_URL=https://proximityserver-production.up.railway.app
+   BACKUP_TOKEN=<same random string>
+   ```
+3. Run `npm run backup`. It pulls `/export` every 5 minutes (configurable via `BACKUP_INTERVAL_SEC`) and writes timestamped JSON to `backups/`.
+4. To autostart on Windows boot: drop a shortcut to `scripts/start-backup.bat` into `shell:startup`.
+
+Defaults: 5-minute interval, keeps the last 200 snapshots (~17 hours), prunes older.
+
 ## Image uploads
 
 `POST /upload` with the raw image bytes as the body and the mime type as `Content-Type`. Server returns `{ id, url, size, mime }`. Client emits a `chat` event with `{ imageUrl: url }`. On render, the image src is `serverUrl + url`. Limits: 10 MB, png/jpeg/gif/webp only. Storage is on Railway's ephemeral disk — uploads survive restarts but not redeploys; that's fine for a friends-only chat.

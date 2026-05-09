@@ -18,7 +18,14 @@ const DATA_DIR = path.join(__dirname, 'data');
 const STATE_FILE = path.join(DATA_DIR, 'state.json');
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
-const ALLOWED_MIME = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+// "application/octet-stream" allowed so end-to-end-encrypted image blobs
+// can be uploaded as opaque bytes — the server can't validate the
+// underlying image type (it can't read the contents). Honest-image mime
+// types still work for clients with E2E disabled.
+const ALLOWED_MIME = new Set([
+    'image/png', 'image/jpeg', 'image/gif', 'image/webp',
+    'application/octet-stream'
+]);
 const MAX_MESSAGES_PER_CHANNEL = 200;
 const MAX_TEXT_CHANNELS = 10;
 const MAX_VOICE_CHANNELS = 5;
@@ -85,6 +92,31 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (_req, res) => res.send('Proximity signaling server'));
+
+// Full state export, gated by a static bearer token. Used by the TIMONE
+// backup script to pull a snapshot every few minutes. Set BACKUP_TOKEN
+// in the server env; without it the endpoint is disabled (403). The
+// token is shared between server + backup script, never sent by clients.
+app.get('/export', (req, res) => {
+    const expected = process.env.BACKUP_TOKEN;
+    if (!expected) return res.status(403).json({ error: 'Backups disabled (no BACKUP_TOKEN set)' });
+    const auth = req.headers.authorization || '';
+    if (auth !== `Bearer ${expected}`) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    res.json({
+        version: 1,
+        exportedAt: Date.now(),
+        profiles: Array.from(profiles.values()),
+        textChannels: Array.from(textChannels.values()).map(c => ({
+            id: c.id, name: c.name, createdBy: c.createdBy, createdAt: c.createdAt,
+            messages: c.messages
+        })),
+        voiceChannels: Array.from(voiceChannels.values()).map(c => ({
+            id: c.id, name: c.name, createdBy: c.createdBy, createdAt: c.createdAt
+        }))
+    });
+});
 
 app.get('/health', (_req, res) => {
     let totalMessages = 0;
@@ -378,15 +410,25 @@ io.on('connection', (socket) => {
         log(`    profile updated: ${profile.username} (${uuid.slice(0, 8)}…)`);
     });
 
-    safe(socket, 'chat', ({ channelId, text, imageUrl }) => {
+    safe(socket, 'chat', ({ channelId, text, imageUrl, enc }) => {
         const uuid = uuidOf(socket.id);
         if (!uuid) throw new Error('chat: not joined yet');
         const channel = textChannels.get(channelId);
         if (!channel) throw new Error(`chat: unknown text channel ${channelId}`);
 
-        const cleanText = (typeof text === 'string') ? text.slice(0, 2000) : '';
+        // Text may be ciphertext (starts with "enc1:") or plaintext — server
+        // doesn't care, treats it as opaque. We just enforce a length cap.
+        const cleanText = (typeof text === 'string') ? text.slice(0, 6000) : '';
         const cleanImage = (typeof imageUrl === 'string' && imageUrl.startsWith('/uploads/'))
             ? imageUrl : null;
+        // For encrypted images: pass through { iv, mime } so receivers can
+        // decrypt. We don't validate beyond shape — server can't read it.
+        let cleanEnc = null;
+        if (enc && typeof enc === 'object') {
+            const iv = typeof enc.iv === 'string' ? enc.iv.slice(0, 32) : null;
+            const mime = typeof enc.mime === 'string' ? enc.mime.slice(0, 64) : null;
+            if (iv) cleanEnc = { iv, mime };
+        }
         if (!cleanText && !cleanImage) return;
 
         const msg = {
@@ -395,6 +437,7 @@ io.on('connection', (socket) => {
             userId: uuid,
             text: cleanText,
             imageUrl: cleanImage,
+            enc: cleanEnc,
             ts: Date.now()
         };
         channel.messages.push(msg);

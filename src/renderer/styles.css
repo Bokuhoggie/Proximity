@@ -264,6 +264,10 @@ input, button { color: inherit; }
 .msg-author { font-weight: 600; }
 .msg-time { font-size: 11px; color: var(--text-dim); }
 .msg-text { white-space: pre-wrap; word-break: break-word; }
+.msg-text.msg-encrypted { color: var(--text-dim); font-style: italic; }
+.msg-text.msg-locked { color: var(--danger); font-style: italic; }
+.msg-image.msg-encrypted { display: none; }
+.msg-image.msg-locked { display: none; }
 .msg-image {
     max-width: 380px;
     max-height: 320px;
@@ -420,6 +424,16 @@ input, button { color: inherit; }
     border: 1px solid var(--border);
     border-radius: 6px;
 }
+
+.e2e-status {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
+.e2e-status.on { color: var(--success, #9ece6a); border-color: var(--success, #9ece6a); }
+.e2e-status.off { color: var(--text-dim); }
 
 .updates-row {
     display: flex;

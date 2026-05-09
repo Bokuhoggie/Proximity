@@ -2,6 +2,7 @@
 // Handles: connect → join → text chat → voice channel → image upload.
 
 import { AudioManager, startMicLevel } from './audio.js';
+import * as e2e from './crypto.js';
 
 const RAILWAY_URL = 'https://proximityserver-production.up.railway.app';
 const LOCAL_URL = 'http://localhost:3000';
@@ -409,17 +410,63 @@ function renderMessageNode(m) {
     const time = el('span', { className: 'msg-time' }, formatTime(m.ts));
     const head = el('div', { className: 'msg-head' }, author, time);
     const body = el('div', { className: 'msg-body' });
-    if (m.text) body.append(el('div', { className: 'msg-text' }, m.text));
+    if (m.text) {
+        const textEl = el('div', { className: 'msg-text' });
+        body.append(textEl);
+        if (m.text.startsWith(e2e.CRYPTO_PREFIX)) {
+            // Encrypted — decrypt asynchronously and patch the node.
+            textEl.classList.add('msg-encrypted');
+            textEl.textContent = '🔒 decrypting…';
+            e2e.decryptText(m.text)
+                .then((plain) => {
+                    textEl.classList.remove('msg-encrypted');
+                    textEl.textContent = plain;
+                })
+                .catch(() => {
+                    textEl.classList.remove('msg-encrypted');
+                    textEl.classList.add('msg-locked');
+                    textEl.textContent = '🔒 (encrypted — passphrase mismatch)';
+                });
+        } else {
+            textEl.textContent = m.text;
+        }
+    }
     if (m.imageUrl) {
         const fullUrl = state.serverUrl + m.imageUrl;
-        const img = el('img', { className: 'msg-image', src: fullUrl, loading: 'lazy' });
-        img.addEventListener('click', () => window.open(fullUrl, '_blank'));
+        const img = el('img', { className: 'msg-image', loading: 'lazy' });
         body.append(img);
+        if (m.enc) {
+            // Encrypted image: fetch ciphertext, decrypt, render via blob URL.
+            img.classList.add('msg-encrypted');
+            img.alt = '🔒 decrypting…';
+            decryptImageInto(img, fullUrl, m.enc);
+        } else {
+            img.src = fullUrl;
+            img.addEventListener('click', () => window.open(fullUrl, '_blank'));
+        }
     }
     const node = el('div', { className: 'msg' }, head, body);
     node.dataset.userId = m.userId;
     node.dataset.msgId = m.id;
     return node;
+}
+
+async function decryptImageInto(imgEl, url, encMeta) {
+    try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const ct = await r.arrayBuffer();
+        const blob = await e2e.decryptBytes(ct, encMeta.iv, encMeta.mime);
+        const objectUrl = URL.createObjectURL(blob);
+        imgEl.src = objectUrl;
+        imgEl.alt = '';
+        imgEl.classList.remove('msg-encrypted');
+        imgEl.addEventListener('click', () => window.open(objectUrl, '_blank'));
+    } catch (err) {
+        imgEl.classList.remove('msg-encrypted');
+        imgEl.classList.add('msg-locked');
+        imgEl.alt = '🔒 (encrypted — passphrase mismatch)';
+    }
 }
 
 // When a profile changes, walk every visible message authored by that user
@@ -447,7 +494,7 @@ function setupChatComposer() {
     const input = $('#chatInput');
     const fileInput = $('#chatFileInput');
 
-    $('#chatForm').addEventListener('submit', (e) => {
+    $('#chatForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const text = input.value.trim();
         if (!text) return;
@@ -455,8 +502,13 @@ function setupChatComposer() {
             notify('No channel selected');
             return;
         }
-        state.socket.emit('chat', { channelId: state.activeTextChannelId, text });
-        input.value = '';
+        try {
+            const payload = e2e.hasKey() ? await e2e.encryptText(text) : text;
+            state.socket.emit('chat', { channelId: state.activeTextChannelId, text: payload });
+            input.value = '';
+        } catch (err) {
+            notify('Send failed: ' + err.message);
+        }
     });
 
     $('#chatAttachBtn').addEventListener('click', () => fileInput.click());
@@ -488,14 +540,30 @@ async function uploadAndSend(file) {
         notify('Image too large (max 10 MB)');
         return;
     }
+    if (!state.activeTextChannelId) {
+        notify('No channel selected');
+        return;
+    }
     try {
+        let body, contentType, enc = null;
+        if (e2e.hasKey()) {
+            // Encrypt the bytes before they leave us.
+            const buf = await file.arrayBuffer();
+            const { ciphertext, iv } = await e2e.encryptBytes(buf);
+            body = ciphertext;
+            contentType = 'application/octet-stream';
+            enc = { iv: bufToB64(iv), mime: file.type };
+        } else {
+            body = file;
+            contentType = file.type;
+        }
         const r = await fetch(state.serverUrl + '/upload', {
             method: 'POST',
             headers: {
-                'Content-Type': file.type,
+                'Content-Type': contentType,
                 'X-Filename': file.name || 'image'
             },
-            body: file
+            body
         });
         if (!r.ok) {
             const err = await r.json().catch(() => ({}));
@@ -503,14 +571,18 @@ async function uploadAndSend(file) {
             return;
         }
         const { url } = await r.json();
-        if (!state.activeTextChannelId) {
-            notify('No channel selected');
-            return;
-        }
-        state.socket.emit('chat', { channelId: state.activeTextChannelId, imageUrl: url });
+        const payload = { channelId: state.activeTextChannelId, imageUrl: url };
+        if (enc) payload.enc = enc;
+        state.socket.emit('chat', payload);
     } catch (err) {
         notify('Upload error: ' + err.message);
     }
+}
+
+function bufToB64(bytes) {
+    let s = '';
+    for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+    return btoa(s);
 }
 
 // ---------- Voice controls ----------
@@ -751,6 +823,7 @@ function setupSettings() {
 
     setupIdentityEditor();
     setupTestSoundButton();
+    setupE2ESection();
 
     async function startMicTest() {
         try {
@@ -856,6 +929,51 @@ function setupSettings() {
             state.me.username = name.slice(0, 32);
             saveProfile();
             state.socket?.emit('update-profile', { username: state.me.username });
+        });
+    }
+
+    function setupE2ESection() {
+        const status = $('#e2eStatus');
+        const input = $('#e2ePassphrase');
+        const saveBtn = $('#e2eSaveBtn');
+        const clearBtn = $('#e2eClearBtn');
+
+        function refreshStatus() {
+            const on = e2e.hasKey();
+            status.textContent = on ? '🔒 Encryption enabled' : 'Encryption disabled';
+            status.className = 'e2e-status ' + (on ? 'on' : 'off');
+            input.value = '';
+            clearBtn.style.display = on ? '' : 'none';
+        }
+        refreshStatus();
+        // Re-run when modal opens too (handled by openSettings calling renderIdentity, but we also patch here):
+        const modal = $('#settingsModal');
+        const observer = new MutationObserver(() => {
+            if (modal.style.display === 'flex') refreshStatus();
+        });
+        observer.observe(modal, { attributes: true, attributeFilter: ['style'] });
+
+        saveBtn.addEventListener('click', async () => {
+            const pp = input.value;
+            if (!pp) {
+                notify('Enter a passphrase');
+                return;
+            }
+            try {
+                await e2e.setPassphrase(pp);
+                refreshStatus();
+                notify('Encryption enabled. Re-render messages to see decrypted content.');
+                // Re-render the active channel to apply decryption to existing visible messages.
+                renderMessages();
+            } catch (err) {
+                notify('Failed to set passphrase: ' + err.message);
+            }
+        });
+        clearBtn.addEventListener('click', () => {
+            e2e.clearKey();
+            refreshStatus();
+            notify('Encryption disabled. Future messages will be sent in plaintext.');
+            renderMessages();
         });
     }
 
