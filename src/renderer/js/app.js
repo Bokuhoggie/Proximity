@@ -22,7 +22,7 @@ const state = {
     activeVoiceChannelId: null,    // voice channel I'm in, or null
     peerStates: new Map(),         // uuid -> RTCPeerConnection state
     peerLevels: new Map(),         // uuid -> bool (currently speaking)
-    proximity: null                // ProximityMap instance, when open
+    proximity: null,               // ProximityMap instance, when open
     audio: null
 };
 
