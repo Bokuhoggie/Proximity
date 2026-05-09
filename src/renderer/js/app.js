@@ -591,12 +591,13 @@ function leaveVoiceChannel() {
 
 // ---------- Diagnostic helper ----------
 //
-// In DevTools: `await proximity.diagnose()` returns a snapshot, and
-// `proximity.diagnose.print()` console.tables the peer rows for sharing.
-// Tagged with bomboclat so you can grep paired logs.
+// In DevTools: `await diagnose()` returns a snapshot AND console.tables
+// the peer rows for sharing. Tagged with bomboclat so you can grep
+// paired logs. NB: window.proximity is the contextBridge-exposed
+// (frozen) updater API from preload.js — we can't attach to it, so
+// this lives at the top level as `diagnose`.
 
-window.proximity = window.proximity || {};
-window.proximity.diagnose = async function diagnose() {
+window.diagnose = async function diagnose() {
     if (!state.audio) {
         const out = { me: null, peers: [], note: 'not in voice' };
         console.log('[diagnose] bomboclat', out);
