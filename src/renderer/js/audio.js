@@ -257,8 +257,14 @@ export class AudioManager {
             }
             el.srcObject = stream;
             this.applySink(el);
+            // Route the audio element through a GainNode so we can attenuate
+            // it for proximity. We use the audio element for actual playback
+            // (so setSinkId / autoplay / OS-level mixing works) AND route the
+            // same source through the gain → destination for the meter +
+            // proximity. WebAudio's MediaElementSource doesn't really mute the
+            // <audio> element, so we set el.volume too.
             el.play().catch(err => console.warn('[audio] autoplay blocked', err));
-            this.attachLevelMeter(peer, stream);
+            this.attachAudioGraph(peer, stream, el);
         };
 
         pc.onconnectionstatechange = () => {
@@ -293,7 +299,7 @@ export class AudioManager {
         return peer;
     }
 
-    attachLevelMeter(peer, stream) {
+    attachAudioGraph(peer, stream, audioEl) {
         if (peer.analyser) return; // already wired
         try {
             const ctx = this.getAudioContext();
@@ -303,10 +309,22 @@ export class AudioManager {
             src.connect(an);
             peer.analyser = an;
             peer.levelBuf = new Float32Array(an.fftSize);
+            // Volume control for proximity: we just adjust the audio
+            // element's volume directly (simpler than a parallel WebAudio
+            // graph since we want the OS-routed playback to keep working).
+            peer.audioEl = audioEl;
             this.startLevelLoop();
         } catch (err) {
-            console.warn('[audio] attachLevelMeter failed', err);
+            console.warn('[audio] attachAudioGraph failed', err);
         }
+    }
+
+    // Set an attenuation factor 0..1 for a remote peer. Used by the
+    // proximity map: 1.0 = on top of you, 0 = inaudible.
+    setPeerVolume(userId, volume) {
+        const peer = this.peers.get(userId);
+        if (!peer || !peer.audioEl) return;
+        peer.audioEl.volume = Math.max(0, Math.min(1, volume));
     }
 
     startLevelLoop() {

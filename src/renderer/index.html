@@ -50,8 +50,20 @@
                 </div>
             </div>
             <div class="voice-dock-actions">
+                <button id="voiceMapBtn" class="btn ghost icon" title="Open proximity map">🗺</button>
                 <button id="voiceMuteBtn" class="btn ghost icon" title="Toggle mute">🎤</button>
                 <button id="voiceLeaveBtn" class="btn danger icon" title="Leave voice">✕</button>
+            </div>
+        </div>
+
+        <div id="mapOverlay" class="map-overlay" style="display:none;">
+            <div class="map-shell">
+                <div class="map-header">
+                    <span id="mapTitle">Proximity map</span>
+                    <button id="mapCloseBtn" class="btn ghost icon" title="Close">✕</button>
+                </div>
+                <div id="mapStage" class="map-stage"></div>
+                <div class="map-hint">Click or drag to move yourself. The dashed circle is your hearing range.</div>
             </div>
         </div>
 
@@ -71,6 +83,7 @@
         <form id="chatForm" class="composer">
             <button type="button" id="chatAttachBtn" class="btn ghost icon" title="Attach image">📎</button>
             <input id="chatInput" class="composer-input" type="text" placeholder="Message — paste images too" autocomplete="off">
+            <button type="button" id="chatEmojiBtn" class="btn ghost icon" title="Emoji">😀</button>
             <button type="submit" class="btn primary">Send</button>
             <input id="chatFileInput" type="file" accept="image/*" hidden>
         </form>

@@ -220,6 +220,10 @@ const profiles = new Map();        // uuid -> profile
 const socketToUuid = new Map();    // socket.id -> uuid
 const uuidToSocket = new Map();    // uuid -> socket.id
 const userVoiceChannel = new Map(); // uuid -> voiceChannelId
+// Proximity map positions per voice channel.
+// Map<channelId, Map<uuid, {x, y}>>. Coordinates are 0..1 normalized so
+// clients can render at any canvas size. Reset when a user leaves voice.
+const positions = new Map();
 
 // channelId -> { id, name, messages[], createdBy, createdAt }
 const textChannels = new Map();
@@ -245,6 +249,13 @@ function publicVoiceChannel(c) {
 
 function uuidOf(socketId) { return socketToUuid.get(socketId); }
 function socketOf(uuid) { return uuidToSocket.get(uuid); }
+
+function serializePositions(channelPos) {
+    const out = {};
+    if (!channelPos) return out;
+    for (const [uuid, pos] of channelPos.entries()) out[uuid] = pos;
+    return out;
+}
 
 function makeChannelId(prefix) {
     return prefix + '-' + crypto.randomBytes(6).toString('hex');
@@ -488,7 +499,6 @@ io.on('connection', (socket) => {
         const channel = voiceChannels.get(channelId);
         if (!channel) throw new Error(`voice-join: unknown channel ${channelId}`);
 
-        // Leave previous voice channel first.
         const prevId = userVoiceChannel.get(uuid);
         if (prevId && prevId !== channelId) {
             const prev = voiceChannels.get(prevId);
@@ -496,15 +506,34 @@ io.on('connection', (socket) => {
                 prev.members.delete(uuid);
                 io.emit('voice-channel-member-left', { channelId: prevId, userId: uuid });
             }
+            const prevPos = positions.get(prevId);
+            if (prevPos) prevPos.delete(uuid);
         }
 
         if (channel.members.has(uuid)) return;
         channel.members.add(uuid);
         userVoiceChannel.set(uuid, channelId);
 
+        // Initial random-ish position so people don't all stack on (0,0).
+        if (!positions.has(channelId)) positions.set(channelId, new Map());
+        const channelPos = positions.get(channelId);
+        if (!channelPos.has(uuid)) {
+            channelPos.set(uuid, {
+                x: 0.3 + Math.random() * 0.4,
+                y: 0.3 + Math.random() * 0.4
+            });
+        }
+
         const others = Array.from(channel.members).filter(id => id !== uuid);
-        socket.emit('voice-peers', { channelId, peers: others });
-        io.emit('voice-channel-member-joined', { channelId, userId: uuid });
+        socket.emit('voice-peers', {
+            channelId,
+            peers: others,
+            positions: serializePositions(channelPos)
+        });
+        io.emit('voice-channel-member-joined', {
+            channelId, userId: uuid,
+            position: channelPos.get(uuid)
+        });
         log(`    voice-join ${uuid.slice(0, 8)}… → ${channel.name} (${channel.members.size})`);
     });
 
@@ -519,7 +548,31 @@ io.on('connection', (socket) => {
             channel.members.delete(uuid);
             io.emit('voice-channel-member-left', { channelId, userId: uuid });
         }
+        const channelPos = positions.get(channelId);
+        if (channelPos) channelPos.delete(uuid);
         log(`    voice-leave ${uuid.slice(0, 8)}…`);
+    });
+
+    safe(socket, 'position-update', ({ x, y }) => {
+        const uuid = uuidOf(socket.id);
+        if (!uuid) return;
+        const channelId = userVoiceChannel.get(uuid);
+        if (!channelId) return;
+        // Clamp to [0, 1].
+        const cx = Math.max(0, Math.min(1, Number(x)));
+        const cy = Math.max(0, Math.min(1, Number(y)));
+        if (!Number.isFinite(cx) || !Number.isFinite(cy)) return;
+        const channelPos = positions.get(channelId) || positions.set(channelId, new Map()).get(channelId);
+        channelPos.set(uuid, { x: cx, y: cy });
+        // Broadcast only to members of this voice channel — everyone else
+        // doesn't care about positions in a room they're not in.
+        const channel = voiceChannels.get(channelId);
+        if (!channel) return;
+        for (const memberUuid of channel.members) {
+            if (memberUuid === uuid) continue;
+            const sock = socketOf(memberUuid);
+            if (sock) io.to(sock).emit('position-update', { channelId, userId: uuid, x: cx, y: cy });
+        }
     });
 
     // WebRTC signaling — `to` is a UUID, server resolves to socket.id.
@@ -565,6 +618,8 @@ io.on('connection', (socket) => {
                     channel.members.delete(uuid);
                     socket.broadcast.emit('voice-channel-member-left', { channelId, userId: uuid });
                 }
+                const channelPos = positions.get(channelId);
+                if (channelPos) channelPos.delete(uuid);
             }
             socket.broadcast.emit('user-disconnected', uuid);
         }

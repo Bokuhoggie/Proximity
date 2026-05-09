@@ -3,6 +3,8 @@
 
 import { AudioManager, startMicLevel } from './audio.js';
 import * as e2e from './crypto.js';
+import { openEmojiPicker } from './emoji.js';
+import { ProximityMap } from './proximity.js';
 
 const RAILWAY_URL = 'https://proximityserver-production.up.railway.app';
 const LOCAL_URL = 'http://localhost:3000';
@@ -20,6 +22,7 @@ const state = {
     activeVoiceChannelId: null,    // voice channel I'm in, or null
     peerStates: new Map(),         // uuid -> RTCPeerConnection state
     peerLevels: new Map(),         // uuid -> bool (currently speaking)
+    proximity: null                // ProximityMap instance, when open
     audio: null
 };
 
@@ -81,6 +84,14 @@ function toast(msg, ttlMs = 4500) {
 }
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+function insertAtCursor(input, text) {
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    input.value = input.value.slice(0, start) + text + input.value.slice(end);
+    const newPos = start + text.length;
+    input.setSelectionRange(newPos, newPos);
+}
 
 // ---------- Boot ----------
 
@@ -241,7 +252,7 @@ async function connectAndJoin(me) {
         if (msg.channelId === state.activeTextChannelId) appendMessageNode(msg);
     });
 
-    socket.on('voice-peers', ({ channelId, peers }) => {
+    socket.on('voice-peers', ({ channelId, peers, positions }) => {
         const channel = state.voiceChannels.get(channelId);
         if (!channel) return;
         for (const id of peers) channel.members.add(id);
@@ -250,22 +261,32 @@ async function connectAndJoin(me) {
         if (state.audio) {
             for (const id of peers) state.audio.offerTo(id);
         }
+        if (state.proximity && positions) {
+            state.proximity.setInitialPositions(positions);
+        }
     });
-    socket.on('voice-channel-member-joined', ({ channelId, userId }) => {
+    socket.on('voice-channel-member-joined', ({ channelId, userId, position }) => {
         const channel = state.voiceChannels.get(channelId);
         if (!channel) return;
         channel.members.add(userId);
+        if (state.proximity && position && channelId === state.activeVoiceChannelId) {
+            state.proximity.setRemotePosition(userId, position.x, position.y);
+        }
         renderVoiceChannels();
     });
     socket.on('voice-channel-member-left', ({ channelId, userId }) => {
         const channel = state.voiceChannels.get(channelId);
         if (channel) channel.members.delete(userId);
-        // If they were a peer of mine in voice, drop the connection.
         if (state.audio && userId !== state.me.id && channelId === state.activeVoiceChannelId) {
             state.audio.dropPeer(userId);
         }
         state.peerStates.delete(userId);
+        if (state.proximity) state.proximity.removeUser(userId);
         renderVoiceChannels();
+    });
+    socket.on('position-update', ({ channelId, userId, x, y }) => {
+        if (channelId !== state.activeVoiceChannelId) return;
+        if (state.proximity) state.proximity.setRemotePosition(userId, x, y);
     });
 
     socket.on('rtc-offer', ({ from, offer }) => state.audio?.handleOffer(from, offer));
@@ -513,6 +534,13 @@ function setupChatComposer() {
 
     $('#chatAttachBtn').addEventListener('click', () => fileInput.click());
 
+    $('#chatEmojiBtn').addEventListener('click', () => {
+        openEmojiPicker($('#chatEmojiBtn'), (emoji) => {
+            insertAtCursor(input, emoji);
+            input.focus();
+        });
+    });
+
     fileInput.addEventListener('change', async () => {
         const file = fileInput.files?.[0];
         fileInput.value = '';
@@ -598,6 +626,39 @@ function setupVoiceLeaveAndMute() {
         $('#voiceMuteBtn').title = next ? 'Unmute' : 'Mute';
         state.socket.emit('mic-status', { muted: next });
     });
+    $('#voiceMapBtn').addEventListener('click', openProximityMap);
+    $('#mapCloseBtn').addEventListener('click', closeProximityMap);
+}
+
+function openProximityMap() {
+    if (!state.activeVoiceChannelId) {
+        notify('Join a voice channel first');
+        return;
+    }
+    const overlay = $('#mapOverlay');
+    overlay.style.display = 'flex';
+    const channel = state.voiceChannels.get(state.activeVoiceChannelId);
+    $('#mapTitle').textContent = `🗺  ${channel?.name || 'Map'}`;
+    if (!state.proximity) {
+        state.proximity = new ProximityMap({
+            container: $('#mapStage'),
+            audio: state.audio,
+            socket: state.socket,
+            getMyUserId: () => state.me?.id,
+            getProfile: (uuid) => profileOf(uuid),
+            getActiveChannelId: () => state.activeVoiceChannelId
+        });
+        // We don't have positions until the server tells us — rely on the
+        // initial voice-peers payload (already delivered when we joined).
+        // For now, seed a position for ourselves at center so we render.
+        state.proximity.setRemotePosition(state.me.id, 0.5, 0.5);
+    }
+    state.proximity.render();
+}
+
+function closeProximityMap() {
+    const overlay = $('#mapOverlay');
+    overlay.style.display = 'none';
 }
 
 async function joinVoiceChannel(channelId) {
@@ -654,6 +715,11 @@ function leaveVoiceChannel() {
     state.audio = null;
     state.peerStates.clear();
     state.peerLevels.clear();
+    if (state.proximity) {
+        state.proximity.destroy();
+        state.proximity = null;
+        $('#mapOverlay').style.display = 'none';
+    }
     const channel = state.voiceChannels.get(state.activeVoiceChannelId);
     if (channel) channel.members.delete(state.me.id);
     state.activeVoiceChannelId = null;
