@@ -14,7 +14,7 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "release": "electron-builder --win --publish always"
+    "release": "node scripts/release.js"
   },
   "author": "Bokuhoggie",
   "license": "MIT",
