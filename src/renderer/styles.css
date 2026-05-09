@@ -400,6 +400,17 @@ input, button { color: inherit; }
     transition: width 0.05s linear;
 }
 
+.prompt-card {
+    width: 360px;
+    max-width: 92vw;
+    gap: 14px;
+}
+.prompt-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
 .identity-row {
     display: flex;
     align-items: center;

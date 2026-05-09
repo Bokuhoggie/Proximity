@@ -631,15 +631,54 @@ function updateVoiceButtons() {
 // ---------- Channel creation ----------
 
 function setupChannelCreation() {
-    $('#addTextChannelBtn').addEventListener('click', () => {
-        const name = window.prompt('New text channel name (max 32 chars):');
-        if (!name?.trim()) return;
-        state.socket.emit('create-text-channel', { name: name.trim() });
+    $('#addTextChannelBtn').addEventListener('click', async () => {
+        const name = await promptDialog('New text channel', 'e.g. memes, planning, dev');
+        if (!name) return;
+        state.socket.emit('create-text-channel', { name });
     });
-    $('#addVoiceChannelBtn').addEventListener('click', () => {
-        const name = window.prompt('New voice channel name (max 32 chars):');
-        if (!name?.trim()) return;
-        state.socket.emit('create-voice-channel', { name: name.trim() });
+    $('#addVoiceChannelBtn').addEventListener('click', async () => {
+        const name = await promptDialog('New voice channel', 'e.g. Lounge, AFK, Game');
+        if (!name) return;
+        state.socket.emit('create-voice-channel', { name });
+    });
+}
+
+// Replacement for window.prompt() (which Electron disables). Returns the
+// trimmed string on submit, or null on cancel. Resolves on Enter / Submit
+// click, rejects/null on Esc / Cancel / backdrop click.
+function promptDialog(title, placeholder = '') {
+    return new Promise((resolve) => {
+        const input = el('input', { className: 'join-input', type: 'text', maxLength: 32, placeholder });
+        const cancelBtn = el('button', { type: 'button', className: 'btn ghost' }, 'Cancel');
+        const okBtn = el('button', { type: 'submit', className: 'btn primary' }, 'Create');
+        const form = el('form', { className: 'modal-card prompt-card' },
+            el('div', { className: 'modal-header' }, el('h2', {}, title)),
+            input,
+            el('div', { className: 'prompt-actions' }, cancelBtn, okBtn)
+        );
+        const backdrop = el('div', { className: 'modal' }, form);
+
+        const close = (value) => {
+            backdrop.remove();
+            document.removeEventListener('keydown', onKey);
+            resolve(value);
+        };
+        const onKey = (e) => {
+            if (e.key === 'Escape') close(null);
+        };
+        cancelBtn.addEventListener('click', () => close(null));
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) close(null);
+        });
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const v = input.value.trim().slice(0, 32);
+            close(v || null);
+        });
+        document.addEventListener('keydown', onKey);
+
+        document.body.append(backdrop);
+        input.focus();
     });
 }
 
