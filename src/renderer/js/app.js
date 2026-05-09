@@ -18,6 +18,7 @@ const state = {
     activeTextChannelId: null,     // currently displayed text channel
     activeVoiceChannelId: null,    // voice channel I'm in, or null
     peerStates: new Map(),         // uuid -> RTCPeerConnection state
+    peerLevels: new Map(),         // uuid -> bool (currently speaking)
     audio: null
 };
 
@@ -535,6 +536,7 @@ async function joinVoiceChannel(channelId) {
     if (state.activeVoiceChannelId) {
         state.audio?.dropAll();
         state.peerStates.clear();
+        state.peerLevels.clear();
     } else {
         // Cold start: spin up the mic.
         try {
@@ -546,6 +548,16 @@ async function joinVoiceChannel(channelId) {
                 onPeerStateChange: (uuid, connectionState) => {
                     state.peerStates.set(uuid, connectionState);
                     renderVoiceChannels();
+                    updateVoiceButtons();
+                },
+                onPeerLevel: (uuid, level) => {
+                    const speaking = level > 0.04;
+                    const wasSpeaking = state.peerLevels.get(uuid) || false;
+                    state.peerLevels.set(uuid, speaking);
+                    if (speaking !== wasSpeaking) {
+                        const dot = document.querySelector(`[data-voice-user="${cssEscape(uuid)}"] .user-dot`);
+                        if (dot) dot.classList.toggle('speaking', speaking);
+                    }
                 }
             });
             await state.audio.startMic();
@@ -569,13 +581,32 @@ function leaveVoiceChannel() {
     state.audio?.stopMic();
     state.audio = null;
     state.peerStates.clear();
-    // Remove ourselves from local channel state immediately for snappy UI.
+    state.peerLevels.clear();
     const channel = state.voiceChannels.get(state.activeVoiceChannelId);
     if (channel) channel.members.delete(state.me.id);
     state.activeVoiceChannelId = null;
     updateVoiceButtons();
     renderVoiceChannels();
 }
+
+// ---------- Diagnostic helper ----------
+//
+// In DevTools: `await proximity.diagnose()` returns a snapshot, and
+// `proximity.diagnose.print()` console.tables the peer rows for sharing.
+// Tagged with bomboclat so you can grep paired logs.
+
+window.proximity = window.proximity || {};
+window.proximity.diagnose = async function diagnose() {
+    if (!state.audio) {
+        const out = { me: null, peers: [], note: 'not in voice' };
+        console.log('[diagnose] bomboclat', out);
+        return out;
+    }
+    const snap = await state.audio.diagnose();
+    console.log('[diagnose] bomboclat — me:', snap.me);
+    console.table(snap.peers);
+    return snap;
+};
 
 function updateVoiceButtons() {
     const inVoice = !!state.activeVoiceChannelId;

@@ -213,7 +213,17 @@ input, button { color: inherit; }
     border-radius: 4px;
 }
 .user-row:hover { background: var(--bg-elev-2); }
-.user-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.user-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.08s ease-out;
+}
+.user-dot.speaking {
+    box-shadow: 0 0 0 2px var(--success, #9ece6a);
+}
 .user-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mic-icon { font-size: 13px; }
 .voice-empty { color: var(--text-dim); font-size: 12px; padding: 4px 6px; }
