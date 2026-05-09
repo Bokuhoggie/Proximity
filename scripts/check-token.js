@@ -61,6 +61,6 @@ function loadEnvFile(file) {
         const k = t.slice(0, eq).trim();
         let v = t.slice(eq + 1).trim();
         if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-        if (!(k in process.env)) process.env[k] = v;
+        process.env[k] = v;
     }
 }
